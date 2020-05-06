@@ -11,7 +11,7 @@
 #include <iostream>
 #include "BitTwiddlingUtil.h"
 
-#include "LoadInstructions.hpp"
+#include "LoadInstructions8.hpp"
 
 using namespace std;
 using namespace MikoGB;

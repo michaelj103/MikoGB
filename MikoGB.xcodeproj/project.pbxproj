@@ -15,7 +15,7 @@
 		297E613A245FEA5D00EE150F /* CPUCore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297E6137245FEA5D00EE150F /* CPUCore.cpp */; };
 		297E613E245FECDF00EE150F /* CPUInstruction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297E613C245FECDF00EE150F /* CPUInstruction.cpp */; };
 		297E613F245FECDF00EE150F /* CPUInstruction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297E613C245FECDF00EE150F /* CPUInstruction.cpp */; };
-		29A8C0BC2462685F0082C52B /* LoadInstructions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8C0BA2462685F0082C52B /* LoadInstructions.cpp */; };
+		29A8C0BC2462685F0082C52B /* LoadInstructions8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8C0BA2462685F0082C52B /* LoadInstructions8.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -51,8 +51,8 @@
 		297E613C245FECDF00EE150F /* CPUInstruction.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = CPUInstruction.cpp; sourceTree = "<group>"; };
 		297E613D245FECDF00EE150F /* CPUInstruction.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = CPUInstruction.hpp; sourceTree = "<group>"; };
 		29A8C0B9246147190082C52B /* BitTwiddlingUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BitTwiddlingUtil.h; sourceTree = "<group>"; };
-		29A8C0BA2462685F0082C52B /* LoadInstructions.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = LoadInstructions.cpp; sourceTree = "<group>"; };
-		29A8C0BB2462685F0082C52B /* LoadInstructions.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = LoadInstructions.hpp; sourceTree = "<group>"; };
+		29A8C0BA2462685F0082C52B /* LoadInstructions8.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = LoadInstructions8.cpp; sourceTree = "<group>"; };
+		29A8C0BB2462685F0082C52B /* LoadInstructions8.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = LoadInstructions8.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -126,8 +126,8 @@
 		29A8C0BD2462686D0082C52B /* InstructionFunctions */ = {
 			isa = PBXGroup;
 			children = (
-				29A8C0BB2462685F0082C52B /* LoadInstructions.hpp */,
-				29A8C0BA2462685F0082C52B /* LoadInstructions.cpp */,
+				29A8C0BB2462685F0082C52B /* LoadInstructions8.hpp */,
+				29A8C0BA2462685F0082C52B /* LoadInstructions8.cpp */,
 			);
 			path = InstructionFunctions;
 			sourceTree = "<group>";
@@ -212,7 +212,7 @@
 			files = (
 				297E6139245FEA5D00EE150F /* CPUCore.cpp in Sources */,
 				297E613E245FECDF00EE150F /* CPUInstruction.cpp in Sources */,
-				29A8C0BC2462685F0082C52B /* LoadInstructions.cpp in Sources */,
+				29A8C0BC2462685F0082C52B /* LoadInstructions8.cpp in Sources */,
 				297E600C2456532700EE150F /* CartridgeHeader.cpp in Sources */,
 				297E5FF92456421B00EE150F /* main.cpp in Sources */,
 			);
