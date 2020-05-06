@@ -8,6 +8,7 @@
 #include "CPUInstruction.hpp"
 #include <exception>
 #include <string>
+#include <iostream>
 #include "BitTwiddlingUtil.h"
 
 #include "LoadInstructions.hpp"
@@ -50,6 +51,12 @@ void CPUInstruction::InitializeInstructionTable() {
         return; //already initialized
     }
     
+    // Technically, there can be 512 instructions but they aren't all used
+    // 256 possible with a single slot. 256 possible with the extender 0xCB and the second byte
+    // Single-byte instructions are indexed by their value
+    // Two-byte instructions must have 0xCB as the first byte and are indexed by 0x1NN
+    // So all feasible codes are 0x00 - 0x1FF (0-511), but there are gaps
+    // Default initialized so that gaps are automatically UnrecognizedInstruction
     InstructionTable = new CPUInstruction[512]();
     
     InstructionTable[0x00] = { 1, NoOp };
@@ -145,5 +152,18 @@ void CPUInstruction::InitializeInstructionTable() {
     InstructionTable[0x7D] = { 1, loadRegisterFromRegister }; // LD A, L
     InstructionTable[0x7E] = { 1, loadRegisterFromMemory }; // LD A, (HL)
     InstructionTable[0x7F] = { 1, loadRegisterFromRegister }; // LD A, A -> redundant?
+    
+    // LD A, (PP)
+    InstructionTable[0x0A] = { 1, loadAccumulatorBC }; // LD A, (BC)
+    InstructionTable[0x1A] = { 1, loadAccumulatorDE }; // LD A, (DE)
+    
+    size_t instCount = 0;
+    for (size_t i = 0; i < 512; ++i) {
+        CPUInstruction &inst = InstructionTable[i];
+        if (inst.size > 0) {
+            instCount++;
+        }
+    }
+    cout << "Loaded " << instCount << " Instructions" << endl;
 }
 

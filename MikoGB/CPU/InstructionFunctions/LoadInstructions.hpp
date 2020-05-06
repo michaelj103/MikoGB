@@ -45,6 +45,16 @@ int loadMemoryFromRegister(uint8_t *, MikoGB::CPUCore &);
 /// 2-bytes, loads the memory pointed to by HL with the immediate value of the second byte
 int loadMemoryImmediate8(uint8_t *, MikoGB::CPUCore &);
 
+/// LD A, (BC)
+/// 8-bit load (BC) -> A. Bits are [ 0, 0, 0, 0, 1, 0, 1, 0 ]
+/// Loads the value pointed to by the register pair BC into the accumulator
+int loadAccumulatorBC(uint8_t *, MikoGB::CPUCore &);
+
+/// LD A, (DE)
+/// 8-bit load (DE) -> A. Bits are [ 0, 0, 0, 1, 1, 0, 1, 0 ]
+/// Loads the value pointed to by the register pair DE into the accumulator
+int loadAccumulatorDE(uint8_t *, MikoGB::CPUCore &);
+
 }
 
 #endif /* LoadInstructions_hpp */

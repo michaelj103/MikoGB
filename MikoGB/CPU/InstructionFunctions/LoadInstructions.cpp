@@ -49,3 +49,18 @@ int CPUInstructions::loadMemoryImmediate8(uint8_t *opcode, CPUCore &core) {
     core.mainMemory[core.getHL()] = immediateVal;
     return 3;
 }
+
+int CPUInstructions::loadAccumulatorBC(uint8_t *opcode, CPUCore &core) {
+    //bits must be 00001010
+    uint8_t memVal = core.mainMemory[core.getBC()];
+    core.registers[REGISTER_A] = memVal;
+    return 2;
+}
+
+int CPUInstructions::loadAccumulatorDE(uint8_t *opcode, CPUCore &core) {
+    //bits must be 00011010
+    uint8_t memVal = core.mainMemory[core.getDE()];
+    core.registers[REGISTER_A] = memVal;
+    return 2;
+}
+

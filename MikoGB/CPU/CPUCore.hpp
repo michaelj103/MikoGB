@@ -47,6 +47,14 @@ public:
         return word16(registers[REGISTER_L], registers[REGISTER_H]);
     }
     
+    uint16_t getBC() {
+        return word16(registers[REGISTER_C], registers[REGISTER_B]);
+    }
+    
+    uint16_t getDE() {
+        return word16(registers[REGISTER_E], registers[REGISTER_D]);
+    }
+    
     //TODO: should this be a class? "MemoryController"
     uint8_t *mainMemory;
 };
