@@ -77,6 +77,23 @@ int CPUInstructions::loadCFromAccumulator(const uint8_t *opcode, CPUCore &core) 
     return 2;
 }
 
+int CPUInstructions::loadPtrImmediate8FromAccumulator(const uint8_t *opcode, CPUCore &core) {
+    //bits must be 11100000
+    uint16_t ptr = 0xFF00 + opcode[1]; //Load into some address from 0xFF00 - 0xFFFF
+    core.mainMemory[ptr] = core.registers[REGISTER_A];
+    return 3;
+}
+
+int CPUInstructions::loadPtrImmediate16FromAccumulator(const uint8_t *opcode, CPUCore &core) {
+    //bits must be 11101010
+    //TODO: Confirm that this is the correct byte order. Assuming it is based on other instructions
+    uint8_t lo = opcode[1];
+    uint8_t hi = opcode[2];
+    uint16_t ptr = word16(lo, hi);
+    core.mainMemory[ptr] = core.registers[REGISTER_A];
+    return 4;
+}
+
 int CPUInstructions::loadAccumulatorFromPtrImmediate8(const uint8_t *opcode, CPUCore &core) {
     //bits must be 11110000
     uint16_t ptr = 0xFF00 + opcode[1]; //Load some byte from 0xFF00 - 0xFFFF into A
@@ -84,10 +101,13 @@ int CPUInstructions::loadAccumulatorFromPtrImmediate8(const uint8_t *opcode, CPU
     return 3;
 }
 
-int CPUInstructions::loadPtrImmediate8FromAccumulator(const uint8_t *opcode, CPUCore &core) {
-    //bits must be 11100000
-    uint16_t ptr = 0xFF00 + opcode[1]; //Load into some address from 0xFF00 - 0xFFFF
-    core.mainMemory[ptr] = core.registers[REGISTER_A];
-    return 3;
+int CPUInstructions::loadAccumulatorFromPtrImmediate16(const uint8_t *opcode, CPUCore &core) {
+    //bits must be 11111010
+    //TODO: Confirm that this is the correct byte order. Assuming it is based on other instructions
+    uint8_t lo = opcode[1];
+    uint8_t hi = opcode[2];
+    uint16_t ptr = word16(lo, hi);
+    core.registers[REGISTER_A] = core.mainMemory[ptr];
+    return 4;
 }
 

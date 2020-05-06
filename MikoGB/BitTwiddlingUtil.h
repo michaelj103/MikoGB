@@ -8,9 +8,9 @@
 #ifndef BitTwiddlingUtil_h
 #define BitTwiddlingUtil_h
 
-inline uint16_t word16(uint8_t low, uint8_t hi) {
+inline uint16_t word16(uint8_t lo, uint8_t hi) {
     uint16_t word = hi;
-    word = (word << 8) | low;
+    word = (word << 8) | lo;
     return word;
 }
 

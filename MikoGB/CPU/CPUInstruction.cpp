@@ -35,9 +35,9 @@ const CPUInstruction &CPUInstruction::LookupInstruction(uint8_t *memoryPtr) {
 #pragma mark - Instruction Definitions
 
 static int LoadStackPointer(const uint8_t *opcode, CPUCore &core) {
-    uint8_t low = opcode[1];
+    uint8_t lo = opcode[1];
     uint8_t hi = opcode[2];
-    core.stackPointer = word16(low, hi);
+    core.stackPointer = word16(lo, hi);
     return 3;
 }
 
@@ -163,7 +163,9 @@ void CPUInstruction::InitializeInstructionTable() {
     
     // LD with accumulator and immediate pointers
     InstructionTable[0xE0] = { 2, loadPtrImmediate8FromAccumulator }; // LD (n), A
+    InstructionTable[0xEA] = { 3, loadPtrImmediate16FromAccumulator }; // LD (nn), A
     InstructionTable[0xF0] = { 2, loadAccumulatorFromPtrImmediate8 }; // LD A, (n)
+    InstructionTable[0xFA] = { 3, loadAccumulatorFromPtrImmediate16 }; // LD A, (nn)
     
     size_t instCount = 0;
     for (size_t i = 0; i < 512; ++i) {
