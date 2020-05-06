@@ -50,17 +50,29 @@ int CPUInstructions::loadMemoryImmediate8(const uint8_t *opcode, CPUCore &core) 
     return 3;
 }
 
-int CPUInstructions::loadAccumulatorFromBC(const uint8_t *opcode, CPUCore &core) {
+int CPUInstructions::loadAccumulatorFromBCptr(const uint8_t *opcode, CPUCore &core) {
     //bits must be 00001010
     uint8_t memVal = core.mainMemory[core.getBCptr()];
     core.registers[REGISTER_A] = memVal;
     return 2;
 }
 
-int CPUInstructions::loadAccumulatorFromDE(const uint8_t *opcode, CPUCore &core) {
+int CPUInstructions::loadBCptrFromAccumulator(const uint8_t *opcode, CPUCore &core) {
+    //bits must be 00000010
+    core.mainMemory[core.getBCptr()] = core.registers[REGISTER_A];
+    return 2;
+}
+
+int CPUInstructions::loadAccumulatorFromDEptr(const uint8_t *opcode, CPUCore &core) {
     //bits must be 00011010
     uint8_t memVal = core.mainMemory[core.getDEptr()];
     core.registers[REGISTER_A] = memVal;
+    return 2;
+}
+
+int CPUInstructions::loadDEptrFromAccumulator(const uint8_t *opcode, CPUCore &core) {
+    //bits must be 00010010
+    core.mainMemory[core.getDEptr()] = core.registers[REGISTER_A];
     return 2;
 }
 
@@ -111,3 +123,32 @@ int CPUInstructions::loadAccumulatorFromPtrImmediate16(const uint8_t *opcode, CP
     return 4;
 }
 
+int CPUInstructions::loadAccumulatorFromHLPtrIncrement(const uint8_t *opcode, CPUCore &core) {
+    //bits must be 00101010
+    uint8_t memVal = core.mainMemory[core.getHLptr()];
+    core.registers[REGISTER_A] = memVal;
+    core.incrementHLptr();
+    return 2;
+}
+
+int CPUInstructions::loadAccumulatorFromHLPtrDecrement(const uint8_t *opcode, CPUCore &core) {
+    //bits must be 00101010
+    uint8_t memVal = core.mainMemory[core.getHLptr()];
+    core.registers[REGISTER_A] = memVal;
+    core.decrementHLptr();
+    return 2;
+}
+
+int CPUInstructions::loadHLPtrFromAccumulatorIncrement(const uint8_t *opcode, CPUCore &core) {
+    //bits must be 00100010
+    core.mainMemory[core.getHLptr()] = core.registers[REGISTER_A];
+    core.incrementHLptr();
+    return 2;
+}
+
+int CPUInstructions::loadHLPtrFromAccumulatorDecrement(const uint8_t *opcode, CPUCore &core) {
+    //bits mus tbe 00110010
+    core.mainMemory[core.getHLptr()] = core.registers[REGISTER_A];
+    core.decrementHLptr();
+    return 2;
+}

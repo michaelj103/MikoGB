@@ -43,24 +43,42 @@ public:
     uint16_t programCounter;
     uint16_t stackPointer;
     
-    uint16_t getHLptr() {
+    //TODO: should this be a class? "MemoryController"
+    uint8_t *mainMemory;
+    
+    uint16_t getHLptr() const  {
         return word16(registers[REGISTER_L], registers[REGISTER_H]);
     }
     
-    uint16_t getBCptr() {
+    void incrementHLptr() {
+        uint16_t ptr = getHLptr();
+        ptr += 1;
+        uint8_t lo, hi;
+        splitWord16(ptr, lo, hi);
+        registers[REGISTER_L] = lo;
+        registers[REGISTER_H] = hi;
+    }
+    
+    void decrementHLptr() {
+        uint16_t ptr = getHLptr();
+        ptr -= 1;
+        uint8_t lo, hi;
+        splitWord16(ptr, lo, hi);
+        registers[REGISTER_L] = lo;
+        registers[REGISTER_H] = hi;
+    }
+    
+    uint16_t getBCptr() const {
         return word16(registers[REGISTER_C], registers[REGISTER_B]);
     }
     
-    uint16_t getDEptr() {
+    uint16_t getDEptr() const {
         return word16(registers[REGISTER_E], registers[REGISTER_D]);
     }
     
-    uint16_t getCptr() {
+    uint16_t getCptr() const {
         return 0xFF00 + registers[REGISTER_C];
     }
-    
-    //TODO: should this be a class? "MemoryController"
-    uint8_t *mainMemory;
 };
 
 }

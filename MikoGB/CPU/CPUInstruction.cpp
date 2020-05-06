@@ -153,9 +153,11 @@ void CPUInstruction::InitializeInstructionTable() {
     InstructionTable[0x7E] = { 1, loadRegisterFromMemory }; // LD A, (HL)
     InstructionTable[0x7F] = { 1, loadRegisterFromRegister }; // LD A, A -> redundant?
     
-    // LD A, (PP)
-    InstructionTable[0x0A] = { 1, loadAccumulatorFromBC }; // LD A, (BC)
-    InstructionTable[0x1A] = { 1, loadAccumulatorFromDE }; // LD A, (DE)
+    // LD with accumulator and other register-pair pointers
+    InstructionTable[0x02] = { 1, loadBCptrFromAccumulator }; // LD (BC), A
+    InstructionTable[0x12] = { 1, loadDEptrFromAccumulator }; // LD (DE), A
+    InstructionTable[0x0A] = { 1, loadAccumulatorFromBCptr }; // LD A, (BC)
+    InstructionTable[0x1A] = { 1, loadAccumulatorFromDEptr }; // LD A, (DE)
     
     // LD with (C)
     InstructionTable[0xE2] = { 1, loadCFromAccumulator }; // LD (C), A
@@ -166,6 +168,12 @@ void CPUInstruction::InitializeInstructionTable() {
     InstructionTable[0xEA] = { 3, loadPtrImmediate16FromAccumulator }; // LD (nn), A
     InstructionTable[0xF0] = { 2, loadAccumulatorFromPtrImmediate8 }; // LD A, (n)
     InstructionTable[0xFA] = { 3, loadAccumulatorFromPtrImmediate16 }; // LD A, (nn)
+    
+    // LD A <-> HL with increment or decrement
+    InstructionTable[0x22] = { 1, loadHLPtrFromAccumulatorIncrement }; // LD (HLI), A
+    InstructionTable[0x2A] = { 1, loadAccumulatorFromHLPtrIncrement }; // LD A, (HLI)
+    InstructionTable[0x32] = { 1, loadHLPtrFromAccumulatorDecrement }; // LD (HLD), A
+    InstructionTable[0x3A] = { 1, loadAccumulatorFromHLPtrDecrement }; // LD A, (HLD)
     
     size_t instCount = 0;
     for (size_t i = 0; i < 512; ++i) {

@@ -14,4 +14,9 @@ inline uint16_t word16(uint8_t lo, uint8_t hi) {
     return word;
 }
 
+inline void splitWord16(uint16_t word, uint8_t &lo, uint8_t &hi) {
+    lo = (word & 0xFF);
+    hi = (word & 0xFF00) >> 8;
+}
+
 #endif /* BitTwiddlingUtil_h */
