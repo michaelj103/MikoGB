@@ -12,6 +12,7 @@
 #include "BitTwiddlingUtil.h"
 
 #include "LoadInstructions8.hpp"
+#include "LoadInstructions16.hpp"
 
 using namespace std;
 using namespace MikoGB;
@@ -34,13 +35,6 @@ const CPUInstruction &CPUInstruction::LookupInstruction(uint8_t *memoryPtr) {
 
 #pragma mark - Instruction Definitions
 
-static int LoadStackPointer(const uint8_t *opcode, CPUCore &core) {
-    uint8_t lo = opcode[1];
-    uint8_t hi = opcode[2];
-    core.stackPointer = word16(lo, hi);
-    return 3;
-}
-
 static int NoOp(const uint8_t *opcode, CPUCore &core) {
     return 1;
 }
@@ -60,7 +54,12 @@ void CPUInstruction::InitializeInstructionTable() {
     InstructionTable = new CPUInstruction[512]();
     
     InstructionTable[0x00] = { 1, NoOp };
-    InstructionTable[0x31] = { 3, LoadStackPointer };
+    
+    // LD dd, nn
+    InstructionTable[0x01] = { 3, loadRegisterPairFromImmediate16 }; // LD BC, nn
+    InstructionTable[0x11] = { 3, loadRegisterPairFromImmediate16 }; // LD DE, nn
+    InstructionTable[0x21] = { 3, loadRegisterPairFromImmediate16 }; // LD HL, nn
+    InstructionTable[0x31] = { 3, loadRegisterPairFromImmediate16 }; // LD SP, nn
     
     // LD r, n
     InstructionTable[0x06] = { 2, loadRegisterFromImmediate8 }; // LD B, n

@@ -12,9 +12,9 @@
 
 namespace CPUInstructions {
 
-// ========================
+// ===================================
 // 8-bit transfer and I/O instructions
-// ========================
+// ===================================
 
 /// LD r, r'
 /// 8-bit load register r' -> r. Bits are [ 0, 1, r2, r1, r0, r'2, r'1, r'0 ]

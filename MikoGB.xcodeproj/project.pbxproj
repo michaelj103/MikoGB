@@ -16,6 +16,7 @@
 		297E613E245FECDF00EE150F /* CPUInstruction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297E613C245FECDF00EE150F /* CPUInstruction.cpp */; };
 		297E613F245FECDF00EE150F /* CPUInstruction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297E613C245FECDF00EE150F /* CPUInstruction.cpp */; };
 		29A8C0BC2462685F0082C52B /* LoadInstructions8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8C0BA2462685F0082C52B /* LoadInstructions8.cpp */; };
+		29A8C0C02463495A0082C52B /* LoadInstructions16.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8C0BE2463495A0082C52B /* LoadInstructions16.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -53,6 +54,8 @@
 		29A8C0B9246147190082C52B /* BitTwiddlingUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BitTwiddlingUtil.h; sourceTree = "<group>"; };
 		29A8C0BA2462685F0082C52B /* LoadInstructions8.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = LoadInstructions8.cpp; sourceTree = "<group>"; };
 		29A8C0BB2462685F0082C52B /* LoadInstructions8.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = LoadInstructions8.hpp; sourceTree = "<group>"; };
+		29A8C0BE2463495A0082C52B /* LoadInstructions16.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = LoadInstructions16.cpp; sourceTree = "<group>"; };
+		29A8C0BF2463495A0082C52B /* LoadInstructions16.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = LoadInstructions16.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -128,6 +131,8 @@
 			children = (
 				29A8C0BB2462685F0082C52B /* LoadInstructions8.hpp */,
 				29A8C0BA2462685F0082C52B /* LoadInstructions8.cpp */,
+				29A8C0BF2463495A0082C52B /* LoadInstructions16.hpp */,
+				29A8C0BE2463495A0082C52B /* LoadInstructions16.cpp */,
 			);
 			path = InstructionFunctions;
 			sourceTree = "<group>";
@@ -211,6 +216,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				297E6139245FEA5D00EE150F /* CPUCore.cpp in Sources */,
+				29A8C0C02463495A0082C52B /* LoadInstructions16.cpp in Sources */,
 				297E613E245FECDF00EE150F /* CPUInstruction.cpp in Sources */,
 				29A8C0BC2462685F0082C52B /* LoadInstructions8.cpp in Sources */,
 				297E600C2456532700EE150F /* CartridgeHeader.cpp in Sources */,
