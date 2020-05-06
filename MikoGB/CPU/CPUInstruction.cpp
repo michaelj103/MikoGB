@@ -154,8 +154,12 @@ void CPUInstruction::InitializeInstructionTable() {
     InstructionTable[0x7F] = { 1, loadRegisterFromRegister }; // LD A, A -> redundant?
     
     // LD A, (PP)
-    InstructionTable[0x0A] = { 1, loadAccumulatorBC }; // LD A, (BC)
-    InstructionTable[0x1A] = { 1, loadAccumulatorDE }; // LD A, (DE)
+    InstructionTable[0x0A] = { 1, loadAccumulatorFromBC }; // LD A, (BC)
+    InstructionTable[0x1A] = { 1, loadAccumulatorFromDE }; // LD A, (DE)
+    
+    // LD with (C)
+    InstructionTable[0xE2] = { 1, loadCFromAccumulator }; // LD (C), A
+    InstructionTable[0xF2] = { 1, loadAccumulatorFromC }; // LD A, (C)
     
     size_t instCount = 0;
     for (size_t i = 0; i < 512; ++i) {

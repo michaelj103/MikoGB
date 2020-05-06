@@ -43,16 +43,20 @@ public:
     uint16_t programCounter;
     uint16_t stackPointer;
     
-    uint16_t getHL() {
+    uint16_t getHLptr() {
         return word16(registers[REGISTER_L], registers[REGISTER_H]);
     }
     
-    uint16_t getBC() {
+    uint16_t getBCptr() {
         return word16(registers[REGISTER_C], registers[REGISTER_B]);
     }
     
-    uint16_t getDE() {
+    uint16_t getDEptr() {
         return word16(registers[REGISTER_E], registers[REGISTER_D]);
+    }
+    
+    uint16_t getCptr() {
+        return 0xFF00 + registers[REGISTER_C];
     }
     
     //TODO: should this be a class? "MemoryController"
