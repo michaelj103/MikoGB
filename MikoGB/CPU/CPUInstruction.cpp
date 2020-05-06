@@ -161,6 +161,10 @@ void CPUInstruction::InitializeInstructionTable() {
     InstructionTable[0xE2] = { 1, loadCFromAccumulator }; // LD (C), A
     InstructionTable[0xF2] = { 1, loadAccumulatorFromC }; // LD A, (C)
     
+    // LD with accumulator and immediate pointers
+    InstructionTable[0xE0] = { 2, loadPtrImmediate8FromAccumulator }; // LD (n), A
+    InstructionTable[0xF0] = { 2, loadAccumulatorFromPtrImmediate8 }; // LD A, (n)
+    
     size_t instCount = 0;
     for (size_t i = 0; i < 512; ++i) {
         CPUInstruction &inst = InstructionTable[i];

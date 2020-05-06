@@ -77,3 +77,17 @@ int CPUInstructions::loadCFromAccumulator(uint8_t *opcode, CPUCore &core) {
     return 2;
 }
 
+int CPUInstructions::loadAccumulatorFromPtrImmediate8(uint8_t *opcode, CPUCore &core) {
+    //bits must be 11110000
+    uint16_t ptr = 0xFF00 + opcode[1]; //Load some byte from 0xFF00 - 0xFFFF into A
+    core.registers[REGISTER_A] = core.mainMemory[ptr];
+    return 3;
+}
+
+int CPUInstructions::loadPtrImmediate8FromAccumulator(uint8_t *opcode, CPUCore &core) {
+    //bits must be 11100000
+    uint16_t ptr = 0xFF00 + opcode[1]; //Load into some address from 0xFF00 - 0xFFFF
+    core.mainMemory[ptr] = core.registers[REGISTER_A];
+    return 3;
+}
+

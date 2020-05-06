@@ -65,6 +65,16 @@ int loadAccumulatorFromC(uint8_t *, MikoGB::CPUCore &);
 /// Loads the value of the accumulator into address 0xFF00 + C
 int loadCFromAccumulator(uint8_t *, MikoGB::CPUCore &);
 
+/// LD A, (n)
+/// 8-bit load (0xFF00 + n) -> A. Bits are [1, 1, 1, 1, 0, 0, 0, 0 ]
+/// Loads the value at address 0xFF00 + n into the accumulator for immediate byte n
+int loadAccumulatorFromPtrImmediate8(uint8_t *, MikoGB::CPUCore &);
+
+/// LD (n), A
+/// 8-bit load A -> (0xFF00 + n). Bits are [1, 1, 1, 0, 0, 0, 0, 0 ]
+/// Loads the value of the accumulator into address 0xFF00 + n, for immediate byte n
+int loadPtrImmediate8FromAccumulator(uint8_t *, MikoGB::CPUCore &);
+
 }
 
 #endif /* LoadInstructions_hpp */
