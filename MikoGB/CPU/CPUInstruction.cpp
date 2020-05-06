@@ -63,14 +63,14 @@ void CPUInstruction::InitializeInstructionTable() {
     InstructionTable[0x31] = { 3, LoadStackPointer };
     
     // LD r, n
-    InstructionTable[0x06] = { 2, loadRegisterImmediate8 }; // LD B, n
-    InstructionTable[0x0E] = { 2, loadRegisterImmediate8 }; // LD C, n
-    InstructionTable[0x16] = { 2, loadRegisterImmediate8 }; // LD D, n
-    InstructionTable[0x1E] = { 2, loadRegisterImmediate8 }; // LD E, n
-    InstructionTable[0x26] = { 2, loadRegisterImmediate8 }; // LD H, n
-    InstructionTable[0x2E] = { 2, loadRegisterImmediate8 }; // LD L, n
-    InstructionTable[0x36] = { 2, loadMemoryImmediate8 }; // LD (HL), n
-    InstructionTable[0x3E] = { 2, loadRegisterImmediate8 }; // LD A, n
+    InstructionTable[0x06] = { 2, loadRegisterFromImmediate8 }; // LD B, n
+    InstructionTable[0x0E] = { 2, loadRegisterFromImmediate8 }; // LD C, n
+    InstructionTable[0x16] = { 2, loadRegisterFromImmediate8 }; // LD D, n
+    InstructionTable[0x1E] = { 2, loadRegisterFromImmediate8 }; // LD E, n
+    InstructionTable[0x26] = { 2, loadRegisterFromImmediate8 }; // LD H, n
+    InstructionTable[0x2E] = { 2, loadRegisterFromImmediate8 }; // LD L, n
+    InstructionTable[0x36] = { 2, loadPtrHLFromImmediate8 }; // LD (HL), n
+    InstructionTable[0x3E] = { 2, loadRegisterFromImmediate8 }; // LD A, n
     
     // LD B, r
     InstructionTable[0x40] = { 1, loadRegisterFromRegister }; // LD B, B -> redundant?
@@ -79,7 +79,7 @@ void CPUInstruction::InitializeInstructionTable() {
     InstructionTable[0x43] = { 1, loadRegisterFromRegister }; // LD B, E
     InstructionTable[0x44] = { 1, loadRegisterFromRegister }; // LD B, H
     InstructionTable[0x45] = { 1, loadRegisterFromRegister }; // LD B, L
-    InstructionTable[0x46] = { 1, loadRegisterFromMemory }; // LD B, (HL)
+    InstructionTable[0x46] = { 1, loadRegisterFromPtrHL }; // LD B, (HL)
     InstructionTable[0x47] = { 1, loadRegisterFromRegister }; // LD B, A
     
     // LD C, r
@@ -89,7 +89,7 @@ void CPUInstruction::InitializeInstructionTable() {
     InstructionTable[0x4B] = { 1, loadRegisterFromRegister }; // LD C, E
     InstructionTable[0x4C] = { 1, loadRegisterFromRegister }; // LD C, H
     InstructionTable[0x4D] = { 1, loadRegisterFromRegister }; // LD C, L
-    InstructionTable[0x4E] = { 1, loadRegisterFromMemory }; // LD C, (HL)
+    InstructionTable[0x4E] = { 1, loadRegisterFromPtrHL }; // LD C, (HL)
     InstructionTable[0x4F] = { 1, loadRegisterFromRegister }; // LD C, A
     
     // LD D, r
@@ -99,7 +99,7 @@ void CPUInstruction::InitializeInstructionTable() {
     InstructionTable[0x53] = { 1, loadRegisterFromRegister }; // LD D, E
     InstructionTable[0x54] = { 1, loadRegisterFromRegister }; // LD D, H
     InstructionTable[0x55] = { 1, loadRegisterFromRegister }; // LD D, L
-    InstructionTable[0x56] = { 1, loadRegisterFromMemory }; // LD D, (HL)
+    InstructionTable[0x56] = { 1, loadRegisterFromPtrHL }; // LD D, (HL)
     InstructionTable[0x57] = { 1, loadRegisterFromRegister }; // LD D, A
     
     // LD E, r
@@ -109,7 +109,7 @@ void CPUInstruction::InitializeInstructionTable() {
     InstructionTable[0x5B] = { 1, loadRegisterFromRegister }; // LD E, E -> redundant?
     InstructionTable[0x5C] = { 1, loadRegisterFromRegister }; // LD E, H
     InstructionTable[0x5D] = { 1, loadRegisterFromRegister }; // LD E, L
-    InstructionTable[0x5E] = { 1, loadRegisterFromMemory }; // LD E, (HL)
+    InstructionTable[0x5E] = { 1, loadRegisterFromPtrHL }; // LD E, (HL)
     InstructionTable[0x5F] = { 1, loadRegisterFromRegister }; // LD E, A
     
     // LD H, r
@@ -119,7 +119,7 @@ void CPUInstruction::InitializeInstructionTable() {
     InstructionTable[0x63] = { 1, loadRegisterFromRegister }; // LD H, E
     InstructionTable[0x64] = { 1, loadRegisterFromRegister }; // LD H, H -> redundant?
     InstructionTable[0x65] = { 1, loadRegisterFromRegister }; // LD H, L
-    InstructionTable[0x66] = { 1, loadRegisterFromMemory }; // LD H, (HL)
+    InstructionTable[0x66] = { 1, loadRegisterFromPtrHL }; // LD H, (HL)
     InstructionTable[0x67] = { 1, loadRegisterFromRegister }; // LD H, A
     
     // LD L, r
@@ -129,19 +129,19 @@ void CPUInstruction::InitializeInstructionTable() {
     InstructionTable[0x6B] = { 1, loadRegisterFromRegister }; // LD L, E
     InstructionTable[0x6C] = { 1, loadRegisterFromRegister }; // LD L, H
     InstructionTable[0x6D] = { 1, loadRegisterFromRegister }; // LD L, L -> redundant?
-    InstructionTable[0x6E] = { 1, loadRegisterFromMemory }; // LD L, (HL)
+    InstructionTable[0x6E] = { 1, loadRegisterFromPtrHL }; // LD L, (HL)
     InstructionTable[0x6F] = { 1, loadRegisterFromRegister }; // LD L, A
     
     // LD (HL), r
-    InstructionTable[0x70] = { 1, loadMemoryFromRegister }; // LD (HL), B
-    InstructionTable[0x71] = { 1, loadMemoryFromRegister }; // LD (HL), C
-    InstructionTable[0x72] = { 1, loadMemoryFromRegister }; // LD (HL), D
-    InstructionTable[0x73] = { 1, loadMemoryFromRegister }; // LD (HL), E
-    InstructionTable[0x74] = { 1, loadMemoryFromRegister }; // LD (HL), H
-    InstructionTable[0x75] = { 1, loadMemoryFromRegister }; // LD (HL), L
+    InstructionTable[0x70] = { 1, loadPtrHLFromRegister }; // LD (HL), B
+    InstructionTable[0x71] = { 1, loadPtrHLFromRegister }; // LD (HL), C
+    InstructionTable[0x72] = { 1, loadPtrHLFromRegister }; // LD (HL), D
+    InstructionTable[0x73] = { 1, loadPtrHLFromRegister }; // LD (HL), E
+    InstructionTable[0x74] = { 1, loadPtrHLFromRegister }; // LD (HL), H
+    InstructionTable[0x75] = { 1, loadPtrHLFromRegister }; // LD (HL), L
     //TODO: what is this instruction?
 //    InstructionTable[0x76] = { 1, ??? }; // LD (HL), (HL)
-    InstructionTable[0x77] = { 1, loadMemoryFromRegister }; // LD (HL), A
+    InstructionTable[0x77] = { 1, loadPtrHLFromRegister }; // LD (HL), A
     
     // LD A, r
     InstructionTable[0x78] = { 1, loadRegisterFromRegister }; // LD A, B
@@ -150,18 +150,18 @@ void CPUInstruction::InitializeInstructionTable() {
     InstructionTable[0x7B] = { 1, loadRegisterFromRegister }; // LD A, E
     InstructionTable[0x7C] = { 1, loadRegisterFromRegister }; // LD A, H
     InstructionTable[0x7D] = { 1, loadRegisterFromRegister }; // LD A, L
-    InstructionTable[0x7E] = { 1, loadRegisterFromMemory }; // LD A, (HL)
+    InstructionTable[0x7E] = { 1, loadRegisterFromPtrHL }; // LD A, (HL)
     InstructionTable[0x7F] = { 1, loadRegisterFromRegister }; // LD A, A -> redundant?
     
     // LD with accumulator and other register-pair pointers
-    InstructionTable[0x02] = { 1, loadBCptrFromAccumulator }; // LD (BC), A
-    InstructionTable[0x12] = { 1, loadDEptrFromAccumulator }; // LD (DE), A
-    InstructionTable[0x0A] = { 1, loadAccumulatorFromBCptr }; // LD A, (BC)
-    InstructionTable[0x1A] = { 1, loadAccumulatorFromDEptr }; // LD A, (DE)
+    InstructionTable[0x02] = { 1, loadPtrBCFromAccumulator }; // LD (BC), A
+    InstructionTable[0x12] = { 1, loadPtrDEFromAccumulator }; // LD (DE), A
+    InstructionTable[0x0A] = { 1, loadAccumulatorFromPtrBC }; // LD A, (BC)
+    InstructionTable[0x1A] = { 1, loadAccumulatorFromPtrDE }; // LD A, (DE)
     
     // LD with (C)
-    InstructionTable[0xE2] = { 1, loadCFromAccumulator }; // LD (C), A
-    InstructionTable[0xF2] = { 1, loadAccumulatorFromC }; // LD A, (C)
+    InstructionTable[0xE2] = { 1, loadPtrCFromAccumulator }; // LD (C), A
+    InstructionTable[0xF2] = { 1, loadAccumulatorFromPtrC }; // LD A, (C)
     
     // LD with accumulator and immediate pointers
     InstructionTable[0xE0] = { 2, loadPtrImmediate8FromAccumulator }; // LD (n), A
@@ -170,10 +170,10 @@ void CPUInstruction::InitializeInstructionTable() {
     InstructionTable[0xFA] = { 3, loadAccumulatorFromPtrImmediate16 }; // LD A, (nn)
     
     // LD A <-> HL with increment or decrement
-    InstructionTable[0x22] = { 1, loadHLPtrFromAccumulatorIncrement }; // LD (HLI), A
-    InstructionTable[0x2A] = { 1, loadAccumulatorFromHLPtrIncrement }; // LD A, (HLI)
-    InstructionTable[0x32] = { 1, loadHLPtrFromAccumulatorDecrement }; // LD (HLD), A
-    InstructionTable[0x3A] = { 1, loadAccumulatorFromHLPtrDecrement }; // LD A, (HLD)
+    InstructionTable[0x22] = { 1, loadPtrHLIncrementFromAccumulator }; // LD (HLI), A
+    InstructionTable[0x2A] = { 1, loadAccumulatorFromPtrHLIncrement }; // LD A, (HLI)
+    InstructionTable[0x32] = { 1, loadPtrHLDecrementFromAccumulator }; // LD (HLD), A
+    InstructionTable[0x3A] = { 1, loadAccumulatorFromPtrHLDecrement }; // LD A, (HLD)
     
     size_t instCount = 0;
     for (size_t i = 0; i < 512; ++i) {
