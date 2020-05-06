@@ -17,7 +17,7 @@ using namespace std;
 using namespace MikoGB;
 using namespace CPUInstructions;
 
-int CPUInstruction::UnrecognizedInstruction(uint8_t *opcode, CPUCore &core) {
+int CPUInstruction::UnrecognizedInstruction(const uint8_t *opcode, CPUCore &core) {
     throw runtime_error("Unrecognized Instruction: " + to_string((int)(*opcode)));
 }
 
@@ -34,14 +34,14 @@ const CPUInstruction &CPUInstruction::LookupInstruction(uint8_t *memoryPtr) {
 
 #pragma mark - Instruction Definitions
 
-static int LoadStackPointer(uint8_t *opcode, CPUCore &core) {
+static int LoadStackPointer(const uint8_t *opcode, CPUCore &core) {
     uint8_t low = opcode[1];
     uint8_t hi = opcode[2];
     core.stackPointer = word16(low, hi);
     return 3;
 }
 
-static int NoOp(uint8_t *opcode, CPUCore &core) {
+static int NoOp(const uint8_t *opcode, CPUCore &core) {
     return 1;
 }
 
