@@ -40,4 +40,3 @@ void CPUCore::reset() {
     stackPointer = 0;
 }
 
-

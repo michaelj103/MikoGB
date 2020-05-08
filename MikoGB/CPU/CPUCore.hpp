@@ -46,40 +46,92 @@ public:
     //TODO: should this be a class? "MemoryController"
     uint8_t *mainMemory;
     
-    uint16_t getHLptr() const  {
-        return word16(registers[REGISTER_L], registers[REGISTER_H]);
-    }
+    uint16_t getHLptr() const;
     
-    void incrementHLptr() {
-        uint16_t ptr = getHLptr();
-        ptr += 1;
-        uint8_t lo, hi;
-        splitWord16(ptr, lo, hi);
-        registers[REGISTER_L] = lo;
-        registers[REGISTER_H] = hi;
-    }
+    void incrementHLptr();
     
-    void decrementHLptr() {
-        uint16_t ptr = getHLptr();
-        ptr -= 1;
-        uint8_t lo, hi;
-        splitWord16(ptr, lo, hi);
-        registers[REGISTER_L] = lo;
-        registers[REGISTER_H] = hi;
-    }
+    void decrementHLptr();
     
-    uint16_t getBCptr() const {
-        return word16(registers[REGISTER_C], registers[REGISTER_B]);
-    }
+    uint16_t getBCptr() const;
     
-    uint16_t getDEptr() const {
-        return word16(registers[REGISTER_E], registers[REGISTER_D]);
-    }
+    uint16_t getDEptr() const;
     
-    uint16_t getCptr() const {
-        return 0xFF00 + registers[REGISTER_C];
-    }
+    /// "C" pointer is the memory address at 0xFF00 + register C
+    uint16_t getCptr() const;
+    
+    /// Convenience for pushing two 8-bit values onto the stack
+    /// hi is stored at stackPointer-1, lo at SP-2. SP points at lo afterwards
+    void stackPush(uint8_t hi, uint8_t lo);
+    
+    /// Convenince, splits and calls stackPush(uint8_t, uint8_t)
+    void stackPush(uint16_t val);
+    
+    /// Convenience for popping 2 8-bit values from the stack
+    void stackPop(uint8_t &hi, uint8_t &lo);
+    
+    /// Convenience, calls stackPop(uint8_t, uint8_t) and returns combined
+    uint16_t stackPop();
 };
+
+
+
+// Inline convenience member function
+
+inline uint16_t CPUCore::getHLptr() const  {
+    return word16(registers[REGISTER_L], registers[REGISTER_H]);
+}
+
+inline void CPUCore::incrementHLptr() {
+    uint16_t ptr = getHLptr();
+    ptr += 1;
+    uint8_t lo, hi;
+    splitWord16(ptr, lo, hi);
+    registers[REGISTER_L] = lo;
+    registers[REGISTER_H] = hi;
+}
+
+inline void CPUCore::decrementHLptr() {
+    uint16_t ptr = getHLptr();
+    ptr -= 1;
+    uint8_t lo, hi;
+    splitWord16(ptr, lo, hi);
+    registers[REGISTER_L] = lo;
+    registers[REGISTER_H] = hi;
+}
+
+inline uint16_t CPUCore::getBCptr() const {
+    return word16(registers[REGISTER_C], registers[REGISTER_B]);
+}
+
+inline uint16_t CPUCore::getDEptr() const {
+    return word16(registers[REGISTER_E], registers[REGISTER_D]);
+}
+
+inline uint16_t CPUCore::getCptr() const {
+    return 0xFF00 + registers[REGISTER_C];
+}
+
+inline void CPUCore::stackPush(uint8_t hi, uint8_t lo) {
+    mainMemory[--stackPointer] = hi;
+    mainMemory[--stackPointer] = lo;
+}
+
+inline void CPUCore::stackPush(uint16_t val) {
+    uint8_t hi = 0, lo = 0;
+    splitWord16(val, lo, hi);
+    stackPush(hi, lo);
+}
+
+inline uint16_t CPUCore::stackPop() {
+    uint8_t hi = 0, lo = 0;
+    stackPop(hi, lo);
+    return word16(lo, hi);
+}
+
+inline void CPUCore::stackPop(uint8_t &hi, uint8_t &lo) {
+    lo = mainMemory[stackPointer++];
+    hi = mainMemory[stackPointer++];
+}
 
 }
 

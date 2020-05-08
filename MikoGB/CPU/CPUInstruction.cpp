@@ -175,16 +175,16 @@ void CPUInstruction::InitializeInstructionTable() {
     InstructionTable[0x3A] = { 1, loadAccumulatorFromPtrHLDecrement }; // LD A, (HLD)
     
     // PUSH qq
-//    InstructionTable[0xC5] = { 1, ??? }; // PUSH BC
-//    InstructionTable[0xD5] = { 1, ??? }; // PUSH DE
-//    InstructionTable[0xE5] = { 1, ??? }; // PUSH HL
-//    InstructionTable[0xF5] = { 1, ??? }; // PUSH AF
+    InstructionTable[0xC5] = { 1, pushQQ }; // PUSH BC
+    InstructionTable[0xD5] = { 1, pushQQ }; // PUSH DE
+    InstructionTable[0xE5] = { 1, pushQQ }; // PUSH HL
+    InstructionTable[0xF5] = { 1, pushQQ }; // PUSH AF
     
     // POP qq
-//    InstructionTable[0xC1] = { 1, ??? }; // POP BC
-//    InstructionTable[0xD1] = { 1, ??? }; // POP DE
-//    InstructionTable[0xE1] = { 1, ??? }; // POP HL
-//    InstructionTable[0xF1] = { 1, ??? }; // POP AF
+    InstructionTable[0xC1] = { 1, popQQ }; // POP BC
+    InstructionTable[0xD1] = { 1, popQQ }; // POP DE
+    InstructionTable[0xE1] = { 1, popQQ }; // POP HL
+    InstructionTable[0xF1] = { 1, popQQ }; // POP AF
     
     InstructionTable[0xF9] = { 1, loadStackPtrFromHL }; // LD SP, HL
     
