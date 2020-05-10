@@ -282,6 +282,80 @@ void CPUInstruction::InitializeInstructionTable() {
     InstructionTable[0x17E] = { 2, bitReadFromPtrHL }; // BIT 7, (HL)
     InstructionTable[0x17F] = { 2, bitReadFromRegister }; // BIT 7, A
     
+    // bit set instructions
+    // SET 0
+    InstructionTable[0x1C0] = { 2, bitSetRegister }; // SET 0, B
+    InstructionTable[0x1C1] = { 2, bitSetRegister }; // SET 0, C
+    InstructionTable[0x1C2] = { 2, bitSetRegister }; // SET 0, D
+    InstructionTable[0x1C3] = { 2, bitSetRegister }; // SET 0, E
+    InstructionTable[0x1C4] = { 2, bitSetRegister }; // SET 0, H
+    InstructionTable[0x1C5] = { 2, bitSetRegister }; // SET 0, L
+    InstructionTable[0x1C6] = { 2, bitSetPtrHL }; // SET 0, (HL)
+    InstructionTable[0x1C7] = { 2, bitSetRegister }; // SET 0, A
+    // SET 1
+    InstructionTable[0x1C8] = { 2, bitSetRegister }; // SET 1, B
+    InstructionTable[0x1C9] = { 2, bitSetRegister }; // SET 1, C
+    InstructionTable[0x1CA] = { 2, bitSetRegister }; // SET 1, D
+    InstructionTable[0x1CB] = { 2, bitSetRegister }; // SET 1, E
+    InstructionTable[0x1CC] = { 2, bitSetRegister }; // SET 1, H
+    InstructionTable[0x1CD] = { 2, bitSetRegister }; // SET 1, L
+    InstructionTable[0x1CE] = { 2, bitSetPtrHL }; // SET 1, (HL)
+    InstructionTable[0x1CF] = { 2, bitSetRegister }; // SET 1, A
+    // SET 2
+    InstructionTable[0x1D0] = { 2, bitSetRegister }; // SET 2, B
+    InstructionTable[0x1D1] = { 2, bitSetRegister }; // SET 2, C
+    InstructionTable[0x1D2] = { 2, bitSetRegister }; // SET 2, D
+    InstructionTable[0x1D3] = { 2, bitSetRegister }; // SET 2, E
+    InstructionTable[0x1D4] = { 2, bitSetRegister }; // SET 2, H
+    InstructionTable[0x1D5] = { 2, bitSetRegister }; // SET 2, L
+    InstructionTable[0x1D6] = { 2, bitSetPtrHL }; // SET 2, (HL)
+    InstructionTable[0x1D7] = { 2, bitSetRegister }; // SET 2, A
+    // SET 3
+    InstructionTable[0x1D8] = { 2, bitSetRegister }; // SET 3, B
+    InstructionTable[0x1D9] = { 2, bitSetRegister }; // SET 3, C
+    InstructionTable[0x1DA] = { 2, bitSetRegister }; // SET 3, D
+    InstructionTable[0x1DB] = { 2, bitSetRegister }; // SET 3, E
+    InstructionTable[0x1DC] = { 2, bitSetRegister }; // SET 3, H
+    InstructionTable[0x1DD] = { 2, bitSetRegister }; // SET 3, L
+    InstructionTable[0x1DE] = { 2, bitSetPtrHL }; // SET 3, (HL)
+    InstructionTable[0x1DF] = { 2, bitSetRegister }; // SET 3, A
+    // SET 4
+    InstructionTable[0x1E0] = { 2, bitSetRegister }; // SET 4, B
+    InstructionTable[0x1E1] = { 2, bitSetRegister }; // SET 4, C
+    InstructionTable[0x1E2] = { 2, bitSetRegister }; // SET 4, D
+    InstructionTable[0x1E3] = { 2, bitSetRegister }; // SET 4, E
+    InstructionTable[0x1E4] = { 2, bitSetRegister }; // SET 4, H
+    InstructionTable[0x1E5] = { 2, bitSetRegister }; // SET 4, L
+    InstructionTable[0x1E6] = { 2, bitSetPtrHL }; // SET 4, (HL)
+    InstructionTable[0x1E7] = { 2, bitSetRegister }; // SET 4, A
+    // SET 5
+    InstructionTable[0x1E8] = { 2, bitSetRegister }; // SET 5, B
+    InstructionTable[0x1E9] = { 2, bitSetRegister }; // SET 5, C
+    InstructionTable[0x1EA] = { 2, bitSetRegister }; // SET 5, D
+    InstructionTable[0x1EB] = { 2, bitSetRegister }; // SET 5, E
+    InstructionTable[0x1EC] = { 2, bitSetRegister }; // SET 5, H
+    InstructionTable[0x1ED] = { 2, bitSetRegister }; // SET 5, L
+    InstructionTable[0x1EE] = { 2, bitSetPtrHL }; // SET 5, (HL)
+    InstructionTable[0x1EF] = { 2, bitSetRegister }; // SET 5, A
+    // SET 6
+    InstructionTable[0x1F0] = { 2, bitSetRegister }; // SET 6, B
+    InstructionTable[0x1F1] = { 2, bitSetRegister }; // SET 6, C
+    InstructionTable[0x1F2] = { 2, bitSetRegister }; // SET 6, D
+    InstructionTable[0x1F3] = { 2, bitSetRegister }; // SET 6, E
+    InstructionTable[0x1F4] = { 2, bitSetRegister }; // SET 6, H
+    InstructionTable[0x1F5] = { 2, bitSetRegister }; // SET 6, L
+    InstructionTable[0x1F6] = { 2, bitSetPtrHL }; // SET 6, (HL)
+    InstructionTable[0x1F7] = { 2, bitSetRegister }; // SET 6, A
+    // SET 7
+    InstructionTable[0x1F8] = { 2, bitSetRegister }; // SET 7, B
+    InstructionTable[0x1F9] = { 2, bitSetRegister }; // SET 7, C
+    InstructionTable[0x1FA] = { 2, bitSetRegister }; // SET 7, D
+    InstructionTable[0x1FB] = { 2, bitSetRegister }; // SET 7, E
+    InstructionTable[0x1FC] = { 2, bitSetRegister }; // SET 7, H
+    InstructionTable[0x1FD] = { 2, bitSetRegister }; // SET 7, L
+    InstructionTable[0x1FE] = { 2, bitSetPtrHL }; // SET 7, (HL)
+    InstructionTable[0x1FF] = { 2, bitSetRegister }; // SET 7, A
+    
     size_t instCount = 0;
     for (size_t i = 0; i < 512; ++i) {
         CPUInstruction &inst = InstructionTable[i];
