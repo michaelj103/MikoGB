@@ -139,7 +139,7 @@ int CPUInstructions::ldhl(const uint8_t *opcode, CPUCore &core) {
     bool carried15 = (carriedBits & 0x10000) == 0x10000;
     
     core.setFlag(FlagBit::Carry, carried15);
-    core.setFlag(FlagBit::HalfCarry, carried11);
+    core.setFlag(FlagBit::H, carried11);
     core.setFlag(FlagBit::Zero, false);
     core.setFlag(FlagBit::N, false);
     return 3;

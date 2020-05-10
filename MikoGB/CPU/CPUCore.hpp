@@ -29,7 +29,7 @@ namespace MikoGB {
 enum FlagBit : uint8_t {
     Zero        = 1 << 7,
     N           = 1 << 6,
-    HalfCarry   = 1 << 5,
+    H           = 1 << 5,
     Carry       = 1 << 4,
 };
 
