@@ -199,7 +199,7 @@ void CPUInstruction::InitializeInstructionTable() {
     InstructionTable[0xAB] = { 1, xorAccWithRegister }; // XOR E
     InstructionTable[0xAC] = { 1, xorAccWithRegister }; // XOR H
     InstructionTable[0xAD] = { 1, xorAccWithRegister }; // XOR L
-//    InstructionTable[0xAE] = { 1, ??? }; // XOR (HL)
+    InstructionTable[0xAE] = { 1, xorAccWithPtrHL }; // XOR (HL)
     InstructionTable[0xAF] = { 1, xorAccWithRegister }; // XOR A
     
     size_t instCount = 0;
