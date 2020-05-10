@@ -41,6 +41,11 @@ int popQQ(const uint8_t *, MikoGB::CPUCore &);
 /// e is treated as a signed 8-bit integer from -128 to +127
 int ldhl(const uint8_t *, MikoGB::CPUCore &);
 
+/// LD (nn), SP
+/// 16-bit store of the stack pointer to the address nn and nn+1. Bits are [ 0, 0, 0, 0, 1, 0, 0, 0 ]
+/// SP is stored with the lo byte at (nn) and the hi byte at (nn+1)
+int loadPtrImmediate16FromSP(const uint8_t *, MikoGB::CPUCore &);
+
 }
 
 #endif /* LoadInstructions16_hpp */

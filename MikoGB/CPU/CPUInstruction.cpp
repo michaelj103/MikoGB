@@ -55,6 +55,8 @@ void CPUInstruction::InitializeInstructionTable() {
     
     InstructionTable[0x00] = { 1, NoOp };
     
+    InstructionTable[0x08] = { 3, loadPtrImmediate16FromSP }; // LD (nn), SP
+    
     // LD dd, nn
     InstructionTable[0x01] = { 3, loadRegisterPairFromImmediate16 }; // LD BC, nn
     InstructionTable[0x11] = { 3, loadRegisterPairFromImmediate16 }; // LD DE, nn

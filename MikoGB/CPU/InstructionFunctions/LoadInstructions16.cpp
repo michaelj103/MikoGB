@@ -127,7 +127,7 @@ int CPUInstructions::popQQ(const uint8_t *opcode, CPUCore &core) {
     return 3;
 }
 
-int CPUInstructions::ldhl(const uint8_t *opcode, MikoGB::CPUCore &core) {
+int CPUInstructions::ldhl(const uint8_t *opcode, CPUCore &core) {
     int8_t e = (int8_t)(opcode[1]); //treat as signed
     int result = core.stackPointer + e; //May be subtraction
     int carriedBits = ((int)core.stackPointer ^ (int)e ^ result);
@@ -143,5 +143,19 @@ int CPUInstructions::ldhl(const uint8_t *opcode, MikoGB::CPUCore &core) {
     core.setFlag(FlagBit::Zero, false);
     core.setFlag(FlagBit::N, false);
     return 3;
+}
+
+int CPUInstructions::loadPtrImmediate16FromSP(const uint8_t *opcode, CPUCore &core) {
+    //Construct the destination address from the immediate operands
+    uint8_t lo = opcode[1];
+    uint8_t hi = opcode[2];
+    uint16_t addr = word16(lo, hi);
+    
+    //Split the stack pointer into 2 bytes and store each at addr. Little-endian
+    uint8_t spLo = 0, spHi = 0;
+    splitWord16(core.stackPointer, spLo, spHi);
+    core.mainMemory[addr] = spLo;
+    core.mainMemory[addr+1] = spHi;
+    return 5;
 }
 
