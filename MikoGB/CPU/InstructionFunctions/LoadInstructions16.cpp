@@ -108,11 +108,14 @@ int CPUInstructions::popQQ(const uint8_t *opcode, CPUCore &core) {
             // POP AF
             core.stackPop(hi, lo);
             core.registers[REGISTER_A] = hi;
-            core.registers[REGISTER_F] = lo;
-            // TODO: the F register is a little special, maybe validate it now?
+            core.registers[REGISTER_F] = lo & 0xF0;
+            // The F register has a special format on intel 8080 derived processors
             // Specifically, when on the stack it has the format [ S, Z, 0, AC, 0, P, 1, C ]
             // S = Sign, Z = zero, AC = aux carry, P = parity, C = carry
             // In theory, a program could modify the stack memory and break this format
+            // Game Boy apparently changes this behavior: There's no parity or zero bit, instead there's an N
+            // It also doesn't follow this format, instead, it's [ Z, N, H, CY, X, X, X, X ]
+            // X behavior isn't specified, so treat low 4 bits as always zero via the "& 0xF0"
             break;
             
         default:

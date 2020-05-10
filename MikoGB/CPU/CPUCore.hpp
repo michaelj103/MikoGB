@@ -26,6 +26,13 @@
 
 namespace MikoGB {
 
+enum FlagBit : uint8_t {
+    Zero        = 1 << 7,
+    N           = 1 << 6,
+    HalfCarry   = 1 << 5,
+    Carry       = 1 << 4,
+};
+
 class CPUCore {
 public:
     CPUCore(uint8_t *memory, size_t len);
@@ -71,6 +78,12 @@ public:
     
     /// Convenience, calls stackPop(uint8_t, uint8_t) and returns combined
     uint16_t stackPop();
+    
+    // Flags
+    
+    bool getFlag(FlagBit) const;
+    void setFlag(FlagBit);
+    void resetFlag(FlagBit);
 };
 
 
@@ -131,6 +144,19 @@ inline uint16_t CPUCore::stackPop() {
 inline void CPUCore::stackPop(uint8_t &hi, uint8_t &lo) {
     lo = mainMemory[stackPointer++];
     hi = mainMemory[stackPointer++];
+}
+
+inline bool CPUCore::getFlag(FlagBit bit) const {
+    return (registers[REGISTER_F] & bit) == bit;
+}
+
+inline void CPUCore::setFlag(FlagBit bit) {
+    // & with 0xF0 to disallow setting of low 4 bits
+    registers[REGISTER_F] |= (bit & 0xF0);
+}
+
+inline void CPUCore::resetFlag(FlagBit bit) {
+    registers[REGISTER_F] &= ~(bit);
 }
 
 }
