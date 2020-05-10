@@ -282,6 +282,80 @@ void CPUInstruction::InitializeInstructionTable() {
     InstructionTable[0x17E] = { 2, bitReadFromPtrHL }; // BIT 7, (HL)
     InstructionTable[0x17F] = { 2, bitReadFromRegister }; // BIT 7, A
     
+    // bit reset instructions
+    // RES 0
+    InstructionTable[0x180] = { 2, bitResetRegister }; // RES 0, B
+    InstructionTable[0x181] = { 2, bitResetRegister }; // RES 0, C
+    InstructionTable[0x182] = { 2, bitResetRegister }; // RES 0, D
+    InstructionTable[0x183] = { 2, bitResetRegister }; // RES 0, E
+    InstructionTable[0x184] = { 2, bitResetRegister }; // RES 0, H
+    InstructionTable[0x185] = { 2, bitResetRegister }; // RES 0, L
+    InstructionTable[0x186] = { 2, bitResetPtrHL }; // RES 0, (HL)
+    InstructionTable[0x187] = { 2, bitResetRegister }; // RES 0, A
+    // RES 1
+    InstructionTable[0x188] = { 2, bitResetRegister }; // RES 1, B
+    InstructionTable[0x189] = { 2, bitResetRegister }; // RES 1, C
+    InstructionTable[0x18A] = { 2, bitResetRegister }; // RES 1, D
+    InstructionTable[0x18B] = { 2, bitResetRegister }; // RES 1, E
+    InstructionTable[0x18C] = { 2, bitResetRegister }; // RES 1, H
+    InstructionTable[0x18D] = { 2, bitResetRegister }; // RES 1, L
+    InstructionTable[0x18E] = { 2, bitResetPtrHL }; // RES 1, (HL)
+    InstructionTable[0x18F] = { 2, bitResetRegister }; // RES 1, A
+    // RES 2
+    InstructionTable[0x190] = { 2, bitResetRegister }; // RES 2, B
+    InstructionTable[0x191] = { 2, bitResetRegister }; // RES 2, C
+    InstructionTable[0x192] = { 2, bitResetRegister }; // RES 2, D
+    InstructionTable[0x193] = { 2, bitResetRegister }; // RES 2, E
+    InstructionTable[0x194] = { 2, bitResetRegister }; // RES 2, H
+    InstructionTable[0x195] = { 2, bitResetRegister }; // RES 2, L
+    InstructionTable[0x196] = { 2, bitResetPtrHL }; // RES 2, (HL)
+    InstructionTable[0x197] = { 2, bitResetRegister }; // RES 2, A
+    // RES 3
+    InstructionTable[0x198] = { 2, bitResetRegister }; // RES 3, B
+    InstructionTable[0x199] = { 2, bitResetRegister }; // RES 3, C
+    InstructionTable[0x19A] = { 2, bitResetRegister }; // RES 3, D
+    InstructionTable[0x19B] = { 2, bitResetRegister }; // RES 3, E
+    InstructionTable[0x19C] = { 2, bitResetRegister }; // RES 3, H
+    InstructionTable[0x19D] = { 2, bitResetRegister }; // RES 3, L
+    InstructionTable[0x19E] = { 2, bitResetPtrHL }; // RES 3, (HL)
+    InstructionTable[0x19F] = { 2, bitResetRegister }; // RES 3, A
+    // RES 4
+    InstructionTable[0x1A0] = { 2, bitResetRegister }; // RES 4, B
+    InstructionTable[0x1A1] = { 2, bitResetRegister }; // RES 4, C
+    InstructionTable[0x1A2] = { 2, bitResetRegister }; // RES 4, D
+    InstructionTable[0x1A3] = { 2, bitResetRegister }; // RES 4, E
+    InstructionTable[0x1A4] = { 2, bitResetRegister }; // RES 4, H
+    InstructionTable[0x1A5] = { 2, bitResetRegister }; // RES 4, L
+    InstructionTable[0x1A6] = { 2, bitResetPtrHL }; // RES 4, (HL)
+    InstructionTable[0x1A7] = { 2, bitResetRegister }; // RES 4, A
+    // RES 5
+    InstructionTable[0x1A8] = { 2, bitResetRegister }; // RES 5, B
+    InstructionTable[0x1A9] = { 2, bitResetRegister }; // RES 5, C
+    InstructionTable[0x1AA] = { 2, bitResetRegister }; // RES 5, D
+    InstructionTable[0x1AB] = { 2, bitResetRegister }; // RES 5, E
+    InstructionTable[0x1AC] = { 2, bitResetRegister }; // RES 5, H
+    InstructionTable[0x1AD] = { 2, bitResetRegister }; // RES 5, L
+    InstructionTable[0x1AE] = { 2, bitResetPtrHL }; // RES 5, (HL)
+    InstructionTable[0x1AF] = { 2, bitResetRegister }; // RES 5, A
+    // RES 6
+    InstructionTable[0x1B0] = { 2, bitResetRegister }; // RES 6, B
+    InstructionTable[0x1B1] = { 2, bitResetRegister }; // RES 6, C
+    InstructionTable[0x1B2] = { 2, bitResetRegister }; // RES 6, D
+    InstructionTable[0x1B3] = { 2, bitResetRegister }; // RES 6, E
+    InstructionTable[0x1B4] = { 2, bitResetRegister }; // RES 6, H
+    InstructionTable[0x1B5] = { 2, bitResetRegister }; // RES 6, L
+    InstructionTable[0x1B6] = { 2, bitResetPtrHL }; // RES 6, (HL)
+    InstructionTable[0x1B7] = { 2, bitResetRegister }; // RES 6, A
+    // RES 7
+    InstructionTable[0x1B8] = { 2, bitResetRegister }; // RES 7, B
+    InstructionTable[0x1B9] = { 2, bitResetRegister }; // RES 7, C
+    InstructionTable[0x1BA] = { 2, bitResetRegister }; // RES 7, D
+    InstructionTable[0x1BB] = { 2, bitResetRegister }; // RES 7, E
+    InstructionTable[0x1BC] = { 2, bitResetRegister }; // RES 7, H
+    InstructionTable[0x1BD] = { 2, bitResetRegister }; // RES 7, L
+    InstructionTable[0x1BE] = { 2, bitResetPtrHL }; // RES 7, (HL)
+    InstructionTable[0x1BF] = { 2, bitResetRegister }; // RES 7, A
+    
     // bit set instructions
     // SET 0
     InstructionTable[0x1C0] = { 2, bitSetRegister }; // SET 0, B

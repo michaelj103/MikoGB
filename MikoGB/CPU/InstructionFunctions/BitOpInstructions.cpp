@@ -63,3 +63,26 @@ int CPUInstructions::bitSetPtrHL(const uint8_t *opcode, CPUCore &core) {
     core.mainMemory[core.getHLptr()] |= mask;
     return 4;
 }
+
+int CPUInstructions::bitResetRegister(const uint8_t *opcode, CPUCore &core) {
+    // Pull the bit index and register code from the instruction (index 1, extended)
+    // Low 3 bits are the register code, next 3 are the bit idx
+    uint8_t bitIdx = (opcode[1] & 0x38) >> 3;
+    uint8_t reg = (opcode[1] & 0x7);
+    
+    // Reset the specified bit
+    const uint8_t mask = 1 << bitIdx;
+    core.registers[reg] ^= mask;
+    return 2;
+}
+
+int CPUInstructions::bitResetPtrHL(const uint8_t *opcode, CPUCore &core) {
+    // Pull the bit index from the instruction (index 1, extended)
+    // Low 3 bits are register code 110, next 3 are the bit idx
+    uint8_t bitIdx = (opcode[1] & 0x38) >> 3;
+    
+    // Set the specified bit
+    const uint8_t mask = 1 << bitIdx;
+    core.mainMemory[core.getHLptr()] ^= mask;
+    return 4;
+}
