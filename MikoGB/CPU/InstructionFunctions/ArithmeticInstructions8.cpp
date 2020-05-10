@@ -24,3 +24,10 @@ int CPUInstructions::xorAccWithPtrHL(const uint8_t *opcode, CPUCore &core) {
     core.registers[REGISTER_A] = result;
     return 2;
 }
+
+int CPUInstructions::xorAccWithImmediate8(const uint8_t *opcode, CPUCore &core) {
+    const uint8_t immediate = opcode[1];
+    const uint8_t result = core.registers[REGISTER_A] ^ immediate;
+    core.registers[REGISTER_A] = result;
+    return 2;
+}
