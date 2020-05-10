@@ -205,7 +205,14 @@ void CPUInstruction::InitializeInstructionTable() {
     InstructionTable[0xAF] = { 1, xorAccWithRegister }; // XOR A
     InstructionTable[0xEE] = { 2, xorAccWithImmediate8 }; // XOR n
     
-    // Jump Instructions
+    // Jump Instructions (relative)
+    InstructionTable[0x18] = { 2, jumpUnconditionalRelative8 }; // JR e
+    InstructionTable[0x20] = { 2, jumpConditionalRelative8 }; // JR NZ, e
+    InstructionTable[0x28] = { 2, jumpConditionalRelative8 }; // JR Z, e
+    InstructionTable[0x30] = { 2, jumpConditionalRelative8 }; // JR NC, e
+    InstructionTable[0x38] = { 2, jumpConditionalRelative8 }; // JR C, e
+    
+    // Jump Instructions (absolute)
     InstructionTable[0xC2] = { 3, jumpConditionalAbsolute16 }; // JP NZ, nn
     InstructionTable[0xC3] = { 3, jumpUnconditionalAbsolute16 }; // JP nn
     InstructionTable[0xCA] = { 3, jumpConditionalAbsolute16 }; // JP Z, nn
