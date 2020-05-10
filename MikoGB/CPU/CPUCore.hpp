@@ -16,10 +16,12 @@
 #define REGISTER_E 3
 #define REGISTER_H 4
 #define REGISTER_L 5
-// Register code 6 means load from memory pointed to by HL
+
 #define REGISTER_A 7
-#define REGISTER_F 8
-#define REGISTER_COUNT 9
+// Register code 6 means load from memory pointed to by HL, or something else contextually
+// Use it for register F
+#define REGISTER_F 6
+#define REGISTER_COUNT 8
 
 #include <cstdlib>
 #include "BitTwiddlingUtil.h"
