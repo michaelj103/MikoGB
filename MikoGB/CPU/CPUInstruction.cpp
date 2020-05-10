@@ -15,6 +15,7 @@
 #include "LoadInstructions16.hpp"
 #include "ArithmeticInstructions8.hpp"
 #include "BitOpInstructions.hpp"
+#include "JumpInstructions.hpp"
 
 using namespace std;
 using namespace MikoGB;
@@ -203,6 +204,14 @@ void CPUInstruction::InitializeInstructionTable() {
     InstructionTable[0xAE] = { 1, xorAccWithPtrHL }; // XOR (HL)
     InstructionTable[0xAF] = { 1, xorAccWithRegister }; // XOR A
     InstructionTable[0xEE] = { 2, xorAccWithImmediate8 }; // XOR n
+    
+    // Jump Instructions
+    InstructionTable[0xC2] = { 3, jumpConditionalAbsolute16 }; // JP NZ, nn
+    InstructionTable[0xC3] = { 3, jumpUnconditionalAbsolute16 }; // JP nn
+    InstructionTable[0xCA] = { 3, jumpConditionalAbsolute16 }; // JP Z, nn
+    InstructionTable[0xD2] = { 3, jumpConditionalAbsolute16 }; // JP NC, nn
+    InstructionTable[0xDA] = { 3, jumpConditionalAbsolute16 }; // JP C, nn
+    InstructionTable[0xE9] = { 1, jumpUnconditionalHL }; // JP (HL)
     
     // =====================================
     // Extended Opcodes, prefixed with 0xCB
