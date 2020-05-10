@@ -18,6 +18,7 @@
 		29A8C0BC2462685F0082C52B /* LoadInstructions8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8C0BA2462685F0082C52B /* LoadInstructions8.cpp */; };
 		29A8C0C02463495A0082C52B /* LoadInstructions16.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8C0BE2463495A0082C52B /* LoadInstructions16.cpp */; };
 		29A8C0D62467DC490082C52B /* ArithmeticInstructions8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8C0D42467DC490082C52B /* ArithmeticInstructions8.cpp */; };
+		29A8C0D92467E9FC0082C52B /* BitOpInstructions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8C0D72467E9FC0082C52B /* BitOpInstructions.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -59,6 +60,8 @@
 		29A8C0BF2463495A0082C52B /* LoadInstructions16.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = LoadInstructions16.hpp; sourceTree = "<group>"; };
 		29A8C0D42467DC490082C52B /* ArithmeticInstructions8.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ArithmeticInstructions8.cpp; sourceTree = "<group>"; };
 		29A8C0D52467DC490082C52B /* ArithmeticInstructions8.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ArithmeticInstructions8.hpp; sourceTree = "<group>"; };
+		29A8C0D72467E9FC0082C52B /* BitOpInstructions.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = BitOpInstructions.cpp; sourceTree = "<group>"; };
+		29A8C0D82467E9FC0082C52B /* BitOpInstructions.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = BitOpInstructions.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -138,6 +141,8 @@
 				29A8C0BE2463495A0082C52B /* LoadInstructions16.cpp */,
 				29A8C0D52467DC490082C52B /* ArithmeticInstructions8.hpp */,
 				29A8C0D42467DC490082C52B /* ArithmeticInstructions8.cpp */,
+				29A8C0D82467E9FC0082C52B /* BitOpInstructions.hpp */,
+				29A8C0D72467E9FC0082C52B /* BitOpInstructions.cpp */,
 			);
 			path = InstructionFunctions;
 			sourceTree = "<group>";
@@ -221,6 +226,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				297E6139245FEA5D00EE150F /* CPUCore.cpp in Sources */,
+				29A8C0D92467E9FC0082C52B /* BitOpInstructions.cpp in Sources */,
 				29A8C0C02463495A0082C52B /* LoadInstructions16.cpp in Sources */,
 				297E613E245FECDF00EE150F /* CPUInstruction.cpp in Sources */,
 				29A8C0BC2462685F0082C52B /* LoadInstructions8.cpp in Sources */,

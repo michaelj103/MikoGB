@@ -14,6 +14,7 @@
 #include "LoadInstructions8.hpp"
 #include "LoadInstructions16.hpp"
 #include "ArithmeticInstructions8.hpp"
+#include "BitOpInstructions.hpp"
 
 using namespace std;
 using namespace MikoGB;
@@ -202,6 +203,84 @@ void CPUInstruction::InitializeInstructionTable() {
     InstructionTable[0xAE] = { 1, xorAccWithPtrHL }; // XOR (HL)
     InstructionTable[0xAF] = { 1, xorAccWithRegister }; // XOR A
     InstructionTable[0xEE] = { 2, xorAccWithImmediate8 }; // XOR n
+    
+    // =====================================
+    // Extended Opcodes, prefixed with 0xCB
+    // =====================================
+    
+    // bit read instructions
+    // BIT 0
+    InstructionTable[0x140] = { 2, bitReadFromRegister }; // BIT 0, B
+    InstructionTable[0x141] = { 2, bitReadFromRegister }; // BIT 0, C
+    InstructionTable[0x142] = { 2, bitReadFromRegister }; // BIT 0, D
+    InstructionTable[0x143] = { 2, bitReadFromRegister }; // BIT 0, E
+    InstructionTable[0x144] = { 2, bitReadFromRegister }; // BIT 0, H
+    InstructionTable[0x145] = { 2, bitReadFromRegister }; // BIT 0, L
+    InstructionTable[0x146] = { 2, bitReadFromPtrHL }; // BIT 0, (HL)
+    InstructionTable[0x147] = { 2, bitReadFromRegister }; // BIT 0, A
+    // BIT 1
+    InstructionTable[0x148] = { 2, bitReadFromRegister }; // BIT 1, B
+    InstructionTable[0x149] = { 2, bitReadFromRegister }; // BIT 1, C
+    InstructionTable[0x14A] = { 2, bitReadFromRegister }; // BIT 1, D
+    InstructionTable[0x14B] = { 2, bitReadFromRegister }; // BIT 1, E
+    InstructionTable[0x14C] = { 2, bitReadFromRegister }; // BIT 1, H
+    InstructionTable[0x14D] = { 2, bitReadFromRegister }; // BIT 1, L
+    InstructionTable[0x14E] = { 2, bitReadFromPtrHL }; // BIT 1, (HL)
+    InstructionTable[0x14F] = { 2, bitReadFromRegister }; // BIT 1, A
+    // BIT 2
+    InstructionTable[0x150] = { 2, bitReadFromRegister }; // BIT 2, B
+    InstructionTable[0x151] = { 2, bitReadFromRegister }; // BIT 2, C
+    InstructionTable[0x152] = { 2, bitReadFromRegister }; // BIT 2, D
+    InstructionTable[0x153] = { 2, bitReadFromRegister }; // BIT 2, E
+    InstructionTable[0x154] = { 2, bitReadFromRegister }; // BIT 2, H
+    InstructionTable[0x155] = { 2, bitReadFromRegister }; // BIT 2, L
+    InstructionTable[0x156] = { 2, bitReadFromPtrHL }; // BIT 2, (HL)
+    InstructionTable[0x157] = { 2, bitReadFromRegister }; // BIT 2, A
+    // BIT 3
+    InstructionTable[0x158] = { 2, bitReadFromRegister }; // BIT 3, B
+    InstructionTable[0x159] = { 2, bitReadFromRegister }; // BIT 3, C
+    InstructionTable[0x15A] = { 2, bitReadFromRegister }; // BIT 3, D
+    InstructionTable[0x15B] = { 2, bitReadFromRegister }; // BIT 3, E
+    InstructionTable[0x15C] = { 2, bitReadFromRegister }; // BIT 3, H
+    InstructionTable[0x15D] = { 2, bitReadFromRegister }; // BIT 3, L
+    InstructionTable[0x15E] = { 2, bitReadFromPtrHL }; // BIT 3, (HL)
+    InstructionTable[0x15F] = { 2, bitReadFromRegister }; // BIT 3, A
+    // BIT 4
+    InstructionTable[0x160] = { 2, bitReadFromRegister }; // BIT 4, B
+    InstructionTable[0x161] = { 2, bitReadFromRegister }; // BIT 4, C
+    InstructionTable[0x162] = { 2, bitReadFromRegister }; // BIT 4, D
+    InstructionTable[0x163] = { 2, bitReadFromRegister }; // BIT 4, E
+    InstructionTable[0x164] = { 2, bitReadFromRegister }; // BIT 4, H
+    InstructionTable[0x165] = { 2, bitReadFromRegister }; // BIT 4, L
+    InstructionTable[0x166] = { 2, bitReadFromPtrHL }; // BIT 4, (HL)
+    InstructionTable[0x167] = { 2, bitReadFromRegister }; // BIT 4, A
+    // BIT 5
+    InstructionTable[0x168] = { 2, bitReadFromRegister }; // BIT 5, B
+    InstructionTable[0x169] = { 2, bitReadFromRegister }; // BIT 5, C
+    InstructionTable[0x16A] = { 2, bitReadFromRegister }; // BIT 5, D
+    InstructionTable[0x16B] = { 2, bitReadFromRegister }; // BIT 5, E
+    InstructionTable[0x16C] = { 2, bitReadFromRegister }; // BIT 5, H
+    InstructionTable[0x16D] = { 2, bitReadFromRegister }; // BIT 5, L
+    InstructionTable[0x16E] = { 2, bitReadFromPtrHL }; // BIT 5, (HL)
+    InstructionTable[0x16F] = { 2, bitReadFromRegister }; // BIT 5, A
+    // BIT 6
+    InstructionTable[0x170] = { 2, bitReadFromRegister }; // BIT 6, B
+    InstructionTable[0x171] = { 2, bitReadFromRegister }; // BIT 6, C
+    InstructionTable[0x172] = { 2, bitReadFromRegister }; // BIT 6, D
+    InstructionTable[0x173] = { 2, bitReadFromRegister }; // BIT 6, E
+    InstructionTable[0x174] = { 2, bitReadFromRegister }; // BIT 6, H
+    InstructionTable[0x175] = { 2, bitReadFromRegister }; // BIT 6, L
+    InstructionTable[0x176] = { 2, bitReadFromPtrHL }; // BIT 6, (HL)
+    InstructionTable[0x177] = { 2, bitReadFromRegister }; // BIT 6, A
+    // BIT 7
+    InstructionTable[0x178] = { 2, bitReadFromRegister }; // BIT 7, B
+    InstructionTable[0x179] = { 2, bitReadFromRegister }; // BIT 7, C
+    InstructionTable[0x17A] = { 2, bitReadFromRegister }; // BIT 7, D
+    InstructionTable[0x17B] = { 2, bitReadFromRegister }; // BIT 7, E
+    InstructionTable[0x17C] = { 2, bitReadFromRegister }; // BIT 7, H
+    InstructionTable[0x17D] = { 2, bitReadFromRegister }; // BIT 7, L
+    InstructionTable[0x17E] = { 2, bitReadFromPtrHL }; // BIT 7, (HL)
+    InstructionTable[0x17F] = { 2, bitReadFromRegister }; // BIT 7, A
     
     size_t instCount = 0;
     for (size_t i = 0; i < 512; ++i) {
