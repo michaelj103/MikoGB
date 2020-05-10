@@ -13,6 +13,7 @@
 
 #include "LoadInstructions8.hpp"
 #include "LoadInstructions16.hpp"
+#include "ArithmeticInstructions8.hpp"
 
 using namespace std;
 using namespace MikoGB;
@@ -54,8 +55,6 @@ void CPUInstruction::InitializeInstructionTable() {
     InstructionTable = new CPUInstruction[512]();
     
     InstructionTable[0x00] = { 1, NoOp };
-    
-    InstructionTable[0x08] = { 3, loadPtrImmediate16FromSP }; // LD (nn), SP
     
     // LD dd, nn
     InstructionTable[0x01] = { 3, loadRegisterPairFromImmediate16 }; // LD BC, nn
@@ -171,10 +170,10 @@ void CPUInstruction::InitializeInstructionTable() {
     InstructionTable[0xFA] = { 3, loadAccumulatorFromPtrImmediate16 }; // LD A, (nn)
     
     // LD A <-> HL with increment or decrement
-    InstructionTable[0x22] = { 1, loadPtrHLIncrementFromAccumulator }; // LD (HLI), A
-    InstructionTable[0x2A] = { 1, loadAccumulatorFromPtrHLIncrement }; // LD A, (HLI)
-    InstructionTable[0x32] = { 1, loadPtrHLDecrementFromAccumulator }; // LD (HLD), A
-    InstructionTable[0x3A] = { 1, loadAccumulatorFromPtrHLDecrement }; // LD A, (HLD)
+    InstructionTable[0x22] = { 1, loadPtrHLIncrementFromAccumulator }; // LD (HL+), A
+    InstructionTable[0x2A] = { 1, loadAccumulatorFromPtrHLIncrement }; // LD A, (HL+)
+    InstructionTable[0x32] = { 1, loadPtrHLDecrementFromAccumulator }; // LD (HL-), A
+    InstructionTable[0x3A] = { 1, loadAccumulatorFromPtrHLDecrement }; // LD A, (HL-)
     
     // PUSH qq
     InstructionTable[0xC5] = { 1, pushQQ }; // PUSH BC
@@ -188,8 +187,20 @@ void CPUInstruction::InitializeInstructionTable() {
     InstructionTable[0xE1] = { 1, popQQ }; // POP HL
     InstructionTable[0xF1] = { 1, popQQ }; // POP AF
     
+    // Stack pointer
+    InstructionTable[0x08] = { 3, loadPtrImmediate16FromSP }; // LD (nn), SP
     InstructionTable[0xF8] = { 2, ldhl }; // LDHL SP, e
     InstructionTable[0xF9] = { 1, loadStackPtrFromHL }; // LD SP, HL
+    
+    // XOR Instructions
+    InstructionTable[0xA8] = { 1, xorAccWithRegister }; // XOR B
+    InstructionTable[0xA9] = { 1, xorAccWithRegister }; // XOR C
+    InstructionTable[0xAA] = { 1, xorAccWithRegister }; // XOR D
+    InstructionTable[0xAB] = { 1, xorAccWithRegister }; // XOR E
+    InstructionTable[0xAC] = { 1, xorAccWithRegister }; // XOR H
+    InstructionTable[0xAD] = { 1, xorAccWithRegister }; // XOR L
+//    InstructionTable[0xAE] = { 1, ??? }; // XOR (HL)
+    InstructionTable[0xAF] = { 1, xorAccWithRegister }; // XOR A
     
     size_t instCount = 0;
     for (size_t i = 0; i < 512; ++i) {

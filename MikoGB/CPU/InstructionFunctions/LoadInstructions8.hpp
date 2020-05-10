@@ -95,22 +95,22 @@ int loadAccumulatorFromPtrImmediate8(const uint8_t *, MikoGB::CPUCore &);
 /// Loads the value at address (nn) into the accumulator for 2 immediate bytes nn
 int loadAccumulatorFromPtrImmediate16(const uint8_t *, MikoGB::CPUCore &);
 
-/// LD A, (HLI)
+/// LD A, (HL+)
 /// 8-bit load (HL) -> A and increment of HL. Bits are [ 0, 0, 1, 0, 1, 0, 1, 0 ]
 /// Loads the value at address (HL) into the accumulator. Then increments HL
 int loadAccumulatorFromPtrHLIncrement(const uint8_t *, MikoGB::CPUCore &);
 
-/// LD A, (HLD)
+/// LD A, (HL-)
 /// 8-bit load (HL) -> A and decrement of HL. Bits are [ 0, 0, 1, 1, 1, 0, 1, 0 ]
 /// Loads the value at address (HL) into the accumulator. Then decrements HL
 int loadAccumulatorFromPtrHLDecrement(const uint8_t *, MikoGB::CPUCore &);
 
-/// LD (HLI), A
+/// LD (HL+), A
 /// 8-bit load A -> (HL) and increment of HL. Bits are [ 0, 0, 1, 0, 0, 0, 1, 0 ]
 /// Loads the value of the accumulator into address (HL). Then increments HL
 int loadPtrHLIncrementFromAccumulator(const uint8_t *, MikoGB::CPUCore &);
 
-/// LD (HLD), A
+/// LD (HL-), A
 /// 8-bit load A -> (HL) and decrement of HL. Bits are [ 0, 0, 1, 1, 0, 0, 1, 0 ]
 /// Loads the value of the accumulator into address (HL). Then decrements HL
 int loadPtrHLDecrementFromAccumulator(const uint8_t *, MikoGB::CPUCore &);

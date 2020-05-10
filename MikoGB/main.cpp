@@ -17,8 +17,10 @@ static uint8_t BootstrapROM[] = {
 
 int main(int argc, const char * argv[]) {
     MikoGB::CPUCore core(BootstrapROM, 256);
-    core.step();
-    core.step();
+    //Run the bootstrap ROM
+    while (core.programCounter < 0x100) {
+        core.step();
+    }
     
     return 0;
 }
