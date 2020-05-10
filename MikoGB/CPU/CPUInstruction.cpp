@@ -186,6 +186,7 @@ void CPUInstruction::InitializeInstructionTable() {
     InstructionTable[0xE1] = { 1, popQQ }; // POP HL
     InstructionTable[0xF1] = { 1, popQQ }; // POP AF
     
+    InstructionTable[0xF8] = { 2, ldhl }; // LDHL SP, e
     InstructionTable[0xF9] = { 1, loadStackPtrFromHL }; // LD SP, HL
     
     size_t instCount = 0;

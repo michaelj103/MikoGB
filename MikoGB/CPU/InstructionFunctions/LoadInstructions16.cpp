@@ -127,3 +127,21 @@ int CPUInstructions::popQQ(const uint8_t *opcode, CPUCore &core) {
     return 3;
 }
 
+int CPUInstructions::ldhl(const uint8_t *opcode, MikoGB::CPUCore &core) {
+    int8_t e = (int8_t)(opcode[1]); //treat as signed
+    int result = core.stackPointer + e; //May be subtraction
+    int carriedBits = ((int)core.stackPointer ^ (int)e ^ result);
+    
+    // Per Game Boy Manual, half is carry out of bit 11 and full is 15
+    // Not sure if subtraction is supposed to be different, but this is based
+    // on 2's comp addition
+    bool carried11 = (carriedBits & 0x1000) == 0x1000;
+    bool carried15 = (carriedBits & 0x10000) == 0x10000;
+    
+    core.setFlag(FlagBit::Carry, carried15);
+    core.setFlag(FlagBit::HalfCarry, carried11);
+    core.setFlag(FlagBit::Zero, false);
+    core.setFlag(FlagBit::N, false);
+    return 3;
+}
+

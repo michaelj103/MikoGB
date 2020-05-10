@@ -36,6 +36,11 @@ int pushQQ(const uint8_t *, MikoGB::CPUCore &);
 /// Able to specify 4 register pairs BC(00), DE(01), HL(10), and AF(11)
 int popQQ(const uint8_t *, MikoGB::CPUCore &);
 
+/// LDHL SP, e
+/// 8-bit immediate operand e is added to SP and stored in HL. Bits are [ 1, 1, 1, 1, 1, 0, 0, 0 ]
+/// e is treated as a signed 8-bit integer from -128 to +127
+int ldhl(const uint8_t *, MikoGB::CPUCore &);
+
 }
 
 #endif /* LoadInstructions16_hpp */

@@ -82,8 +82,7 @@ public:
     // Flags
     
     bool getFlag(FlagBit) const;
-    void setFlag(FlagBit);
-    void resetFlag(FlagBit);
+    void setFlag(FlagBit, bool);
 };
 
 
@@ -150,13 +149,13 @@ inline bool CPUCore::getFlag(FlagBit bit) const {
     return (registers[REGISTER_F] & bit) == bit;
 }
 
-inline void CPUCore::setFlag(FlagBit bit) {
-    // & with 0xF0 to disallow setting of low 4 bits
-    registers[REGISTER_F] |= (bit & 0xF0);
-}
-
-inline void CPUCore::resetFlag(FlagBit bit) {
-    registers[REGISTER_F] &= ~(bit);
+inline void CPUCore::setFlag(FlagBit bit, bool isSet) {
+    if (isSet) {
+        // & with 0xF0 to disallow setting of low 4 bits
+        registers[REGISTER_F] |= (bit & 0xF0);
+    } else {
+        registers[REGISTER_F] &= ~(bit);
+    }
 }
 
 }
