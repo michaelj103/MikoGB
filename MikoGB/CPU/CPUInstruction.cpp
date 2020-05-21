@@ -220,6 +220,17 @@ void CPUInstruction::InitializeInstructionTable() {
     InstructionTable[0xDA] = { 3, jumpConditionalAbsolute16 }; // JP C, nn
     InstructionTable[0xE9] = { 1, jumpUnconditionalHL }; // JP (HL)
     
+    // 8-bit Add instructions
+    InstructionTable[0x80] = { 1, addAccWithRegister }; // ADD A, B
+    InstructionTable[0x81] = { 1, addAccWithRegister }; // ADD A, C
+    InstructionTable[0x82] = { 1, addAccWithRegister }; // ADD A, D
+    InstructionTable[0x83] = { 1, addAccWithRegister }; // ADD A, E
+    InstructionTable[0x84] = { 1, addAccWithRegister }; // ADD A, H
+    InstructionTable[0x85] = { 1, addAccWithRegister }; // ADD A, L
+    InstructionTable[0x86] = { 1, addAccWithPtrHL }; // ADD A, (HL)
+    InstructionTable[0x87] = { 1, addAccWithRegister }; // ADD A, A
+    InstructionTable[0xC6] = { 2, addAccWithImmediate8 }; // ADD A, n
+    
     // =====================================
     // Extended Opcodes, prefixed with 0xCB
     // =====================================
