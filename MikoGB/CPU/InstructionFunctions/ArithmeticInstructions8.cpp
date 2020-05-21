@@ -9,6 +9,8 @@
 
 using namespace MikoGB;
 
+#pragma mark - Add
+
 // a and b must be uint8_t cast to int
 static uint8_t _Add8BitOperands(int a, int b, bool addCarry, CPUCore &core) {
     const int carryIn = (addCarry && core.getFlag(FlagBit::Carry)) ? 1 : 0;
@@ -53,6 +55,34 @@ int CPUInstructions::addAccWithImmediate8(const uint8_t *opcode, CPUCore &core) 
     
     return 2;
 }
+
+int CPUInstructions::addAccWithRegisterAndCarry(const uint8_t *opcode, CPUCore &core) {
+    //register code is low 3 bits
+    const uint8_t reg = opcode[0] & 0x7;
+    const uint8_t a = core.registers[REGISTER_A];
+    const uint8_t b = core.registers[reg];
+    core.registers[REGISTER_A] = _Add8BitOperands(a, b, true, core);
+    
+    return 1;
+}
+
+int CPUInstructions::addAccWithPtrHLAndCarry(const uint8_t *opcode, CPUCore &core) {
+    const uint8_t a = core.registers[REGISTER_A];
+    const uint8_t b = core.mainMemory[core.getHLptr()];
+    core.registers[REGISTER_A] = _Add8BitOperands(a, b, true, core);
+    
+    return 2;
+}
+
+int CPUInstructions::addAccWithImmediate8AndCarry(const uint8_t *opcode, CPUCore &core) {
+    const uint8_t a = core.registers[REGISTER_A];
+    const uint8_t b = opcode[1];
+    core.registers[REGISTER_A] = _Add8BitOperands(a, b, true, core);
+    
+    return 2;
+}
+
+#pragma mark - XOR
 
 int CPUInstructions::xorAccWithRegister(const uint8_t *opcode, CPUCore &core) {
     // Register code is low 3 bits

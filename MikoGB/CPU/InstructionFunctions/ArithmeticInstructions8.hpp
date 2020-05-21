@@ -29,9 +29,24 @@ int addAccWithPtrHL(const uint8_t *, MikoGB::CPUCore &);
 
 /// ADD A, n
 /// A <- A + n for immediate byte n. Bits are [ 1, 1, 0, 0, 0, 1, 1, 0 ]
-/// Special register code 110 indicates immediate argument, see below
 /// Z flag set if 0, H flag set if carry from bit 3, N flag reset, carry flag set if carry from bit 7
 int addAccWithImmediate8(const uint8_t *, MikoGB::CPUCore &);
+
+/// ADC A, r
+/// A <- A + r + CY for standard register codes and carry flag. Bits are [ 1, 0, 0, 0, 1, r2, r1, r0 ]
+/// Special register code 110 indicates adding contents pointed to by HL, see below
+/// Z flag set if 0, H flag set if carry from bit 3, N flag reset, carry flag set if carry from bit 7
+int addAccWithRegisterAndCarry(const uint8_t *, MikoGB::CPUCore &);
+
+/// ADC A, (HL)
+/// A <- A + (HL) + CY for byte at (HL) and carry flag. Bits are [ 1, 0, 0, 0, 1, 1, 1, 0 ]
+/// Special case of addAccWithRegisterAndCarry()
+int addAccWithPtrHLAndCarry(const uint8_t *, MikoGB::CPUCore &);
+
+/// ADC A, n
+/// A <- A + n + CY for immediate byte n. Bits are [ 1, 1, 0, 0, 1, 1, 1, 0 ]
+/// Z flag set if 0, H flag set if carry from bit 3, N flag reset, carry flag set if carry from bit 7
+int addAccWithImmediate8AndCarry(const uint8_t *, MikoGB::CPUCore &);
 
 /// XOR r
 /// A <- A ^ r for standard register codes. Bits are [ 1, 0, 1, 0, 1, r2, r1, r0 ]

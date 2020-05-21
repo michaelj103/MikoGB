@@ -231,6 +231,17 @@ void CPUInstruction::InitializeInstructionTable() {
     InstructionTable[0x87] = { 1, addAccWithRegister }; // ADD A, A
     InstructionTable[0xC6] = { 2, addAccWithImmediate8 }; // ADD A, n
     
+    // 8-bit Add with carry instructions
+    InstructionTable[0x88] = { 1, addAccWithRegisterAndCarry }; // ADC A, B
+    InstructionTable[0x89] = { 1, addAccWithRegisterAndCarry }; // ADC A, C
+    InstructionTable[0x8A] = { 1, addAccWithRegisterAndCarry }; // ADC A, D
+    InstructionTable[0x8B] = { 1, addAccWithRegisterAndCarry }; // ADC A, E
+    InstructionTable[0x8C] = { 1, addAccWithRegisterAndCarry }; // ADC A, H
+    InstructionTable[0x8D] = { 1, addAccWithRegisterAndCarry }; // ADC A, L
+    InstructionTable[0x8E] = { 1, addAccWithPtrHLAndCarry }; // ADC A, (HL)
+    InstructionTable[0x8F] = { 1, addAccWithRegisterAndCarry }; // ADC A, A
+    InstructionTable[0xCE] = { 2, addAccWithImmediate8AndCarry }; // ADC A, n
+    
     // =====================================
     // Extended Opcodes, prefixed with 0xCB
     // =====================================
