@@ -41,4 +41,10 @@ using namespace std;
     XCTAssertEqual(core.programCounter, 5);
 }
 
+- (void)testNoOp {
+    MikoGB::CPUCore core(NULL, 0);
+    core.step();
+    XCTAssertEqual(core.programCounter, 1);
+}
+
 @end

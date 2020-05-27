@@ -16,7 +16,9 @@ static const size_t MainMemorySize = 1024 * 64; // 64 KiB
 
 CPUCore::CPUCore(uint8_t *memory, size_t len) {
     mainMemory = new uint8_t[MainMemorySize]();
-    memcpy(mainMemory, memory, std::min(len, MainMemorySize));
+    if (memory) {
+        memcpy(mainMemory, memory, std::min(len, MainMemorySize));
+    }
     reset();
     CPUInstruction::InitializeInstructionTable();
 }
