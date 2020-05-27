@@ -18,21 +18,13 @@ using namespace std;
 
 @implementation TestCPUCoreBasics
 
-- (void)setUp {
-}
-
-- (void)tearDown {
-    // Put teardown code here. This method is called after the invocation of each test method in the class.
-}
-
 - (void)testBasicStepping {
     vector<uint8_t> mem = {
         0x31, 0xFE, 0xFF,   // LD SP, $FFFE
         0x3E, 0xBD,         // LD A, $0xBD
     };
     
-    unique_ptr<uint8_t[]> allocatedMemory = createGBMemory(mem);
-    MikoGB::CPUCore core(allocatedMemory.get(), mem.size());
+    MikoGB::CPUCore core(mem.data(), mem.size());
     core.step();
     XCTAssertEqual(core.stackPointer, 0xFFFE);
     XCTAssertEqual(core.programCounter, 3);

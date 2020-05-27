@@ -10,7 +10,8 @@
 
 #include <memory>
 #include <vector>
+#include <map>
 
-std::unique_ptr<uint8_t[]> createGBMemory(const std::vector<uint8_t> &mem);
+std::vector<uint8_t> createGBMemory(const std::vector<uint8_t> &mem, const std::map<uint16_t, uint8_t> &otherValues);
 
 #endif /* TestCPUCoreUtilities_hpp */
