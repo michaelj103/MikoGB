@@ -140,4 +140,42 @@ using namespace std;
     XCTAssertEqual(core.mainMemory[0x5566], 0x77);
 }
 
+#pragma mark - LD (HL), r
+
+- (void)testLoadPtrHLFromRegister {
+    vector<uint8_t> mem {
+        0x70,   //LD (HL), B
+        0x71,   //LD (HL), C
+        0x72,   //LD (HL), D
+        0x73,   //LD (HL), E
+        0x74,   //LD (HL), H
+        0x75,   //LD (HL), L
+        /*0x76, halt*/
+        0x77,   //LD (HL), A
+    };
+    MikoGB::CPUCore core(mem.data(), mem.size());
+    core.registers[REGISTER_A] = 0x11;
+    core.registers[REGISTER_B] = 0x22;
+    core.registers[REGISTER_C] = 0x33;
+    core.registers[REGISTER_D] = 0x44;
+    core.registers[REGISTER_E] = 0x55;
+    core.registers[REGISTER_H] = 0x66;
+    core.registers[REGISTER_L] = 0x77;
+    
+    XCTAssertEqual(core.step(), 2);
+    XCTAssertEqual(core.mainMemory[0x6677], 0x22);
+    XCTAssertEqual(core.step(), 2);
+    XCTAssertEqual(core.mainMemory[0x6677], 0x33);
+    XCTAssertEqual(core.step(), 2);
+    XCTAssertEqual(core.mainMemory[0x6677], 0x44);
+    XCTAssertEqual(core.step(), 2);
+    XCTAssertEqual(core.mainMemory[0x6677], 0x55);
+    XCTAssertEqual(core.step(), 2);
+    XCTAssertEqual(core.mainMemory[0x6677], 0x66);
+    XCTAssertEqual(core.step(), 2);
+    XCTAssertEqual(core.mainMemory[0x6677], 0x77);
+    XCTAssertEqual(core.step(), 2);
+    XCTAssertEqual(core.mainMemory[0x6677], 0x11);
+}
+
 @end

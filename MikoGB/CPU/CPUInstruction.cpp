@@ -141,7 +141,7 @@ void CPUInstruction::InitializeInstructionTable() {
     InstructionTable[0x73] = { 1, loadPtrHLFromRegister }; // LD (HL), E
     InstructionTable[0x74] = { 1, loadPtrHLFromRegister }; // LD (HL), H
     InstructionTable[0x75] = { 1, loadPtrHLFromRegister }; // LD (HL), L
-    //TODO: what is this instruction?
+    //TODO: HALT instruction
 //    InstructionTable[0x76] = { 1, ??? }; // LD (HL), (HL)
     InstructionTable[0x77] = { 1, loadPtrHLFromRegister }; // LD (HL), A
     
