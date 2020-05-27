@@ -301,4 +301,86 @@ using namespace std;
     XCTAssertEqual(core.mainMemory[0x5AF9], 0xD2);
 }
 
+#pragma mark - LD A, (HLI) and LD A, (HLD)
+
+- (void)testLoadAccumulatorFromPtrHLIncrement {
+    vector<uint8_t> mem = { 0x2A, 0x2A, 0x2A };
+    map<uint16_t, uint8_t> otherVals = {
+        { 0x2CFE, 0x12 },
+        { 0x2CFF, 0x13 },
+        { 0x2D00, 0x14 },
+    };
+    vector<uint8_t> allocatedMemory = createGBMemory(mem, otherVals);
+    MikoGB::CPUCore core(allocatedMemory.data(), allocatedMemory.size());
+    core.registers[REGISTER_H] = 0x2C;
+    core.registers[REGISTER_L] = 0xFE;
+    
+    XCTAssertEqual(core.step(), 2);
+    XCTAssertEqual(core.registers[REGISTER_A], 0x12);
+    XCTAssertEqual(core.step(), 2);
+    XCTAssertEqual(core.registers[REGISTER_A], 0x13);
+    XCTAssertEqual(core.step(), 2);
+    XCTAssertEqual(core.registers[REGISTER_A], 0x14);
+    XCTAssertEqual(core.registers[REGISTER_H], 0x2D);
+    XCTAssertEqual(core.registers[REGISTER_L], 0x01);
+}
+
+- (void)testLoadAccumulatorFromPtrHLDecrement {
+    vector<uint8_t> mem = { 0x3A, 0x3A, 0x3A };
+    map<uint16_t, uint8_t> otherVals = {
+        { 0x2C01, 0x12 },
+        { 0x2C00, 0x13 },
+        { 0x2BFF, 0x14 },
+    };
+    vector<uint8_t> allocatedMemory = createGBMemory(mem, otherVals);
+    MikoGB::CPUCore core(allocatedMemory.data(), allocatedMemory.size());
+    core.registers[REGISTER_H] = 0x2C;
+    core.registers[REGISTER_L] = 0x01;
+    
+    XCTAssertEqual(core.step(), 2);
+    XCTAssertEqual(core.registers[REGISTER_A], 0x12);
+    XCTAssertEqual(core.step(), 2);
+    XCTAssertEqual(core.registers[REGISTER_A], 0x13);
+    XCTAssertEqual(core.step(), 2);
+    XCTAssertEqual(core.registers[REGISTER_A], 0x14);
+    XCTAssertEqual(core.registers[REGISTER_H], 0x2B);
+    XCTAssertEqual(core.registers[REGISTER_L], 0xFE);
+}
+
+#pragma mark - LD (HLI), A and LD (HLD), A
+
+- (void)testLoadPtrHLIncrementFromAccumulator {
+    vector<uint8_t> mem = { 0x22, 0x22, 0x22 };
+    MikoGB::CPUCore core(mem.data(), mem.size());
+    core.registers[REGISTER_A] = 0xE9;
+    core.registers[REGISTER_H] = 0xD5;
+    core.registers[REGISTER_L] = 0xFD;
+    
+    XCTAssertEqual(core.step(), 2);
+    XCTAssertEqual(core.mainMemory[0xD5FD], 0xE9);
+    XCTAssertEqual(core.step(), 2);
+    XCTAssertEqual(core.mainMemory[0xD5FE], 0xE9);
+    XCTAssertEqual(core.step(), 2);
+    XCTAssertEqual(core.mainMemory[0xD5FF], 0xE9);
+    XCTAssertEqual(core.registers[REGISTER_H], 0xD6);
+    XCTAssertEqual(core.registers[REGISTER_L], 0x00);
+}
+
+- (void)testLoadPtrHLDecrementFromAccumulator {
+    vector<uint8_t> mem = { 0x32, 0x32, 0x32 };
+    MikoGB::CPUCore core(mem.data(), mem.size());
+    core.registers[REGISTER_A] = 0xEE;
+    core.registers[REGISTER_H] = 0xC0;
+    core.registers[REGISTER_L] = 0x02;
+    
+    XCTAssertEqual(core.step(), 2);
+    XCTAssertEqual(core.mainMemory[0xC002], 0xEE);
+    XCTAssertEqual(core.step(), 2);
+    XCTAssertEqual(core.mainMemory[0xC001], 0xEE);
+    XCTAssertEqual(core.step(), 2);
+    XCTAssertEqual(core.mainMemory[0xC000], 0xEE);
+    XCTAssertEqual(core.registers[REGISTER_H], 0xBF);
+    XCTAssertEqual(core.registers[REGISTER_L], 0xFF);
+}
+
 @end

@@ -147,7 +147,7 @@ int CPUInstructions::loadPtrHLIncrementFromAccumulator(const uint8_t *opcode, CP
 }
 
 int CPUInstructions::loadPtrHLDecrementFromAccumulator(const uint8_t *opcode, CPUCore &core) {
-    //bits mus tbe 00110010
+    //bits must be 00110010
     core.mainMemory[core.getHLptr()] = core.registers[REGISTER_A];
     core.decrementHLptr();
     return 2;
