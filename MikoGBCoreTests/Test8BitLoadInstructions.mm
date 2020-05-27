@@ -111,4 +111,33 @@ using namespace std;
     [self _loadFromRegisterHelper:0x68 registerIdx:REGISTER_L];
 }
 
+#pragma mark - LD r, n
+
+- (void)testLoadRegisterFromImmediate8 {
+    vector<uint8_t> mem = {
+        0x06, 0x11, //LD B, $11
+        0x0E, 0x22, //LD C, $22
+        0x16, 0x33, //LD D, $33
+        0x1E, 0x44, //LD E, $44
+        0x26, 0x55, //LD H, $55
+        0x2E, 0x66, //LD L, $66
+        0x36, 0x77, //LD (HL), $77
+        0x3E, 0x88, //LD A, $88
+    };
+    MikoGB::CPUCore core(mem.data(), mem.size());
+    for (size_t i = 0; i < 8; ++i) {
+        int steps = core.step();
+        int targetSteps = i == 6 ? 3 : 2;
+        XCTAssertEqual(steps, targetSteps);
+    }
+    XCTAssertEqual(core.registers[REGISTER_A], 0x88);
+    XCTAssertEqual(core.registers[REGISTER_B], 0x11);
+    XCTAssertEqual(core.registers[REGISTER_C], 0x22);
+    XCTAssertEqual(core.registers[REGISTER_D], 0x33);
+    XCTAssertEqual(core.registers[REGISTER_E], 0x44);
+    XCTAssertEqual(core.registers[REGISTER_H], 0x55);
+    XCTAssertEqual(core.registers[REGISTER_L], 0x66);
+    XCTAssertEqual(core.mainMemory[0x5566], 0x77);
+}
+
 @end
