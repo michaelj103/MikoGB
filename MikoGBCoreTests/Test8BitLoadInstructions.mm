@@ -178,7 +178,7 @@ using namespace std;
     XCTAssertEqual(core.mainMemory[0x6677], 0x11);
 }
 
-#pragma mark - LD A, (BC)
+#pragma mark - LD A, (BC) and LD (BC), A
 
 - (void)testLoadAccumulatorFromPtrBC {
     vector<uint8_t> mem = { 0x0A };
@@ -192,7 +192,18 @@ using namespace std;
     XCTAssertEqual(core.registers[REGISTER_A], 0x2F);
 }
 
-#pragma mark - LD A, (DE)
+- (void)testLoadPtrBCFromAccumulator {
+    vector<uint8_t> mem = { 0x02 };
+    MikoGB::CPUCore core(mem.data(), mem.size());
+    core.registers[REGISTER_A] = 0x84;
+    core.registers[REGISTER_B] = 0xF5;
+    core.registers[REGISTER_C] = 0x01;
+    
+    XCTAssertEqual(core.step(), 2);
+    XCTAssertEqual(core.mainMemory[0xF501], 0x84);
+}
+
+#pragma mark - LD A, (DE) and LD (DE), A
 
 - (void)testLoadAccumulatorFromPtrDE {
     vector<uint8_t> mem = { 0x1A };
@@ -204,6 +215,17 @@ using namespace std;
     
     XCTAssertEqual(core.step(), 2);
     XCTAssertEqual(core.registers[REGISTER_A], 0xEF);
+}
+
+- (void)testLoadPtrDEFromAccumulator {
+    vector<uint8_t> mem = { 0x12 };
+    MikoGB::CPUCore core(mem.data(), mem.size());
+    core.registers[REGISTER_A] = 0xFD;
+    core.registers[REGISTER_D] = 0x4F;
+    core.registers[REGISTER_E] = 0xA4;
+    
+    XCTAssertEqual(core.step(), 2);
+    XCTAssertEqual(core.mainMemory[0x4FA4], 0xFD);
 }
 
 #pragma mark - LD A, (C) and LD (C), A
@@ -252,6 +274,31 @@ using namespace std;
     
     XCTAssertEqual(core.step(), 3);
     XCTAssertEqual(core.mainMemory[0xFF92], 0x5D);
+}
+
+#pragma mark - LD A, (nn) and LD (nn), A
+
+- (void)testLoadAccumulatorFromPtrImmediate16 {
+    vector<uint8_t> mem = {
+        0xFA, 0xD8, 0x7B,
+    };
+    map<uint16_t, uint8_t> otherVals = { { 0x7BD8, 0x91 } };
+    vector<uint8_t> allocatedMemory = createGBMemory(mem, otherVals);
+    MikoGB::CPUCore core(allocatedMemory.data(), allocatedMemory.size());
+    
+    XCTAssertEqual(core.step(), 4);
+    XCTAssertEqual(core.registers[REGISTER_A], 0x91);
+}
+
+- (void)testLoadPtrImmediate16FromAccumulator {
+    vector<uint8_t> mem = {
+        0xEA, 0xF9, 0x5A,
+    };
+    MikoGB::CPUCore core(mem.data(), mem.size());
+    core.registers[REGISTER_A] = 0xD2;
+    
+    XCTAssertEqual(core.step(), 4);
+    XCTAssertEqual(core.mainMemory[0x5AF9], 0xD2);
 }
 
 @end
