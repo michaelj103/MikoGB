@@ -38,7 +38,7 @@ using namespace std;
     core.registers[REGISTER_H] = 0x06;
     core.registers[REGISTER_L] = 0x07;
     
-    // LD ?, B
+    // LD r, B
     {
         core.registers[regIdx] = 0x99;
         XCTAssertEqual(core.step(), 1);
@@ -46,7 +46,7 @@ using namespace std;
         XCTAssertEqual(core.registers[regIdx], targetVal);
     }
     
-    // LD ?, C
+    // LD r, C
     {
         core.registers[regIdx] = 0x99;
         XCTAssertEqual(core.step(), 1);
@@ -54,7 +54,7 @@ using namespace std;
         XCTAssertEqual(core.registers[regIdx], targetVal);
     }
     
-    // LD ?, D
+    // LD r, D
     {
         core.registers[regIdx] = 0x99;
         XCTAssertEqual(core.step(), 1);
@@ -62,7 +62,7 @@ using namespace std;
         XCTAssertEqual(core.registers[regIdx], targetVal);
     }
     
-    // LD ?, E
+    // LD r, E
     {
         core.registers[regIdx] = 0x99;
         XCTAssertEqual(core.step(), 1);
@@ -70,7 +70,7 @@ using namespace std;
         XCTAssertEqual(core.registers[regIdx], targetVal);
     }
     
-    // LD ?, H
+    // LD r, H
     {
         core.registers[regIdx] = 0x99;
         XCTAssertEqual(core.step(), 1);
@@ -78,7 +78,7 @@ using namespace std;
         XCTAssertEqual(core.registers[regIdx], targetVal);
     }
     
-    // LD ?, L
+    // LD r, L
     {
         core.registers[regIdx] = 0x99;
         XCTAssertEqual(core.step(), 1);
@@ -86,13 +86,13 @@ using namespace std;
         XCTAssertEqual(core.registers[regIdx], targetVal);
     }
     
-    // LD ?, (HL)
+    // LD r, (HL)
     core.registers[REGISTER_H] = 0x3C;
     core.registers[REGISTER_L] = 0xDE;
     XCTAssertEqual(core.step(), 2);
     XCTAssertEqual(core.registers[regIdx], 0x42);
     
-    // LD ?, A
+    // LD r, A
     {
         core.registers[regIdx] = 0x99;
         XCTAssertEqual(core.step(), 1);
