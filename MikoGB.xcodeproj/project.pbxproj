@@ -15,6 +15,7 @@
 		290B3BCD247E00D200937D71 /* BitOpInstructions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8C0D72467E9FC0082C52B /* BitOpInstructions.cpp */; };
 		290B3BCE247E00D500937D71 /* JumpInstructions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8C0DA246810640082C52B /* JumpInstructions.cpp */; };
 		290B3BD0247E048100937D71 /* Test8BitLoadInstructions.mm in Sources */ = {isa = PBXBuildFile; fileRef = 290B3BCF247E048100937D71 /* Test8BitLoadInstructions.mm */; };
+		290B3BD2247F51D100937D71 /* Test16BitLoadInstructions.mm in Sources */ = {isa = PBXBuildFile; fileRef = 290B3BD1247F51D100937D71 /* Test16BitLoadInstructions.mm */; };
 		297E5FF92456421B00EE150F /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297E5FF82456421B00EE150F /* main.cpp */; };
 		297E60062456426400EE150F /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297E60052456426400EE150F /* main.cpp */; };
 		297E600C2456532700EE150F /* CartridgeHeader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297E600A2456532700EE150F /* CartridgeHeader.cpp */; };
@@ -55,6 +56,7 @@
 
 /* Begin PBXFileReference section */
 		290B3BCF247E048100937D71 /* Test8BitLoadInstructions.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = Test8BitLoadInstructions.mm; sourceTree = "<group>"; };
+		290B3BD1247F51D100937D71 /* Test16BitLoadInstructions.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = Test16BitLoadInstructions.mm; sourceTree = "<group>"; };
 		297E5FF52456421B00EE150F /* MikoGB */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = MikoGB; sourceTree = BUILT_PRODUCTS_DIR; };
 		297E5FF82456421B00EE150F /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		297E60032456426400EE150F /* RomAnalyzer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = RomAnalyzer; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -180,6 +182,7 @@
 		29D3C937247DFBFE0096D21B /* MikoGBCoreTests */ = {
 			isa = PBXGroup;
 			children = (
+				290B3BD1247F51D100937D71 /* Test16BitLoadInstructions.mm */,
 				290B3BCF247E048100937D71 /* Test8BitLoadInstructions.mm */,
 				29D3C93E247DFC6A0096D21B /* TestCPUCoreBasics.mm */,
 				29D3C943247DFDF80096D21B /* Utilities */,
@@ -343,6 +346,7 @@
 				290B3BCE247E00D500937D71 /* JumpInstructions.cpp in Sources */,
 				290B3BCC247E00D000937D71 /* ArithmeticInstructions8.cpp in Sources */,
 				29D3C93F247DFC6A0096D21B /* TestCPUCoreBasics.mm in Sources */,
+				290B3BD2247F51D100937D71 /* Test16BitLoadInstructions.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

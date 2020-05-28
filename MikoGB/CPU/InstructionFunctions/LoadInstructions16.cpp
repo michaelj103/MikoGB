@@ -18,6 +18,7 @@ int CPUInstructions::loadRegisterPairFromImmediate16(const uint8_t *opcode, CPUC
     uint8_t lo = opcode[1];
     uint8_t hi = opcode[2];
     uint8_t dd = (opcode[0] & 0x30) >> 4;
+    //TODO: Debug assert that dd <= 3?
     switch (dd) {
         case 0:
             //destination is BC
@@ -37,10 +38,6 @@ int CPUInstructions::loadRegisterPairFromImmediate16(const uint8_t *opcode, CPUC
         case 3:
             //destination is SP
             core.stackPointer = word16(lo, hi);
-            break;
-        default:
-            //TODO: Debug assert?
-            throw std::runtime_error("Unreachable condition error: LD dd, nn");
             break;
     }
     
@@ -85,6 +82,7 @@ int CPUInstructions::pushQQ(const uint8_t *opcode, CPUCore &core) {
 int CPUInstructions::popQQ(const uint8_t *opcode, CPUCore &core) {
     uint8_t qq = (opcode[0] & 0x30) >> 4;
     uint8_t hi = 0, lo = 0;
+    //TODO: Debug assert that qq <= 3?
     switch (qq) {
         case 0:
             // POP BC
@@ -116,11 +114,6 @@ int CPUInstructions::popQQ(const uint8_t *opcode, CPUCore &core) {
             // Game Boy apparently changes this behavior: There's no parity or zero bit, instead there's an N
             // It also doesn't follow this format, instead, it's [ Z, N, H, CY, X, X, X, X ]
             // X behavior isn't specified, so treat low 4 bits as always zero via the "& 0xF0"
-            break;
-            
-        default:
-            //TODO: Debug assert?
-            throw std::runtime_error("Unreachable condition error: POP qq");
             break;
     }
     
