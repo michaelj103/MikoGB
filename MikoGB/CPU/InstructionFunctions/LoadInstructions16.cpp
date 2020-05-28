@@ -6,7 +6,6 @@
 //
 
 #include "LoadInstructions16.hpp"
-#include <stdexcept>
 
 using namespace MikoGB;
 
@@ -52,6 +51,7 @@ int CPUInstructions::loadStackPtrFromHL(const uint8_t *opcode, CPUCore &core) {
 
 int CPUInstructions::pushQQ(const uint8_t *opcode, CPUCore &core) {
     uint8_t qq = (opcode[0] & 0x30) >> 4;
+    //TODO: Debug assert that qq <= 3?
     switch (qq) {
         case 0:
             // PUSH BC
@@ -68,11 +68,6 @@ int CPUInstructions::pushQQ(const uint8_t *opcode, CPUCore &core) {
         case 3:
             // PUSH AF
             core.stackPush(core.registers[REGISTER_A], core.registers[REGISTER_F]);
-            break;
-            
-        default:
-            //TODO: Debug assert?
-            throw std::runtime_error("Unreachable condition error: PUSH qq");
             break;
     }
     
