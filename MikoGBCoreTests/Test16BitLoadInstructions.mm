@@ -52,6 +52,47 @@ using namespace std;
     XCTAssertEqual(core.stackPointer, 0xC741);
 }
 
+#pragma mark - LD (nn), SP
+
+- (void)testLoadPtrImmediate16FromSP {
+    vector<uint8_t> mem = {
+        0x21, 0x9E, 0xEA,   //LD HL, $EA9E
+        0xF9,               //LD SP, HL
+        0x08, 0xAD, 0x0B,   //LD $0BAD, SP
+    };
+    MikoGB::CPUCore core(mem.data(), mem.size());
+    XCTAssertEqual(core.step(), 3);
+    XCTAssertEqual(core.step(), 2);
+    XCTAssertEqual(core.step(), 5);
+    
+    XCTAssertEqual(core.mainMemory[0x0BAD], 0x9E);
+    XCTAssertEqual(core.mainMemory[0x0BAE], 0xEA);
+}
+
+#pragma mark - LDHL SP, e
+
+- (void)testLDHL {
+    vector<uint8_t> mem = {
+        0x31, 0x13, 0x8E,   //LD SP, $8E13
+        0xF8, 0x01,         //LDHL SP, 1 #HL <- 0x8E14
+        0xF8, 0x8B,         //LDHL SP, -117 #HL <- 0x8D9E
+    };
+    
+    MikoGB::CPUCore core(mem.data(), mem.size());
+    XCTAssertEqual(core.step(), 3);
+    
+    XCTAssertEqual(core.step(), 3);
+    XCTAssertEqual(core.getHLptr(), 0x8E14);
+    XCTAssertFalse(core.getFlag(MikoGB::FlagBit::Carry));
+    XCTAssertFalse(core.getFlag(MikoGB::FlagBit::H));
+    
+    // 0x8E13 - 117 = 0x8D9E, carry from both
+    XCTAssertEqual(core.step(), 3);
+    XCTAssertEqual(core.getHLptr(), 0x8D9E);
+    XCTAssertTrue(core.getFlag(MikoGB::FlagBit::Carry));
+    XCTAssertTrue(core.getFlag(MikoGB::FlagBit::H));
+}
+
 #pragma mark - PUSH and POP
 
 - (void)testPushAndPop {

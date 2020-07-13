@@ -6,6 +6,7 @@
 //
 
 #include "LoadInstructions16.hpp"
+#include "BitTwiddlingUtil.h"
 
 using namespace MikoGB;
 
@@ -118,11 +119,16 @@ int CPUInstructions::popQQ(const uint8_t *opcode, CPUCore &core) {
 int CPUInstructions::ldhl(const uint8_t *opcode, CPUCore &core) {
     int8_t e = (int8_t)(opcode[1]); //treat as signed
     int result = core.stackPointer + e; //May be subtraction
-    int carriedBits = ((int)core.stackPointer ^ (int)e ^ result);
+    uint8_t lo = 0;
+    uint8_t hi = 0;
+    splitWord16(result, lo, hi);
+    core.registers[REGISTER_H] = hi;
+    core.registers[REGISTER_L] = lo;
     
     // Per Game Boy Manual, half is carry out of bit 11 and full is 15
     // Not sure if subtraction is supposed to be different, but this is based
     // on 2's comp addition
+    int carriedBits = ((int)core.stackPointer ^ (int)e ^ result);
     bool carried11 = (carriedBits & 0x1000) == 0x1000;
     bool carried15 = (carriedBits & 0x10000) == 0x10000;
     
