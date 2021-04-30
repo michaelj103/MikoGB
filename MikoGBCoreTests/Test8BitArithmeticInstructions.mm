@@ -383,4 +383,54 @@ using namespace std;
     XCTAssertEqual(core.getFlag(MikoGB::Carry), false);
 }
 
+#pragma mark - CP r
+
+- (void)testCpAccWithRegister {
+    vector<uint8_t> mem = { 0xB8 }; //CP B
+    MikoGB::CPUCore core(mem.data(), mem.size());
+    core.registers[REGISTER_A] = 0x3C;
+    core.registers[REGISTER_B] = 0x2F;
+    
+    XCTAssertEqual(core.step(), 1);
+    XCTAssertEqual(core.registers[REGISTER_A], 0x3C);
+    XCTAssertEqual(core.getFlag(MikoGB::Zero), false);
+    XCTAssertEqual(core.getFlag(MikoGB::H), true);
+    XCTAssertEqual(core.getFlag(MikoGB::N), true);
+    XCTAssertEqual(core.getFlag(MikoGB::Carry), false);
+}
+
+#pragma mark - CP n
+
+- (void)testCpAccWithImmediate8 {
+    vector<uint8_t> mem = { 0xFE, 0x3C }; //CP $3C
+    MikoGB::CPUCore core(mem.data(), mem.size());
+    core.registers[REGISTER_A] = 0x3C;
+    
+    XCTAssertEqual(core.step(), 2);
+    XCTAssertEqual(core.registers[REGISTER_A], 0x3C);
+    XCTAssertEqual(core.getFlag(MikoGB::Zero), true);
+    XCTAssertEqual(core.getFlag(MikoGB::H), false);
+    XCTAssertEqual(core.getFlag(MikoGB::N), true);
+    XCTAssertEqual(core.getFlag(MikoGB::Carry), false);
+}
+
+#pragma mark - CP (HL)
+
+- (void)testCpAccWithPtrHL {
+    vector<uint8_t> mem = { 0xBE }; //CP (HL)
+    map<uint16_t, uint8_t> otherVals = { { 0xBEEF, 0x40 } };
+    vector<uint8_t> allocatedMemory = createGBMemory(mem, otherVals);
+    MikoGB::CPUCore core(allocatedMemory.data(), allocatedMemory.size());
+    core.registers[REGISTER_A] = 0x3C;
+    core.registers[REGISTER_H] = 0xBE;
+    core.registers[REGISTER_L] = 0xEF;
+    
+    XCTAssertEqual(core.step(), 2);
+    XCTAssertEqual(core.registers[REGISTER_A], 0x3C);
+    XCTAssertEqual(core.getFlag(MikoGB::Zero), false);
+    XCTAssertEqual(core.getFlag(MikoGB::H), false);
+    XCTAssertEqual(core.getFlag(MikoGB::N), true);
+    XCTAssertEqual(core.getFlag(MikoGB::Carry), true);
+}
+
 @end

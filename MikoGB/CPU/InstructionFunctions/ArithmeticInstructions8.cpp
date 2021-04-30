@@ -266,3 +266,38 @@ int CPUInstructions::xorAccWithPtrHL(const uint8_t *opcode, CPUCore &core) {
     
     return 2;
 }
+
+#pragma mark - CP
+
+static void _Cp8BitOperands(uint8_t a, uint8_t b, CPUCore &core) {
+    core.setFlag(FlagBit::Zero, a == b);
+    core.setFlag(FlagBit::H, a > b);
+    core.setFlag(FlagBit::N, true);
+    core.setFlag(FlagBit::Carry, a < b);
+}
+
+int CPUInstructions::cpAccWithRegister(const uint8_t *opcode, CPUCore &core) {
+    //register code is low 3 bits
+    const uint8_t reg = opcode[0] & 0x7;
+    const uint8_t a = core.registers[REGISTER_A];
+    const uint8_t b = core.registers[reg];
+    _Cp8BitOperands(a, b, core);
+    
+    return 1;
+}
+
+int CPUInstructions::cpAccWithImmediate8(const uint8_t *opcode, CPUCore &core) {
+    const uint8_t a = core.registers[REGISTER_A];
+    const uint8_t b = opcode[1];
+    _Cp8BitOperands(a, b, core);
+    
+    return 2;
+}
+
+int CPUInstructions::cpAccWithPtrHL(const uint8_t *opcode, CPUCore &core) {
+    const uint8_t a = core.registers[REGISTER_A];
+    const uint8_t b = core.mainMemory[core.getHLptr()];
+    _Cp8BitOperands(a, b, core);
+    
+    return 2;
+}

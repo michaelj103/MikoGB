@@ -123,6 +123,21 @@ int xorAccWithImmediate8(const uint8_t *, MikoGB::CPUCore &);
 /// "8th" register code of XOR r
 int xorAccWithPtrHL(const uint8_t *, MikoGB::CPUCore &);
 
+/// CP r
+/// Compares A and r for standard register codes. Bits are [ 1, 0, 1, 1, 1, r2, r1, r0 ]
+/// Z <- 1 if equal. H <- 1 if A > r. CY <- 1 if A < r
+int cpAccWithRegister(const uint8_t *, MikoGB::CPUCore &);
+
+/// CP n
+/// Compares A and n for immediate byte n. Bits are [ 1, 1, 1, 1, 1, 1, 1, 0 ]
+/// Z <- 1 if equal. H <- 1 if A > n. CY <- 1 if A < n
+int cpAccWithImmediate8(const uint8_t *, MikoGB::CPUCore &);
+
+/// CP (HL)
+/// Compares A and (HL) for byte pointed to by HL. Bits are [ 1, 0, 1, 1, 1, 1, 1, 0 ]
+/// Z <- 1 if equal. H <- 1 if A > (HL). CY <- 1 if A < (HL)
+int cpAccWithPtrHL(const uint8_t *, MikoGB::CPUCore &);
+
 }
 
 #endif /* ArithmeticInstructions8_hpp */

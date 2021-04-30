@@ -286,6 +286,17 @@ void CPUInstruction::InitializeInstructionTable() {
     InstructionTable[0xAF] = { 1, xorAccWithRegister }; // XOR A
     InstructionTable[0xEE] = { 2, xorAccWithImmediate8 }; // XOR n
     
+    // CP Instructions
+    InstructionTable[0xB8] = { 1, cpAccWithRegister }; // CP B
+    InstructionTable[0xB9] = { 1, cpAccWithRegister }; // CP C
+    InstructionTable[0xBA] = { 1, cpAccWithRegister }; // CP D
+    InstructionTable[0xBB] = { 1, cpAccWithRegister }; // CP E
+    InstructionTable[0xBC] = { 1, cpAccWithRegister }; // CP H
+    InstructionTable[0xBD] = { 1, cpAccWithRegister }; // CP L
+    InstructionTable[0xBE] = { 1, cpAccWithPtrHL }; // CP (HL)
+    InstructionTable[0xBF] = { 1, cpAccWithRegister }; // CP A
+    InstructionTable[0xFE] = { 2, cpAccWithImmediate8 }; // CP n
+    
     // =====================================
     // Extended Opcodes, prefixed with 0xCB
     // =====================================
