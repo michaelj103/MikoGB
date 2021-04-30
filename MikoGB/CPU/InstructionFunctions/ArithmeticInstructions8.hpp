@@ -48,6 +48,36 @@ int addAccWithPtrHLAndCarry(const uint8_t *, MikoGB::CPUCore &);
 /// Z flag set if 0, H flag set if carry from bit 3, N flag reset, carry flag set if carry from bit 7
 int addAccWithImmediate8AndCarry(const uint8_t *, MikoGB::CPUCore &);
 
+/// SUB A, r
+/// A <- A - r for standard register codes. Bits are [ 1, 0, 0, 1, 0, r2, r1, r0 ]
+/// Z flag set if 0, H flag set if borrow from bit 4, N is always set, carry set if borrow from (imaginary) bit 8
+int subAccWithRegister(const uint8_t *, MikoGB::CPUCore &);
+
+/// SUB A, n
+/// A <- A - n for immediate byte n. Bits are [ 1, 1, 0, 1, 0, 1, 1, 0 ]
+/// Z flag set if 0, H flag set if borrow from bit 4, N is always set, carry set if borrow from (imaginary) bit 8
+int subAccWithImmediate8(const uint8_t *, MikoGB::CPUCore &);
+
+/// SUB A, (HL)
+/// A <- A - (HL). Subtracts byte pointed to by HL from A. Bits are [ 1, 0, 0, 1, 0, 1, 1, 0 ]
+/// Z flag set if 0, H flag set if borrow from bit 4, N is always set, carry set if borrow from (imaginary) bit 8
+int subAccWithPtrHL(const uint8_t *, MikoGB::CPUCore &);
+
+/// SBC A, r
+/// A <- A - r - CY for standard register codes. Bits are [ 1, 0, 0, 1, 1, r2, r1, r0 ]
+/// Z flag set if 0, H flag set if borrow from bit 4, N is always set, carry set if borrow from (imaginary) bit 8
+int subAccWithRegisterAndCarry(const uint8_t *, MikoGB::CPUCore &);
+
+/// SBC A, n
+/// A <- A - n - CY for immediate byte n. Bits are [ 1, 1, 0, 1, 1, 1, 1, 0 ]
+/// Z flag set if 0, H flag set if borrow from bit 4, N is always set, carry set if borrow from (imaginary) bit 8
+int subAccWithImmediate8AndCarry(const uint8_t *, MikoGB::CPUCore &);
+
+/// SBC A, (HL)
+/// A <- A - (HL) - CY. Subtracts byte pointed to by HL from A. Bits are [ 1, 0, 0, 1, 1, 1, 1, 0 ]
+/// Z flag set if 0, H flag set if borrow from bit 4, N is always set, carry set if borrow from (imaginary) bit 8
+int subAccWithPtrHLAndCarry(const uint8_t *, MikoGB::CPUCore &);
+
 /// XOR r
 /// A <- A ^ r for standard register codes. Bits are [ 1, 0, 1, 0, 1, r2, r1, r0 ]
 /// Able to specify 7 registers A(111), B(000), C(001), D(010), E(011), H(100), L(101).

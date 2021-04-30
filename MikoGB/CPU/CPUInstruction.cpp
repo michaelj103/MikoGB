@@ -242,6 +242,28 @@ void CPUInstruction::InitializeInstructionTable() {
     InstructionTable[0x8F] = { 1, addAccWithRegisterAndCarry }; // ADC A, A
     InstructionTable[0xCE] = { 2, addAccWithImmediate8AndCarry }; // ADC A, n
     
+    // 8-bit Sub instructions
+    InstructionTable[0x90] = { 1, subAccWithRegister }; // SUB A, B
+    InstructionTable[0x91] = { 1, subAccWithRegister }; // SUB A, C
+    InstructionTable[0x92] = { 1, subAccWithRegister }; // SUB A, D
+    InstructionTable[0x93] = { 1, subAccWithRegister }; // SUB A, E
+    InstructionTable[0x94] = { 1, subAccWithRegister }; // SUB A, H
+    InstructionTable[0x95] = { 1, subAccWithRegister }; // SUB A, L
+    InstructionTable[0x96] = { 1, subAccWithPtrHL }; // SUB A, (HL)
+    InstructionTable[0x97] = { 1, subAccWithRegister }; // SUB A, A
+    InstructionTable[0xD6] = { 2, subAccWithImmediate8 }; // SUB A, n
+    
+    // 8-bit Sub with carry instructions
+    InstructionTable[0x98] = { 1, subAccWithRegisterAndCarry }; // SBC A, B
+    InstructionTable[0x99] = { 1, subAccWithRegisterAndCarry }; // SBC A, C
+    InstructionTable[0x9A] = { 1, subAccWithRegisterAndCarry }; // SBC A, D
+    InstructionTable[0x9B] = { 1, subAccWithRegisterAndCarry }; // SBC A, E
+    InstructionTable[0x9C] = { 1, subAccWithRegisterAndCarry }; // SBC A, H
+    InstructionTable[0x9D] = { 1, subAccWithRegisterAndCarry }; // SBC A, L
+    InstructionTable[0x9E] = { 1, subAccWithPtrHLAndCarry }; // SBC A, (HL)
+    InstructionTable[0x9F] = { 1, subAccWithRegisterAndCarry }; // SBC A, A
+    InstructionTable[0xDE] = { 2, subAccWithImmediate8AndCarry }; // SBC A, n
+    
     // =====================================
     // Extended Opcodes, prefixed with 0xCB
     // =====================================

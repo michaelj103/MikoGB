@@ -24,7 +24,7 @@ static uint8_t _Add8BitOperands(int a, int b, bool addCarry, CPUCore &core) {
     const uint8_t result = (0xFF & sum);
     core.setFlag(FlagBit::Zero, result == 0);
     core.setFlag(FlagBit::H, halfCarry);
-    core.setFlag(FlagBit::N, 0);
+    core.setFlag(FlagBit::N, false);
     core.setFlag(FlagBit::Carry, carry);
     
     return result;
@@ -78,6 +78,80 @@ int CPUInstructions::addAccWithImmediate8AndCarry(const uint8_t *opcode, CPUCore
     const uint8_t a = core.registers[REGISTER_A];
     const uint8_t b = opcode[1];
     core.registers[REGISTER_A] = _Add8BitOperands(a, b, true, core);
+    
+    return 2;
+}
+
+#pragma mark - SUB
+// TODO: Could probably combine SUB and ADD since they're so similar. Same with the carry vs non-carry versions
+
+// a and b must be uint8_t cast to int
+static uint8_t _Sub8BitOperands(int a, int b, bool subCarry, CPUCore &core) {
+    const int carryVal = (subCarry && core.getFlag(FlagBit::Carry)) ? 1 : 0;
+    const int difference = a - b - carryVal;
+    //carry in can be ignored when computing borrow bits because we don't care about the low bit
+    //each bit of borrowed reflects whether there was a borrow from that bit
+    const int borrowedBits = a ^ b ^ difference;
+    const bool halfCarry = (borrowedBits & 0x10) == 0x10; //bit 4 set? Means borrow from bit 4
+    const bool carry = (borrowedBits & 0x100) == 0x100; //bit 8 set? Means borrow from bit 8
+    
+    const uint8_t result = (0xFF & difference);
+    core.setFlag(FlagBit::Zero, result == 0);
+    core.setFlag(FlagBit::H, halfCarry);
+    core.setFlag(FlagBit::N, true);
+    core.setFlag(FlagBit::Carry, carry);
+    
+    return result;
+}
+
+int CPUInstructions::subAccWithRegister(const uint8_t *opcode, MikoGB::CPUCore &core) {
+    //register code is low 3 bits
+    const uint8_t reg = opcode[0] & 0x7;
+    const uint8_t a = core.registers[REGISTER_A];
+    const uint8_t b = core.registers[reg];
+    core.registers[REGISTER_A] = _Sub8BitOperands(a, b, false, core);
+    
+    return 1;
+}
+
+int CPUInstructions::subAccWithImmediate8(const uint8_t *opcode, MikoGB::CPUCore &core) {
+    const uint8_t a = core.registers[REGISTER_A];
+    const uint8_t b = opcode[1];
+    core.registers[REGISTER_A] = _Sub8BitOperands(a, b, false, core);
+    
+    return 2;
+}
+
+int CPUInstructions::subAccWithPtrHL(const uint8_t *opcode, MikoGB::CPUCore &core) {
+    const uint8_t a = core.registers[REGISTER_A];
+    const uint8_t b = core.mainMemory[core.getHLptr()];
+    core.registers[REGISTER_A] = _Sub8BitOperands(a, b, false, core);
+    
+    return 2;
+}
+
+int CPUInstructions::subAccWithRegisterAndCarry(const uint8_t *opcode, MikoGB::CPUCore &core) {
+    //register code is low 3 bits
+    const uint8_t reg = opcode[0] & 0x7;
+    const uint8_t a = core.registers[REGISTER_A];
+    const uint8_t b = core.registers[reg];
+    core.registers[REGISTER_A] = _Sub8BitOperands(a, b, true, core);
+    
+    return 1;
+}
+
+int CPUInstructions::subAccWithImmediate8AndCarry(const uint8_t *opcode, MikoGB::CPUCore &core) {
+    const uint8_t a = core.registers[REGISTER_A];
+    const uint8_t b = opcode[1];
+    core.registers[REGISTER_A] = _Sub8BitOperands(a, b, true, core);
+    
+    return 2;
+}
+
+int CPUInstructions::subAccWithPtrHLAndCarry(const uint8_t *opcode, MikoGB::CPUCore &core) {
+    const uint8_t a = core.registers[REGISTER_A];
+    const uint8_t b = core.mainMemory[core.getHLptr()];
+    core.registers[REGISTER_A] = _Sub8BitOperands(a, b, true, core);
     
     return 2;
 }
