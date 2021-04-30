@@ -235,4 +235,54 @@ using namespace std;
     XCTAssertEqual(core.getFlag(MikoGB::Carry), true);
 }
 
+#pragma mark - AND r
+
+- (void)testAndAccWithRegister {
+    vector<uint8_t> mem = { 0xA5 }; //AND L
+    MikoGB::CPUCore core(mem.data(), mem.size());
+    core.registers[REGISTER_A] = 0x5A;
+    core.registers[REGISTER_L] = 0x3F;
+    
+    XCTAssertEqual(core.step(), 1);
+    XCTAssertEqual(core.registers[REGISTER_A], 0x1A);
+    XCTAssertEqual(core.getFlag(MikoGB::Zero), false);
+    XCTAssertEqual(core.getFlag(MikoGB::H), true);
+    XCTAssertEqual(core.getFlag(MikoGB::N), false);
+    XCTAssertEqual(core.getFlag(MikoGB::Carry), false);
+}
+
+#pragma mark - AND n
+
+- (void)testAndAccWithImmediate8 {
+    vector<uint8_t> mem = { 0xE6, 0x38 }; //AND $38
+    MikoGB::CPUCore core(mem.data(), mem.size());
+    core.registers[REGISTER_A] = 0x5A;
+    
+    XCTAssertEqual(core.step(), 2);
+    XCTAssertEqual(core.registers[REGISTER_A], 0x18);
+    XCTAssertEqual(core.getFlag(MikoGB::Zero), false);
+    XCTAssertEqual(core.getFlag(MikoGB::H), true);
+    XCTAssertEqual(core.getFlag(MikoGB::N), false);
+    XCTAssertEqual(core.getFlag(MikoGB::Carry), false);
+}
+
+#pragma mark - AND (HL)
+
+- (void)testAndAccWithPtrHL {
+    vector<uint8_t> mem = { 0xA6 }; //AND (HL)
+    map<uint16_t, uint8_t> otherVals = { { 0xBEEF, 0x00 } };
+    vector<uint8_t> allocatedMemory = createGBMemory(mem, otherVals);
+    MikoGB::CPUCore core(allocatedMemory.data(), allocatedMemory.size());
+    core.registers[REGISTER_A] = 0x5A;
+    core.registers[REGISTER_H] = 0xBE;
+    core.registers[REGISTER_L] = 0xEF;
+    
+    XCTAssertEqual(core.step(), 2);
+    XCTAssertEqual(core.registers[REGISTER_A], 0x00);
+    XCTAssertEqual(core.getFlag(MikoGB::Zero), true);
+    XCTAssertEqual(core.getFlag(MikoGB::H), true);
+    XCTAssertEqual(core.getFlag(MikoGB::N), false);
+    XCTAssertEqual(core.getFlag(MikoGB::Carry), false);
+}
+
 @end
