@@ -231,27 +231,38 @@ int CPUInstructions::orAccWithPtrHL(const uint8_t *opcode, MikoGB::CPUCore &core
 }
 
 #pragma mark - XOR
-//TODO: Set the flags correctly for XOR!
+
+static uint8_t _Xor8BitOperands(uint8_t a, uint8_t b, CPUCore &core) {
+    const uint8_t result = a ^ b;
+    core.setFlag(FlagBit::Zero, result == 0);
+    core.setFlag(FlagBit::H, false);
+    core.setFlag(FlagBit::N, false);
+    core.setFlag(FlagBit::Carry, false);
+    return result;
+}
 
 int CPUInstructions::xorAccWithRegister(const uint8_t *opcode, CPUCore &core) {
-    // Register code is low 3 bits
+    //register code is low 3 bits
     const uint8_t reg = opcode[0] & 0x7;
-    const uint8_t result = core.registers[REGISTER_A] ^ core.registers[reg];
-    core.registers[REGISTER_A] = result;
+    const uint8_t a = core.registers[REGISTER_A];
+    const uint8_t b = core.registers[reg];
+    core.registers[REGISTER_A] = _Xor8BitOperands(a, b, core);
+    
     return 1;
 }
 
-int CPUInstructions::xorAccWithPtrHL(const uint8_t *opcode, CPUCore &core) {
-    // Low 3 bits must be 110, indicating "memory address"
-    uint16_t ptr = core.getHLptr();
-    const uint8_t result = core.registers[REGISTER_A] ^ core.mainMemory[ptr];
-    core.registers[REGISTER_A] = result;
+int CPUInstructions::xorAccWithImmediate8(const uint8_t *opcode, CPUCore &core) {
+    const uint8_t a = core.registers[REGISTER_A];
+    const uint8_t b = opcode[1];
+    core.registers[REGISTER_A] = _Xor8BitOperands(a, b, core);
+    
     return 2;
 }
 
-int CPUInstructions::xorAccWithImmediate8(const uint8_t *opcode, CPUCore &core) {
-    const uint8_t immediate = opcode[1];
-    const uint8_t result = core.registers[REGISTER_A] ^ immediate;
-    core.registers[REGISTER_A] = result;
+int CPUInstructions::xorAccWithPtrHL(const uint8_t *opcode, CPUCore &core) {
+    const uint8_t a = core.registers[REGISTER_A];
+    const uint8_t b = core.mainMemory[core.getHLptr()];
+    core.registers[REGISTER_A] = _Xor8BitOperands(a, b, core);
+    
     return 2;
 }

@@ -114,14 +114,14 @@ int orAccWithPtrHL(const uint8_t *, MikoGB::CPUCore &);
 /// 8th code (110) is xor with byte at address (HL), see instruction below
 int xorAccWithRegister(const uint8_t *, MikoGB::CPUCore &);
 
+/// XOR n
+/// A <- A ^ n. XOR A with immediate byte. Bits are [ 1, 1, 1, 0, 1, 1, 1, 0 ]
+int xorAccWithImmediate8(const uint8_t *, MikoGB::CPUCore &);
+
 /// XOR (HL)
 /// A <- A ^ (HL). XOR with the byte at address (HL). Bits are [ 1, 0, 1, 0, 1, 1, 1, 0 ]
 /// "8th" register code of XOR r
 int xorAccWithPtrHL(const uint8_t *, MikoGB::CPUCore &);
-
-/// XOR n
-/// A <- A ^ n. XOR A with immediate byte. Bits are [ 1, 1, 1, 0, 1, 1, 1, 0 ]
-int xorAccWithImmediate8(const uint8_t *, MikoGB::CPUCore &);
 
 }
 

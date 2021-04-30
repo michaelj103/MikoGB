@@ -194,17 +194,6 @@ void CPUInstruction::InitializeInstructionTable() {
     InstructionTable[0xF8] = { 2, ldhl }; // LDHL SP, e
     InstructionTable[0xF9] = { 1, loadStackPtrFromHL }; // LD SP, HL
     
-    // XOR Instructions
-    InstructionTable[0xA8] = { 1, xorAccWithRegister }; // XOR B
-    InstructionTable[0xA9] = { 1, xorAccWithRegister }; // XOR C
-    InstructionTable[0xAA] = { 1, xorAccWithRegister }; // XOR D
-    InstructionTable[0xAB] = { 1, xorAccWithRegister }; // XOR E
-    InstructionTable[0xAC] = { 1, xorAccWithRegister }; // XOR H
-    InstructionTable[0xAD] = { 1, xorAccWithRegister }; // XOR L
-    InstructionTable[0xAE] = { 1, xorAccWithPtrHL }; // XOR (HL)
-    InstructionTable[0xAF] = { 1, xorAccWithRegister }; // XOR A
-    InstructionTable[0xEE] = { 2, xorAccWithImmediate8 }; // XOR n
-    
     // Jump Instructions (relative)
     InstructionTable[0x18] = { 2, jumpUnconditionalRelative8 }; // JR e
     InstructionTable[0x20] = { 2, jumpConditionalRelative8 }; // JR NZ, e
@@ -285,6 +274,17 @@ void CPUInstruction::InitializeInstructionTable() {
     InstructionTable[0xB6] = { 1, orAccWithPtrHL }; // OR (HL)
     InstructionTable[0xB7] = { 1, orAccWithRegister }; // OR A
     InstructionTable[0xF6] = { 2, orAccWithImmediate8 }; // OR n
+    
+    // XOR Instructions
+    InstructionTable[0xA8] = { 1, xorAccWithRegister }; // XOR B
+    InstructionTable[0xA9] = { 1, xorAccWithRegister }; // XOR C
+    InstructionTable[0xAA] = { 1, xorAccWithRegister }; // XOR D
+    InstructionTable[0xAB] = { 1, xorAccWithRegister }; // XOR E
+    InstructionTable[0xAC] = { 1, xorAccWithRegister }; // XOR H
+    InstructionTable[0xAD] = { 1, xorAccWithRegister }; // XOR L
+    InstructionTable[0xAE] = { 1, xorAccWithPtrHL }; // XOR (HL)
+    InstructionTable[0xAF] = { 1, xorAccWithRegister }; // XOR A
+    InstructionTable[0xEE] = { 2, xorAccWithImmediate8 }; // XOR n
     
     // =====================================
     // Extended Opcodes, prefixed with 0xCB

@@ -334,4 +334,53 @@ using namespace std;
     XCTAssertEqual(core.getFlag(MikoGB::Carry), false);
 }
 
+#pragma mark - XOR r
+
+- (void)testXorAccWithRegister {
+    vector<uint8_t> mem = { 0xAF }; //XOR A
+    MikoGB::CPUCore core(mem.data(), mem.size());
+    core.registers[REGISTER_A] = 0xFF;
+    
+    XCTAssertEqual(core.step(), 1);
+    XCTAssertEqual(core.registers[REGISTER_A], 0x00);
+    XCTAssertEqual(core.getFlag(MikoGB::Zero), true);
+    XCTAssertEqual(core.getFlag(MikoGB::H), false);
+    XCTAssertEqual(core.getFlag(MikoGB::N), false);
+    XCTAssertEqual(core.getFlag(MikoGB::Carry), false);
+}
+
+#pragma mark - XOR n
+
+- (void)testXorAccWithImmediate8 {
+    vector<uint8_t> mem = { 0xEE, 0x0F }; //XOR $0F
+    MikoGB::CPUCore core(mem.data(), mem.size());
+    core.registers[REGISTER_A] = 0xFF;
+    
+    XCTAssertEqual(core.step(), 2);
+    XCTAssertEqual(core.registers[REGISTER_A], 0xF0);
+    XCTAssertEqual(core.getFlag(MikoGB::Zero), false);
+    XCTAssertEqual(core.getFlag(MikoGB::H), false);
+    XCTAssertEqual(core.getFlag(MikoGB::N), false);
+    XCTAssertEqual(core.getFlag(MikoGB::Carry), false);
+}
+
+#pragma mark - XOR (HL)
+
+- (void)testXorAccWithPtrHL {
+    vector<uint8_t> mem = { 0xAE }; //XOR (HL)
+    map<uint16_t, uint8_t> otherVals = { { 0xBEEF, 0x8A } };
+    vector<uint8_t> allocatedMemory = createGBMemory(mem, otherVals);
+    MikoGB::CPUCore core(allocatedMemory.data(), allocatedMemory.size());
+    core.registers[REGISTER_A] = 0xFF;
+    core.registers[REGISTER_H] = 0xBE;
+    core.registers[REGISTER_L] = 0xEF;
+    
+    XCTAssertEqual(core.step(), 2);
+    XCTAssertEqual(core.registers[REGISTER_A], 0x75);
+    XCTAssertEqual(core.getFlag(MikoGB::Zero), false);
+    XCTAssertEqual(core.getFlag(MikoGB::H), false);
+    XCTAssertEqual(core.getFlag(MikoGB::N), false);
+    XCTAssertEqual(core.getFlag(MikoGB::Carry), false);
+}
+
 @end
