@@ -93,6 +93,21 @@ int andAccWithImmediate8(const uint8_t *, MikoGB::CPUCore &);
 /// Z flag set if 0, H flag always set, C flag always reset, N flag always reset
 int andAccWithPtrHL(const uint8_t *, MikoGB::CPUCore &);
 
+/// OR r
+/// A <- A | r for standard register codes. Bits are [ 1, 0, 1, 1, 0, r2, r1, r0 ]
+/// Z flag set if 0, Other flags always reset
+int orAccWithRegister(const uint8_t *, MikoGB::CPUCore &);
+
+/// OR n
+/// A <- A | n for immediate byte n. Bits are [ 1, 1, 1, 1, 0, 1, 1, 0 ]
+/// Z flag set if 0, Other flags always reset
+int orAccWithImmediate8(const uint8_t *, MikoGB::CPUCore &);
+
+/// OR (HL)
+/// A <- A | (HL) for byte pointed to by HL. Bits are [ 1, 0, 1, 1, 0, 1, 1, 0 ]
+/// Z flag set if 0, Other flags always reset
+int orAccWithPtrHL(const uint8_t *, MikoGB::CPUCore &);
+
 /// XOR r
 /// A <- A ^ r for standard register codes. Bits are [ 1, 0, 1, 0, 1, r2, r1, r0 ]
 /// Able to specify 7 registers A(111), B(000), C(001), D(010), E(011), H(100), L(101).

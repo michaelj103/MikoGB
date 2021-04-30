@@ -275,6 +275,17 @@ void CPUInstruction::InitializeInstructionTable() {
     InstructionTable[0xA7] = { 1, andAccWithRegister }; // AND A
     InstructionTable[0xE6] = { 2, andAccWithImmediate8 }; // AND n
     
+    // 8-bit OR instructions
+    InstructionTable[0xB0] = { 1, orAccWithRegister }; // OR B
+    InstructionTable[0xB1] = { 1, orAccWithRegister }; // OR C
+    InstructionTable[0xB2] = { 1, orAccWithRegister }; // OR D
+    InstructionTable[0xB3] = { 1, orAccWithRegister }; // OR E
+    InstructionTable[0xB4] = { 1, orAccWithRegister }; // OR H
+    InstructionTable[0xB5] = { 1, orAccWithRegister }; // OR L
+    InstructionTable[0xB6] = { 1, orAccWithPtrHL }; // OR (HL)
+    InstructionTable[0xB7] = { 1, orAccWithRegister }; // OR A
+    InstructionTable[0xF6] = { 2, orAccWithImmediate8 }; // OR n
+    
     // =====================================
     // Extended Opcodes, prefixed with 0xCB
     // =====================================

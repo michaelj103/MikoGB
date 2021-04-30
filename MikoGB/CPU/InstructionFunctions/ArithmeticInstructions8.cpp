@@ -193,6 +193,43 @@ int CPUInstructions::andAccWithPtrHL(const uint8_t *opcode, CPUCore &core) {
     return 2;
 }
 
+#pragma mark - OR
+
+static uint8_t _Or8BitOperands(uint8_t a, uint8_t b, CPUCore &core) {
+    const uint8_t result = a | b;
+    core.setFlag(FlagBit::Zero, result == 0);
+    core.setFlag(FlagBit::H, false);
+    core.setFlag(FlagBit::N, false);
+    core.setFlag(FlagBit::Carry, false);
+    return result;
+}
+
+int CPUInstructions::orAccWithRegister(const uint8_t *opcode, CPUCore &core) {
+    //register code is low 3 bits
+    const uint8_t reg = opcode[0] & 0x7;
+    const uint8_t a = core.registers[REGISTER_A];
+    const uint8_t b = core.registers[reg];
+    core.registers[REGISTER_A] = _Or8BitOperands(a, b, core);
+    
+    return 1;
+}
+
+int CPUInstructions::orAccWithImmediate8(const uint8_t *opcode, MikoGB::CPUCore &core) {
+    const uint8_t a = core.registers[REGISTER_A];
+    const uint8_t b = opcode[1];
+    core.registers[REGISTER_A] = _Or8BitOperands(a, b, core);
+    
+    return 2;
+}
+
+int CPUInstructions::orAccWithPtrHL(const uint8_t *opcode, MikoGB::CPUCore &core) {
+    const uint8_t a = core.registers[REGISTER_A];
+    const uint8_t b = core.mainMemory[core.getHLptr()];
+    core.registers[REGISTER_A] = _Or8BitOperands(a, b, core);
+    
+    return 2;
+}
+
 #pragma mark - XOR
 //TODO: Set the flags correctly for XOR!
 
