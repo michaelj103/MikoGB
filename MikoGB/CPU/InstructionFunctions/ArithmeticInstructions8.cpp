@@ -104,7 +104,7 @@ static uint8_t _Sub8BitOperands(int a, int b, bool subCarry, CPUCore &core) {
     return result;
 }
 
-int CPUInstructions::subAccWithRegister(const uint8_t *opcode, MikoGB::CPUCore &core) {
+int CPUInstructions::subAccWithRegister(const uint8_t *opcode, CPUCore &core) {
     //register code is low 3 bits
     const uint8_t reg = opcode[0] & 0x7;
     const uint8_t a = core.registers[REGISTER_A];
@@ -114,7 +114,7 @@ int CPUInstructions::subAccWithRegister(const uint8_t *opcode, MikoGB::CPUCore &
     return 1;
 }
 
-int CPUInstructions::subAccWithImmediate8(const uint8_t *opcode, MikoGB::CPUCore &core) {
+int CPUInstructions::subAccWithImmediate8(const uint8_t *opcode, CPUCore &core) {
     const uint8_t a = core.registers[REGISTER_A];
     const uint8_t b = opcode[1];
     core.registers[REGISTER_A] = _Sub8BitOperands(a, b, false, core);
@@ -122,7 +122,7 @@ int CPUInstructions::subAccWithImmediate8(const uint8_t *opcode, MikoGB::CPUCore
     return 2;
 }
 
-int CPUInstructions::subAccWithPtrHL(const uint8_t *opcode, MikoGB::CPUCore &core) {
+int CPUInstructions::subAccWithPtrHL(const uint8_t *opcode, CPUCore &core) {
     const uint8_t a = core.registers[REGISTER_A];
     const uint8_t b = core.mainMemory[core.getHLptr()];
     core.registers[REGISTER_A] = _Sub8BitOperands(a, b, false, core);
@@ -130,7 +130,7 @@ int CPUInstructions::subAccWithPtrHL(const uint8_t *opcode, MikoGB::CPUCore &cor
     return 2;
 }
 
-int CPUInstructions::subAccWithRegisterAndCarry(const uint8_t *opcode, MikoGB::CPUCore &core) {
+int CPUInstructions::subAccWithRegisterAndCarry(const uint8_t *opcode, CPUCore &core) {
     //register code is low 3 bits
     const uint8_t reg = opcode[0] & 0x7;
     const uint8_t a = core.registers[REGISTER_A];
@@ -140,7 +140,7 @@ int CPUInstructions::subAccWithRegisterAndCarry(const uint8_t *opcode, MikoGB::C
     return 1;
 }
 
-int CPUInstructions::subAccWithImmediate8AndCarry(const uint8_t *opcode, MikoGB::CPUCore &core) {
+int CPUInstructions::subAccWithImmediate8AndCarry(const uint8_t *opcode, CPUCore &core) {
     const uint8_t a = core.registers[REGISTER_A];
     const uint8_t b = opcode[1];
     core.registers[REGISTER_A] = _Sub8BitOperands(a, b, true, core);
@@ -148,15 +148,53 @@ int CPUInstructions::subAccWithImmediate8AndCarry(const uint8_t *opcode, MikoGB:
     return 2;
 }
 
-int CPUInstructions::subAccWithPtrHLAndCarry(const uint8_t *opcode, MikoGB::CPUCore &core) {
+int CPUInstructions::subAccWithPtrHLAndCarry(const uint8_t *opcode, CPUCore &core) {
     const uint8_t a = core.registers[REGISTER_A];
     const uint8_t b = core.mainMemory[core.getHLptr()];
     core.registers[REGISTER_A] = _Sub8BitOperands(a, b, true, core);
+    
+    return 2;
+}
+
+#pragma mark - AND
+
+static uint8_t _And8BitOperands(uint8_t a, uint8_t b, CPUCore &core) {
+    const uint8_t result = a & b;
+    core.setFlag(FlagBit::Zero, result == 0);
+    core.setFlag(FlagBit::H, true);
+    core.setFlag(FlagBit::N, false);
+    core.setFlag(FlagBit::Carry, false);
+    return result;
+}
+
+int CPUInstructions::andAccWithRegister(const uint8_t *opcode, CPUCore &core) {
+    //register code is low 3 bits
+    const uint8_t reg = opcode[0] & 0x7;
+    const uint8_t a = core.registers[REGISTER_A];
+    const uint8_t b = core.registers[reg];
+    core.registers[REGISTER_A] = _And8BitOperands(a, b, core);
+    
+    return 1;
+}
+
+int CPUInstructions::andAccWithImmediate8(const uint8_t *opcode, CPUCore &core) {
+    const uint8_t a = core.registers[REGISTER_A];
+    const uint8_t b = opcode[1];
+    core.registers[REGISTER_A] = _And8BitOperands(a, b, core);
+    
+    return 2;
+}
+
+int CPUInstructions::andAccWithPtrHL(const uint8_t *opcode, CPUCore &core) {
+    const uint8_t a = core.registers[REGISTER_A];
+    const uint8_t b = core.mainMemory[core.getHLptr()];
+    core.registers[REGISTER_A] = _And8BitOperands(a, b, core);
     
     return 2;
 }
 
 #pragma mark - XOR
+//TODO: Set the flags correctly for XOR!
 
 int CPUInstructions::xorAccWithRegister(const uint8_t *opcode, CPUCore &core) {
     // Register code is low 3 bits

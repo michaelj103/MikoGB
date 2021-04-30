@@ -78,6 +78,21 @@ int subAccWithImmediate8AndCarry(const uint8_t *, MikoGB::CPUCore &);
 /// Z flag set if 0, H flag set if borrow from bit 4, N is always set, carry set if borrow from (imaginary) bit 8
 int subAccWithPtrHLAndCarry(const uint8_t *, MikoGB::CPUCore &);
 
+/// AND r
+/// A <- A & r for standard register codes. Bits are [ 1, 0, 1, 0, 0, r2, r1, r0 ]
+/// Z flag set if 0, H flag always set, C flag always reset, N flag always reset
+int andAccWithRegister(const uint8_t *, MikoGB::CPUCore &);
+
+/// AND n
+/// A <- A & n for immediate byte n. Bits are [ 1, 1, 1, 0, 0, 1, 1, 0 ]
+/// Z flag set if 0, H flag always set, C flag always reset, N flag always reset
+int andAccWithImmediate8(const uint8_t *, MikoGB::CPUCore &);
+
+/// AND (HL)
+/// A <- A & (HL) for byte pointed to by HL. Bits are [ 1, 0, 1, 0, 0, 1, 1, 0 ]
+/// Z flag set if 0, H flag always set, C flag always reset, N flag always reset
+int andAccWithPtrHL(const uint8_t *, MikoGB::CPUCore &);
+
 /// XOR r
 /// A <- A ^ r for standard register codes. Bits are [ 1, 0, 1, 0, 1, r2, r1, r0 ]
 /// Able to specify 7 registers A(111), B(000), C(001), D(010), E(011), H(100), L(101).

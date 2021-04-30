@@ -264,6 +264,17 @@ void CPUInstruction::InitializeInstructionTable() {
     InstructionTable[0x9F] = { 1, subAccWithRegisterAndCarry }; // SBC A, A
     InstructionTable[0xDE] = { 2, subAccWithImmediate8AndCarry }; // SBC A, n
     
+    // 8-bit AND instructions
+    InstructionTable[0xA0] = { 1, andAccWithRegister }; // AND B
+    InstructionTable[0xA1] = { 1, andAccWithRegister }; // AND C
+    InstructionTable[0xA2] = { 1, andAccWithRegister }; // AND D
+    InstructionTable[0xA3] = { 1, andAccWithRegister }; // AND E
+    InstructionTable[0xA4] = { 1, andAccWithRegister }; // AND H
+    InstructionTable[0xA5] = { 1, andAccWithRegister }; // AND L
+    InstructionTable[0xA6] = { 1, andAccWithPtrHL }; // AND (HL)
+    InstructionTable[0xA7] = { 1, andAccWithRegister }; // AND A
+    InstructionTable[0xE6] = { 2, andAccWithImmediate8 }; // AND n
+    
     // =====================================
     // Extended Opcodes, prefixed with 0xCB
     // =====================================
