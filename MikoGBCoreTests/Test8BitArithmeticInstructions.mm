@@ -21,12 +21,10 @@ using namespace std;
 #pragma mark - ADD A, r
 
 - (void)testAddAccWithRegister {
-    // Just some basics of identifying the correct register and storing
-    
     vector<uint8_t> mem = {
         0x3E, 0x3A, //LD A, $3A
         0x06, 0xC6, //LD B, $C6
-        0x80,       //Add A, B
+        0x80,       //ADD A, B
     };
     
     MikoGB::CPUCore core(mem.data(), mem.size());
@@ -45,7 +43,85 @@ using namespace std;
 #pragma mark - ADD A, n
 
 - (void)testAddAccWithImmediate8 {
+    vector<uint8_t> mem = {
+        0x3E, 0x3C, //LD A, $3C
+        0xC6, 0xFF, //ADD A, $FF
+    };
     
+    MikoGB::CPUCore core(mem.data(), mem.size());
+    for (size_t i = 0; i < 2; ++i) {
+        int steps = core.step();
+        XCTAssertEqual(steps, 2);
+    }
+    XCTAssertEqual(core.registers[REGISTER_A], 0x3B);
+    XCTAssertEqual(core.getFlag(MikoGB::Zero), false);
+    XCTAssertEqual(core.getFlag(MikoGB::Carry), true);
+    XCTAssertEqual(core.getFlag(MikoGB::H), true);
+    XCTAssertEqual(core.getFlag(MikoGB::N), false);
+}
+
+- (void)testAddAccWithPtrHL {
+    vector<uint8_t> mem = { 0x86 }; //ADD A, (HL)
+    map<uint16_t, uint8_t> otherVals = { { 0xBEEF, 0x12 } };
+    vector<uint8_t> allocatedMemory = createGBMemory(mem, otherVals);
+    MikoGB::CPUCore core(allocatedMemory.data(), allocatedMemory.size());
+    core.registers[REGISTER_A] = 0x3C;
+    core.registers[REGISTER_H] = 0xBE;
+    core.registers[REGISTER_L] = 0xEF;
+    
+    XCTAssertEqual(core.step(), 2);
+    XCTAssertEqual(core.registers[REGISTER_A], 0x4E);
+    XCTAssertEqual(core.getFlag(MikoGB::Zero), false);
+    XCTAssertEqual(core.getFlag(MikoGB::Carry), false);
+    XCTAssertEqual(core.getFlag(MikoGB::H), false);
+    XCTAssertEqual(core.getFlag(MikoGB::N), false);
+}
+
+- (void)testAddAccWithRegisterAndCarry {
+    vector<uint8_t> mem = { 0x8B }; //ADC A, E
+    MikoGB::CPUCore core(mem.data(), mem.size());
+    core.registers[REGISTER_A] = 0xE1;
+    core.registers[REGISTER_E] = 0x0F;
+    core.setFlag(MikoGB::Carry, true);
+    
+    XCTAssertEqual(core.step(), 1);
+    XCTAssertEqual(core.registers[REGISTER_A], 0xF1);
+    XCTAssertEqual(core.getFlag(MikoGB::Zero), false);
+    XCTAssertEqual(core.getFlag(MikoGB::Carry), false);
+    XCTAssertEqual(core.getFlag(MikoGB::H), true);
+    XCTAssertEqual(core.getFlag(MikoGB::N), false);
+}
+
+- (void)testAddAccWithImmediate8AndCarry {
+    vector<uint8_t> mem = { 0xCE, 0x3B }; //ADC A, $3B
+    MikoGB::CPUCore core(mem.data(), mem.size());
+    core.registers[REGISTER_A] = 0xE1;
+    core.setFlag(MikoGB::Carry, true);
+    
+    XCTAssertEqual(core.step(), 2);
+    XCTAssertEqual(core.registers[REGISTER_A], 0x1D);
+    XCTAssertEqual(core.getFlag(MikoGB::Zero), false);
+    XCTAssertEqual(core.getFlag(MikoGB::Carry), true);
+    XCTAssertEqual(core.getFlag(MikoGB::H), false);
+    XCTAssertEqual(core.getFlag(MikoGB::N), false);
+}
+
+- (void)testAddAccWithPtrHLAndCarry {
+    vector<uint8_t> mem = { 0x8E }; //ADC A, (HL)
+    map<uint16_t, uint8_t> otherVals = { { 0xBEEF, 0x1E } };
+    vector<uint8_t> allocatedMemory = createGBMemory(mem, otherVals);
+    MikoGB::CPUCore core(allocatedMemory.data(), allocatedMemory.size());
+    core.registers[REGISTER_A] = 0xE1;
+    core.registers[REGISTER_H] = 0xBE;
+    core.registers[REGISTER_L] = 0xEF;
+    core.setFlag(MikoGB::Carry, true);
+    
+    XCTAssertEqual(core.step(), 2);
+    XCTAssertEqual(core.registers[REGISTER_A], 0x00);
+    XCTAssertEqual(core.getFlag(MikoGB::Zero), true);
+    XCTAssertEqual(core.getFlag(MikoGB::Carry), true);
+    XCTAssertEqual(core.getFlag(MikoGB::H), true);
+    XCTAssertEqual(core.getFlag(MikoGB::N), false);
 }
 
 @end
