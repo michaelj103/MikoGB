@@ -31,6 +31,7 @@
 		29A8C0DC246810640082C52B /* JumpInstructions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8C0DA246810640082C52B /* JumpInstructions.cpp */; };
 		29D3C93F247DFC6A0096D21B /* TestCPUCoreBasics.mm in Sources */ = {isa = PBXBuildFile; fileRef = 29D3C93E247DFC6A0096D21B /* TestCPUCoreBasics.mm */; };
 		29D3C942247DFDE80096D21B /* TestCPUCoreUtilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29D3C940247DFDE80096D21B /* TestCPUCoreUtilities.cpp */; };
+		29FC06AB24BC2BFD00C12E6B /* Test8BitArithmeticInstructions.mm in Sources */ = {isa = PBXBuildFile; fileRef = 29FC06AA24BC2BFD00C12E6B /* Test8BitArithmeticInstructions.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -83,6 +84,7 @@
 		29D3C93E247DFC6A0096D21B /* TestCPUCoreBasics.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = TestCPUCoreBasics.mm; sourceTree = "<group>"; };
 		29D3C940247DFDE80096D21B /* TestCPUCoreUtilities.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = TestCPUCoreUtilities.cpp; sourceTree = "<group>"; };
 		29D3C941247DFDE80096D21B /* TestCPUCoreUtilities.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = TestCPUCoreUtilities.hpp; sourceTree = "<group>"; };
+		29FC06AA24BC2BFD00C12E6B /* Test8BitArithmeticInstructions.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = Test8BitArithmeticInstructions.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -182,6 +184,7 @@
 		29D3C937247DFBFE0096D21B /* MikoGBCoreTests */ = {
 			isa = PBXGroup;
 			children = (
+				29FC06AA24BC2BFD00C12E6B /* Test8BitArithmeticInstructions.mm */,
 				290B3BD1247F51D100937D71 /* Test16BitLoadInstructions.mm */,
 				290B3BCF247E048100937D71 /* Test8BitLoadInstructions.mm */,
 				29D3C93E247DFC6A0096D21B /* TestCPUCoreBasics.mm */,
@@ -342,6 +345,7 @@
 				290B3BCB247E00CE00937D71 /* LoadInstructions16.cpp in Sources */,
 				290B3BC9247E00C000937D71 /* CPUInstruction.cpp in Sources */,
 				29D3C942247DFDE80096D21B /* TestCPUCoreUtilities.cpp in Sources */,
+				29FC06AB24BC2BFD00C12E6B /* Test8BitArithmeticInstructions.mm in Sources */,
 				290B3BCA247E00CB00937D71 /* LoadInstructions8.cpp in Sources */,
 				290B3BCE247E00D500937D71 /* JumpInstructions.cpp in Sources */,
 				290B3BCC247E00D000937D71 /* ArithmeticInstructions8.cpp in Sources */,
