@@ -24,6 +24,9 @@
 		297E613A245FEA5D00EE150F /* CPUCore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297E6137245FEA5D00EE150F /* CPUCore.cpp */; };
 		297E613E245FECDF00EE150F /* CPUInstruction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297E613C245FECDF00EE150F /* CPUInstruction.cpp */; };
 		297E613F245FECDF00EE150F /* CPUInstruction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297E613C245FECDF00EE150F /* CPUInstruction.cpp */; };
+		2992818D263DDEC8004691E5 /* ArithmeticInstructions16.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2992818B263DDEC8004691E5 /* ArithmeticInstructions16.cpp */; };
+		29928195263DE721004691E5 /* Test16BitArithmeticInstructions.mm in Sources */ = {isa = PBXBuildFile; fileRef = 29928194263DE721004691E5 /* Test16BitArithmeticInstructions.mm */; };
+		2992819C263DE86C004691E5 /* ArithmeticInstructions16.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2992818B263DDEC8004691E5 /* ArithmeticInstructions16.cpp */; };
 		29A8C0BC2462685F0082C52B /* LoadInstructions8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8C0BA2462685F0082C52B /* LoadInstructions8.cpp */; };
 		29A8C0C02463495A0082C52B /* LoadInstructions16.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8C0BE2463495A0082C52B /* LoadInstructions16.cpp */; };
 		29A8C0D62467DC490082C52B /* ArithmeticInstructions8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8C0D42467DC490082C52B /* ArithmeticInstructions8.cpp */; };
@@ -68,6 +71,9 @@
 		297E6138245FEA5D00EE150F /* CPUCore.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = CPUCore.hpp; sourceTree = "<group>"; };
 		297E613C245FECDF00EE150F /* CPUInstruction.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = CPUInstruction.cpp; sourceTree = "<group>"; };
 		297E613D245FECDF00EE150F /* CPUInstruction.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = CPUInstruction.hpp; sourceTree = "<group>"; };
+		2992818B263DDEC8004691E5 /* ArithmeticInstructions16.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ArithmeticInstructions16.cpp; sourceTree = "<group>"; };
+		2992818C263DDEC8004691E5 /* ArithmeticInstructions16.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ArithmeticInstructions16.hpp; sourceTree = "<group>"; };
+		29928194263DE721004691E5 /* Test16BitArithmeticInstructions.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = Test16BitArithmeticInstructions.mm; sourceTree = "<group>"; };
 		29A8C0B9246147190082C52B /* BitTwiddlingUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BitTwiddlingUtil.h; sourceTree = "<group>"; };
 		29A8C0BA2462685F0082C52B /* LoadInstructions8.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = LoadInstructions8.cpp; sourceTree = "<group>"; };
 		29A8C0BB2462685F0082C52B /* LoadInstructions8.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = LoadInstructions8.hpp; sourceTree = "<group>"; };
@@ -173,6 +179,8 @@
 				29A8C0BE2463495A0082C52B /* LoadInstructions16.cpp */,
 				29A8C0D52467DC490082C52B /* ArithmeticInstructions8.hpp */,
 				29A8C0D42467DC490082C52B /* ArithmeticInstructions8.cpp */,
+				2992818C263DDEC8004691E5 /* ArithmeticInstructions16.hpp */,
+				2992818B263DDEC8004691E5 /* ArithmeticInstructions16.cpp */,
 				29A8C0D82467E9FC0082C52B /* BitOpInstructions.hpp */,
 				29A8C0D72467E9FC0082C52B /* BitOpInstructions.cpp */,
 				29A8C0DB246810640082C52B /* JumpInstructions.hpp */,
@@ -184,6 +192,7 @@
 		29D3C937247DFBFE0096D21B /* MikoGBCoreTests */ = {
 			isa = PBXGroup;
 			children = (
+				29928194263DE721004691E5 /* Test16BitArithmeticInstructions.mm */,
 				29FC06AA24BC2BFD00C12E6B /* Test8BitArithmeticInstructions.mm */,
 				290B3BD1247F51D100937D71 /* Test16BitLoadInstructions.mm */,
 				290B3BCF247E048100937D71 /* Test8BitLoadInstructions.mm */,
@@ -317,6 +326,7 @@
 				29A8C0C02463495A0082C52B /* LoadInstructions16.cpp in Sources */,
 				297E613E245FECDF00EE150F /* CPUInstruction.cpp in Sources */,
 				29A8C0BC2462685F0082C52B /* LoadInstructions8.cpp in Sources */,
+				2992818D263DDEC8004691E5 /* ArithmeticInstructions16.cpp in Sources */,
 				297E600C2456532700EE150F /* CartridgeHeader.cpp in Sources */,
 				29A8C0DC246810640082C52B /* JumpInstructions.cpp in Sources */,
 				29A8C0D62467DC490082C52B /* ArithmeticInstructions8.cpp in Sources */,
@@ -347,8 +357,10 @@
 				29D3C942247DFDE80096D21B /* TestCPUCoreUtilities.cpp in Sources */,
 				29FC06AB24BC2BFD00C12E6B /* Test8BitArithmeticInstructions.mm in Sources */,
 				290B3BCA247E00CB00937D71 /* LoadInstructions8.cpp in Sources */,
+				29928195263DE721004691E5 /* Test16BitArithmeticInstructions.mm in Sources */,
 				290B3BCE247E00D500937D71 /* JumpInstructions.cpp in Sources */,
 				290B3BCC247E00D000937D71 /* ArithmeticInstructions8.cpp in Sources */,
+				2992819C263DE86C004691E5 /* ArithmeticInstructions16.cpp in Sources */,
 				29D3C93F247DFC6A0096D21B /* TestCPUCoreBasics.mm in Sources */,
 				290B3BD2247F51D100937D71 /* Test16BitLoadInstructions.mm in Sources */,
 			);

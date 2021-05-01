@@ -14,6 +14,7 @@
 #include "LoadInstructions8.hpp"
 #include "LoadInstructions16.hpp"
 #include "ArithmeticInstructions8.hpp"
+#include "ArithmeticInstructions16.hpp"
 #include "BitOpInstructions.hpp"
 #include "JumpInstructions.hpp"
 
@@ -297,7 +298,7 @@ void CPUInstruction::InitializeInstructionTable() {
     InstructionTable[0xBF] = { 1, cpAccWithRegister }; // CP A
     InstructionTable[0xFE] = { 2, cpAccWithImmediate8 }; // CP n
     
-    // INC instructions
+    // 8-bit INC instructions
     InstructionTable[0x04] = { 1, incRegister }; // INC B
     InstructionTable[0x0C] = { 1, incRegister }; // INC C
     InstructionTable[0x14] = { 1, incRegister }; // INC D
@@ -307,7 +308,7 @@ void CPUInstruction::InitializeInstructionTable() {
     InstructionTable[0x34] = { 1, incPtrHL }; // INC (HL)
     InstructionTable[0x3C] = { 1, incRegister }; // INC A
     
-    // DEC instructions
+    // 8-bit DEC instructions
     InstructionTable[0x05] = { 1, decRegister }; // DEC B
     InstructionTable[0x0D] = { 1, decRegister }; // DEC C
     InstructionTable[0x15] = { 1, decRegister }; // DEC D
@@ -316,6 +317,13 @@ void CPUInstruction::InitializeInstructionTable() {
     InstructionTable[0x2D] = { 1, decRegister }; // DEC L
     InstructionTable[0x35] = { 1, decPtrHL }; // DEC (HL)
     InstructionTable[0x3D] = { 1, decRegister }; // DEC A
+    
+    // 16-bit ADD instructions
+    InstructionTable[0x09] = { 1, addHLWithRegisterPair }; // ADD HL, BC
+    InstructionTable[0x19] = { 1, addHLWithRegisterPair }; // ADD HL, DE
+    InstructionTable[0x29] = { 1, addHLWithRegisterPair }; // ADD HL, HL
+    InstructionTable[0x39] = { 1, addHLWithRegisterPair }; // ADD HL, SP
+    InstructionTable[0xE8] = { 2, addSPWithImmediate8Signed }; // ADD SP, e
     
     // =====================================
     // Extended Opcodes, prefixed with 0xCB
