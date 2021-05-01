@@ -297,6 +297,26 @@ void CPUInstruction::InitializeInstructionTable() {
     InstructionTable[0xBF] = { 1, cpAccWithRegister }; // CP A
     InstructionTable[0xFE] = { 2, cpAccWithImmediate8 }; // CP n
     
+    // INC instructions
+    InstructionTable[0x04] = { 1, incRegister }; // INC B
+    InstructionTable[0x0C] = { 1, incRegister }; // INC C
+    InstructionTable[0x14] = { 1, incRegister }; // INC D
+    InstructionTable[0x1C] = { 1, incRegister }; // INC E
+    InstructionTable[0x24] = { 1, incRegister }; // INC H
+    InstructionTable[0x2C] = { 1, incRegister }; // INC L
+    InstructionTable[0x34] = { 1, incPtrHL }; // INC (HL)
+    InstructionTable[0x3C] = { 1, incRegister }; // INC A
+    
+    // DEC instructions
+    InstructionTable[0x05] = { 1, decRegister }; // DEC B
+    InstructionTable[0x0D] = { 1, decRegister }; // DEC C
+    InstructionTable[0x15] = { 1, decRegister }; // DEC D
+    InstructionTable[0x1D] = { 1, decRegister }; // DEC E
+    InstructionTable[0x25] = { 1, decRegister }; // DEC H
+    InstructionTable[0x2D] = { 1, decRegister }; // DEC L
+    InstructionTable[0x35] = { 1, decPtrHL }; // DEC (HL)
+    InstructionTable[0x3D] = { 1, decRegister }; // DEC A
+    
     // =====================================
     // Extended Opcodes, prefixed with 0xCB
     // =====================================

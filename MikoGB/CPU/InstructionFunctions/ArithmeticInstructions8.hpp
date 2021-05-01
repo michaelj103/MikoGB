@@ -138,6 +138,26 @@ int cpAccWithImmediate8(const uint8_t *, MikoGB::CPUCore &);
 /// Z <- 1 if equal. H <- 1 if A > (HL). CY <- 1 if A < (HL)
 int cpAccWithPtrHL(const uint8_t *, MikoGB::CPUCore &);
 
+/// INC r
+/// Increments r for standard register codes. Bits are [ 0, 0, r2, r1, r0, 1, 0, 0 ]
+/// Z set if 0, H set if carry out of bit 4. N reset. CY not affected
+int incRegister(const uint8_t *, MikoGB::CPUCore &);
+
+/// INC (HL)
+/// Increments (HL) in place. Bits are [ 0, 0, 1, 1, 0, 1, 0, 0 ]
+/// Z set if 0, H set if carry out of bit 4. N reset. CY not affected
+int incPtrHL(const uint8_t *, MikoGB::CPUCore &);
+
+/// DEC r
+/// Decrements r for standard register codes. Bits are [ 0, 0, r2, r1, r0, 1, 0, 1 ]
+/// Z set if 0, H set if borrow from bit 4. N reset. CY not affected
+int decRegister(const uint8_t *, MikoGB::CPUCore &);
+
+/// DEC (HL)
+/// Increments (HL) in place. Bits are [ 0, 0, 1, 1, 0, 1, 0, 1 ]
+/// Z set if 0, H set if borrow from bit 4. N reset. CY not affected
+int decPtrHL(const uint8_t *, MikoGB::CPUCore &);
+
 }
 
 #endif /* ArithmeticInstructions8_hpp */

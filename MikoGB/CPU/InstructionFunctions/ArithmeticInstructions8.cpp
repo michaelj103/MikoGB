@@ -301,3 +301,65 @@ int CPUInstructions::cpAccWithPtrHL(const uint8_t *opcode, CPUCore &core) {
     
     return 2;
 }
+
+#pragma mark - INC
+
+static uint8_t _Inc8BitValue(uint8_t a, CPUCore &core) {
+    const uint8_t sum = a + 1;
+    // We don't actually care about the low bit, so xor with the sum to get all bits with carry outs
+    // from previous bits. Only one we care about is 3, so check 4 (0x10 mask)
+    const uint8_t carriedBits = a ^ sum;
+    core.setFlag(FlagBit::Zero, sum == 0);
+    core.setFlag(FlagBit::H, (carriedBits & 0x10) == 0x10);
+    core.setFlag(FlagBit::N, false);
+    //Carry flag is not touched
+    return sum;
+}
+
+int CPUInstructions::incRegister(const uint8_t *opcode, CPUCore &core) {
+    //register code is mid 3 bits
+    const uint8_t reg = (opcode[0] & 0x38) >> 3;
+    const uint8_t val = core.registers[reg];
+    core.registers[reg] = _Inc8BitValue(val, core);
+    
+    return 1;
+}
+
+int CPUInstructions::incPtrHL(const uint8_t *opcode, CPUCore &core) {
+    const uint16_t ptrAddress = core.getHLptr();
+    const uint8_t val = core.mainMemory[ptrAddress];
+    core.mainMemory[ptrAddress] = _Inc8BitValue(val, core);
+    
+    return 3;
+}
+
+#pragma mark - DEC
+
+static uint8_t _Dec8BitValue(uint8_t a, CPUCore &core) {
+    const uint8_t diff = a - 1;
+    // We don't actually care about the low bit, so xor with the diff to get all bits borrowed from
+    // Only one we care about is 4, so check mask 0x10
+    const uint8_t carriedBits = a ^ diff;
+    core.setFlag(FlagBit::Zero, diff == 0);
+    core.setFlag(FlagBit::H, (carriedBits & 0x10) == 0x10);
+    core.setFlag(FlagBit::N, true);
+    //Carry flag is not touched
+    return diff;
+}
+
+int CPUInstructions::decRegister(const uint8_t *opcode, CPUCore &core) {
+    //register code is mid 3 bits
+    const uint8_t reg = (opcode[0] & 0x38) >> 3;
+    const uint8_t val = core.registers[reg];
+    core.registers[reg] = _Dec8BitValue(val, core);
+    
+    return 1;
+}
+
+int CPUInstructions::decPtrHL(const uint8_t *opcode, CPUCore &core) {
+    const uint16_t ptrAddress = core.getHLptr();
+    const uint8_t val = core.mainMemory[ptrAddress];
+    core.mainMemory[ptrAddress] = _Dec8BitValue(val, core);
+    
+    return 3;
+}

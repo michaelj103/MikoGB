@@ -433,4 +433,66 @@ using namespace std;
     XCTAssertEqual(core.getFlag(MikoGB::Carry), true);
 }
 
+#pragma mark - INC r
+
+- (void)testIncRegister {
+    vector<uint8_t> mem = { 0x3C }; //INC A
+    MikoGB::CPUCore core(mem.data(), mem.size());
+    core.registers[REGISTER_A] = 0xFF;
+    
+    XCTAssertEqual(core.step(), 1);
+    XCTAssertEqual(core.registers[REGISTER_A], 0x00);
+    XCTAssertEqual(core.getFlag(MikoGB::Zero), true);
+    XCTAssertEqual(core.getFlag(MikoGB::H), true);
+    XCTAssertEqual(core.getFlag(MikoGB::N), false);
+}
+
+#pragma mark - INC (HL)
+
+- (void)testIncPtrHL {
+    vector<uint8_t> mem = { 0x34 }; //INC (HL)
+    map<uint16_t, uint8_t> otherVals = { { 0xBEEF, 0x50 } };
+    vector<uint8_t> allocatedMemory = createGBMemory(mem, otherVals);
+    MikoGB::CPUCore core(allocatedMemory.data(), allocatedMemory.size());
+    core.registers[REGISTER_H] = 0xBE;
+    core.registers[REGISTER_L] = 0xEF;
+    
+    XCTAssertEqual(core.step(), 3);
+    XCTAssertEqual(core.mainMemory[0xBEEF], 0x51);
+    XCTAssertEqual(core.getFlag(MikoGB::Zero), false);
+    XCTAssertEqual(core.getFlag(MikoGB::H), false);
+    XCTAssertEqual(core.getFlag(MikoGB::N), false);
+}
+
+#pragma mark - DEC r
+
+- (void)testDecRegister {
+    vector<uint8_t> mem = { 0x2D }; //DEC L
+    MikoGB::CPUCore core(mem.data(), mem.size());
+    core.registers[REGISTER_L] = 0x01;
+    
+    XCTAssertEqual(core.step(), 1);
+    XCTAssertEqual(core.registers[REGISTER_L], 0x00);
+    XCTAssertEqual(core.getFlag(MikoGB::Zero), true);
+    XCTAssertEqual(core.getFlag(MikoGB::H), false);
+    XCTAssertEqual(core.getFlag(MikoGB::N), true);
+}
+
+#pragma mark - DEC (HL)
+
+- (void)testDecPtrHL {
+    vector<uint8_t> mem = { 0x35 }; //DEC (HL)
+    map<uint16_t, uint8_t> otherVals = { { 0xBEEF, 0x00 } };
+    vector<uint8_t> allocatedMemory = createGBMemory(mem, otherVals);
+    MikoGB::CPUCore core(allocatedMemory.data(), allocatedMemory.size());
+    core.registers[REGISTER_H] = 0xBE;
+    core.registers[REGISTER_L] = 0xEF;
+    
+    XCTAssertEqual(core.step(), 3);
+    XCTAssertEqual(core.mainMemory[0xBEEF], 0xFF);
+    XCTAssertEqual(core.getFlag(MikoGB::Zero), false);
+    XCTAssertEqual(core.getFlag(MikoGB::H), true);
+    XCTAssertEqual(core.getFlag(MikoGB::N), true);
+}
+
 @end
