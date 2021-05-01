@@ -26,6 +26,16 @@ int addHLWithRegisterPair(const uint8_t *, MikoGB::CPUCore &);
 /// N flag reset, Z flag reset, H and CY set for carry out of bits 11 and 15
 int addSPWithImmediate8Signed(const uint8_t *, MikoGB::CPUCore &);
 
+/// INC ss
+/// ss <- ss + 1 for register pair ss. Bits are [ 0, 0, s1, s0, 0, 0, 1, 1 ]
+/// No flags affected
+int incRegisterPair(const uint8_t *, MikoGB::CPUCore &);
+
+/// DEC ss
+/// ss <- ss - 1 for register pair ss. Bits are [ 0, 0, s1, s0, 1, 0, 1, 1 ]
+/// No flags affected
+int decRegisterPair(const uint8_t *, MikoGB::CPUCore &);
+
 }
 
 #endif /* ArithmeticInstructions16_hpp */

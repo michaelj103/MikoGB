@@ -93,4 +93,64 @@ using namespace std;
     XCTAssertEqual(core.getFlag(MikoGB::Zero), false);
 }
 
+#pragma mark - INC ss
+
+- (void)testIncRegisterPair {
+    vector<uint8_t> mem = {
+        0x03, // INC BC
+        0x13, // INC DE
+        0x23, // INC HL
+        0x33, // INC SP
+    };
+    MikoGB::CPUCore core(mem.data(), mem.size());
+    core.registers[REGISTER_B] = 0xC9;
+    core.registers[REGISTER_C] = 0x34;
+    core.registers[REGISTER_D] = 0x23;
+    core.registers[REGISTER_E] = 0x5F;
+    core.registers[REGISTER_H] = 0xFF;
+    core.registers[REGISTER_L] = 0xFF;
+    core.stackPointer = 0x7610;
+    
+    XCTAssertEqual(core.step(), 2);
+    XCTAssertEqual(core.getBCptr(), 0xC935);
+    
+    XCTAssertEqual(core.step(), 2);
+    XCTAssertEqual(core.getDEptr(), 0x2360);
+    
+    XCTAssertEqual(core.step(), 2);
+    XCTAssertEqual(core.getHLptr(), 0x0000);
+    
+    XCTAssertEqual(core.step(), 2);
+    XCTAssertEqual(core.stackPointer, 0x7611);
+}
+
+- (void)testDecRegisterPair {
+    vector<uint8_t> mem = {
+        0x0B, // DEC BC
+        0x1B, // DEC DE
+        0x2B, // DEC HL
+        0x3B, // DEC SP
+    };
+    MikoGB::CPUCore core(mem.data(), mem.size());
+    core.registers[REGISTER_B] = 0xC9;
+    core.registers[REGISTER_C] = 0x34;
+    core.registers[REGISTER_D] = 0x23;
+    core.registers[REGISTER_E] = 0x5F;
+    core.registers[REGISTER_H] = 0x00;
+    core.registers[REGISTER_L] = 0x00;
+    core.stackPointer = 0x7610;
+    
+    XCTAssertEqual(core.step(), 2);
+    XCTAssertEqual(core.getBCptr(), 0xC933);
+    
+    XCTAssertEqual(core.step(), 2);
+    XCTAssertEqual(core.getDEptr(), 0x235E);
+    
+    XCTAssertEqual(core.step(), 2);
+    XCTAssertEqual(core.getHLptr(), 0xFFFF);
+    
+    XCTAssertEqual(core.step(), 2);
+    XCTAssertEqual(core.stackPointer, 0x760F);
+}
+
 @end

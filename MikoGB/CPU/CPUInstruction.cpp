@@ -325,6 +325,16 @@ void CPUInstruction::InitializeInstructionTable() {
     InstructionTable[0x39] = { 1, addHLWithRegisterPair }; // ADD HL, SP
     InstructionTable[0xE8] = { 2, addSPWithImmediate8Signed }; // ADD SP, e
     
+    // 16-bit INC and DEC instructions
+    InstructionTable[0x03] = { 1, incRegisterPair }; // INC BC
+    InstructionTable[0x13] = { 1, incRegisterPair }; // INC DE
+    InstructionTable[0x23] = { 1, incRegisterPair }; // INC HL
+    InstructionTable[0x33] = { 1, incRegisterPair }; // INC SP
+    InstructionTable[0x0B] = { 1, decRegisterPair }; // DEC BC
+    InstructionTable[0x1B] = { 1, decRegisterPair }; // DEC DE
+    InstructionTable[0x2B] = { 1, decRegisterPair }; // DEC HL
+    InstructionTable[0x3B] = { 1, decRegisterPair }; // DEC SP
+    
     // =====================================
     // Extended Opcodes, prefixed with 0xCB
     // =====================================

@@ -67,3 +67,87 @@ int CPUInstructions::addSPWithImmediate8Signed(const uint8_t *opcode, CPUCore &c
     core.setFlag(FlagBit::Zero, false);
     return 4;
 }
+
+#pragma mark INC & DEC
+
+int CPUInstructions::incRegisterPair(const uint8_t *opcode, CPUCore &core) {
+    // register pair specified by 2 bits ss in opcode
+    uint8_t ss = (opcode[0] & 0x30) >> 4;
+    //TODO: Debug assert that ss <= 3?
+    switch (ss) {
+        case 0: {
+            // inc BC
+            const uint16_t val = core.getBCptr() + 1;
+            uint8_t lo = 0, hi = 0;
+            splitWord16(val, lo, hi);
+            core.registers[REGISTER_B] = hi;
+            core.registers[REGISTER_C] = lo;
+        }
+            break;
+        case 1: {
+            // inc DE
+            const uint16_t val = core.getDEptr() + 1;
+            uint8_t lo = 0, hi = 0;
+            splitWord16(val, lo, hi);
+            core.registers[REGISTER_D] = hi;
+            core.registers[REGISTER_E] = lo;
+        }
+            break;
+        case 2: {
+            // inc HL
+            const uint16_t val = core.getHLptr() + 1;
+            uint8_t lo = 0, hi = 0;
+            splitWord16(val, lo, hi);
+            core.registers[REGISTER_H] = hi;
+            core.registers[REGISTER_L] = lo;
+        }
+            break;
+        case 3:
+            // inc SP
+            core.stackPointer += 1;
+            break;
+    }
+    
+    return 2;
+}
+
+int CPUInstructions::decRegisterPair(const uint8_t *opcode, CPUCore &core) {
+    // register pair specified by 2 bits ss in opcode
+    uint8_t ss = (opcode[0] & 0x30) >> 4;
+    //TODO: Debug assert that ss <= 3?
+    switch (ss) {
+        case 0: {
+            // inc BC
+            const uint16_t val = core.getBCptr() - 1;
+            uint8_t lo = 0, hi = 0;
+            splitWord16(val, lo, hi);
+            core.registers[REGISTER_B] = hi;
+            core.registers[REGISTER_C] = lo;
+        }
+            break;
+        case 1: {
+            // inc DE
+            const uint16_t val = core.getDEptr() - 1;
+            uint8_t lo = 0, hi = 0;
+            splitWord16(val, lo, hi);
+            core.registers[REGISTER_D] = hi;
+            core.registers[REGISTER_E] = lo;
+        }
+            break;
+        case 2: {
+            // inc HL
+            const uint16_t val = core.getHLptr() - 1;
+            uint8_t lo = 0, hi = 0;
+            splitWord16(val, lo, hi);
+            core.registers[REGISTER_H] = hi;
+            core.registers[REGISTER_L] = lo;
+        }
+            break;
+        case 3:
+            // inc SP
+            core.stackPointer -= 1;
+            break;
+    }
+    
+    return 2;
+}
