@@ -337,13 +337,27 @@ void CPUInstruction::InitializeInstructionTable() {
     InstructionTable[0x3B] = { 1, decRegisterPair }; // DEC SP
     
     // CALL and RET instructions
+    InstructionTable[0xC0] = { 1, returnSubroutineConditional }; // RET NZ
     InstructionTable[0xC4] = { 3, callConditionalImmediate16 }; // CALL NZ nn
+    InstructionTable[0xC8] = { 1, returnSubroutineConditional }; // RET Z
+    InstructionTable[0xC9] = { 1, returnSubroutine }; // RET
     InstructionTable[0xCC] = { 3, callConditionalImmediate16 }; // CALL Z nn
     InstructionTable[0xCD] = { 3, callImmediate16 }; // CALL nn
+    InstructionTable[0xD0] = { 1, returnSubroutineConditional }; // RET NC
     InstructionTable[0xD4] = { 3, callConditionalImmediate16 }; // CALL NC nn
-    InstructionTable[0xDC] = { 3, callConditionalImmediate16 }; // CALL C nn
-    InstructionTable[0xC9] = { 1, returnSubroutine }; // RET
+    InstructionTable[0xD8] = { 1, returnSubroutineConditional }; // RET C
     InstructionTable[0xD9] = { 1, returnInterrupt }; // RETI
+    InstructionTable[0xDC] = { 3, callConditionalImmediate16 }; // CALL C nn
+    
+    // RST instruction. A bit of a weird one
+    InstructionTable[0xC7] = { 1, resetCall }; // RST 0
+    InstructionTable[0xCF] = { 1, resetCall }; // RST 1
+    InstructionTable[0xD7] = { 1, resetCall }; // RST 2
+    InstructionTable[0xDF] = { 1, resetCall }; // RST 3
+    InstructionTable[0xE7] = { 1, resetCall }; // RST 4
+    InstructionTable[0xEF] = { 1, resetCall }; // RST 5
+    InstructionTable[0xF7] = { 1, resetCall }; // RST 6
+    InstructionTable[0xFF] = { 1, resetCall }; // RST 7
     
     // =====================================
     // Extended Opcodes, prefixed with 0xCB

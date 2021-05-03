@@ -36,6 +36,16 @@ int returnSubroutine(const uint8_t *, MikoGB::CPUCore &);
 /// Pops the PC value from the stack and re-enables interrupts between instructions
 int returnInterrupt(const uint8_t *, MikoGB::CPUCore &);
 
+/// RET cc
+/// Return from the current subroutine if condition is met. Bits are [ 1, 1, 0, c1, c0, 0, 0, 0 ]
+/// Standard condition codes. Same behavior as RET if condition met
+int returnSubroutineConditional(const uint8_t *, MikoGB::CPUCore &);
+
+/// RST
+/// "Reset" which is a weird one. Kind of a syscall. Bits are [ 1, 1, t2, t1, t0, 1, 1, 1 ]
+/// Essentially a cheap "call" to one of 8 specific low addresses, 8 bytes apart: 0x00 - 0x38
+int resetCall(const uint8_t *, MikoGB::CPUCore &);
+
 }
 
 #endif /* CallAndReturnInstructions_hpp */
