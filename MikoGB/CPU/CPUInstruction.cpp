@@ -16,6 +16,7 @@
 #include "ArithmeticInstructions8.hpp"
 #include "ArithmeticInstructions16.hpp"
 #include "BitOpInstructions.hpp"
+#include "CallAndReturnInstructions.hpp"
 #include "JumpInstructions.hpp"
 
 using namespace std;
@@ -334,6 +335,15 @@ void CPUInstruction::InitializeInstructionTable() {
     InstructionTable[0x1B] = { 1, decRegisterPair }; // DEC DE
     InstructionTable[0x2B] = { 1, decRegisterPair }; // DEC HL
     InstructionTable[0x3B] = { 1, decRegisterPair }; // DEC SP
+    
+    // CALL and RET instructions
+    InstructionTable[0xC4] = { 3, callConditionalImmediate16 }; // CALL NZ nn
+    InstructionTable[0xCC] = { 3, callConditionalImmediate16 }; // CALL Z nn
+    InstructionTable[0xCD] = { 3, callImmediate16 }; // CALL nn
+    InstructionTable[0xD4] = { 3, callConditionalImmediate16 }; // CALL NC nn
+    InstructionTable[0xDC] = { 3, callConditionalImmediate16 }; // CALL C nn
+    InstructionTable[0xC9] = { 1, returnSubroutine }; // RET
+    InstructionTable[0xD9] = { 1, returnInterrupt }; // RETI
     
     // =====================================
     // Extended Opcodes, prefixed with 0xCB

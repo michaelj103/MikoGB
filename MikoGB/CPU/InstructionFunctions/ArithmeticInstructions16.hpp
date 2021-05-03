@@ -12,9 +12,9 @@
 
 namespace CPUInstructions {
 
-// =========================================
-// 8-bit Arithmetic and Logical Instructions
-// =========================================
+// ==========================================
+// 16-bit Arithmetic and Logical Instructions
+// ==========================================
 
 /// ADD HL, ss
 /// HL <- HL + ss for register pair codes. Bits are [ 0, 0, s1, s0, 1, 0, 0, 1 ]

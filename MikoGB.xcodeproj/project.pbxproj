@@ -27,6 +27,8 @@
 		2992818D263DDEC8004691E5 /* ArithmeticInstructions16.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2992818B263DDEC8004691E5 /* ArithmeticInstructions16.cpp */; };
 		29928195263DE721004691E5 /* Test16BitArithmeticInstructions.mm in Sources */ = {isa = PBXBuildFile; fileRef = 29928194263DE721004691E5 /* Test16BitArithmeticInstructions.mm */; };
 		2992819C263DE86C004691E5 /* ArithmeticInstructions16.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2992818B263DDEC8004691E5 /* ArithmeticInstructions16.cpp */; };
+		299281A5263F885E004691E5 /* CallAndReturnInstructions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 299281A3263F885E004691E5 /* CallAndReturnInstructions.cpp */; };
+		299281A6263F885E004691E5 /* CallAndReturnInstructions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 299281A3263F885E004691E5 /* CallAndReturnInstructions.cpp */; };
 		29A8C0BC2462685F0082C52B /* LoadInstructions8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8C0BA2462685F0082C52B /* LoadInstructions8.cpp */; };
 		29A8C0C02463495A0082C52B /* LoadInstructions16.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8C0BE2463495A0082C52B /* LoadInstructions16.cpp */; };
 		29A8C0D62467DC490082C52B /* ArithmeticInstructions8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8C0D42467DC490082C52B /* ArithmeticInstructions8.cpp */; };
@@ -74,6 +76,8 @@
 		2992818B263DDEC8004691E5 /* ArithmeticInstructions16.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ArithmeticInstructions16.cpp; sourceTree = "<group>"; };
 		2992818C263DDEC8004691E5 /* ArithmeticInstructions16.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ArithmeticInstructions16.hpp; sourceTree = "<group>"; };
 		29928194263DE721004691E5 /* Test16BitArithmeticInstructions.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = Test16BitArithmeticInstructions.mm; sourceTree = "<group>"; };
+		299281A3263F885E004691E5 /* CallAndReturnInstructions.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = CallAndReturnInstructions.cpp; sourceTree = "<group>"; };
+		299281A4263F885E004691E5 /* CallAndReturnInstructions.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = CallAndReturnInstructions.hpp; sourceTree = "<group>"; };
 		29A8C0B9246147190082C52B /* BitTwiddlingUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BitTwiddlingUtil.h; sourceTree = "<group>"; };
 		29A8C0BA2462685F0082C52B /* LoadInstructions8.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = LoadInstructions8.cpp; sourceTree = "<group>"; };
 		29A8C0BB2462685F0082C52B /* LoadInstructions8.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = LoadInstructions8.hpp; sourceTree = "<group>"; };
@@ -185,6 +189,8 @@
 				29A8C0D72467E9FC0082C52B /* BitOpInstructions.cpp */,
 				29A8C0DB246810640082C52B /* JumpInstructions.hpp */,
 				29A8C0DA246810640082C52B /* JumpInstructions.cpp */,
+				299281A4263F885E004691E5 /* CallAndReturnInstructions.hpp */,
+				299281A3263F885E004691E5 /* CallAndReturnInstructions.cpp */,
 			);
 			path = InstructionFunctions;
 			sourceTree = "<group>";
@@ -322,6 +328,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				297E6139245FEA5D00EE150F /* CPUCore.cpp in Sources */,
+				299281A5263F885E004691E5 /* CallAndReturnInstructions.cpp in Sources */,
 				29A8C0D92467E9FC0082C52B /* BitOpInstructions.cpp in Sources */,
 				29A8C0C02463495A0082C52B /* LoadInstructions16.cpp in Sources */,
 				297E613E245FECDF00EE150F /* CPUInstruction.cpp in Sources */,
@@ -358,6 +365,7 @@
 				29FC06AB24BC2BFD00C12E6B /* Test8BitArithmeticInstructions.mm in Sources */,
 				290B3BCA247E00CB00937D71 /* LoadInstructions8.cpp in Sources */,
 				29928195263DE721004691E5 /* Test16BitArithmeticInstructions.mm in Sources */,
+				299281A6263F885E004691E5 /* CallAndReturnInstructions.cpp in Sources */,
 				290B3BCE247E00D500937D71 /* JumpInstructions.cpp in Sources */,
 				290B3BCC247E00D000937D71 /* ArithmeticInstructions8.cpp in Sources */,
 				2992819C263DE86C004691E5 /* ArithmeticInstructions16.cpp in Sources */,

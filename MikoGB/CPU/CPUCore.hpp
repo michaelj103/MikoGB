@@ -51,6 +51,7 @@ public:
     uint8_t registers[REGISTER_COUNT];
     uint16_t programCounter;
     uint16_t stackPointer;
+    bool interruptsEnabled; // IME
     
     //TODO: should this be a class? "MemoryController"
     uint8_t *mainMemory;
