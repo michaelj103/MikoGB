@@ -1,5 +1,5 @@
 //
-//  TestCPUCoreBasics.m
+//  TestCPUCoreBasics.mm
 //  MikoGB
 //
 //  Created on 5/26/20.

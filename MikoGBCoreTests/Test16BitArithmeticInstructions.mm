@@ -1,5 +1,5 @@
 //
-//  Test16BitArithmeticInstructions.m
+//  Test16BitArithmeticInstructions.mm
 //  MikoGB
 //
 //  Created on 5/1/21.

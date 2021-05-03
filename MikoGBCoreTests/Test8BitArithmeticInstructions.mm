@@ -1,5 +1,5 @@
 //
-//  Test8BitArithmeticInstructions.m
+//  Test8BitArithmeticInstructions.mm
 //  MikoGB
 //
 //  Created on 7/12/20.
