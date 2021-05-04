@@ -102,7 +102,7 @@ using namespace std;
     XCTAssertEqual(core.getFlag(MikoGB::Zero), false);
 }
 
-- (void)testRotateLeftHlPtrCarryOut {
+- (void)testRotateLeftPtrHLCarryOut {
     vector<uint8_t> mem = { 0xCB, 0x06 }; // RLC (HL)
     MikoGB::CPUCore core(mem.data(), mem.size());
     core.registers[REGISTER_H] = 0xBE;
@@ -136,7 +136,7 @@ using namespace std;
     XCTAssertEqual(core.getFlag(MikoGB::Zero), false);
 }
 
-- (void)testRotateLeftHLPtrThroughCarry {
+- (void)testRotateLeftPtrHLThroughCarry {
     vector<uint8_t> mem = {
         0xCB, 0x16, // RLC (HL)
         0xCB, 0x16, // RLC (HL)
@@ -172,7 +172,7 @@ using namespace std;
     XCTAssertEqual(core.getFlag(MikoGB::Zero), false);
 }
 
-- (void)testRotateRightHlPtrCarryOut {
+- (void)testRotateRightPtrHLCarryOut {
     vector<uint8_t> mem = { 0xCB, 0x0E }; // RRC (HL)
     MikoGB::CPUCore core(mem.data(), mem.size());
     core.registers[REGISTER_H] = 0xBE;
@@ -207,7 +207,7 @@ using namespace std;
     XCTAssertEqual(core.getFlag(MikoGB::Zero), false);
 }
 
-- (void)testRotateRightHLPtrThroughCarry {
+- (void)testRotateRightPtrHLThroughCarry {
     vector<uint8_t> mem = {
         0xCB, 0x1E, // RR (HL)
         0xCB, 0x1E, // RR (HL)

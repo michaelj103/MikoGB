@@ -39,7 +39,7 @@ int rotateLeftRegisterCarryOut(const uint8_t *, MikoGB::CPUCore &);
 
 /// RLC (HL)     (Extended opcode 0xCB)
 /// Rotate the byte at address pointed to by HL pointer. Carry out high. Bits are [ 0, 0, 0, 0, 0, 1, 1, 0 ]
-int rotateLeftHLPtrCarryOut(const uint8_t *, MikoGB::CPUCore &);
+int rotateLeftPtrHLCarryOut(const uint8_t *, MikoGB::CPUCore &);
 
 /// RL r     (Extended opcode 0xCB)
 /// Rotate argument left through the carry. Bits are [ 0, 0, 0, 1, 0, r2, r1, r0 ]
@@ -48,7 +48,7 @@ int rotateLeftRegisterThroughCarry(const uint8_t *, MikoGB::CPUCore &);
 
 /// RL (HL)     (Extended opcode 0xCB)
 /// Rotate the byte at address pointed to by HL pointer through the carry. Bits are [ 0, 0, 0, 1, 0, 1, 1, 0 ]
-int rotateLeftHLPtrThroughCarry(const uint8_t *, MikoGB::CPUCore &);
+int rotateLeftPtrHLThroughCarry(const uint8_t *, MikoGB::CPUCore &);
 
 /// RRC r     (Extended opcode 0xCB)
 /// Rotate argument right and carry out the low bit. Bits are [ 0, 0, 0, 0, 1, r2, r1, r0 ]
@@ -57,7 +57,7 @@ int rotateRightRegisterCarryOut(const uint8_t *, MikoGB::CPUCore &);
 
 /// RRC (HL)     (Extended opcode 0xCB)
 /// Rotate the byte at address pointed to by HL pointer. Carry out low. Bits are [ 0, 0, 0, 0, 1, 1, 1, 0 ]
-int rotateRightHLPtrCarryOut(const uint8_t *, MikoGB::CPUCore &);
+int rotateRightPtrHLCarryOut(const uint8_t *, MikoGB::CPUCore &);
 
 /// RR r     (Extended opcode 0xCB)
 /// Rotate argument right through the carry. Bits are [ 0, 0, 0, 1, 1, r2, r1, r0 ]
@@ -66,7 +66,7 @@ int rotateRightRegisterThroughCarry(const uint8_t *, MikoGB::CPUCore &);
 
 /// RR (HL)     (Extended opcode 0xCB)
 /// Rotate the byte at address pointed to by HL pointer through the carry. Bits are [ 0, 0, 0, 1, 1, 1, 1, 0 ]
-int rotateRightHLPtrThroughCarry(const uint8_t *, MikoGB::CPUCore &);
+int rotateRightPtrHLThroughCarry(const uint8_t *, MikoGB::CPUCore &);
 
 /// SLA m     (Extended opcode 0xCB)
 /// Shift left with carry out for register argument. "Normal" shift. Bits are [ 0, 0, 1, 0, 0, r2, r1, r0 ]
