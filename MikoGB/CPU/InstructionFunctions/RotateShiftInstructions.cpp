@@ -56,3 +56,113 @@ int CPUInstructions::rotateRightAccumulatorThroughCarry(const uint8_t *opcode, C
     
     return 1;
 }
+
+#pragma mark - Rotate extended opcodes
+
+int CPUInstructions::rotateLeftRegisterCarryOut(const uint8_t *opcode, CPUCore &core) {
+    const uint8_t reg = (opcode[1] & 0x07); // Register code is low 3 bits
+    const uint8_t rVal = core.registers[reg];
+    const uint8_t finalVal = (rVal << 1) | ((rVal & 0x80) >> 7);
+    core.setFlag(FlagBit::Carry, (rVal & 0x80) == 0x80);
+    core.registers[reg] = finalVal;
+    core.setFlag(FlagBit::H, false);
+    core.setFlag(FlagBit::N, false);
+    core.setFlag(FlagBit::Zero, finalVal == 0);
+    
+    return 2;
+}
+
+int CPUInstructions::rotateLeftHLPtrCarryOut(const uint8_t *opcode, CPUCore &core) {
+    const uint16_t hlPtr = core.getHLptr();
+    const uint8_t mVal = core.mainMemory[hlPtr];
+    const uint8_t finalVal = (mVal << 1) | ((mVal & 0x80) >> 7);
+    core.setFlag(FlagBit::Carry, (mVal & 0x80) == 0x80);
+    core.mainMemory[hlPtr] = finalVal;
+    core.setFlag(FlagBit::H, false);
+    core.setFlag(FlagBit::N, false);
+    core.setFlag(FlagBit::Zero, finalVal == 0);
+    
+    return 4;
+}
+
+int CPUInstructions::rotateLeftRegisterThroughCarry(const uint8_t *opcode, CPUCore &core) {
+    const uint8_t reg = (opcode[1] & 0x07); // Register code is low 3 bits
+    const uint8_t rVal = core.registers[reg];
+    const uint8_t carryVal = core.getFlag(FlagBit::Carry) ? 1 : 0;
+    const uint8_t finalVal = (rVal << 1) | carryVal;
+    core.setFlag(FlagBit::Carry, (rVal & 0x80) == 0x80);
+    core.registers[reg] = finalVal;
+    core.setFlag(FlagBit::H, false);
+    core.setFlag(FlagBit::N, false);
+    core.setFlag(FlagBit::Zero, finalVal == 0);
+    
+    return 2;
+}
+
+int CPUInstructions::rotateLeftHLPtrThroughCarry(const uint8_t *opcode, CPUCore &core) {
+    const uint16_t hlPtr = core.getHLptr();
+    const uint8_t mVal = core.mainMemory[hlPtr];
+    const uint8_t carryVal = core.getFlag(FlagBit::Carry) ? 1 : 0;
+    const uint8_t finalVal = (mVal << 1) | carryVal;
+    core.setFlag(FlagBit::Carry, (mVal & 0x80) == 0x80);
+    core.mainMemory[hlPtr] = finalVal;
+    core.setFlag(FlagBit::H, false);
+    core.setFlag(FlagBit::N, false);
+    core.setFlag(FlagBit::Zero, finalVal == 0);
+    
+    return 4;
+}
+
+int CPUInstructions::rotateRightRegisterCarryOut(const uint8_t *opcode, CPUCore &core) {
+    const uint8_t reg = (opcode[1] & 0x07); // Register code is low 3 bits
+    const uint8_t rVal = core.registers[reg];
+    const uint8_t finalVal = (rVal >> 1) | ((rVal & 0x01) << 7);
+    core.setFlag(FlagBit::Carry, (rVal & 0x01) == 0x01);
+    core.registers[reg] = finalVal;
+    core.setFlag(FlagBit::H, false);
+    core.setFlag(FlagBit::N, false);
+    core.setFlag(FlagBit::Zero, finalVal == 0);
+    
+    return 2;
+}
+
+int CPUInstructions::rotateRightHLPtrCarryOut(const uint8_t *opcode, CPUCore &core) {
+    const uint16_t hlPtr = core.getHLptr();
+    const uint8_t mVal = core.mainMemory[hlPtr];
+    const uint8_t finalVal = (mVal >> 1) | ((mVal & 0x01) << 7);
+    core.setFlag(FlagBit::Carry, (mVal & 0x01) == 0x01);
+    core.mainMemory[hlPtr] = finalVal;
+    core.setFlag(FlagBit::H, false);
+    core.setFlag(FlagBit::N, false);
+    core.setFlag(FlagBit::Zero, finalVal == 0);
+    
+    return 4;
+}
+
+int CPUInstructions::rotateRightRegisterThroughCarry(const uint8_t *opcode, CPUCore &core) {
+    const uint8_t reg = (opcode[1] & 0x07); // Register code is low 3 bits
+    const uint8_t rVal = core.registers[reg];
+    const uint8_t carryVal = core.getFlag(FlagBit::Carry) ? 0x80 : 0;
+    const uint8_t finalVal = (rVal >> 1) | carryVal;
+    core.setFlag(FlagBit::Carry, (rVal & 0x01) == 0x01);
+    core.registers[reg] = finalVal;
+    core.setFlag(FlagBit::H, false);
+    core.setFlag(FlagBit::N, false);
+    core.setFlag(FlagBit::Zero, finalVal == 0);
+    
+    return 2;
+}
+
+int CPUInstructions::rotateRightHLPtrThroughCarry(const uint8_t *opcode, CPUCore &core) {
+    const uint16_t hlPtr = core.getHLptr();
+    const uint8_t mVal = core.mainMemory[hlPtr];
+    const uint8_t carryVal = core.getFlag(FlagBit::Carry) ? 0x80 : 0;
+    const uint8_t finalVal = (mVal >> 1) | carryVal;
+    core.setFlag(FlagBit::Carry, (mVal & 0x01) == 0x01);
+    core.mainMemory[hlPtr] = finalVal;
+    core.setFlag(FlagBit::H, false);
+    core.setFlag(FlagBit::N, false);
+    core.setFlag(FlagBit::Zero, finalVal == 0);
+    
+    return 4;
+}

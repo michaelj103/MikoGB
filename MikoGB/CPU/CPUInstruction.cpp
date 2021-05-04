@@ -592,6 +592,46 @@ void CPUInstruction::InitializeInstructionTable() {
     InstructionTable[0x1FE] = { 2, bitSetPtrHL }; // SET 7, (HL)
     InstructionTable[0x1FF] = { 2, bitSetRegister }; // SET 7, A
     
+    // RLC instructions
+    InstructionTable[0x100] = { 2, rotateLeftRegisterCarryOut }; // RLC B
+    InstructionTable[0x101] = { 2, rotateLeftRegisterCarryOut }; // RLC C
+    InstructionTable[0x102] = { 2, rotateLeftRegisterCarryOut }; // RLC D
+    InstructionTable[0x103] = { 2, rotateLeftRegisterCarryOut }; // RLC E
+    InstructionTable[0x104] = { 2, rotateLeftRegisterCarryOut }; // RLC H
+    InstructionTable[0x105] = { 2, rotateLeftRegisterCarryOut }; // RLC L
+    InstructionTable[0x106] = { 2, rotateLeftHLPtrCarryOut }; // RLC (HL)
+    InstructionTable[0x107] = { 2, rotateLeftRegisterCarryOut }; // RLC A
+    
+    // RL instructions
+    InstructionTable[0x110] = { 2, rotateLeftRegisterThroughCarry }; // RL B
+    InstructionTable[0x111] = { 2, rotateLeftRegisterThroughCarry }; // RL C
+    InstructionTable[0x112] = { 2, rotateLeftRegisterThroughCarry }; // RL D
+    InstructionTable[0x113] = { 2, rotateLeftRegisterThroughCarry }; // RL E
+    InstructionTable[0x114] = { 2, rotateLeftRegisterThroughCarry }; // RL H
+    InstructionTable[0x115] = { 2, rotateLeftRegisterThroughCarry }; // RL L
+    InstructionTable[0x116] = { 2, rotateLeftHLPtrThroughCarry }; // RL (HL)
+    InstructionTable[0x117] = { 2, rotateLeftRegisterThroughCarry }; // RL A
+    
+    // RRC instructions
+    InstructionTable[0x108] = { 2, rotateRightRegisterCarryOut }; // RRC B
+    InstructionTable[0x109] = { 2, rotateRightRegisterCarryOut }; // RRC C
+    InstructionTable[0x10A] = { 2, rotateRightRegisterCarryOut }; // RRC D
+    InstructionTable[0x10B] = { 2, rotateRightRegisterCarryOut }; // RRC E
+    InstructionTable[0x10C] = { 2, rotateRightRegisterCarryOut }; // RRC H
+    InstructionTable[0x10D] = { 2, rotateRightRegisterCarryOut }; // RRC L
+    InstructionTable[0x10E] = { 2, rotateRightHLPtrCarryOut }; // RRC (HL)
+    InstructionTable[0x10F] = { 2, rotateRightRegisterCarryOut }; // RRC A
+    
+    // RR instructions
+    InstructionTable[0x118] = { 2, rotateRightRegisterThroughCarry }; // RR B
+    InstructionTable[0x119] = { 2, rotateRightRegisterThroughCarry }; // RR C
+    InstructionTable[0x11A] = { 2, rotateRightRegisterThroughCarry }; // RR D
+    InstructionTable[0x11B] = { 2, rotateRightRegisterThroughCarry }; // RR E
+    InstructionTable[0x11C] = { 2, rotateRightRegisterThroughCarry }; // RR H
+    InstructionTable[0x11D] = { 2, rotateRightRegisterThroughCarry }; // RR L
+    InstructionTable[0x11E] = { 2, rotateRightHLPtrThroughCarry }; // RR (HL)
+    InstructionTable[0x11F] = { 2, rotateRightRegisterThroughCarry }; // RR A
+    
     size_t instCount = 0;
     for (size_t i = 0; i < 512; ++i) {
         CPUInstruction &inst = InstructionTable[i];

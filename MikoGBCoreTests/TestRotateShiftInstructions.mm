@@ -89,4 +89,145 @@ using namespace std;
     XCTAssertEqual(core.getFlag(MikoGB::Carry), false);
 }
 
+#pragma mark - RLC m
+
+- (void)testRotateLeftRegisterCarryOut {
+    vector<uint8_t> mem = { 0xCB, 0x00 }; // RLC B
+    MikoGB::CPUCore core(mem.data(), mem.size());
+    core.registers[REGISTER_B] = 0x85;
+    
+    XCTAssertEqual(core.step(), 2);
+    XCTAssertEqual(core.registers[REGISTER_B], 0x0B);
+    XCTAssertEqual(core.getFlag(MikoGB::Carry), true);
+    XCTAssertEqual(core.getFlag(MikoGB::Zero), false);
+}
+
+- (void)testRotateLeftHlPtrCarryOut {
+    vector<uint8_t> mem = { 0xCB, 0x06 }; // RLC (HL)
+    MikoGB::CPUCore core(mem.data(), mem.size());
+    core.registers[REGISTER_H] = 0xBE;
+    core.registers[REGISTER_L] = 0xEF;
+    
+    XCTAssertEqual(core.step(), 4);
+    XCTAssertEqual(core.mainMemory[0xBEEF], 0x00);
+    XCTAssertEqual(core.getFlag(MikoGB::Carry), false);
+    XCTAssertEqual(core.getFlag(MikoGB::Zero), true);
+}
+
+#pragma mark - RL m
+
+- (void)testRotateLeftRegisterThroughCarry {
+    vector<uint8_t> mem = {
+        0xCB, 0x15, // RL L
+        0xCB, 0x12, // RL D
+    };
+    MikoGB::CPUCore core(mem.data(), mem.size());
+    core.registers[REGISTER_L] = 0x80;
+    core.registers[REGISTER_D] = 0xAD;
+    
+    XCTAssertEqual(core.step(), 2);
+    XCTAssertEqual(core.registers[REGISTER_L], 0x00);
+    XCTAssertEqual(core.getFlag(MikoGB::Carry), true);
+    XCTAssertEqual(core.getFlag(MikoGB::Zero), true);
+    
+    XCTAssertEqual(core.step(), 2);
+    XCTAssertEqual(core.registers[REGISTER_D], 0x5B);
+    XCTAssertEqual(core.getFlag(MikoGB::Carry), true);
+    XCTAssertEqual(core.getFlag(MikoGB::Zero), false);
+}
+
+- (void)testRotateLeftHLPtrThroughCarry {
+    vector<uint8_t> mem = {
+        0xCB, 0x16, // RLC (HL)
+        0xCB, 0x16, // RLC (HL)
+    };
+    map<uint16_t, uint8_t> otherVals = { { 0xBEEF, 0x11 } };
+    vector<uint8_t> allocatedMemory = createGBMemory(mem, otherVals);
+    MikoGB::CPUCore core(allocatedMemory.data(), allocatedMemory.size());
+    core.registers[REGISTER_H] = 0xBE;
+    core.registers[REGISTER_L] = 0xEF;
+    core.setFlag(MikoGB::Carry, true);
+    
+    XCTAssertEqual(core.step(), 4);
+    XCTAssertEqual(core.mainMemory[0xBEEF], 0x23);
+    XCTAssertEqual(core.getFlag(MikoGB::Carry), false);
+    XCTAssertEqual(core.getFlag(MikoGB::Zero), false);
+    
+    XCTAssertEqual(core.step(), 4);
+    XCTAssertEqual(core.mainMemory[0xBEEF], 0x46);
+    XCTAssertEqual(core.getFlag(MikoGB::Carry), false);
+    XCTAssertEqual(core.getFlag(MikoGB::Zero), false);
+}
+
+#pragma mark - RRC m
+
+- (void)testRotateRightRegisterCarryOut {
+    vector<uint8_t> mem = { 0xCB, 0x09 }; // RRC C
+    MikoGB::CPUCore core(mem.data(), mem.size());
+    core.registers[REGISTER_C] = 0x01;
+    
+    XCTAssertEqual(core.step(), 2);
+    XCTAssertEqual(core.registers[REGISTER_C], 0x80);
+    XCTAssertEqual(core.getFlag(MikoGB::Carry), true);
+    XCTAssertEqual(core.getFlag(MikoGB::Zero), false);
+}
+
+- (void)testRotateRightHlPtrCarryOut {
+    vector<uint8_t> mem = { 0xCB, 0x0E }; // RRC (HL)
+    MikoGB::CPUCore core(mem.data(), mem.size());
+    core.registers[REGISTER_H] = 0xBE;
+    core.registers[REGISTER_L] = 0xEF;
+    core.setFlag(MikoGB::Carry, true);
+    
+    XCTAssertEqual(core.step(), 4);
+    XCTAssertEqual(core.mainMemory[0xBEEF], 0x00);
+    XCTAssertEqual(core.getFlag(MikoGB::Carry), false);
+    XCTAssertEqual(core.getFlag(MikoGB::Zero), true);
+}
+
+#pragma mark - RR m
+
+- (void)testRotateRightRegisterThroughCarry {
+    vector<uint8_t> mem = {
+        0xCB, 0x1F, // RR A
+        0xCB, 0x1B, // RR E
+    };
+    MikoGB::CPUCore core(mem.data(), mem.size());
+    core.registers[REGISTER_A] = 0x01;
+    core.registers[REGISTER_E] = 0x21;
+    
+    XCTAssertEqual(core.step(), 2);
+    XCTAssertEqual(core.registers[REGISTER_A], 0x00);
+    XCTAssertEqual(core.getFlag(MikoGB::Carry), true);
+    XCTAssertEqual(core.getFlag(MikoGB::Zero), true);
+    
+    XCTAssertEqual(core.step(), 2);
+    XCTAssertEqual(core.registers[REGISTER_E], 0x90);
+    XCTAssertEqual(core.getFlag(MikoGB::Carry), true);
+    XCTAssertEqual(core.getFlag(MikoGB::Zero), false);
+}
+
+- (void)testRotateRightHLPtrThroughCarry {
+    vector<uint8_t> mem = {
+        0xCB, 0x1E, // RR (HL)
+        0xCB, 0x1E, // RR (HL)
+    };
+    map<uint16_t, uint8_t> otherVals = { { 0xBEEF, 0x8A } };
+    vector<uint8_t> allocatedMemory = createGBMemory(mem, otherVals);
+    MikoGB::CPUCore core(allocatedMemory.data(), allocatedMemory.size());
+    core.registers[REGISTER_H] = 0xBE;
+    core.registers[REGISTER_L] = 0xEF;
+    
+    XCTAssertEqual(core.step(), 4);
+    XCTAssertEqual(core.mainMemory[0xBEEF], 0x45);
+    XCTAssertEqual(core.getFlag(MikoGB::Carry), false);
+    XCTAssertEqual(core.getFlag(MikoGB::Zero), false);
+    
+    core.setFlag(MikoGB::Carry, true);
+    XCTAssertEqual(core.step(), 4);
+    XCTAssertEqual(core.mainMemory[0xBEEF], 0xA2);
+    XCTAssertEqual(core.getFlag(MikoGB::Carry), true);
+    XCTAssertEqual(core.getFlag(MikoGB::Zero), false);
+}
+
 @end

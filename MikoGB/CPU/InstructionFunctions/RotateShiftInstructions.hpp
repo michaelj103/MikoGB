@@ -32,6 +32,42 @@ int rotateRightAccumulatorCarryOut(const uint8_t *, MikoGB::CPUCore &);
 /// Accumulator is rotated right as if it is 9 bits with the carry at the lowest position
 int rotateRightAccumulatorThroughCarry(const uint8_t *, MikoGB::CPUCore &);
 
+/// RLC r     (Extended opcode 0xCB)
+/// Rotate argument left and carry out the high bit. Bits are [ 0, 0, 0, 0, 0, r2, r1, r0 ]
+/// Standard register codes including an HL option
+int rotateLeftRegisterCarryOut(const uint8_t *, MikoGB::CPUCore &);
+
+/// RLC (HL)     (Extended opcode 0xCB)
+/// Rotate the byte at address pointed to by HL pointer. Carry out high. Bits are [ 0, 0, 0, 0, 0, 1, 1, 0 ]
+int rotateLeftHLPtrCarryOut(const uint8_t *, MikoGB::CPUCore &);
+
+/// RL r     (Extended opcode 0xCB)
+/// Rotate argument left through the carry. Bits are [ 0, 0, 0, 1, 0, r2, r1, r0 ]
+/// Standard register codes including an HL option
+int rotateLeftRegisterThroughCarry(const uint8_t *, MikoGB::CPUCore &);
+
+/// RL (HL)     (Extended opcode 0xCB)
+/// Rotate the byte at address pointed to by HL pointer through the carry. Bits are [ 0, 0, 0, 1, 0, 1, 1, 0 ]
+int rotateLeftHLPtrThroughCarry(const uint8_t *, MikoGB::CPUCore &);
+
+/// RRC r     (Extended opcode 0xCB)
+/// Rotate argument right and carry out the low bit. Bits are [ 0, 0, 0, 0, 1, r2, r1, r0 ]
+/// Standard register codes including an HL option
+int rotateRightRegisterCarryOut(const uint8_t *, MikoGB::CPUCore &);
+
+/// RRC (HL)     (Extended opcode 0xCB)
+/// Rotate the byte at address pointed to by HL pointer. Carry out low. Bits are [ 0, 0, 0, 0, 1, 1, 1, 0 ]
+int rotateRightHLPtrCarryOut(const uint8_t *, MikoGB::CPUCore &);
+
+/// RR r     (Extended opcode 0xCB)
+/// Rotate argument right through the carry. Bits are [ 0, 0, 0, 1, 1, r2, r1, r0 ]
+/// Standard register codes including an HL option
+int rotateRightRegisterThroughCarry(const uint8_t *, MikoGB::CPUCore &);
+
+/// RR (HL)     (Extended opcode 0xCB)
+/// Rotate the byte at address pointed to by HL pointer through the carry. Bits are [ 0, 0, 0, 1, 1, 1, 1, 0 ]
+int rotateRightHLPtrThroughCarry(const uint8_t *, MikoGB::CPUCore &);
+
 }
 
 #endif /* RotateShiftInstructions_hpp */
