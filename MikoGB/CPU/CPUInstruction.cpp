@@ -21,6 +21,7 @@
 #include "CallAndReturnInstructions.hpp"
 #include "JumpInstructions.hpp"
 #include "RotateShiftInstructions.hpp"
+#include "SpecialInstructions.hpp"
 
 using namespace std;
 using namespace MikoGB;
@@ -160,8 +161,7 @@ void CPUInstruction::InitializeInstructionTable() {
     InstructionTable[0x73] = { 1, loadPtrHLFromRegister }; // LD (HL), E
     InstructionTable[0x74] = { 1, loadPtrHLFromRegister }; // LD (HL), H
     InstructionTable[0x75] = { 1, loadPtrHLFromRegister }; // LD (HL), L
-    //TODO: HALT instruction
-//    InstructionTable[0x76] = { 1, ??? }; // LD (HL), (HL)
+    // 0x76 is HALT. LD (HL), (HL) wouldn't do anything
     InstructionTable[0x77] = { 1, loadPtrHLFromRegister }; // LD (HL), A
     
     // LD A, r
@@ -381,6 +381,16 @@ void CPUInstruction::InitializeInstructionTable() {
     InstructionTable[0x17] = { 1, rotateLeftAccumulatorThroughCarry }; // RLA
     InstructionTable[0x0F] = { 1, rotateRightAccumulatorCarryOut }; // RRCA
     InstructionTable[0x1F] = { 1, rotateRightAccumulatorThroughCarry }; // RRA
+    
+    // Special instructions
+    InstructionTable[0x27] = { 1, decimalAdjustAccumulator }; // DAA
+    InstructionTable[0x2F] = { 1, complementAccumulator }; // CPL
+    InstructionTable[0x37] = { 1, setCarryFlag }; // SCF
+    InstructionTable[0x3F] = { 1, complementCarryFlag }; // CCF
+    InstructionTable[0xF3] = { 1, disableInterrupts }; // DI
+    InstructionTable[0xFB] = { 1, enableInterrupts }; // EI
+    InstructionTable[0x76] = { 1, haltInstruction }; // HALT
+    InstructionTable[0x10] = { 2, stopInstruction }; // STOP. Technically 2 bytes, the second is expected to be 0x00
     
     // =====================================
     // Extended Opcodes, prefixed with 0xCB

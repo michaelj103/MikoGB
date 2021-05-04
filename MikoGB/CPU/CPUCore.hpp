@@ -82,6 +82,9 @@ public:
     /// Convenience, calls stackPop(uint8_t, uint8_t) and returns combined
     uint16_t stackPop();
     
+    void halt();
+    void stop();
+    
     // Flags
     
     bool getFlag(FlagBit) const;

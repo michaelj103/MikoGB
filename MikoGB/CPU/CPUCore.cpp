@@ -8,6 +8,7 @@
 #include "CPUCore.hpp"
 #include "CPUInstruction.hpp"
 #include <algorithm>
+#include <stdexcept>
 
 using namespace std;
 using namespace MikoGB;
@@ -40,5 +41,13 @@ void CPUCore::reset() {
     }
     programCounter = 0;
     stackPointer = 0;
+}
+
+void CPUCore::halt() {
+    throw runtime_error("HALT mode not implemented");
+}
+
+void CPUCore::stop() {
+    throw runtime_error("STOP mode not implemented");
 }
 
