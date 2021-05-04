@@ -679,6 +679,16 @@ void CPUInstruction::InitializeInstructionTable() {
     InstructionTable[0x12E] = { 2, shiftRightPtrHLFillHigh }; // SRA (HL)
     InstructionTable[0x12F] = { 2, shiftRightRegisterFillHigh }; // SRA A
     
+    // SWAP instructions
+    InstructionTable[0x130] = { 2, swapRegister }; // SWAP B
+    InstructionTable[0x131] = { 2, swapRegister }; // SWAP C
+    InstructionTable[0x132] = { 2, swapRegister }; // SWAP D
+    InstructionTable[0x133] = { 2, swapRegister }; // SWAP E
+    InstructionTable[0x134] = { 2, swapRegister }; // SWAP H
+    InstructionTable[0x135] = { 2, swapRegister }; // SWAP L
+    InstructionTable[0x136] = { 2, swapPtrHL }; // SWAP (HL)
+    InstructionTable[0x137] = { 2, swapRegister }; // SWAP A
+    
     size_t instCount = 0;
     for (size_t i = 0; i < 512; ++i) {
         CPUInstruction &inst = InstructionTable[i];

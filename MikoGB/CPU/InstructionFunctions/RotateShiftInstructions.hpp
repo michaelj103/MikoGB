@@ -95,6 +95,14 @@ int shiftRightRegisterFillHigh(const uint8_t *, MikoGB::CPUCore &);
 /// Shift right with carry out, contents pointed to by HL. Doesn't fill the high bit, leaves it unchanged. Bits are [ 0, 0, 1, 0, 1, 1, 1, 0 ]
 int shiftRightPtrHLFillHigh(const uint8_t *, MikoGB::CPUCore &);
 
+/// SWAP r     (Extended opcode 0xCB)
+/// Swap the low 4 bits with the high 4 bits for standard register codes. Bits are [ 0, 0, 1, 1, 0, r2, r1, r0 ]
+int swapRegister(const uint8_t *, MikoGB::CPUCore &);
+
+/// SWAP (HL)     (Extended opcode 0xCB)
+/// Swap the low 4 bits with the high 4 bits for byte at (HL). Bits are [ 0, 0, 1, 1, 0, r2, r1, r0 ]
+int swapPtrHL(const uint8_t *, MikoGB::CPUCore &);
+
 }
 
 #endif /* RotateShiftInstructions_hpp */

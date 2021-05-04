@@ -246,3 +246,31 @@ int CPUInstructions::shiftRightPtrHLFillHigh(const uint8_t *opcode, CPUCore &cor
     
     return 4;
 }
+
+#pragma mark - SWAP m
+
+int CPUInstructions::swapRegister(const uint8_t *opcode, CPUCore &core) {
+    const uint8_t reg = (opcode[1] & 0x07); // Register code is low 3 bits
+    const uint8_t rVal = core.registers[reg];
+    const uint8_t finalVal = ((rVal & 0xF) << 4) | ((rVal & 0xF0) >> 4);
+    core.registers[reg] = finalVal;
+    core.setFlag(FlagBit::Carry, false);
+    core.setFlag(FlagBit::H, false);
+    core.setFlag(FlagBit::N, false);
+    core.setFlag(FlagBit::Zero, finalVal == 0);
+    
+    return 2;
+}
+
+int CPUInstructions::swapPtrHL(const uint8_t *opcode, CPUCore &core) {
+    const uint16_t hlPtr = core.getHLptr();
+    const uint8_t mVal = core.mainMemory[hlPtr];
+    const uint8_t finalVal = ((mVal & 0xF) << 4) | ((mVal & 0xF0) >> 4);
+    core.mainMemory[hlPtr] = finalVal;
+    core.setFlag(FlagBit::Carry, false);
+    core.setFlag(FlagBit::H, false);
+    core.setFlag(FlagBit::N, false);
+    core.setFlag(FlagBit::Zero, finalVal == 0);
+    
+    return 4;
+}

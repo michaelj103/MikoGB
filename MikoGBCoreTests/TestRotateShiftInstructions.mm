@@ -311,4 +311,40 @@ using namespace std;
     XCTAssertEqual(core.getFlag(MikoGB::Zero), true);
 }
 
+#pragma mark - SWAP m
+
+- (void)testSwapRegister {
+    vector<uint8_t> mem = {
+        0xCB, 0x37, // SWAP A
+        0xCB, 0x30, // SWAP B
+    };
+    MikoGB::CPUCore core(mem.data(), mem.size());
+    core.registers[REGISTER_A] = 0x00;
+    core.registers[REGISTER_B] = 0xBA;
+    
+    XCTAssertEqual(core.step(), 2);
+    XCTAssertEqual(core.registers[REGISTER_A], 0x00);
+    XCTAssertEqual(core.getFlag(MikoGB::Carry), false);
+    XCTAssertEqual(core.getFlag(MikoGB::Zero), true);
+    
+    XCTAssertEqual(core.step(), 2);
+    XCTAssertEqual(core.registers[REGISTER_B], 0xAB);
+    XCTAssertEqual(core.getFlag(MikoGB::Carry), false);
+    XCTAssertEqual(core.getFlag(MikoGB::Zero), false);
+}
+
+- (void)testSwapPtrHL {
+    vector<uint8_t> mem = { 0xCB, 0x36 }; // SWAP (HL)
+    map<uint16_t, uint8_t> otherVals = { { 0xBEEF, 0xF0 } };
+    vector<uint8_t> allocatedMemory = createGBMemory(mem, otherVals);
+    MikoGB::CPUCore core(allocatedMemory.data(), allocatedMemory.size());
+    core.registers[REGISTER_H] = 0xBE;
+    core.registers[REGISTER_L] = 0xEF;
+    
+    XCTAssertEqual(core.step(), 4);
+    XCTAssertEqual(core.mainMemory[0xBEEF], 0x0F);
+    XCTAssertEqual(core.getFlag(MikoGB::Carry), false);
+    XCTAssertEqual(core.getFlag(MikoGB::Zero), false);
+}
+
 @end
