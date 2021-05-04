@@ -67,11 +67,11 @@ void CPUInstruction::InitializeInstructionTable() {
         return; //already initialized
     }
     
-    // Technically, there can be 512 instructions but they aren't all used
-    // 256 possible with a single slot. 256 possible with the extender 0xCB and the second byte
+    // Technically, there can be 511 instructions but only 500 are used
+    // 255 possible with a single byte. 256 possible with the extender 0xCB and the second byte
     // Single-byte instructions are indexed by their value
     // Two-byte instructions must have 0xCB as the first byte and are indexed by 0x1NN
-    // So all feasible codes are 0x00 - 0x1FF (0-511), but there are gaps
+    // So all feasible indices are 0x00 - 0x1FF (0-511), but there are gaps
     // Default initialized so that gaps are automatically UnrecognizedInstruction
     InstructionTable = new CPUInstruction[512]();
     
@@ -668,6 +668,16 @@ void CPUInstruction::InitializeInstructionTable() {
     InstructionTable[0x13D] = { 2, shiftRightRegisterFill0 }; // SRL L
     InstructionTable[0x13E] = { 2, shiftRightPtrHLFill0 }; // SRL (HL)
     InstructionTable[0x13F] = { 2, shiftRightRegisterFill0 }; // SRL A
+    
+    // SRA instructions
+    InstructionTable[0x128] = { 2, shiftRightRegisterFillHigh }; // SRA B
+    InstructionTable[0x129] = { 2, shiftRightRegisterFillHigh }; // SRA C
+    InstructionTable[0x12A] = { 2, shiftRightRegisterFillHigh }; // SRA D
+    InstructionTable[0x12B] = { 2, shiftRightRegisterFillHigh }; // SRA E
+    InstructionTable[0x12C] = { 2, shiftRightRegisterFillHigh }; // SRA H
+    InstructionTable[0x12D] = { 2, shiftRightRegisterFillHigh }; // SRA L
+    InstructionTable[0x12E] = { 2, shiftRightPtrHLFillHigh }; // SRA (HL)
+    InstructionTable[0x12F] = { 2, shiftRightRegisterFillHigh }; // SRA A
     
     size_t instCount = 0;
     for (size_t i = 0; i < 512; ++i) {

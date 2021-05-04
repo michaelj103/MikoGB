@@ -284,4 +284,31 @@ using namespace std;
     XCTAssertEqual(core.getFlag(MikoGB::Zero), false);
 }
 
+#pragma mark - SRA m
+
+- (void)testShiftRightRegisterFillHigh {
+    vector<uint8_t> mem = { 0xCB, 0x2B }; // SRA E
+    MikoGB::CPUCore core(mem.data(), mem.size());
+    core.registers[REGISTER_E] = 0x8A;
+    
+    XCTAssertEqual(core.step(), 2);
+    XCTAssertEqual(core.registers[REGISTER_E], 0xC5);
+    XCTAssertEqual(core.getFlag(MikoGB::Carry), false);
+    XCTAssertEqual(core.getFlag(MikoGB::Zero), false);
+}
+
+- (void)testShiftRightPtrHLFillHigh {
+    vector<uint8_t> mem = { 0xCB, 0x2E }; // SRL (HL)
+    map<uint16_t, uint8_t> otherVals = { { 0xBEEF, 0x01 } };
+    vector<uint8_t> allocatedMemory = createGBMemory(mem, otherVals);
+    MikoGB::CPUCore core(allocatedMemory.data(), allocatedMemory.size());
+    core.registers[REGISTER_H] = 0xBE;
+    core.registers[REGISTER_L] = 0xEF;
+    
+    XCTAssertEqual(core.step(), 4);
+    XCTAssertEqual(core.mainMemory[0xBEEF], 0x00);
+    XCTAssertEqual(core.getFlag(MikoGB::Carry), true);
+    XCTAssertEqual(core.getFlag(MikoGB::Zero), true);
+}
+
 @end

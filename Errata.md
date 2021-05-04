@@ -6,3 +6,4 @@
 - `SET b, r` and `SET b, (HL)` commands seem to have an off-by-one on the examples for the 3rd bit (Note that `RES 3, (HL)` example is correct)
 - `CALL cc` command example seems to have a math error, should start at instruction 0x7FFD
 - `RLCA` instruction describes that bit 7 of A is copied to bit 0, but the example doesn't follow that rule. Per Intel 8080 manual, the description is correct, example is wrong
+- `SRA` instruction example seems to mix up registers
