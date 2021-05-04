@@ -658,6 +658,17 @@ void CPUInstruction::InitializeInstructionTable() {
     InstructionTable[0x126] = { 2, shiftLeftPtrHLFill0 }; // SLA (HL)
     InstructionTable[0x127] = { 2, shiftLeftRegisterFill0 }; // SLA A
     
+    // SRL instructions
+    // TODO: Verify these are correct. I find it weird that SRL is documented to be the right-shift version of SLA but that SRA has unique behavior (no left equivalent)
+    InstructionTable[0x138] = { 2, shiftRightRegisterFill0 }; // SRL B
+    InstructionTable[0x139] = { 2, shiftRightRegisterFill0 }; // SRL C
+    InstructionTable[0x13A] = { 2, shiftRightRegisterFill0 }; // SRL D
+    InstructionTable[0x13B] = { 2, shiftRightRegisterFill0 }; // SRL E
+    InstructionTable[0x13C] = { 2, shiftRightRegisterFill0 }; // SRL H
+    InstructionTable[0x13D] = { 2, shiftRightRegisterFill0 }; // SRL L
+    InstructionTable[0x13E] = { 2, shiftRightPtrHLFill0 }; // SRL (HL)
+    InstructionTable[0x13F] = { 2, shiftRightRegisterFill0 }; // SRL A
+    
     size_t instCount = 0;
     for (size_t i = 0; i < 512; ++i) {
         CPUInstruction &inst = InstructionTable[i];
