@@ -230,4 +230,32 @@ using namespace std;
     XCTAssertEqual(core.getFlag(MikoGB::Zero), false);
 }
 
+#pragma mark - SLA m
+
+- (void)testShiftLeftRegisterFill0 {
+    vector<uint8_t> mem = { 0xCB, 0x22 }; // SLA D
+    MikoGB::CPUCore core(mem.data(), mem.size());
+    core.registers[REGISTER_D] = 0x80;
+    
+    XCTAssertEqual(core.step(), 2);
+    XCTAssertEqual(core.registers[REGISTER_D], 0x00);
+    XCTAssertEqual(core.getFlag(MikoGB::Carry), true);
+    XCTAssertEqual(core.getFlag(MikoGB::Zero), true);
+}
+
+- (void)testShiftLeftPtrHLFill0 {
+    vector<uint8_t> mem = { 0xCB, 0x26 }; // SLA (HL)
+    map<uint16_t, uint8_t> otherVals = { { 0xBEEF, 0xFF } };
+    vector<uint8_t> allocatedMemory = createGBMemory(mem, otherVals);
+    MikoGB::CPUCore core(allocatedMemory.data(), allocatedMemory.size());
+    core.registers[REGISTER_H] = 0xBE;
+    core.registers[REGISTER_L] = 0xEF;
+    core.setFlag(MikoGB::Carry, true);
+    
+    XCTAssertEqual(core.step(), 4);
+    XCTAssertEqual(core.mainMemory[0xBEEF], 0xFE);
+    XCTAssertEqual(core.getFlag(MikoGB::Carry), true);
+    XCTAssertEqual(core.getFlag(MikoGB::Zero), false);
+}
+
 @end

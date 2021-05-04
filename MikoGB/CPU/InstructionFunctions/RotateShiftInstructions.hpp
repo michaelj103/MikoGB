@@ -68,6 +68,16 @@ int rotateRightRegisterThroughCarry(const uint8_t *, MikoGB::CPUCore &);
 /// Rotate the byte at address pointed to by HL pointer through the carry. Bits are [ 0, 0, 0, 1, 1, 1, 1, 0 ]
 int rotateRightHLPtrThroughCarry(const uint8_t *, MikoGB::CPUCore &);
 
+/// SLA m     (Extended opcode 0xCB)
+/// Shift left with carry out for register argument. "Normal" shift. Bits are [ 0, 0, 1, 0, 0, r2, r1, r0 ]
+/// Standard register codes including an HL option
+int shiftLeftRegisterFill0(const uint8_t *, MikoGB::CPUCore &);
+
+/// SLA (HL)     (Extended opcode 0xCB)
+/// Shift left with carry out, contents pointed to by HL. "Normal" shift. Bits are [ 0, 0, 1, 0, 0, r2, r1, r0 ]
+/// Standard register codes including an HL option
+int shiftLeftPtrHLFill0(const uint8_t *, MikoGB::CPUCore &);
+
 }
 
 #endif /* RotateShiftInstructions_hpp */

@@ -648,6 +648,16 @@ void CPUInstruction::InitializeInstructionTable() {
     InstructionTable[0x11E] = { 2, rotateRightHLPtrThroughCarry }; // RR (HL)
     InstructionTable[0x11F] = { 2, rotateRightRegisterThroughCarry }; // RR A
     
+    // SLA instructions
+    InstructionTable[0x120] = { 2, shiftLeftRegisterFill0 }; // SLA B
+    InstructionTable[0x121] = { 2, shiftLeftRegisterFill0 }; // SLA C
+    InstructionTable[0x122] = { 2, shiftLeftRegisterFill0 }; // SLA D
+    InstructionTable[0x123] = { 2, shiftLeftRegisterFill0 }; // SLA E
+    InstructionTable[0x124] = { 2, shiftLeftRegisterFill0 }; // SLA H
+    InstructionTable[0x125] = { 2, shiftLeftRegisterFill0 }; // SLA L
+    InstructionTable[0x126] = { 2, shiftLeftPtrHLFill0 }; // SLA (HL)
+    InstructionTable[0x127] = { 2, shiftLeftRegisterFill0 }; // SLA A
+    
     size_t instCount = 0;
     for (size_t i = 0; i < 512; ++i) {
         CPUInstruction &inst = InstructionTable[i];

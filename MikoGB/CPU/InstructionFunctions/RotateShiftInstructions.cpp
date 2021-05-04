@@ -166,3 +166,31 @@ int CPUInstructions::rotateRightHLPtrThroughCarry(const uint8_t *opcode, CPUCore
     
     return 4;
 }
+
+#pragma mark - Shift extended opcodes
+
+int CPUInstructions::shiftLeftRegisterFill0(const uint8_t *opcode, CPUCore &core) {
+    const uint8_t reg = (opcode[1] & 0x07); // Register code is low 3 bits
+    const uint8_t rVal = core.registers[reg];
+    const uint8_t finalVal = rVal << 1;
+    core.setFlag(FlagBit::Carry, (rVal & 0x80) == 0x80);
+    core.registers[reg] = finalVal;
+    core.setFlag(FlagBit::H, false);
+    core.setFlag(FlagBit::N, false);
+    core.setFlag(FlagBit::Zero, finalVal == 0);
+    
+    return 2;
+}
+
+int CPUInstructions::shiftLeftPtrHLFill0(const uint8_t *opcode, CPUCore &core) {
+    const uint16_t hlPtr = core.getHLptr();
+    const uint8_t mVal = core.mainMemory[hlPtr];
+    const uint8_t finalVal = mVal << 1;
+    core.setFlag(FlagBit::Carry, (mVal & 0x80) == 0x80);
+    core.mainMemory[hlPtr] = finalVal;
+    core.setFlag(FlagBit::H, false);
+    core.setFlag(FlagBit::N, false);
+    core.setFlag(FlagBit::Zero, finalVal == 0);
+    
+    return 4;
+}
