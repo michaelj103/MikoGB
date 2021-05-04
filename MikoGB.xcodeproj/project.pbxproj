@@ -30,6 +30,9 @@
 		299281A5263F885E004691E5 /* CallAndReturnInstructions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 299281A3263F885E004691E5 /* CallAndReturnInstructions.cpp */; };
 		299281A6263F885E004691E5 /* CallAndReturnInstructions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 299281A3263F885E004691E5 /* CallAndReturnInstructions.cpp */; };
 		299281AE2640739C004691E5 /* TestCallAndReturnInstructions.mm in Sources */ = {isa = PBXBuildFile; fileRef = 299281AD2640739C004691E5 /* TestCallAndReturnInstructions.mm */; };
+		299281BA264097FE004691E5 /* RotateShiftInstructions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 299281B8264097FE004691E5 /* RotateShiftInstructions.cpp */; };
+		299281BB264097FE004691E5 /* RotateShiftInstructions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 299281B8264097FE004691E5 /* RotateShiftInstructions.cpp */; };
+		299281C32640A17D004691E5 /* TestRotateShiftInstructions.mm in Sources */ = {isa = PBXBuildFile; fileRef = 299281C22640A17D004691E5 /* TestRotateShiftInstructions.mm */; };
 		29A8C0BC2462685F0082C52B /* LoadInstructions8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8C0BA2462685F0082C52B /* LoadInstructions8.cpp */; };
 		29A8C0C02463495A0082C52B /* LoadInstructions16.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8C0BE2463495A0082C52B /* LoadInstructions16.cpp */; };
 		29A8C0D62467DC490082C52B /* ArithmeticInstructions8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8C0D42467DC490082C52B /* ArithmeticInstructions8.cpp */; };
@@ -80,6 +83,9 @@
 		299281A3263F885E004691E5 /* CallAndReturnInstructions.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = CallAndReturnInstructions.cpp; sourceTree = "<group>"; };
 		299281A4263F885E004691E5 /* CallAndReturnInstructions.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = CallAndReturnInstructions.hpp; sourceTree = "<group>"; };
 		299281AD2640739C004691E5 /* TestCallAndReturnInstructions.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = TestCallAndReturnInstructions.mm; sourceTree = "<group>"; };
+		299281B8264097FE004691E5 /* RotateShiftInstructions.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = RotateShiftInstructions.cpp; sourceTree = "<group>"; };
+		299281B9264097FE004691E5 /* RotateShiftInstructions.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = RotateShiftInstructions.hpp; sourceTree = "<group>"; };
+		299281C22640A17D004691E5 /* TestRotateShiftInstructions.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = TestRotateShiftInstructions.mm; sourceTree = "<group>"; };
 		29A8C0B9246147190082C52B /* BitTwiddlingUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BitTwiddlingUtil.h; sourceTree = "<group>"; };
 		29A8C0BA2462685F0082C52B /* LoadInstructions8.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = LoadInstructions8.cpp; sourceTree = "<group>"; };
 		29A8C0BB2462685F0082C52B /* LoadInstructions8.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = LoadInstructions8.hpp; sourceTree = "<group>"; };
@@ -193,6 +199,8 @@
 				29A8C0DA246810640082C52B /* JumpInstructions.cpp */,
 				299281A4263F885E004691E5 /* CallAndReturnInstructions.hpp */,
 				299281A3263F885E004691E5 /* CallAndReturnInstructions.cpp */,
+				299281B9264097FE004691E5 /* RotateShiftInstructions.hpp */,
+				299281B8264097FE004691E5 /* RotateShiftInstructions.cpp */,
 			);
 			path = InstructionFunctions;
 			sourceTree = "<group>";
@@ -200,6 +208,7 @@
 		29D3C937247DFBFE0096D21B /* MikoGBCoreTests */ = {
 			isa = PBXGroup;
 			children = (
+				299281C22640A17D004691E5 /* TestRotateShiftInstructions.mm */,
 				299281AD2640739C004691E5 /* TestCallAndReturnInstructions.mm */,
 				29928194263DE721004691E5 /* Test16BitArithmeticInstructions.mm */,
 				29FC06AA24BC2BFD00C12E6B /* Test8BitArithmeticInstructions.mm */,
@@ -336,6 +345,7 @@
 				29A8C0C02463495A0082C52B /* LoadInstructions16.cpp in Sources */,
 				297E613E245FECDF00EE150F /* CPUInstruction.cpp in Sources */,
 				29A8C0BC2462685F0082C52B /* LoadInstructions8.cpp in Sources */,
+				299281BA264097FE004691E5 /* RotateShiftInstructions.cpp in Sources */,
 				2992818D263DDEC8004691E5 /* ArithmeticInstructions16.cpp in Sources */,
 				297E600C2456532700EE150F /* CartridgeHeader.cpp in Sources */,
 				29A8C0DC246810640082C52B /* JumpInstructions.cpp in Sources */,
@@ -361,10 +371,12 @@
 			files = (
 				290B3BC8247E00B400937D71 /* CPUCore.cpp in Sources */,
 				290B3BD0247E048100937D71 /* Test8BitLoadInstructions.mm in Sources */,
+				299281C32640A17D004691E5 /* TestRotateShiftInstructions.mm in Sources */,
 				290B3BCD247E00D200937D71 /* BitOpInstructions.cpp in Sources */,
 				290B3BCB247E00CE00937D71 /* LoadInstructions16.cpp in Sources */,
 				290B3BC9247E00C000937D71 /* CPUInstruction.cpp in Sources */,
 				29D3C942247DFDE80096D21B /* TestCPUCoreUtilities.cpp in Sources */,
+				299281BB264097FE004691E5 /* RotateShiftInstructions.cpp in Sources */,
 				29FC06AB24BC2BFD00C12E6B /* Test8BitArithmeticInstructions.mm in Sources */,
 				290B3BCA247E00CB00937D71 /* LoadInstructions8.cpp in Sources */,
 				29928195263DE721004691E5 /* Test16BitArithmeticInstructions.mm in Sources */,

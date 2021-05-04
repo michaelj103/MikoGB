@@ -18,6 +18,7 @@
 #include "BitOpInstructions.hpp"
 #include "CallAndReturnInstructions.hpp"
 #include "JumpInstructions.hpp"
+#include "RotateShiftInstructions.hpp"
 
 using namespace std;
 using namespace MikoGB;
@@ -358,6 +359,12 @@ void CPUInstruction::InitializeInstructionTable() {
     InstructionTable[0xEF] = { 1, resetCall }; // RST 5
     InstructionTable[0xF7] = { 1, resetCall }; // RST 6
     InstructionTable[0xFF] = { 1, resetCall }; // RST 7
+    
+    // Rotate instructions
+    InstructionTable[0x07] = { 1, rotateLeftAccumulatorCarryOut }; // RLCA
+    InstructionTable[0x17] = { 1, rotateLeftAccumulatorThroughCarry }; // RLA
+    InstructionTable[0x0F] = { 1, rotateRightAccumulatorCarryOut }; // RRCA
+    InstructionTable[0x1F] = { 1, rotateRightAccumulatorThroughCarry }; // RRA
     
     // =====================================
     // Extended Opcodes, prefixed with 0xCB
