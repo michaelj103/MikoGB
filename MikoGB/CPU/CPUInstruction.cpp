@@ -9,6 +9,8 @@
 #include <exception>
 #include <string>
 #include <iostream>
+#include <sstream>
+#include <iomanip>
 #include "BitTwiddlingUtil.h"
 
 #include "LoadInstructions8.hpp"
@@ -24,8 +26,22 @@ using namespace std;
 using namespace MikoGB;
 using namespace CPUInstructions;
 
+static inline string _HexStringForByte(uint8_t byte) {
+    ostringstream oss;
+    oss << "0x";
+    oss << std::hex << std::setfill('0') << std::setw(2) << std::uppercase << (int)byte;
+    return oss.str();
+}
+
 int CPUInstruction::UnrecognizedInstruction(const uint8_t *opcode, CPUCore &core) {
-    throw runtime_error("Unrecognized Instruction: " + to_string((int)(*opcode)));
+    const uint8_t firstCode = opcode[0];
+    if (firstCode == 0xCB) {
+        // Unrecognized extended opcode
+        const uint8_t secondCode = opcode[1];
+        throw runtime_error("Unrecognized Instruction: " + _HexStringForByte(firstCode) + ", " + _HexStringForByte(secondCode));
+    } else {
+        throw runtime_error("Unrecognized Instruction: " + _HexStringForByte(firstCode));
+    }
 }
 
 const CPUInstruction &CPUInstruction::LookupInstruction(uint8_t *memoryPtr) {
