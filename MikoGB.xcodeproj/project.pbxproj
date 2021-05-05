@@ -16,37 +16,54 @@
 		290B3BCE247E00D500937D71 /* JumpInstructions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8C0DA246810640082C52B /* JumpInstructions.cpp */; };
 		290B3BD0247E048100937D71 /* Test8BitLoadInstructions.mm in Sources */ = {isa = PBXBuildFile; fileRef = 290B3BCF247E048100937D71 /* Test8BitLoadInstructions.mm */; };
 		290B3BD2247F51D100937D71 /* Test16BitLoadInstructions.mm in Sources */ = {isa = PBXBuildFile; fileRef = 290B3BD1247F51D100937D71 /* Test16BitLoadInstructions.mm */; };
-		297E5FF92456421B00EE150F /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297E5FF82456421B00EE150F /* main.cpp */; };
 		297E60062456426400EE150F /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297E60052456426400EE150F /* main.cpp */; };
-		297E600C2456532700EE150F /* CartridgeHeader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297E600A2456532700EE150F /* CartridgeHeader.cpp */; };
 		297E600D2456532700EE150F /* CartridgeHeader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297E600A2456532700EE150F /* CartridgeHeader.cpp */; };
-		297E6139245FEA5D00EE150F /* CPUCore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297E6137245FEA5D00EE150F /* CPUCore.cpp */; };
-		297E613A245FEA5D00EE150F /* CPUCore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297E6137245FEA5D00EE150F /* CPUCore.cpp */; };
-		297E613E245FECDF00EE150F /* CPUInstruction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297E613C245FECDF00EE150F /* CPUInstruction.cpp */; };
-		297E613F245FECDF00EE150F /* CPUInstruction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297E613C245FECDF00EE150F /* CPUInstruction.cpp */; };
-		2992818D263DDEC8004691E5 /* ArithmeticInstructions16.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2992818B263DDEC8004691E5 /* ArithmeticInstructions16.cpp */; };
 		29928195263DE721004691E5 /* Test16BitArithmeticInstructions.mm in Sources */ = {isa = PBXBuildFile; fileRef = 29928194263DE721004691E5 /* Test16BitArithmeticInstructions.mm */; };
 		2992819C263DE86C004691E5 /* ArithmeticInstructions16.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2992818B263DDEC8004691E5 /* ArithmeticInstructions16.cpp */; };
-		299281A5263F885E004691E5 /* CallAndReturnInstructions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 299281A3263F885E004691E5 /* CallAndReturnInstructions.cpp */; };
 		299281A6263F885E004691E5 /* CallAndReturnInstructions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 299281A3263F885E004691E5 /* CallAndReturnInstructions.cpp */; };
 		299281AE2640739C004691E5 /* TestCallAndReturnInstructions.mm in Sources */ = {isa = PBXBuildFile; fileRef = 299281AD2640739C004691E5 /* TestCallAndReturnInstructions.mm */; };
-		299281BA264097FE004691E5 /* RotateShiftInstructions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 299281B8264097FE004691E5 /* RotateShiftInstructions.cpp */; };
 		299281BB264097FE004691E5 /* RotateShiftInstructions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 299281B8264097FE004691E5 /* RotateShiftInstructions.cpp */; };
 		299281C32640A17D004691E5 /* TestRotateShiftInstructions.mm in Sources */ = {isa = PBXBuildFile; fileRef = 299281C22640A17D004691E5 /* TestRotateShiftInstructions.mm */; };
-		299281CC2641ECC9004691E5 /* SpecialInstructions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 299281CA2641ECC9004691E5 /* SpecialInstructions.cpp */; };
 		299281CD2641ECC9004691E5 /* SpecialInstructions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 299281CA2641ECC9004691E5 /* SpecialInstructions.cpp */; };
-		29A8C0BC2462685F0082C52B /* LoadInstructions8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8C0BA2462685F0082C52B /* LoadInstructions8.cpp */; };
-		29A8C0C02463495A0082C52B /* LoadInstructions16.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8C0BE2463495A0082C52B /* LoadInstructions16.cpp */; };
-		29A8C0D62467DC490082C52B /* ArithmeticInstructions8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8C0D42467DC490082C52B /* ArithmeticInstructions8.cpp */; };
-		29A8C0D92467E9FC0082C52B /* BitOpInstructions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8C0D72467E9FC0082C52B /* BitOpInstructions.cpp */; };
-		29A8C0DC246810640082C52B /* JumpInstructions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8C0DA246810640082C52B /* JumpInstructions.cpp */; };
+		299281E926424123004691E5 /* MikoGBCore.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 299281E826424123004691E5 /* MikoGBCore.hpp */; };
+		299281EB26424123004691E5 /* MikoGBCorePriv.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 299281EA26424123004691E5 /* MikoGBCorePriv.hpp */; };
+		299281ED26424123004691E5 /* MikoGBCore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 299281EC26424123004691E5 /* MikoGBCore.cpp */; };
+		299281F526424164004691E5 /* GameBoyCore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 299281D8264234F5004691E5 /* GameBoyCore.cpp */; };
+		299281FE2642416A004691E5 /* GameBoyCore.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 299281D9264234F5004691E5 /* GameBoyCore.hpp */; settings = {ATTRIBUTES = (Public, ); }; };
+		2992821726424240004691E5 /* CPUCore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297E6137245FEA5D00EE150F /* CPUCore.cpp */; };
+		299282202642424C004691E5 /* CPUInstruction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297E613C245FECDF00EE150F /* CPUInstruction.cpp */; };
+		2992822D26424252004691E5 /* LoadInstructions8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8C0BA2462685F0082C52B /* LoadInstructions8.cpp */; };
+		2992823626424255004691E5 /* LoadInstructions16.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8C0BE2463495A0082C52B /* LoadInstructions16.cpp */; };
+		2992823B2642425A004691E5 /* ArithmeticInstructions8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8C0D42467DC490082C52B /* ArithmeticInstructions8.cpp */; };
+		299282482642425D004691E5 /* ArithmeticInstructions16.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2992818B263DDEC8004691E5 /* ArithmeticInstructions16.cpp */; };
+		2992825126424260004691E5 /* BitOpInstructions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8C0D72467E9FC0082C52B /* BitOpInstructions.cpp */; };
+		2992825A26424262004691E5 /* JumpInstructions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8C0DA246810640082C52B /* JumpInstructions.cpp */; };
+		2992826326424265004691E5 /* CallAndReturnInstructions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 299281A3263F885E004691E5 /* CallAndReturnInstructions.cpp */; };
+		2992826C26424268004691E5 /* RotateShiftInstructions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 299281B8264097FE004691E5 /* RotateShiftInstructions.cpp */; };
+		299282752642426B004691E5 /* SpecialInstructions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 299281CA2641ECC9004691E5 /* SpecialInstructions.cpp */; };
+		29928295264243F4004691E5 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29928294264243F4004691E5 /* main.cpp */; };
+		299282A02642441F004691E5 /* libMikoGBCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 299281E626424123004691E5 /* libMikoGBCore.a */; };
+		299282B52642449D004691E5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 299282B42642449D004691E5 /* AppDelegate.swift */; };
+		299282B72642449D004691E5 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 299282B62642449D004691E5 /* ViewController.swift */; };
+		299282B92642449F004691E5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 299282B82642449F004691E5 /* Assets.xcassets */; };
+		299282BC2642449F004691E5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 299282BA2642449F004691E5 /* Main.storyboard */; };
 		29D3C93F247DFC6A0096D21B /* TestCPUCoreBasics.mm in Sources */ = {isa = PBXBuildFile; fileRef = 29D3C93E247DFC6A0096D21B /* TestCPUCoreBasics.mm */; };
 		29D3C942247DFDE80096D21B /* TestCPUCoreUtilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29D3C940247DFDE80096D21B /* TestCPUCoreUtilities.cpp */; };
 		29FC06AB24BC2BFD00C12E6B /* Test8BitArithmeticInstructions.mm in Sources */ = {isa = PBXBuildFile; fileRef = 29FC06AA24BC2BFD00C12E6B /* Test8BitArithmeticInstructions.mm */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		2992829E2642441B004691E5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 297E5FED2456421B00EE150F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 299281E526424123004691E5;
+			remoteInfo = MikoGBCore;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXCopyFilesBuildPhase section */
-		297E5FF32456421B00EE150F /* CopyFiles */ = {
+		297E60012456426400EE150F /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = /usr/share/man/man1/;
@@ -55,7 +72,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 		};
-		297E60012456426400EE150F /* CopyFiles */ = {
+		29928290264243F4004691E5 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = /usr/share/man/man1/;
@@ -69,8 +86,6 @@
 /* Begin PBXFileReference section */
 		290B3BCF247E048100937D71 /* Test8BitLoadInstructions.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = Test8BitLoadInstructions.mm; sourceTree = "<group>"; };
 		290B3BD1247F51D100937D71 /* Test16BitLoadInstructions.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = Test16BitLoadInstructions.mm; sourceTree = "<group>"; };
-		297E5FF52456421B00EE150F /* MikoGB */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = MikoGB; sourceTree = BUILT_PRODUCTS_DIR; };
-		297E5FF82456421B00EE150F /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		297E60032456426400EE150F /* RomAnalyzer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = RomAnalyzer; sourceTree = BUILT_PRODUCTS_DIR; };
 		297E60052456426400EE150F /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		297E600A2456532700EE150F /* CartridgeHeader.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = CartridgeHeader.cpp; sourceTree = "<group>"; };
@@ -90,6 +105,21 @@
 		299281C22640A17D004691E5 /* TestRotateShiftInstructions.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = TestRotateShiftInstructions.mm; sourceTree = "<group>"; };
 		299281CA2641ECC9004691E5 /* SpecialInstructions.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SpecialInstructions.cpp; sourceTree = "<group>"; };
 		299281CB2641ECC9004691E5 /* SpecialInstructions.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SpecialInstructions.hpp; sourceTree = "<group>"; };
+		299281D8264234F5004691E5 /* GameBoyCore.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GameBoyCore.cpp; sourceTree = "<group>"; };
+		299281D9264234F5004691E5 /* GameBoyCore.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = GameBoyCore.hpp; sourceTree = "<group>"; };
+		299281E626424123004691E5 /* libMikoGBCore.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libMikoGBCore.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		299281E826424123004691E5 /* MikoGBCore.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MikoGBCore.hpp; sourceTree = "<group>"; };
+		299281EA26424123004691E5 /* MikoGBCorePriv.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MikoGBCorePriv.hpp; sourceTree = "<group>"; };
+		299281EC26424123004691E5 /* MikoGBCore.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = MikoGBCore.cpp; sourceTree = "<group>"; };
+		29928292264243F4004691E5 /* MikoGBCoreTestTool */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = MikoGBCoreTestTool; sourceTree = BUILT_PRODUCTS_DIR; };
+		29928294264243F4004691E5 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		299282B22642449D004691E5 /* MikoGB.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MikoGB.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		299282B42642449D004691E5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		299282B62642449D004691E5 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		299282B82642449F004691E5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		299282BB2642449F004691E5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		299282BD2642449F004691E5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		299282BE2642449F004691E5 /* MikoGB.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MikoGB.entitlements; sourceTree = "<group>"; };
 		29A8C0B9246147190082C52B /* BitTwiddlingUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BitTwiddlingUtil.h; sourceTree = "<group>"; };
 		29A8C0BA2462685F0082C52B /* LoadInstructions8.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = LoadInstructions8.cpp; sourceTree = "<group>"; };
 		29A8C0BB2462685F0082C52B /* LoadInstructions8.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = LoadInstructions8.hpp; sourceTree = "<group>"; };
@@ -110,14 +140,29 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		297E5FF22456421B00EE150F /* Frameworks */ = {
+		297E60002456426400EE150F /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		297E60002456426400EE150F /* Frameworks */ = {
+		299281E426424123004691E5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2992828F264243F4004691E5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				299282A02642441F004691E5 /* libMikoGBCore.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		299282AF2642449D004691E5 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -137,39 +182,34 @@
 		297E5FEC2456421B00EE150F = {
 			isa = PBXGroup;
 			children = (
-				297E5FF72456421B00EE150F /* MikoGB */,
 				297E60042456426400EE150F /* RomAnalyzer */,
+				299281E726424123004691E5 /* MikoGBCore */,
 				29D3C937247DFBFE0096D21B /* MikoGBCoreTests */,
+				29928293264243F4004691E5 /* MikoGBCoreTestTool */,
+				299282B32642449D004691E5 /* MikoGB */,
 				297E5FF62456421B00EE150F /* Products */,
+				29928280264242D9004691E5 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
 		297E5FF62456421B00EE150F /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				297E5FF52456421B00EE150F /* MikoGB */,
 				297E60032456426400EE150F /* RomAnalyzer */,
 				29D3C936247DFBFE0096D21B /* MikoGBCoreTests.xctest */,
+				299281E626424123004691E5 /* libMikoGBCore.a */,
+				29928292264243F4004691E5 /* MikoGBCoreTestTool */,
+				299282B22642449D004691E5 /* MikoGB.app */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		297E5FF72456421B00EE150F /* MikoGB */ = {
-			isa = PBXGroup;
-			children = (
-				297E5FF82456421B00EE150F /* main.cpp */,
-				297E600B2456532700EE150F /* CartridgeHeader.hpp */,
-				297E600A2456532700EE150F /* CartridgeHeader.cpp */,
-				29A8C0B9246147190082C52B /* BitTwiddlingUtil.h */,
-				297E613B245FEB9B00EE150F /* CPU */,
-			);
-			path = MikoGB;
 			sourceTree = "<group>";
 		};
 		297E60042456426400EE150F /* RomAnalyzer */ = {
 			isa = PBXGroup;
 			children = (
 				297E60052456426400EE150F /* main.cpp */,
+				297E600B2456532700EE150F /* CartridgeHeader.hpp */,
+				297E600A2456532700EE150F /* CartridgeHeader.cpp */,
 			);
 			path = RomAnalyzer;
 			sourceTree = "<group>";
@@ -184,6 +224,56 @@
 				29A8C0BD2462686D0082C52B /* InstructionFunctions */,
 			);
 			path = CPU;
+			sourceTree = "<group>";
+		};
+		299281D726423469004691E5 /* GPU */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = GPU;
+			sourceTree = "<group>";
+		};
+		299281E726424123004691E5 /* MikoGBCore */ = {
+			isa = PBXGroup;
+			children = (
+				299281E826424123004691E5 /* MikoGBCore.hpp */,
+				299281EA26424123004691E5 /* MikoGBCorePriv.hpp */,
+				299281EC26424123004691E5 /* MikoGBCore.cpp */,
+				299281D9264234F5004691E5 /* GameBoyCore.hpp */,
+				299281D8264234F5004691E5 /* GameBoyCore.cpp */,
+				29A8C0B9246147190082C52B /* BitTwiddlingUtil.h */,
+				297E613B245FEB9B00EE150F /* CPU */,
+				299281D726423469004691E5 /* GPU */,
+			);
+			path = MikoGBCore;
+			sourceTree = "<group>";
+		};
+		29928280264242D9004691E5 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		29928293264243F4004691E5 /* MikoGBCoreTestTool */ = {
+			isa = PBXGroup;
+			children = (
+				29928294264243F4004691E5 /* main.cpp */,
+			);
+			path = MikoGBCoreTestTool;
+			sourceTree = "<group>";
+		};
+		299282B32642449D004691E5 /* MikoGB */ = {
+			isa = PBXGroup;
+			children = (
+				299282B42642449D004691E5 /* AppDelegate.swift */,
+				299282B62642449D004691E5 /* ViewController.swift */,
+				299282B82642449F004691E5 /* Assets.xcassets */,
+				299282BA2642449F004691E5 /* Main.storyboard */,
+				299282BD2642449F004691E5 /* Info.plist */,
+				299282BE2642449F004691E5 /* MikoGB.entitlements */,
+			);
+			path = MikoGB;
 			sourceTree = "<group>";
 		};
 		29A8C0BD2462686D0082C52B /* InstructionFunctions */ = {
@@ -238,24 +328,20 @@
 		};
 /* End PBXGroup section */
 
-/* Begin PBXNativeTarget section */
-		297E5FF42456421B00EE150F /* MikoGB */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 297E5FFC2456421B00EE150F /* Build configuration list for PBXNativeTarget "MikoGB" */;
-			buildPhases = (
-				297E5FF12456421B00EE150F /* Sources */,
-				297E5FF22456421B00EE150F /* Frameworks */,
-				297E5FF32456421B00EE150F /* CopyFiles */,
+/* Begin PBXHeadersBuildPhase section */
+		299281E226424123004691E5 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				299281E926424123004691E5 /* MikoGBCore.hpp in Headers */,
+				299281FE2642416A004691E5 /* GameBoyCore.hpp in Headers */,
+				299281EB26424123004691E5 /* MikoGBCorePriv.hpp in Headers */,
 			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = MikoGB;
-			productName = MikoGB;
-			productReference = 297E5FF52456421B00EE150F /* MikoGB */;
-			productType = "com.apple.product-type.tool";
+			runOnlyForDeploymentPostprocessing = 0;
 		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
 		297E60022456426400EE150F /* RomAnalyzer */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 297E60072456426400EE150F /* Build configuration list for PBXNativeTarget "RomAnalyzer" */;
@@ -272,6 +358,58 @@
 			productName = RomAnalyzer;
 			productReference = 297E60032456426400EE150F /* RomAnalyzer */;
 			productType = "com.apple.product-type.tool";
+		};
+		299281E526424123004691E5 /* MikoGBCore */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 299281EE26424123004691E5 /* Build configuration list for PBXNativeTarget "MikoGBCore" */;
+			buildPhases = (
+				299281E226424123004691E5 /* Headers */,
+				299281E326424123004691E5 /* Sources */,
+				299281E426424123004691E5 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MikoGBCore;
+			productName = MikoGBCore;
+			productReference = 299281E626424123004691E5 /* libMikoGBCore.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		29928291264243F4004691E5 /* MikoGBCoreTestTool */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 29928296264243F4004691E5 /* Build configuration list for PBXNativeTarget "MikoGBCoreTestTool" */;
+			buildPhases = (
+				2992828E264243F4004691E5 /* Sources */,
+				2992828F264243F4004691E5 /* Frameworks */,
+				29928290264243F4004691E5 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2992829F2642441B004691E5 /* PBXTargetDependency */,
+			);
+			name = MikoGBCoreTestTool;
+			productName = MikoGBCoreTestTool;
+			productReference = 29928292264243F4004691E5 /* MikoGBCoreTestTool */;
+			productType = "com.apple.product-type.tool";
+		};
+		299282B12642449D004691E5 /* MikoGB */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 299282DB264244A0004691E5 /* Build configuration list for PBXNativeTarget "MikoGB" */;
+			buildPhases = (
+				299282AE2642449D004691E5 /* Sources */,
+				299282AF2642449D004691E5 /* Frameworks */,
+				299282B02642449D004691E5 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MikoGB;
+			productName = MikoGB;
+			productReference = 299282B22642449D004691E5 /* MikoGB.app */;
+			productType = "com.apple.product-type.application";
 		};
 		29D3C935247DFBFE0096D21B /* MikoGBCoreTests */ = {
 			isa = PBXNativeTarget;
@@ -296,14 +434,21 @@
 		297E5FED2456421B00EE150F /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 1240;
 				LastUpgradeCheck = 1140;
 				ORGANIZATIONNAME = "Michael Brandt";
 				TargetAttributes = {
-					297E5FF42456421B00EE150F = {
-						CreatedOnToolsVersion = 11.4.1;
-					};
 					297E60022456426400EE150F = {
 						CreatedOnToolsVersion = 11.4.1;
+					};
+					299281E526424123004691E5 = {
+						CreatedOnToolsVersion = 12.4;
+					};
+					29928291264243F4004691E5 = {
+						CreatedOnToolsVersion = 12.4;
+					};
+					299282B12642449D004691E5 = {
+						CreatedOnToolsVersion = 12.4;
 					};
 					29D3C935247DFBFE0096D21B = {
 						CreatedOnToolsVersion = 11.5;
@@ -323,14 +468,25 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				297E5FF42456421B00EE150F /* MikoGB */,
 				297E60022456426400EE150F /* RomAnalyzer */,
 				29D3C935247DFBFE0096D21B /* MikoGBCoreTests */,
+				299281E526424123004691E5 /* MikoGBCore */,
+				29928291264243F4004691E5 /* MikoGBCoreTestTool */,
+				299282B12642449D004691E5 /* MikoGB */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		299282B02642449D004691E5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				299282B92642449F004691E5 /* Assets.xcassets in Resources */,
+				299282BC2642449F004691E5 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		29D3C934247DFBFE0096D21B /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -341,34 +497,49 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		297E5FF12456421B00EE150F /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				297E6139245FEA5D00EE150F /* CPUCore.cpp in Sources */,
-				299281A5263F885E004691E5 /* CallAndReturnInstructions.cpp in Sources */,
-				29A8C0D92467E9FC0082C52B /* BitOpInstructions.cpp in Sources */,
-				29A8C0C02463495A0082C52B /* LoadInstructions16.cpp in Sources */,
-				297E613E245FECDF00EE150F /* CPUInstruction.cpp in Sources */,
-				29A8C0BC2462685F0082C52B /* LoadInstructions8.cpp in Sources */,
-				299281BA264097FE004691E5 /* RotateShiftInstructions.cpp in Sources */,
-				2992818D263DDEC8004691E5 /* ArithmeticInstructions16.cpp in Sources */,
-				297E600C2456532700EE150F /* CartridgeHeader.cpp in Sources */,
-				299281CC2641ECC9004691E5 /* SpecialInstructions.cpp in Sources */,
-				29A8C0DC246810640082C52B /* JumpInstructions.cpp in Sources */,
-				29A8C0D62467DC490082C52B /* ArithmeticInstructions8.cpp in Sources */,
-				297E5FF92456421B00EE150F /* main.cpp in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		297E5FFF2456426400EE150F /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				297E613A245FEA5D00EE150F /* CPUCore.cpp in Sources */,
-				297E613F245FECDF00EE150F /* CPUInstruction.cpp in Sources */,
 				297E600D2456532700EE150F /* CartridgeHeader.cpp in Sources */,
 				297E60062456426400EE150F /* main.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		299281E326424123004691E5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2992825A26424262004691E5 /* JumpInstructions.cpp in Sources */,
+				2992826326424265004691E5 /* CallAndReturnInstructions.cpp in Sources */,
+				2992821726424240004691E5 /* CPUCore.cpp in Sources */,
+				2992823626424255004691E5 /* LoadInstructions16.cpp in Sources */,
+				299282202642424C004691E5 /* CPUInstruction.cpp in Sources */,
+				299282482642425D004691E5 /* ArithmeticInstructions16.cpp in Sources */,
+				2992826C26424268004691E5 /* RotateShiftInstructions.cpp in Sources */,
+				299281ED26424123004691E5 /* MikoGBCore.cpp in Sources */,
+				2992822D26424252004691E5 /* LoadInstructions8.cpp in Sources */,
+				299282752642426B004691E5 /* SpecialInstructions.cpp in Sources */,
+				2992825126424260004691E5 /* BitOpInstructions.cpp in Sources */,
+				2992823B2642425A004691E5 /* ArithmeticInstructions8.cpp in Sources */,
+				299281F526424164004691E5 /* GameBoyCore.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2992828E264243F4004691E5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				29928295264243F4004691E5 /* main.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		299282AE2642449D004691E5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				299282B72642449D004691E5 /* ViewController.swift in Sources */,
+				299282B52642449D004691E5 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -399,6 +570,25 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		2992829F2642441B004691E5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 299281E526424123004691E5 /* MikoGBCore */;
+			targetProxy = 2992829E2642441B004691E5 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		299282BA2642449F004691E5 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				299282BB2642449F004691E5 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		297E5FFA2456421B00EE150F /* Debug */ = {
@@ -510,22 +700,6 @@
 			};
 			name = Release;
 		};
-		297E5FFD2456421B00EE150F /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Debug;
-		};
-		297E5FFE2456421B00EE150F /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Release;
-		};
 		297E60082456426400EE150F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -539,6 +713,100 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		299281EF26424123004691E5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CODE_SIGN_STYLE = Automatic;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				MACOSX_DEPLOYMENT_TARGET = 11.1;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		299281F026424123004691E5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CODE_SIGN_STYLE = Automatic;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				MACOSX_DEPLOYMENT_TARGET = 11.1;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		29928297264243F4004691E5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CODE_SIGN_STYLE = Automatic;
+				MACOSX_DEPLOYMENT_TARGET = 11.1;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		29928298264243F4004691E5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CODE_SIGN_STYLE = Automatic;
+				MACOSX_DEPLOYMENT_TARGET = 11.1;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		299282D5264244A0004691E5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CODE_SIGN_ENTITLEMENTS = MikoGB/MikoGB.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = MikoGB/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 11.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mjb.MikoGB;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		299282D6264244A0004691E5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CODE_SIGN_ENTITLEMENTS = MikoGB/MikoGB.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = MikoGB/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 11.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mjb.MikoGB;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
@@ -586,20 +854,38 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		297E5FFC2456421B00EE150F /* Build configuration list for PBXNativeTarget "MikoGB" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				297E5FFD2456421B00EE150F /* Debug */,
-				297E5FFE2456421B00EE150F /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		297E60072456426400EE150F /* Build configuration list for PBXNativeTarget "RomAnalyzer" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				297E60082456426400EE150F /* Debug */,
 				297E60092456426400EE150F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		299281EE26424123004691E5 /* Build configuration list for PBXNativeTarget "MikoGBCore" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				299281EF26424123004691E5 /* Debug */,
+				299281F026424123004691E5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		29928296264243F4004691E5 /* Build configuration list for PBXNativeTarget "MikoGBCoreTestTool" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				29928297264243F4004691E5 /* Debug */,
+				29928298264243F4004691E5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		299282DB264244A0004691E5 /* Build configuration list for PBXNativeTarget "MikoGB" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				299282D5264244A0004691E5 /* Debug */,
+				299282D6264244A0004691E5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
