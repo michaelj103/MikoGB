@@ -55,6 +55,13 @@ public:
     
     //TODO: should this be a class? "MemoryController"
     uint8_t *mainMemory;
+    void setMemory(uint16_t address, uint8_t val) {
+        mainMemory[address] = val;
+    }
+    
+    uint8_t getMemory(uint16_t address) const {
+        return mainMemory[address];
+    }
     
     uint16_t getHLptr() const;
     

@@ -25,9 +25,6 @@
 		299281BB264097FE004691E5 /* RotateShiftInstructions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 299281B8264097FE004691E5 /* RotateShiftInstructions.cpp */; };
 		299281C32640A17D004691E5 /* TestRotateShiftInstructions.mm in Sources */ = {isa = PBXBuildFile; fileRef = 299281C22640A17D004691E5 /* TestRotateShiftInstructions.mm */; };
 		299281CD2641ECC9004691E5 /* SpecialInstructions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 299281CA2641ECC9004691E5 /* SpecialInstructions.cpp */; };
-		299281E926424123004691E5 /* MikoGBCore.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 299281E826424123004691E5 /* MikoGBCore.hpp */; };
-		299281EB26424123004691E5 /* MikoGBCorePriv.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 299281EA26424123004691E5 /* MikoGBCorePriv.hpp */; };
-		299281ED26424123004691E5 /* MikoGBCore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 299281EC26424123004691E5 /* MikoGBCore.cpp */; };
 		299281F526424164004691E5 /* GameBoyCore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 299281D8264234F5004691E5 /* GameBoyCore.cpp */; };
 		299281FE2642416A004691E5 /* GameBoyCore.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 299281D9264234F5004691E5 /* GameBoyCore.hpp */; settings = {ATTRIBUTES = (Public, ); }; };
 		2992821726424240004691E5 /* CPUCore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297E6137245FEA5D00EE150F /* CPUCore.cpp */; };
@@ -47,6 +44,11 @@
 		299282B72642449D004691E5 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 299282B62642449D004691E5 /* ViewController.swift */; };
 		299282B92642449F004691E5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 299282B82642449F004691E5 /* Assets.xcassets */; };
 		299282BC2642449F004691E5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 299282BA2642449F004691E5 /* Main.storyboard */; };
+		299282FC264266A9004691E5 /* GameBoyCoreImp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 299282FA264266A9004691E5 /* GameBoyCoreImp.cpp */; };
+		299282FD264266A9004691E5 /* GameBoyCoreImp.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 299282FB264266A9004691E5 /* GameBoyCoreImp.hpp */; };
+		2992830A26426A32004691E5 /* GPUCore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2992830826426A32004691E5 /* GPUCore.cpp */; };
+		2992830B26426A32004691E5 /* GPUCore.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 2992830926426A32004691E5 /* GPUCore.hpp */; };
+		299283192643AF00004691E5 /* PixelBuffer.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 299283172643AF00004691E5 /* PixelBuffer.hpp */; };
 		29D3C93F247DFC6A0096D21B /* TestCPUCoreBasics.mm in Sources */ = {isa = PBXBuildFile; fileRef = 29D3C93E247DFC6A0096D21B /* TestCPUCoreBasics.mm */; };
 		29D3C942247DFDE80096D21B /* TestCPUCoreUtilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29D3C940247DFDE80096D21B /* TestCPUCoreUtilities.cpp */; };
 		29FC06AB24BC2BFD00C12E6B /* Test8BitArithmeticInstructions.mm in Sources */ = {isa = PBXBuildFile; fileRef = 29FC06AA24BC2BFD00C12E6B /* Test8BitArithmeticInstructions.mm */; };
@@ -108,9 +110,6 @@
 		299281D8264234F5004691E5 /* GameBoyCore.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GameBoyCore.cpp; sourceTree = "<group>"; };
 		299281D9264234F5004691E5 /* GameBoyCore.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = GameBoyCore.hpp; sourceTree = "<group>"; };
 		299281E626424123004691E5 /* libMikoGBCore.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libMikoGBCore.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		299281E826424123004691E5 /* MikoGBCore.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MikoGBCore.hpp; sourceTree = "<group>"; };
-		299281EA26424123004691E5 /* MikoGBCorePriv.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MikoGBCorePriv.hpp; sourceTree = "<group>"; };
-		299281EC26424123004691E5 /* MikoGBCore.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = MikoGBCore.cpp; sourceTree = "<group>"; };
 		29928292264243F4004691E5 /* MikoGBCoreTestTool */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = MikoGBCoreTestTool; sourceTree = BUILT_PRODUCTS_DIR; };
 		29928294264243F4004691E5 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		299282B22642449D004691E5 /* MikoGB.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MikoGB.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -120,6 +119,11 @@
 		299282BB2642449F004691E5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		299282BD2642449F004691E5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		299282BE2642449F004691E5 /* MikoGB.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MikoGB.entitlements; sourceTree = "<group>"; };
+		299282FA264266A9004691E5 /* GameBoyCoreImp.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GameBoyCoreImp.cpp; sourceTree = "<group>"; };
+		299282FB264266A9004691E5 /* GameBoyCoreImp.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = GameBoyCoreImp.hpp; sourceTree = "<group>"; };
+		2992830826426A32004691E5 /* GPUCore.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GPUCore.cpp; sourceTree = "<group>"; };
+		2992830926426A32004691E5 /* GPUCore.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = GPUCore.hpp; sourceTree = "<group>"; };
+		299283172643AF00004691E5 /* PixelBuffer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = PixelBuffer.hpp; sourceTree = "<group>"; };
 		29A8C0B9246147190082C52B /* BitTwiddlingUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BitTwiddlingUtil.h; sourceTree = "<group>"; };
 		29A8C0BA2462685F0082C52B /* LoadInstructions8.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = LoadInstructions8.cpp; sourceTree = "<group>"; };
 		29A8C0BB2462685F0082C52B /* LoadInstructions8.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = LoadInstructions8.hpp; sourceTree = "<group>"; };
@@ -229,6 +233,8 @@
 		299281D726423469004691E5 /* GPU */ = {
 			isa = PBXGroup;
 			children = (
+				2992830926426A32004691E5 /* GPUCore.hpp */,
+				2992830826426A32004691E5 /* GPUCore.cpp */,
 			);
 			path = GPU;
 			sourceTree = "<group>";
@@ -236,11 +242,11 @@
 		299281E726424123004691E5 /* MikoGBCore */ = {
 			isa = PBXGroup;
 			children = (
-				299281E826424123004691E5 /* MikoGBCore.hpp */,
-				299281EA26424123004691E5 /* MikoGBCorePriv.hpp */,
-				299281EC26424123004691E5 /* MikoGBCore.cpp */,
 				299281D9264234F5004691E5 /* GameBoyCore.hpp */,
 				299281D8264234F5004691E5 /* GameBoyCore.cpp */,
+				299282FB264266A9004691E5 /* GameBoyCoreImp.hpp */,
+				299282FA264266A9004691E5 /* GameBoyCoreImp.cpp */,
+				299283172643AF00004691E5 /* PixelBuffer.hpp */,
 				29A8C0B9246147190082C52B /* BitTwiddlingUtil.h */,
 				297E613B245FEB9B00EE150F /* CPU */,
 				299281D726423469004691E5 /* GPU */,
@@ -333,9 +339,10 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				299281E926424123004691E5 /* MikoGBCore.hpp in Headers */,
 				299281FE2642416A004691E5 /* GameBoyCore.hpp in Headers */,
-				299281EB26424123004691E5 /* MikoGBCorePriv.hpp in Headers */,
+				299283192643AF00004691E5 /* PixelBuffer.hpp in Headers */,
+				299282FD264266A9004691E5 /* GameBoyCoreImp.hpp in Headers */,
+				2992830B26426A32004691E5 /* GPUCore.hpp in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -517,12 +524,13 @@
 				299282202642424C004691E5 /* CPUInstruction.cpp in Sources */,
 				299282482642425D004691E5 /* ArithmeticInstructions16.cpp in Sources */,
 				2992826C26424268004691E5 /* RotateShiftInstructions.cpp in Sources */,
-				299281ED26424123004691E5 /* MikoGBCore.cpp in Sources */,
 				2992822D26424252004691E5 /* LoadInstructions8.cpp in Sources */,
 				299282752642426B004691E5 /* SpecialInstructions.cpp in Sources */,
 				2992825126424260004691E5 /* BitOpInstructions.cpp in Sources */,
 				2992823B2642425A004691E5 /* ArithmeticInstructions8.cpp in Sources */,
+				299282FC264266A9004691E5 /* GameBoyCoreImp.cpp in Sources */,
 				299281F526424164004691E5 /* GameBoyCore.cpp in Sources */,
+				2992830A26426A32004691E5 /* GPUCore.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
