@@ -26,3 +26,7 @@ void GameBoyCore::step() {
 uint16_t GameBoyCore::getPC() const {
     return _imp->_cpu->programCounter;
 }
+
+void GameBoyCore::getTileMap(PixelBufferImageCallback callback) {
+    _imp->getTileMap(callback);
+}

@@ -160,3 +160,109 @@ void GPUCore::updateWithCPUCycles(size_t cpuCycles) {
 void GPUCore::_processScanline(uint8_t line) {
     //TODO: Figure out the pixels for the current scanline
 }
+
+static inline Pixel _PixelForCode(uint8_t code) {
+    switch (code) {
+        case 0:
+            // White
+            return Pixel(0xFF);
+        case 1:
+            // Light Gray
+            return Pixel(0xBF);
+        case 2:
+            // Dark Gray
+            return Pixel(0x40);
+        case 3:
+            // Black
+            return Pixel(0x00);
+        default:
+            return Pixel();
+    }
+}
+
+static void _ReadBGTile(uint16_t addr, const CPUCore *cpu, Pixel *bgPalette, PixelBuffer &dest) {
+    assert(dest.width == 8 && dest.height == 8);
+    for (uint16_t y = 0; y < 16; y += 2) {
+        uint8_t byte0 = cpu->getMemory(addr + y);
+        uint8_t byte1 = cpu->getMemory(addr + y + 1);
+        for (int x = 0; x < 8; ++x) {
+            int shift = 8 - x - 1;
+            uint8_t code = ((byte0 >> shift) & 0x1) | ((byte1 >> (shift-1)) & 0x2);
+            Pixel &px = bgPalette[code];
+            size_t idx = dest.indexOf(x, y/2);
+            dest.pixels[idx] = px;
+        }
+    }
+}
+
+static void _DrawPixelBufferToBuffer(const PixelBuffer &source, PixelBuffer &dest, size_t x, size_t y) {
+    //TODO: No-op and make this a debug assertion?
+    assert(x < dest.width && y < dest.height);
+    
+    for (size_t sy = 0; sy < source.height; ++sy) {
+        const size_t dy = y + sy;
+        if (dy >= dest.height) {
+            break;
+        }
+        
+        for (size_t sx = 0; sx < source.width; ++sx) {
+            const size_t dx = x + sx;
+            if (dx >= dest.width) {
+                break;
+            }
+            
+            const size_t sIdx = source.indexOf(sx, sy);
+            const size_t dIdx = dest.indexOf(dx, dy);
+            dest.pixels[dIdx] = source.pixels[sIdx];
+        }
+    }
+}
+
+void GPUCore::getTileMap(PixelBufferImageCallback callback) {
+    // For now, just support the 8x8 BG tile map, so 256 tiles. Draw into 16x16 square
+    const size_t tilesPerRow = 16;
+    const size_t tileWidth = 8;
+    const size_t pixelWidth = (tilesPerRow * tileWidth) + (tilesPerRow - 1);
+    PixelBuffer tileMap(pixelWidth, pixelWidth);
+    
+    const uint8_t lcdc = _cpu->getMemory(LCDCRegister);
+    
+    // Range of tiles 0x00-0x7F always start at 0x9000. Range of tiles 0x80 - 0xFF varies
+    const uint16_t bgCharacterLowerRange = 0x9000;
+    uint16_t bgCharacterUpperRange = 0x8800;
+    if (isMaskSet(lcdc, 0x10)) {
+        bgCharacterUpperRange = 0x8000;
+    }
+    
+    const uint8_t paletteVal = _cpu->getMemory(BGPRegister);
+    Pixel bgPalette[4];
+    bgPalette[0] = _PixelForCode(paletteVal & 0x03);
+    bgPalette[1] = _PixelForCode((paletteVal & 0x0C) >> 2);
+    bgPalette[2] = _PixelForCode((paletteVal & 0x30) >> 4);
+    bgPalette[3] = _PixelForCode((paletteVal & 0xC0) >> 6);
+    
+    PixelBuffer tileBuffer(8, 8);
+    // first group of 128 tiles
+    for (uint16_t i = 0; i < 0x80; ++i) {
+        const uint16_t addr = bgCharacterLowerRange + (i * 16);
+        _ReadBGTile(addr, _cpu, bgPalette, tileBuffer);
+        const size_t tileX = i % tilesPerRow;
+        const size_t tileY = i / tilesPerRow;
+        const size_t pixelX = tileX * (tileWidth + 1);
+        const size_t pixelY = tileY * (tileWidth + 1);
+        _DrawPixelBufferToBuffer(tileBuffer, tileMap, pixelX, pixelY);
+    }
+    
+    // second groupd of 128 tiles
+    for (uint16_t i = 0; i < 0x80; ++i) {
+        const uint16_t addr = bgCharacterUpperRange + (i * 16);
+        _ReadBGTile(addr, _cpu, bgPalette, tileBuffer);
+        const size_t tileX = (i + 0x80) % tilesPerRow;
+        const size_t tileY = (i + 0x80) / tilesPerRow;
+        const size_t pixelX = tileX * (tileWidth + 1);
+        const size_t pixelY = tileY * (tileWidth + 1);
+        _DrawPixelBufferToBuffer(tileBuffer, tileMap, pixelX, pixelY);
+    }
+    
+    callback(tileMap);
+}

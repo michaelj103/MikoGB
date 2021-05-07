@@ -38,7 +38,7 @@
 		2992826326424265004691E5 /* CallAndReturnInstructions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 299281A3263F885E004691E5 /* CallAndReturnInstructions.cpp */; };
 		2992826C26424268004691E5 /* RotateShiftInstructions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 299281B8264097FE004691E5 /* RotateShiftInstructions.cpp */; };
 		299282752642426B004691E5 /* SpecialInstructions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 299281CA2641ECC9004691E5 /* SpecialInstructions.cpp */; };
-		29928295264243F4004691E5 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29928294264243F4004691E5 /* main.cpp */; };
+		29928295264243F4004691E5 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = 29928294264243F4004691E5 /* main.mm */; };
 		299282A02642441F004691E5 /* libMikoGBCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 299281E626424123004691E5 /* libMikoGBCore.a */; };
 		299282B52642449D004691E5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 299282B42642449D004691E5 /* AppDelegate.swift */; };
 		299282B72642449D004691E5 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 299282B62642449D004691E5 /* ViewController.swift */; };
@@ -48,7 +48,10 @@
 		299282FD264266A9004691E5 /* GameBoyCoreImp.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 299282FB264266A9004691E5 /* GameBoyCoreImp.hpp */; };
 		2992830A26426A32004691E5 /* GPUCore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2992830826426A32004691E5 /* GPUCore.cpp */; };
 		2992830B26426A32004691E5 /* GPUCore.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 2992830926426A32004691E5 /* GPUCore.hpp */; };
-		299283192643AF00004691E5 /* PixelBuffer.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 299283172643AF00004691E5 /* PixelBuffer.hpp */; };
+		299283192643AF00004691E5 /* PixelBuffer.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 299283172643AF00004691E5 /* PixelBuffer.hpp */; settings = {ATTRIBUTES = (Public, ); }; };
+		2992833526452868004691E5 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2992833426452868004691E5 /* CoreGraphics.framework */; };
+		2992833C264528F1004691E5 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2992833B264528F1004691E5 /* ImageIO.framework */; };
+		29928343264528F9004691E5 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 29928342264528F9004691E5 /* CoreServices.framework */; };
 		29D3C93F247DFC6A0096D21B /* TestCPUCoreBasics.mm in Sources */ = {isa = PBXBuildFile; fileRef = 29D3C93E247DFC6A0096D21B /* TestCPUCoreBasics.mm */; };
 		29D3C942247DFDE80096D21B /* TestCPUCoreUtilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29D3C940247DFDE80096D21B /* TestCPUCoreUtilities.cpp */; };
 		29FC06AB24BC2BFD00C12E6B /* Test8BitArithmeticInstructions.mm in Sources */ = {isa = PBXBuildFile; fileRef = 29FC06AA24BC2BFD00C12E6B /* Test8BitArithmeticInstructions.mm */; };
@@ -111,7 +114,7 @@
 		299281D9264234F5004691E5 /* GameBoyCore.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = GameBoyCore.hpp; sourceTree = "<group>"; };
 		299281E626424123004691E5 /* libMikoGBCore.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libMikoGBCore.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		29928292264243F4004691E5 /* MikoGBCoreTestTool */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = MikoGBCoreTestTool; sourceTree = BUILT_PRODUCTS_DIR; };
-		29928294264243F4004691E5 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		29928294264243F4004691E5 /* main.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = main.mm; sourceTree = "<group>"; };
 		299282B22642449D004691E5 /* MikoGB.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MikoGB.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		299282B42642449D004691E5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		299282B62642449D004691E5 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -124,6 +127,9 @@
 		2992830826426A32004691E5 /* GPUCore.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GPUCore.cpp; sourceTree = "<group>"; };
 		2992830926426A32004691E5 /* GPUCore.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = GPUCore.hpp; sourceTree = "<group>"; };
 		299283172643AF00004691E5 /* PixelBuffer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = PixelBuffer.hpp; sourceTree = "<group>"; };
+		2992833426452868004691E5 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		2992833B264528F1004691E5 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
+		29928342264528F9004691E5 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
 		29A8C0B9246147190082C52B /* BitTwiddlingUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BitTwiddlingUtil.h; sourceTree = "<group>"; };
 		29A8C0BA2462685F0082C52B /* LoadInstructions8.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = LoadInstructions8.cpp; sourceTree = "<group>"; };
 		29A8C0BB2462685F0082C52B /* LoadInstructions8.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = LoadInstructions8.hpp; sourceTree = "<group>"; };
@@ -162,6 +168,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				29928343264528F9004691E5 /* CoreServices.framework in Frameworks */,
+				2992833C264528F1004691E5 /* ImageIO.framework in Frameworks */,
+				2992833526452868004691E5 /* CoreGraphics.framework in Frameworks */,
 				299282A02642441F004691E5 /* libMikoGBCore.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -257,6 +266,9 @@
 		29928280264242D9004691E5 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				29928342264528F9004691E5 /* CoreServices.framework */,
+				2992833B264528F1004691E5 /* ImageIO.framework */,
+				2992833426452868004691E5 /* CoreGraphics.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -264,7 +276,7 @@
 		29928293264243F4004691E5 /* MikoGBCoreTestTool */ = {
 			isa = PBXGroup;
 			children = (
-				29928294264243F4004691E5 /* main.cpp */,
+				29928294264243F4004691E5 /* main.mm */,
 			);
 			path = MikoGBCoreTestTool;
 			sourceTree = "<group>";
@@ -538,7 +550,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				29928295264243F4004691E5 /* main.cpp in Sources */,
+				29928295264243F4004691E5 /* main.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

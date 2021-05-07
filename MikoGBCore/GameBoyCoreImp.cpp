@@ -41,3 +41,7 @@ void GameBoyCoreImp::step() {
     size_t cpuCycles = instructionCycles * 4;
     _gpu->updateWithCPUCycles(cpuCycles);
 }
+
+void GameBoyCoreImp::getTileMap(PixelBufferImageCallback callback) {
+    _gpu->getTileMap(callback);
+}

@@ -9,6 +9,7 @@
 #define GameBoyCore_hpp
 
 #include <cstdlib>
+#include "PixelBuffer.hpp"
 
 namespace MikoGB {
 
@@ -22,6 +23,9 @@ public:
     void step();
     
     uint16_t getPC() const;
+    
+    /// Debug utilities
+    void getTileMap(PixelBufferImageCallback callback);
     
 private:
     GameBoyCoreImp *_imp;

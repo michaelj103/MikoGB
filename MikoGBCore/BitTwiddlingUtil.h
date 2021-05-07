@@ -19,4 +19,9 @@ inline void splitWord16(uint16_t word, uint8_t &lo, uint8_t &hi) {
     hi = (word & 0xFF00) >> 8;
 }
 
+inline bool isMaskSet(uint8_t byte, uint8_t mask) {
+    bool isSet = ((byte & mask) == mask);
+    return isSet;
+}
+
 #endif /* BitTwiddlingUtil_h */

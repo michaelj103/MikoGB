@@ -21,6 +21,9 @@ public:
     
     void step();
     
+    /// Debug utilities
+    void getTileMap(PixelBufferImageCallback callback);
+    
 private:
     CPUCore *_cpu;
     GPUCore *_gpu;

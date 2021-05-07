@@ -9,8 +9,7 @@
 #define GPUCore_hpp
 
 #include <cstdlib>
-
-
+#include "PixelBuffer.hpp"
 
 namespace MikoGB {
 
@@ -29,6 +28,9 @@ public:
     
     /// Expects CPU oscillation cycles (~4.2MHz, 4 per instruction cycle)
     void updateWithCPUCycles(size_t cpuCycles);
+    
+    /// Debug utilities
+    void getTileMap(PixelBufferImageCallback callback);
     
 private:
     CPUCore *_cpu = nullptr;
