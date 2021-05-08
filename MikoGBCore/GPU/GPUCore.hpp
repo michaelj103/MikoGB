@@ -31,6 +31,7 @@ public:
     
     /// Debug utilities
     void getTileMap(PixelBufferImageCallback callback);
+    void getBackground(PixelBufferImageCallback callback);
     
 private:
     CPUCore *_cpu = nullptr;

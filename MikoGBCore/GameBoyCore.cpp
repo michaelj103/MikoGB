@@ -30,3 +30,7 @@ uint16_t GameBoyCore::getPC() const {
 void GameBoyCore::getTileMap(PixelBufferImageCallback callback) {
     _imp->getTileMap(callback);
 }
+
+void GameBoyCore::getBackground(PixelBufferImageCallback callback) {
+    _imp->getBackground(callback);
+}

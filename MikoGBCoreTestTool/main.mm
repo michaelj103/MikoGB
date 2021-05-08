@@ -38,7 +38,7 @@ CGImageRef createImageWithPixelBuffer(const MikoGB::PixelBuffer &pixelBuffer) {
     return image;
 }
 
-void writePNG(const MikoGB::PixelBuffer &pixelBuffer) {
+void writePNG(const MikoGB::PixelBuffer &pixelBuffer, NSString *filename) {
     CGImageRef image = createImageWithPixelBuffer(pixelBuffer);
     if (!image) {
         fprintf(stderr, "Failed to create image\n");
@@ -50,7 +50,7 @@ void writePNG(const MikoGB::PixelBuffer &pixelBuffer) {
     if (!desktopPath) {
         fprintf(stderr, "Failed to get desktop\n");
     } else {
-        NSString *destPath = [desktopPath stringByAppendingPathComponent:@"tileMap.png"];
+        NSString *destPath = [desktopPath stringByAppendingPathComponent:filename];
         NSURL *destURL = [NSURL fileURLWithPath:destPath];
         CGImageDestinationRef imageDest = CGImageDestinationCreateWithURL((__bridge CFURLRef)destURL, kUTTypePNG, 1, NULL);
         if (imageDest) {
@@ -74,11 +74,19 @@ int main(int argc, const char * argv[]) {
     }
     
     void (^tileMapBlock)(const MikoGB::PixelBuffer &) = ^void(const MikoGB::PixelBuffer &pixelBuffer) {
-        writePNG(pixelBuffer);
+        writePNG(pixelBuffer, @"tileMap.png");
     };
     
     gbCore.getTileMap([tileMapBlock](const MikoGB::PixelBuffer &pixelBuffer){
         tileMapBlock(pixelBuffer);
+    });
+    
+    void (^backgroundBlock)(const MikoGB::PixelBuffer &) = ^void(const MikoGB::PixelBuffer &pixelBuffer) {
+        writePNG(pixelBuffer, @"background.png");
+    };
+    
+    gbCore.getBackground([backgroundBlock](const MikoGB::PixelBuffer &pixelBuffer){
+        backgroundBlock(pixelBuffer);
     });
     
     return 0;

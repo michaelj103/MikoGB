@@ -27,6 +27,8 @@ public:
     /// Debug utilities
     void getTileMap(PixelBufferImageCallback callback);
     
+    void getBackground(PixelBufferImageCallback callback);
+    
 private:
     GameBoyCoreImp *_imp;
 };

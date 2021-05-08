@@ -45,3 +45,7 @@ void GameBoyCoreImp::step() {
 void GameBoyCoreImp::getTileMap(PixelBufferImageCallback callback) {
     _gpu->getTileMap(callback);
 }
+
+void GameBoyCoreImp::getBackground(PixelBufferImageCallback callback) {
+    _gpu->getBackground(callback);
+}

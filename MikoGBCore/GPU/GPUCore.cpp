@@ -180,7 +180,15 @@ static inline Pixel _PixelForCode(uint8_t code) {
     }
 }
 
-static void _ReadBGTile(uint16_t addr, const CPUCore *cpu, Pixel *bgPalette, PixelBuffer &dest) {
+static void _ReadBGPalette(Pixel *palette, const CPUCore *cpu) {
+    const uint8_t paletteVal = cpu->getMemory(BGPRegister);
+    palette[0] = _PixelForCode(paletteVal & 0x03);
+    palette[1] = _PixelForCode((paletteVal & 0x0C) >> 2);
+    palette[2] = _PixelForCode((paletteVal & 0x30) >> 4);
+    palette[3] = _PixelForCode((paletteVal & 0xC0) >> 6);
+}
+
+static void _ReadBGTile(uint16_t addr, const CPUCore *cpu, const Pixel *bgPalette, PixelBuffer &dest) {
     assert(dest.width == 8 && dest.height == 8);
     for (uint16_t y = 0; y < 16; y += 2) {
         uint8_t byte0 = cpu->getMemory(addr + y);
@@ -188,7 +196,7 @@ static void _ReadBGTile(uint16_t addr, const CPUCore *cpu, Pixel *bgPalette, Pix
         for (int x = 0; x < 8; ++x) {
             int shift = 8 - x - 1;
             uint8_t code = ((byte0 >> shift) & 0x1) | ((byte1 >> (shift-1)) & 0x2);
-            Pixel &px = bgPalette[code];
+            const Pixel &px = bgPalette[code];
             size_t idx = dest.indexOf(x, y/2);
             dest.pixels[idx] = px;
         }
@@ -227,25 +235,28 @@ void GPUCore::getTileMap(PixelBufferImageCallback callback) {
     
     const uint8_t lcdc = _cpu->getMemory(LCDCRegister);
     
-    // Range of tiles 0x00-0x7F always start at 0x9000. Range of tiles 0x80 - 0xFF varies
-    const uint16_t bgCharacterLowerRange = 0x9000;
-    uint16_t bgCharacterUpperRange = 0x8800;
+    // Range of tiles is either 0x9000 with codes being signed offsets (0x8800-0x97FF)
+    // or they start at 0x8000 with codes being unsigned offsets (0x8000-0x8FFF)
+    int32_t bgBase = 0x9000;
+    bool signedMode = true;
     if (isMaskSet(lcdc, 0x10)) {
-        bgCharacterUpperRange = 0x8000;
+        bgBase = 0x8000;
     }
     
-    const uint8_t paletteVal = _cpu->getMemory(BGPRegister);
     Pixel bgPalette[4];
-    bgPalette[0] = _PixelForCode(paletteVal & 0x03);
-    bgPalette[1] = _PixelForCode((paletteVal & 0x0C) >> 2);
-    bgPalette[2] = _PixelForCode((paletteVal & 0x30) >> 4);
-    bgPalette[3] = _PixelForCode((paletteVal & 0xC0) >> 6);
+    _ReadBGPalette(bgPalette, _cpu);
     
     PixelBuffer tileBuffer(8, 8);
-    // first group of 128 tiles
-    for (uint16_t i = 0; i < 0x80; ++i) {
-        const uint16_t addr = bgCharacterLowerRange + (i * 16);
+    for (uint16_t i = 0; i <= 0xFF; ++i) {
+        const uint8_t code = i & 0xFF;
+        uint16_t addr;
+        if (signedMode) {
+            addr = (uint16_t)(bgBase + ((int8_t)code * 16));
+        } else {
+            addr = (uint16_t)(bgBase + (code * 16));
+        }
         _ReadBGTile(addr, _cpu, bgPalette, tileBuffer);
+        
         const size_t tileX = i % tilesPerRow;
         const size_t tileY = i / tilesPerRow;
         const size_t pixelX = tileX * (tileWidth + 1);
@@ -253,16 +264,50 @@ void GPUCore::getTileMap(PixelBufferImageCallback callback) {
         _DrawPixelBufferToBuffer(tileBuffer, tileMap, pixelX, pixelY);
     }
     
-    // second groupd of 128 tiles
-    for (uint16_t i = 0; i < 0x80; ++i) {
-        const uint16_t addr = bgCharacterUpperRange + (i * 16);
-        _ReadBGTile(addr, _cpu, bgPalette, tileBuffer);
-        const size_t tileX = (i + 0x80) % tilesPerRow;
-        const size_t tileY = (i + 0x80) / tilesPerRow;
-        const size_t pixelX = tileX * (tileWidth + 1);
-        const size_t pixelY = tileY * (tileWidth + 1);
-        _DrawPixelBufferToBuffer(tileBuffer, tileMap, pixelX, pixelY);
+    callback(tileMap);
+}
+
+void GPUCore::getBackground(PixelBufferImageCallback callback) {
+    const size_t bgCanvasSize = 256;
+    PixelBuffer background(bgCanvasSize, bgCanvasSize);
+    const uint8_t lcdc = _cpu->getMemory(LCDCRegister);
+    
+    // Range of tiles is either 0x9000 with codes being signed offsets (0x8800-0x97FF)
+    // or they start at 0x8000 with codes being unsigned offsets (0x8000-0x8FFF)
+    int32_t bgBase = 0x9000;
+    bool signedMode = true;
+    if (isMaskSet(lcdc, 0x10)) {
+        bgBase = 0x8000;
     }
     
-    callback(tileMap);
+    uint16_t bgCodeArea = 0x9800;
+    if (isMaskSet(lcdc, 0x8)) {
+        bgCodeArea = 0x9C00;
+    }
+    
+    Pixel bgPalette[4];
+    _ReadBGPalette(bgPalette, _cpu);
+    
+    const uint16_t tileSide = 8;
+    const uint16_t TilesPerRow = 32;
+    const uint16_t NumberOfBGCodes = 1024; //1024: 32x32 tiles form the background
+    PixelBuffer tileBuffer(8, 8);
+    for (uint16_t i = 0; i < NumberOfBGCodes; ++i) {
+        const uint8_t code = _cpu->getMemory(bgCodeArea + i);
+        uint16_t tileBaseAddress;
+        if (signedMode) {
+            tileBaseAddress = (uint16_t)(bgBase + ((int8_t)code * 16));
+        } else {
+            tileBaseAddress = (uint16_t)(bgBase + (code * 16));
+            
+        }
+        _ReadBGTile(tileBaseAddress, _cpu, bgPalette, tileBuffer);
+        const size_t tileX = i % TilesPerRow;
+        const size_t tileY = i / TilesPerRow;
+        const size_t pixelX = tileX * tileSide;
+        const size_t pixelY = tileY * tileSide;
+        _DrawPixelBufferToBuffer(tileBuffer, background, pixelX, pixelY);
+    }
+    
+    callback(background);
 }
