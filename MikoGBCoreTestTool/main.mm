@@ -44,17 +44,12 @@ void writePNG(const MikoGB::PixelBuffer &pixelBuffer) {
         fprintf(stderr, "Failed to create image\n");
         return;
     }
-    
-    BOOL success = YES;
-    
+        
     NSArray<NSString *> *paths = NSSearchPathForDirectoriesInDomains(NSDesktopDirectory, NSUserDomainMask, YES);
     NSString *desktopPath = paths.firstObject;
     if (!desktopPath) {
         fprintf(stderr, "Failed to get desktop\n");
-        success = NO;
-    }
-    
-    if (success) {
+    } else {
         NSString *destPath = [desktopPath stringByAppendingPathComponent:@"tileMap.png"];
         NSURL *destURL = [NSURL fileURLWithPath:destPath];
         CGImageDestinationRef imageDest = CGImageDestinationCreateWithURL((__bridge CFURLRef)destURL, kUTTypePNG, 1, NULL);
@@ -62,12 +57,10 @@ void writePNG(const MikoGB::PixelBuffer &pixelBuffer) {
             CGImageDestinationAddImage(imageDest, image, NULL);
             if (!CGImageDestinationFinalize(imageDest)) {
                 fprintf(stderr, "Failed to finalize image destination\n");
-                success = NO;
             }
             CFRelease(imageDest);
         } else {
             fprintf(stderr, "Failed to create image destination\n");
-            success = NO;
         }
     }
     
