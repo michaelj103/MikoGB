@@ -35,7 +35,7 @@ struct PixelBuffer {
     std::vector<Pixel> pixels;
     
     PixelBuffer(size_t w, size_t h): width(w), height(h), pixels(w*h) {}
-    
+
     size_t indexOf(size_t x, size_t y) const {
         assert(x < width && y < height);
         size_t idx = (y * width) + x;

@@ -52,6 +52,7 @@
 		2992833526452868004691E5 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2992833426452868004691E5 /* CoreGraphics.framework */; };
 		2992833C264528F1004691E5 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2992833B264528F1004691E5 /* ImageIO.framework */; };
 		29928343264528F9004691E5 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 29928342264528F9004691E5 /* CoreServices.framework */; };
+		2992837E264733B3004691E5 /* WindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2992837D264733B3004691E5 /* WindowController.swift */; };
 		29D3C93F247DFC6A0096D21B /* TestCPUCoreBasics.mm in Sources */ = {isa = PBXBuildFile; fileRef = 29D3C93E247DFC6A0096D21B /* TestCPUCoreBasics.mm */; };
 		29D3C942247DFDE80096D21B /* TestCPUCoreUtilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29D3C940247DFDE80096D21B /* TestCPUCoreUtilities.cpp */; };
 		29FC06AB24BC2BFD00C12E6B /* Test8BitArithmeticInstructions.mm in Sources */ = {isa = PBXBuildFile; fileRef = 29FC06AA24BC2BFD00C12E6B /* Test8BitArithmeticInstructions.mm */; };
@@ -130,6 +131,7 @@
 		2992833426452868004691E5 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		2992833B264528F1004691E5 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 		29928342264528F9004691E5 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
+		2992837D264733B3004691E5 /* WindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowController.swift; sourceTree = "<group>"; };
 		29A8C0B9246147190082C52B /* BitTwiddlingUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BitTwiddlingUtil.h; sourceTree = "<group>"; };
 		29A8C0BA2462685F0082C52B /* LoadInstructions8.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = LoadInstructions8.cpp; sourceTree = "<group>"; };
 		29A8C0BB2462685F0082C52B /* LoadInstructions8.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = LoadInstructions8.hpp; sourceTree = "<group>"; };
@@ -286,6 +288,7 @@
 			children = (
 				299282B42642449D004691E5 /* AppDelegate.swift */,
 				299282B62642449D004691E5 /* ViewController.swift */,
+				2992837D264733B3004691E5 /* WindowController.swift */,
 				299282B82642449F004691E5 /* Assets.xcassets */,
 				299282BA2642449F004691E5 /* Main.storyboard */,
 				299282BD2642449F004691E5 /* Info.plist */,
@@ -559,6 +562,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				299282B72642449D004691E5 /* ViewController.swift in Sources */,
+				2992837E264733B3004691E5 /* WindowController.swift in Sources */,
 				299282B52642449D004691E5 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -24,7 +24,7 @@ enum LCDMode : uint8_t {
 
 class GPUCore {
 public:
-    GPUCore(CPUCore *cpu): _cpu(cpu) {};
+    GPUCore(CPUCore *cpu);
     
     /// Expects CPU oscillation cycles (~4.2MHz, 4 per instruction cycle)
     void updateWithCPUCycles(size_t cpuCycles);
@@ -45,7 +45,9 @@ private:
     bool _wasOn = false;
     void _turnOff();
     
-    void _processScanline(uint8_t line);
+    PixelBuffer _scanline;
+    void _renderScanline(size_t line);
+    void _renderBackgroundToScanline(size_t line, PixelBuffer &scanline);
 };
 
 }
