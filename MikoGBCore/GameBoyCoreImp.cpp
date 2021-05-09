@@ -42,6 +42,22 @@ void GameBoyCoreImp::step() {
     _gpu->updateWithCPUCycles(cpuCycles);
 }
 
+void GameBoyCoreImp::emulateFrame() {
+    // If we're in the middle of a frame, run until the start of the next
+    while (_gpu->getCurrentScanline() != 0) {
+        step();
+    }
+    
+    // Run until v-blank at line 144
+    while (_gpu->getCurrentScanline() < 144) {
+        step();
+    }
+}
+
+void GameBoyCoreImp::setScanlineCallback(PixelBufferScanlineCallback callback) {
+    _gpu->setScanlineCallback(callback);
+}
+
 void GameBoyCoreImp::getTileMap(PixelBufferImageCallback callback) {
     _gpu->getTileMap(callback);
 }

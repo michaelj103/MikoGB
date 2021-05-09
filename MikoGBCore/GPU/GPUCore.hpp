@@ -29,6 +29,14 @@ public:
     /// Expects CPU oscillation cycles (~4.2MHz, 4 per instruction cycle)
     void updateWithCPUCycles(size_t cpuCycles);
     
+    void setScanlineCallback(PixelBufferScanlineCallback callback) {
+        _scanlineCallback = callback;
+    }
+    
+    uint8_t getCurrentScanline() {
+        return _currentScanline;
+    }
+    
     /// Debug utilities
     void getTileMap(PixelBufferImageCallback callback);
     void getBackground(PixelBufferImageCallback callback);
@@ -48,6 +56,7 @@ private:
     PixelBuffer _scanline;
     void _renderScanline(size_t line);
     void _renderBackgroundToScanline(size_t line, PixelBuffer &scanline);
+    PixelBufferScanlineCallback _scanlineCallback;
 };
 
 }

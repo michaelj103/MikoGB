@@ -317,8 +317,9 @@ void GPUCore::getBackground(PixelBufferImageCallback callback) {
 
 static uint8_t _DrawTileRowToScanline(uint16_t tileAddress, uint8_t tileRow, uint8_t tileCol, uint8_t scanlinePos, PixelBuffer &scanline, const CPUCore *cpu, const Pixel *bgPalette) {
     // the 2 bytes representing the given row in the tile
-    const uint8_t byte0 = cpu->getMemory(tileAddress + tileRow);
-    const uint8_t byte1 = cpu->getMemory(tileAddress + tileRow + 1);
+    const uint16_t tileRowOffset = tileRow * 2; // 2 bytes per row
+    const uint8_t byte0 = cpu->getMemory(tileAddress + tileRowOffset);
+    const uint8_t byte1 = cpu->getMemory(tileAddress + tileRowOffset + 1);
     uint8_t currentIdx = scanlinePos;
     for (int x = tileCol; x < 8; ++x) {
         int shift = 8 - x - 1;
@@ -368,5 +369,7 @@ void GPUCore::_renderBackgroundToScanline(size_t lineNum, PixelBuffer &scanline)
 void GPUCore::_renderScanline(size_t lineNum) {
     _renderBackgroundToScanline(lineNum, _scanline);
     
-    
+    if (_scanlineCallback) {
+        _scanlineCallback(_scanline, lineNum);
+    }
 }

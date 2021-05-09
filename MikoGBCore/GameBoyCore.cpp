@@ -23,6 +23,14 @@ void GameBoyCore::step() {
     _imp->step();
 }
 
+void GameBoyCore::emulateFrame() {
+    _imp->emulateFrame();
+}
+
+void GameBoyCore::setScanlineCallback(PixelBufferScanlineCallback callback) {
+    _imp->setScanlineCallback(callback);
+}
+
 uint16_t GameBoyCore::getPC() const {
     return _imp->_cpu->programCounter;
 }

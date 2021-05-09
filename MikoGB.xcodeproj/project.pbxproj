@@ -55,11 +55,22 @@
 		2992837E264733B3004691E5 /* WindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2992837D264733B3004691E5 /* WindowController.swift */; };
 		29D3C93F247DFC6A0096D21B /* TestCPUCoreBasics.mm in Sources */ = {isa = PBXBuildFile; fileRef = 29D3C93E247DFC6A0096D21B /* TestCPUCoreBasics.mm */; };
 		29D3C942247DFDE80096D21B /* TestCPUCoreUtilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29D3C940247DFDE80096D21B /* TestCPUCoreUtilities.cpp */; };
+		29F082862647B9C400FA5F67 /* NoROMView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F082852647B9C400FA5F67 /* NoROMView.swift */; };
+		29F0829C2647BA0D00FA5F67 /* GBEngine.mm in Sources */ = {isa = PBXBuildFile; fileRef = 29F0829B2647BA0D00FA5F67 /* GBEngine.mm */; };
+		29F082A32647BA3800FA5F67 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F082A22647BA3800FA5F67 /* GameView.swift */; };
+		29F082B32647BC3B00FA5F67 /* libMikoGBCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 299281E626424123004691E5 /* libMikoGBCore.a */; };
 		29FC06AB24BC2BFD00C12E6B /* Test8BitArithmeticInstructions.mm in Sources */ = {isa = PBXBuildFile; fileRef = 29FC06AA24BC2BFD00C12E6B /* Test8BitArithmeticInstructions.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
 		2992829E2642441B004691E5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 297E5FED2456421B00EE150F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 299281E526424123004691E5;
+			remoteInfo = MikoGBCore;
+		};
+		29F082B42647BC4000FA5F67 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 297E5FED2456421B00EE150F /* Project object */;
 			proxyType = 1;
@@ -148,6 +159,11 @@
 		29D3C93E247DFC6A0096D21B /* TestCPUCoreBasics.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = TestCPUCoreBasics.mm; sourceTree = "<group>"; };
 		29D3C940247DFDE80096D21B /* TestCPUCoreUtilities.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = TestCPUCoreUtilities.cpp; sourceTree = "<group>"; };
 		29D3C941247DFDE80096D21B /* TestCPUCoreUtilities.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = TestCPUCoreUtilities.hpp; sourceTree = "<group>"; };
+		29F082852647B9C400FA5F67 /* NoROMView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoROMView.swift; sourceTree = "<group>"; };
+		29F0828C2647B9F700FA5F67 /* MikoGB-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MikoGB-Bridging-Header.h"; sourceTree = "<group>"; };
+		29F0829A2647BA0D00FA5F67 /* GBEngine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GBEngine.h; sourceTree = "<group>"; };
+		29F0829B2647BA0D00FA5F67 /* GBEngine.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = GBEngine.mm; sourceTree = "<group>"; };
+		29F082A22647BA3800FA5F67 /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
 		29FC06AA24BC2BFD00C12E6B /* Test8BitArithmeticInstructions.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = Test8BitArithmeticInstructions.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -181,6 +197,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				29F082B32647BC3B00FA5F67 /* libMikoGBCore.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -289,10 +306,15 @@
 				299282B42642449D004691E5 /* AppDelegate.swift */,
 				299282B62642449D004691E5 /* ViewController.swift */,
 				2992837D264733B3004691E5 /* WindowController.swift */,
+				29F082852647B9C400FA5F67 /* NoROMView.swift */,
+				29F082A22647BA3800FA5F67 /* GameView.swift */,
+				29F0829A2647BA0D00FA5F67 /* GBEngine.h */,
+				29F0829B2647BA0D00FA5F67 /* GBEngine.mm */,
 				299282B82642449F004691E5 /* Assets.xcassets */,
 				299282BA2642449F004691E5 /* Main.storyboard */,
 				299282BD2642449F004691E5 /* Info.plist */,
 				299282BE2642449F004691E5 /* MikoGB.entitlements */,
+				29F0828C2647B9F700FA5F67 /* MikoGB-Bridging-Header.h */,
 			);
 			path = MikoGB;
 			sourceTree = "<group>";
@@ -427,6 +449,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				29F082B52647BC4000FA5F67 /* PBXTargetDependency */,
 			);
 			name = MikoGB;
 			productName = MikoGB;
@@ -471,6 +494,7 @@
 					};
 					299282B12642449D004691E5 = {
 						CreatedOnToolsVersion = 12.4;
+						LastSwiftMigration = 1240;
 					};
 					29D3C935247DFBFE0096D21B = {
 						CreatedOnToolsVersion = 11.5;
@@ -561,8 +585,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				29F082862647B9C400FA5F67 /* NoROMView.swift in Sources */,
+				29F0829C2647BA0D00FA5F67 /* GBEngine.mm in Sources */,
 				299282B72642449D004691E5 /* ViewController.swift in Sources */,
 				2992837E264733B3004691E5 /* WindowController.swift in Sources */,
+				29F082A32647BA3800FA5F67 /* GameView.swift in Sources */,
 				299282B52642449D004691E5 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -600,6 +627,11 @@
 			isa = PBXTargetDependency;
 			target = 299281E526424123004691E5 /* MikoGBCore */;
 			targetProxy = 2992829E2642441B004691E5 /* PBXContainerItemProxy */;
+		};
+		29F082B52647BC4000FA5F67 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 299281E526424123004691E5 /* MikoGBCore */;
+			targetProxy = 29F082B42647BC4000FA5F67 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -793,6 +825,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CODE_SIGN_ENTITLEMENTS = MikoGB/MikoGB.entitlements;
 				CODE_SIGN_STYLE = Automatic;
@@ -806,6 +839,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.mjb.MikoGB;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OBJC_BRIDGING_HEADER = "MikoGB/MikoGB-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 			};
@@ -816,6 +850,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CODE_SIGN_ENTITLEMENTS = MikoGB/MikoGB.entitlements;
 				CODE_SIGN_STYLE = Automatic;
@@ -829,6 +864,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.mjb.MikoGB;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OBJC_BRIDGING_HEADER = "MikoGB/MikoGB-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.0;
 			};

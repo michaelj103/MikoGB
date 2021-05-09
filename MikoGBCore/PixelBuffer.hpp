@@ -44,6 +44,7 @@ struct PixelBuffer {
 };
 
 using PixelBufferImageCallback = std::function<void(const PixelBuffer &)>;
+using PixelBufferScanlineCallback = std::function<void(const PixelBuffer &, size_t lineNum)>;
 
 }
 

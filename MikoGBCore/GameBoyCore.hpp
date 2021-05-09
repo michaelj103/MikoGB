@@ -20,7 +20,14 @@ public:
     GameBoyCore();
     ~GameBoyCore();
     
+    /// Step a single CPU instruction
     void step();
+    
+    /// Emulate at least 1 full frame. If a frame is partially rendered when called, that frame will be finished first and
+    /// then the next one will be emulated to completion
+    void emulateFrame();
+    
+    void setScanlineCallback(PixelBufferScanlineCallback callback);
     
     uint16_t getPC() const;
     

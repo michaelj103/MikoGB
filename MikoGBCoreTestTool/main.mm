@@ -70,7 +70,7 @@ void writePNG(const MikoGB::PixelBuffer &pixelBuffer, NSString *filename) {
 int main(int argc, const char * argv[]) {
     MikoGB::GameBoyCore gbCore;
     while (gbCore.getPC() < 0xfa) {
-        gbCore.step();
+        gbCore.emulateFrame();
     }
     
     void (^tileMapBlock)(const MikoGB::PixelBuffer &) = ^void(const MikoGB::PixelBuffer &pixelBuffer) {

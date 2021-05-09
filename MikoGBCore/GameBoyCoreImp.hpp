@@ -21,6 +21,10 @@ public:
     
     void step();
     
+    void emulateFrame();
+    
+    void setScanlineCallback(PixelBufferScanlineCallback callback);
+    
     /// Debug utilities
     void getTileMap(PixelBufferImageCallback callback);
     void getBackground(PixelBufferImageCallback callback);
