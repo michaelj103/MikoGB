@@ -8,6 +8,7 @@
 #import <Foundation/Foundation.h>
 #import <ImageIO/ImageIO.h>
 #include "GameboyCore.hpp"
+#include <iostream>
 
 using namespace std;
 
@@ -69,9 +70,12 @@ void writePNG(const MikoGB::PixelBuffer &pixelBuffer, NSString *filename) {
 
 int main(int argc, const char * argv[]) {
     MikoGB::GameBoyCore gbCore;
+    int numFrames = 0;
     while (gbCore.getPC() < 0xfa) {
         gbCore.emulateFrame();
+        numFrames++;
     }
+    cout << "Emulated " << numFrames << " frames\n";
     
     void (^tileMapBlock)(const MikoGB::PixelBuffer &) = ^void(const MikoGB::PixelBuffer &pixelBuffer) {
         writePNG(pixelBuffer, @"tileMap.png");

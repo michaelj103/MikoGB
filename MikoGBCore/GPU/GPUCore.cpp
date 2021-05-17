@@ -30,11 +30,15 @@ static const size_t VBlankScanline = 144;
 // 84 cycles in OAM (2)
 // 364 cycles in Transfer (3)
 // 8 cycles in H-Blank (0)
-// Starting there, but we may have to fudge the H-Blank timing to be a longer portion since that's the point where
-// VRAM may be accessed and games may wait and try to squeeze work in there. If it's actually so short, probably not. To test
-static const size_t OAMCycles = 84;
-static const size_t LCDTransferCycles = 364;
-static const size_t HBlankCycles = 8;
+// According to The Ultimate Game Boy Talk, the counts are a bit different:
+// 20 clocks (80 cycles) in OAM (2)
+// 43+ clocks (172 cycles) in transfer (3)
+// 51- clocks (204 cycles) in H-blank (0)
+// Which makes more sense since H-blank needs to be long enough to do meaningful computation
+// Transfer can take longer if there's window and/or sprites on the line, but longer may be better for emulation? to test
+static const size_t OAMCycles = 80;
+static const size_t LCDTransferCycles = 172;
+static const size_t HBlankCycles = 204;
 
 // Important memory locations
 static const uint16_t LCDCRegister = 0xFF40; // LCD Control
