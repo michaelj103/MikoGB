@@ -16,7 +16,7 @@ namespace MikoGB {
 /// Base class for memory bank controllers
 class MemoryBankController {
 public:
-    MemoryBankController();
+    MemoryBankController() = default;
     virtual ~MemoryBankController();
     
     static MemoryBankController *CreateMBC(const CartridgeHeader &header);

@@ -52,6 +52,7 @@
 		2992833C264528F1004691E5 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2992833B264528F1004691E5 /* ImageIO.framework */; };
 		29928343264528F9004691E5 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 29928342264528F9004691E5 /* CoreServices.framework */; };
 		2992837E264733B3004691E5 /* WindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2992837D264733B3004691E5 /* WindowController.swift */; };
+		29A8000A265387BB007A26C9 /* CartridgeHeader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297E600A2456532700EE150F /* CartridgeHeader.cpp */; };
 		29A8FF74265211B8007A26C9 /* MemoryController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8FF72265211B8007A26C9 /* MemoryController.cpp */; };
 		29A8FF75265211B8007A26C9 /* MemoryController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8FF72265211B8007A26C9 /* MemoryController.cpp */; };
 		29A8FF76265211B8007A26C9 /* MemoryController.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 29A8FF73265211B8007A26C9 /* MemoryController.hpp */; };
@@ -664,6 +665,7 @@
 				299281BB264097FE004691E5 /* RotateShiftInstructions.cpp in Sources */,
 				299281CD2641ECC9004691E5 /* SpecialInstructions.cpp in Sources */,
 				29FC06AB24BC2BFD00C12E6B /* Test8BitArithmeticInstructions.mm in Sources */,
+				29A8000A265387BB007A26C9 /* CartridgeHeader.cpp in Sources */,
 				290B3BCA247E00CB00937D71 /* LoadInstructions8.cpp in Sources */,
 				29928195263DE721004691E5 /* Test16BitArithmeticInstructions.mm in Sources */,
 				299281A6263F885E004691E5 /* CallAndReturnInstructions.cpp in Sources */,
