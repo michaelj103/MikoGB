@@ -7,6 +7,8 @@
 
 #include "MemoryController.hpp"
 #include "CartridgeHeader.hpp"
+#include "MemoryBankController.hpp"
+#include <iostream>
 
 using namespace std;
 using namespace MikoGB;
@@ -22,20 +24,44 @@ static const uint16_t HighRangeMemoryBaseAddr = 0xC000;
 static const size_t HighRangeMemorySize = 1024 * 16;     // 16 KiB of internal memory for various uses from 0xC000 - 0xFFFF
 //TODO: In CGB mode, there is additional bank switchable RAM in the high range
 
-MemoryController::MemoryController(void *romData, size_t size) {
-    assert(size >= PermanentROMSize);
+static void _LogMemoryControllerErr(const string &msg) {
+    cerr << "MemoryController Err: " << msg << "\n";
+}
+
+bool MemoryController::configureWithROMData(void *romData, size_t size) {
+    if (size < PermanentROMSize) {
+        _LogMemoryControllerErr("Data is too small to be a valid ROM");
+        return false;
+    }
+    
+    if (_permanentROM != nullptr || _videoRAM != nullptr || _highRangeMemory != nullptr || _mbc != nullptr) {
+        _LogMemoryControllerErr("Controller should not be reused");
+        return false;
+    }
+    
+    // Map the permanent ROM and read the header data from it
     _permanentROM = new uint8_t[PermanentROMSize];
     memcpy(_permanentROM, romData, PermanentROMSize);
     _header.readHeaderData(_permanentROM);
     
+    _mbc = MemoryBankController::CreateMBC(_header);
+    if (!_mbc) {
+        _LogMemoryControllerErr("Unable to create MBC from header data");
+        return false;
+    }
+    
     _videoRAM = new uint8_t[VRAMSize];
     _highRangeMemory = new uint8_t[HighRangeMemorySize];
+    
+    bool success = _mbc->configureWithROMData(romData, size);
+    return success;
 }
 
 MemoryController::~MemoryController() {
     delete [] _permanentROM;
     delete [] _videoRAM;
     delete [] _highRangeMemory;
+    delete _mbc;
 }
 
 uint8_t MemoryController::readByte(uint16_t addr) const {
@@ -43,14 +69,14 @@ uint8_t MemoryController::readByte(uint16_t addr) const {
         // Read from permanent ROM
         return _permanentROM[addr];
     } else if (addr < VRAMBaseAddr) {
-        //TODO: Ask MBC to read from switchable ROM
-        return 0;
+        // Ask MBC to read from switchable ROM
+        return _mbc->readROM(addr);
     } else if (addr < SwitchableRAMBaseAddr) {
         // Read from VRAM
         return _videoRAM[addr - VRAMBaseAddr];
     } else if (addr < HighRangeMemoryBaseAddr) {
-        //TODO: Ask the MBC to read from switchable RAM
-        return 0;
+        // Ask the MBC to read from switchable RAM
+        return _mbc->readROM(addr);
     } else {
         // Read from the high range memory
         return _highRangeMemory[addr - HighRangeMemoryBaseAddr];
@@ -59,14 +85,13 @@ uint8_t MemoryController::readByte(uint16_t addr) const {
 
 void MemoryController::setByte(uint16_t addr, uint8_t val) {
     if (addr < VRAMBaseAddr) {
-        // Write to ROM area
-        //TODO: Forward to MBC for possible control code
+        // Write to ROM area means potentially an MBC control code
+        _mbc->writeControlCode(addr, val);
     } else if (addr < SwitchableRAMBaseAddr) {
         // Write to VRAM
         _videoRAM[addr - VRAMBaseAddr] = val;
     } else if (addr < HighRangeMemoryBaseAddr) {
-        // Write to switchable RAM
-        // TODO: Forward to MBC
+        _mbc->writeRAM(addr, val);
     } else {
         // Write to high range memory
         _highRangeMemory[addr - HighRangeMemoryBaseAddr] = val;

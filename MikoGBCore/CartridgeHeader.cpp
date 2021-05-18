@@ -124,6 +124,7 @@ static string _CartridgeROMSizeDescription(uint8_t byte) {
 static CartridgeRAMSize _CartridgeRAMSizeFromByte(uint8_t byte) {
     switch (byte) {
         case 0x00:
+            //TODO: handle this quirk?
             //Random quirk: could also mean MBC2
             return CartridgeRAMSize::RAM0;
         case 0x01:

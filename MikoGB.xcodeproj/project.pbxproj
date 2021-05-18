@@ -62,6 +62,9 @@
 		29A8FFD426535994007A26C9 /* MemoryBankController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8FFD226535994007A26C9 /* MemoryBankController.cpp */; };
 		29A8FFD526535994007A26C9 /* MemoryBankController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8FFD226535994007A26C9 /* MemoryBankController.cpp */; };
 		29A8FFD626535994007A26C9 /* MemoryBankController.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 29A8FFD326535994007A26C9 /* MemoryBankController.hpp */; };
+		29A8FFF826537426007A26C9 /* NoMBC.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8FFF626537426007A26C9 /* NoMBC.cpp */; };
+		29A8FFF926537426007A26C9 /* NoMBC.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8FFF626537426007A26C9 /* NoMBC.cpp */; };
+		29A8FFFA26537426007A26C9 /* NoMBC.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 29A8FFF726537426007A26C9 /* NoMBC.hpp */; };
 		29D3C93F247DFC6A0096D21B /* TestCPUCoreBasics.mm in Sources */ = {isa = PBXBuildFile; fileRef = 29D3C93E247DFC6A0096D21B /* TestCPUCoreBasics.mm */; };
 		29D3C942247DFDE80096D21B /* TestCPUCoreUtilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29D3C940247DFDE80096D21B /* TestCPUCoreUtilities.cpp */; };
 		29F082862647B9C400FA5F67 /* NoROMView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F082852647B9C400FA5F67 /* NoROMView.swift */; };
@@ -174,6 +177,8 @@
 		29A8FF73265211B8007A26C9 /* MemoryController.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MemoryController.hpp; sourceTree = "<group>"; };
 		29A8FFD226535994007A26C9 /* MemoryBankController.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = MemoryBankController.cpp; sourceTree = "<group>"; };
 		29A8FFD326535994007A26C9 /* MemoryBankController.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MemoryBankController.hpp; sourceTree = "<group>"; };
+		29A8FFF626537426007A26C9 /* NoMBC.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = NoMBC.cpp; sourceTree = "<group>"; };
+		29A8FFF726537426007A26C9 /* NoMBC.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = NoMBC.hpp; sourceTree = "<group>"; };
 		29D3C936247DFBFE0096D21B /* MikoGBCoreTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MikoGBCoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		29D3C93A247DFBFE0096D21B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		29D3C93E247DFC6A0096D21B /* TestCPUCoreBasics.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = TestCPUCoreBasics.mm; sourceTree = "<group>"; };
@@ -373,8 +378,18 @@
 				29A8FF72265211B8007A26C9 /* MemoryController.cpp */,
 				29A8FFD326535994007A26C9 /* MemoryBankController.hpp */,
 				29A8FFD226535994007A26C9 /* MemoryBankController.cpp */,
+				29A8FFF52653740C007A26C9 /* ConcreteMBCs */,
 			);
 			path = Memory;
+			sourceTree = "<group>";
+		};
+		29A8FFF52653740C007A26C9 /* ConcreteMBCs */ = {
+			isa = PBXGroup;
+			children = (
+				29A8FFF726537426007A26C9 /* NoMBC.hpp */,
+				29A8FFF626537426007A26C9 /* NoMBC.cpp */,
+			);
+			path = ConcreteMBCs;
 			sourceTree = "<group>";
 		};
 		29D3C937247DFBFE0096D21B /* MikoGBCoreTests */ = {
@@ -415,6 +430,7 @@
 				29A8FFD626535994007A26C9 /* MemoryBankController.hpp in Headers */,
 				299282FD264266A9004691E5 /* GameBoyCoreImp.hpp in Headers */,
 				29A8FF76265211B8007A26C9 /* MemoryController.hpp in Headers */,
+				29A8FFFA26537426007A26C9 /* NoMBC.hpp in Headers */,
 				2992830B26426A32004691E5 /* GPUCore.hpp in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -599,6 +615,7 @@
 				2992823626424255004691E5 /* LoadInstructions16.cpp in Sources */,
 				299282202642424C004691E5 /* CPUInstruction.cpp in Sources */,
 				299282482642425D004691E5 /* ArithmeticInstructions16.cpp in Sources */,
+				29A8FFF926537426007A26C9 /* NoMBC.cpp in Sources */,
 				2992826C26424268004691E5 /* RotateShiftInstructions.cpp in Sources */,
 				2992822D26424252004691E5 /* LoadInstructions8.cpp in Sources */,
 				299282752642426B004691E5 /* SpecialInstructions.cpp in Sources */,
@@ -655,6 +672,7 @@
 				2992819C263DE86C004691E5 /* ArithmeticInstructions16.cpp in Sources */,
 				29A8FFD426535994007A26C9 /* MemoryBankController.cpp in Sources */,
 				29D3C93F247DFC6A0096D21B /* TestCPUCoreBasics.mm in Sources */,
+				29A8FFF826537426007A26C9 /* NoMBC.cpp in Sources */,
 				299281AE2640739C004691E5 /* TestCallAndReturnInstructions.mm in Sources */,
 				29A8FF74265211B8007A26C9 /* MemoryController.cpp in Sources */,
 				290B3BD2247F51D100937D71 /* Test16BitLoadInstructions.mm in Sources */,

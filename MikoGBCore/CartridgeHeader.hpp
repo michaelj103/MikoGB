@@ -28,7 +28,7 @@ enum class CartridgeROMSize {
     BANKS_8, ///< 128 KiB
     BANKS_16, ///< 256 KiB
     BANKS_32, ///< 512 KiB
-    BANKS_64, ///< 1MiB
+    BANKS_64, ///< 1 MiB
     BANKS_128, ///< 2 MiB
     BANKS_256, ///< 4 MiB
     BANKS_512, ///< 8 MiB

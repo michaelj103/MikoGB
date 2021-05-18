@@ -13,10 +13,14 @@
 
 namespace MikoGB {
 
+class MemoryBankController;
+
 class MemoryController {
 public:
-    MemoryController(void *romData, size_t size);
+    MemoryController() = default;
     ~MemoryController();
+    
+    bool configureWithROMData(void *romData, size_t size);
     
     uint8_t readByte(uint16_t addr) const;
     void setByte(uint16_t addr, uint8_t val);
@@ -28,6 +32,8 @@ private:
     uint8_t *_videoRAM;
     uint8_t *_highRangeMemory;
     CartridgeHeader _header;
+    
+    MemoryBankController *_mbc;
 };
 
 }
