@@ -31,7 +31,8 @@ int main(int argc, const char * argv[]) {
     char *romBytes = new char[SixteenKB]();
     rom.read(romBytes, SixteenKB);
     
-    CartridgeHeader header((uint8_t *)romBytes);
+    CartridgeHeader header;
+    header.readHeaderData((uint8_t *)romBytes);
     cout << header << endl;
     
     delete [] romBytes;

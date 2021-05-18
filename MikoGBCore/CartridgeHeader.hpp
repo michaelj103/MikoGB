@@ -46,7 +46,8 @@ enum class CartridgeRAMSize {
 
 class CartridgeHeader {
 public:
-    CartridgeHeader(uint8_t * bytes);
+    CartridgeHeader() = default;
+    void readHeaderData(uint8_t *romData);
     
     bool isSupported() const;
     

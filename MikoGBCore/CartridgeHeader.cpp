@@ -162,7 +162,7 @@ static string _CartridgeRAMSizeDescription(uint8_t byte) {
     }
 }
 
-CartridgeHeader::CartridgeHeader(uint8_t *romData) {
+void CartridgeHeader::readHeaderData(uint8_t *romData) {
     // Check that the logo is in the correct spot
     _validLogo = _ValidateLogoHeader(romData);
     
@@ -264,8 +264,8 @@ std::ostream &operator<<(std::ostream &os, const CartridgeHeader &cartridge) {
     cout << "\nRegion: " << (cartridge._destinationCode == 0x00 ? "Japanese" : "Non-Japanese");
     cout << "\nVersion: " << (int)cartridge._version;
     cout << "\nHeader Checks: " << (cartridge._validLogo && cartridge._headerChecksum ? "Valid" : "Invalid");
-    cout << "\nSGB Support: " << (cartridge._sgbSupported ? "Supported" : "Unsupported");
-    cout << "\nCGB Support: " << (cartridge._cgbExclusive ? (cartridge._cgbExclusive ? "Required" : "Supported") : "Unsupported");
+    cout << "\nSGB Support: " << (cartridge._sgbSupported ? "Yes" : "No");
+    cout << "\nCGB Support: " << (cartridge._cgbSupported ? (cartridge._cgbExclusive ? "Required" : "Optional") : "No");
     cout << "\nPublisher Code: " << cartridge._publisherCode;
     cout << "\nCartridge Type: " << _CartridgeTypeDescription(cartridge._cartridgeType);
     cout << "\nROM Size: " << _CartridgeROMSizeDescription(cartridge._romSize);

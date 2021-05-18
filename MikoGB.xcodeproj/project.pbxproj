@@ -17,7 +17,6 @@
 		290B3BD0247E048100937D71 /* Test8BitLoadInstructions.mm in Sources */ = {isa = PBXBuildFile; fileRef = 290B3BCF247E048100937D71 /* Test8BitLoadInstructions.mm */; };
 		290B3BD2247F51D100937D71 /* Test16BitLoadInstructions.mm in Sources */ = {isa = PBXBuildFile; fileRef = 290B3BD1247F51D100937D71 /* Test16BitLoadInstructions.mm */; };
 		297E60062456426400EE150F /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297E60052456426400EE150F /* main.cpp */; };
-		297E600D2456532700EE150F /* CartridgeHeader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297E600A2456532700EE150F /* CartridgeHeader.cpp */; };
 		29928195263DE721004691E5 /* Test16BitArithmeticInstructions.mm in Sources */ = {isa = PBXBuildFile; fileRef = 29928194263DE721004691E5 /* Test16BitArithmeticInstructions.mm */; };
 		2992819C263DE86C004691E5 /* ArithmeticInstructions16.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2992818B263DDEC8004691E5 /* ArithmeticInstructions16.cpp */; };
 		299281A6263F885E004691E5 /* CallAndReturnInstructions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 299281A3263F885E004691E5 /* CallAndReturnInstructions.cpp */; };
@@ -53,6 +52,16 @@
 		2992833C264528F1004691E5 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2992833B264528F1004691E5 /* ImageIO.framework */; };
 		29928343264528F9004691E5 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 29928342264528F9004691E5 /* CoreServices.framework */; };
 		2992837E264733B3004691E5 /* WindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2992837D264733B3004691E5 /* WindowController.swift */; };
+		29A8FF74265211B8007A26C9 /* MemoryController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8FF72265211B8007A26C9 /* MemoryController.cpp */; };
+		29A8FF75265211B8007A26C9 /* MemoryController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8FF72265211B8007A26C9 /* MemoryController.cpp */; };
+		29A8FF76265211B8007A26C9 /* MemoryController.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 29A8FF73265211B8007A26C9 /* MemoryController.hpp */; };
+		29A8FF86265211E4007A26C9 /* GPUCore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2992830826426A32004691E5 /* GPUCore.cpp */; };
+		29A8FF8C26521A6E007A26C9 /* CartridgeHeader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297E600A2456532700EE150F /* CartridgeHeader.cpp */; };
+		29A8FF9226521A71007A26C9 /* CartridgeHeader.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 297E600B2456532700EE150F /* CartridgeHeader.hpp */; settings = {ATTRIBUTES = (Public, ); }; };
+		29A8FF9D26521AA3007A26C9 /* libMikoGBCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 299281E626424123004691E5 /* libMikoGBCore.a */; };
+		29A8FFD426535994007A26C9 /* MemoryBankController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8FFD226535994007A26C9 /* MemoryBankController.cpp */; };
+		29A8FFD526535994007A26C9 /* MemoryBankController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8FFD226535994007A26C9 /* MemoryBankController.cpp */; };
+		29A8FFD626535994007A26C9 /* MemoryBankController.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 29A8FFD326535994007A26C9 /* MemoryBankController.hpp */; };
 		29D3C93F247DFC6A0096D21B /* TestCPUCoreBasics.mm in Sources */ = {isa = PBXBuildFile; fileRef = 29D3C93E247DFC6A0096D21B /* TestCPUCoreBasics.mm */; };
 		29D3C942247DFDE80096D21B /* TestCPUCoreUtilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29D3C940247DFDE80096D21B /* TestCPUCoreUtilities.cpp */; };
 		29F082862647B9C400FA5F67 /* NoROMView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F082852647B9C400FA5F67 /* NoROMView.swift */; };
@@ -64,6 +73,13 @@
 
 /* Begin PBXContainerItemProxy section */
 		2992829E2642441B004691E5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 297E5FED2456421B00EE150F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 299281E526424123004691E5;
+			remoteInfo = MikoGBCore;
+		};
+		29A8FF9E26521AA9007A26C9 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 297E5FED2456421B00EE150F /* Project object */;
 			proxyType = 1;
@@ -154,6 +170,10 @@
 		29A8C0D82467E9FC0082C52B /* BitOpInstructions.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = BitOpInstructions.hpp; sourceTree = "<group>"; };
 		29A8C0DA246810640082C52B /* JumpInstructions.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = JumpInstructions.cpp; sourceTree = "<group>"; };
 		29A8C0DB246810640082C52B /* JumpInstructions.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = JumpInstructions.hpp; sourceTree = "<group>"; };
+		29A8FF72265211B8007A26C9 /* MemoryController.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = MemoryController.cpp; sourceTree = "<group>"; };
+		29A8FF73265211B8007A26C9 /* MemoryController.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MemoryController.hpp; sourceTree = "<group>"; };
+		29A8FFD226535994007A26C9 /* MemoryBankController.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = MemoryBankController.cpp; sourceTree = "<group>"; };
+		29A8FFD326535994007A26C9 /* MemoryBankController.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MemoryBankController.hpp; sourceTree = "<group>"; };
 		29D3C936247DFBFE0096D21B /* MikoGBCoreTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MikoGBCoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		29D3C93A247DFBFE0096D21B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		29D3C93E247DFC6A0096D21B /* TestCPUCoreBasics.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = TestCPUCoreBasics.mm; sourceTree = "<group>"; };
@@ -172,6 +192,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				29A8FF9D26521AA3007A26C9 /* libMikoGBCore.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -240,8 +261,6 @@
 			isa = PBXGroup;
 			children = (
 				297E60052456426400EE150F /* main.cpp */,
-				297E600B2456532700EE150F /* CartridgeHeader.hpp */,
-				297E600A2456532700EE150F /* CartridgeHeader.cpp */,
 			);
 			path = RomAnalyzer;
 			sourceTree = "<group>";
@@ -276,6 +295,9 @@
 				299282FA264266A9004691E5 /* GameBoyCoreImp.cpp */,
 				299283172643AF00004691E5 /* PixelBuffer.hpp */,
 				29A8C0B9246147190082C52B /* BitTwiddlingUtil.h */,
+				297E600B2456532700EE150F /* CartridgeHeader.hpp */,
+				297E600A2456532700EE150F /* CartridgeHeader.cpp */,
+				29A8FF71265211A7007A26C9 /* Memory */,
 				297E613B245FEB9B00EE150F /* CPU */,
 				299281D726423469004691E5 /* GPU */,
 			);
@@ -344,6 +366,17 @@
 			path = InstructionFunctions;
 			sourceTree = "<group>";
 		};
+		29A8FF71265211A7007A26C9 /* Memory */ = {
+			isa = PBXGroup;
+			children = (
+				29A8FF73265211B8007A26C9 /* MemoryController.hpp */,
+				29A8FF72265211B8007A26C9 /* MemoryController.cpp */,
+				29A8FFD326535994007A26C9 /* MemoryBankController.hpp */,
+				29A8FFD226535994007A26C9 /* MemoryBankController.cpp */,
+			);
+			path = Memory;
+			sourceTree = "<group>";
+		};
 		29D3C937247DFBFE0096D21B /* MikoGBCoreTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -377,8 +410,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				299281FE2642416A004691E5 /* GameBoyCore.hpp in Headers */,
+				29A8FF9226521A71007A26C9 /* CartridgeHeader.hpp in Headers */,
 				299283192643AF00004691E5 /* PixelBuffer.hpp in Headers */,
+				29A8FFD626535994007A26C9 /* MemoryBankController.hpp in Headers */,
 				299282FD264266A9004691E5 /* GameBoyCoreImp.hpp in Headers */,
+				29A8FF76265211B8007A26C9 /* MemoryController.hpp in Headers */,
 				2992830B26426A32004691E5 /* GPUCore.hpp in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -397,6 +433,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				29A8FF9F26521AA9007A26C9 /* PBXTargetDependency */,
 			);
 			name = RomAnalyzer;
 			productName = RomAnalyzer;
@@ -547,7 +584,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				297E600D2456532700EE150F /* CartridgeHeader.cpp in Sources */,
 				297E60062456426400EE150F /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -558,6 +594,7 @@
 			files = (
 				2992825A26424262004691E5 /* JumpInstructions.cpp in Sources */,
 				2992826326424265004691E5 /* CallAndReturnInstructions.cpp in Sources */,
+				29A8FF8C26521A6E007A26C9 /* CartridgeHeader.cpp in Sources */,
 				2992821726424240004691E5 /* CPUCore.cpp in Sources */,
 				2992823626424255004691E5 /* LoadInstructions16.cpp in Sources */,
 				299282202642424C004691E5 /* CPUInstruction.cpp in Sources */,
@@ -569,7 +606,9 @@
 				2992823B2642425A004691E5 /* ArithmeticInstructions8.cpp in Sources */,
 				299282FC264266A9004691E5 /* GameBoyCoreImp.cpp in Sources */,
 				299281F526424164004691E5 /* GameBoyCore.cpp in Sources */,
+				29A8FF75265211B8007A26C9 /* MemoryController.cpp in Sources */,
 				2992830A26426A32004691E5 /* GPUCore.cpp in Sources */,
+				29A8FFD526535994007A26C9 /* MemoryBankController.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -614,9 +653,12 @@
 				290B3BCE247E00D500937D71 /* JumpInstructions.cpp in Sources */,
 				290B3BCC247E00D000937D71 /* ArithmeticInstructions8.cpp in Sources */,
 				2992819C263DE86C004691E5 /* ArithmeticInstructions16.cpp in Sources */,
+				29A8FFD426535994007A26C9 /* MemoryBankController.cpp in Sources */,
 				29D3C93F247DFC6A0096D21B /* TestCPUCoreBasics.mm in Sources */,
 				299281AE2640739C004691E5 /* TestCallAndReturnInstructions.mm in Sources */,
+				29A8FF74265211B8007A26C9 /* MemoryController.cpp in Sources */,
 				290B3BD2247F51D100937D71 /* Test16BitLoadInstructions.mm in Sources */,
+				29A8FF86265211E4007A26C9 /* GPUCore.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -627,6 +669,11 @@
 			isa = PBXTargetDependency;
 			target = 299281E526424123004691E5 /* MikoGBCore */;
 			targetProxy = 2992829E2642441B004691E5 /* PBXContainerItemProxy */;
+		};
+		29A8FF9F26521AA9007A26C9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 299281E526424123004691E5 /* MikoGBCore */;
+			targetProxy = 29A8FF9E26521AA9007A26C9 /* PBXContainerItemProxy */;
 		};
 		29F082B52647BC4000FA5F67 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -697,7 +744,6 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -749,7 +795,6 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = macosx;
@@ -805,7 +850,6 @@
 			buildSettings = {
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CODE_SIGN_STYLE = Automatic;
-				MACOSX_DEPLOYMENT_TARGET = 11.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -815,7 +859,6 @@
 			buildSettings = {
 				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CODE_SIGN_STYLE = Automatic;
-				MACOSX_DEPLOYMENT_TARGET = 11.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
