@@ -11,6 +11,7 @@
 #include "GameBoyCore.hpp"
 #include "CPUCore.hpp"
 #include "GPUCore.hpp"
+#include "MemoryController.hpp"
 
 namespace MikoGB {
 
@@ -18,6 +19,9 @@ class GameBoyCoreImp {
 public:
     GameBoyCoreImp();
     ~GameBoyCoreImp();
+    
+    bool loadROMData(void *romData, size_t size);
+    void prepTestROM();
     
     void step();
     
@@ -32,6 +36,7 @@ public:
 private:
     CPUCore *_cpu;
     GPUCore *_gpu;
+    MemoryController *_memoryController;
     
     friend class GameBoyCore;
 };

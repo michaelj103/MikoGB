@@ -25,8 +25,11 @@
 
 #include <cstdlib>
 #include "BitTwiddlingUtil.h"
+#include "MemoryController.hpp"
 
 namespace MikoGB {
+
+class MemoryController;
 
 enum FlagBit : uint8_t {
     Zero        = 1 << 7,
@@ -37,8 +40,11 @@ enum FlagBit : uint8_t {
 
 class CPUCore {
 public:
+    CPUCore(MemoryController *memoryController);
+#if BUILD_FOR_TESTING
     CPUCore(uint8_t *memory, size_t len);
     ~CPUCore();
+#endif
     
     /// Step one instruction. Returns elapsed cycle count
     int step();
@@ -53,15 +59,13 @@ public:
     uint16_t stackPointer;
     bool interruptsEnabled; // IME
     
-    //TODO: should this be a class? "MemoryController"
+    MemoryController *memoryController;
+#if BUILD_FOR_TESTING
     uint8_t *mainMemory;
-    void setMemory(uint16_t address, uint8_t val) {
-        mainMemory[address] = val;
-    }
+#endif
+    void setMemory(uint16_t address, uint8_t val);
     
-    uint8_t getMemory(uint16_t address) const {
-        return mainMemory[address];
-    }
+    uint8_t getMemory(uint16_t address) const;
     
     uint16_t getHLptr() const;
     
@@ -137,8 +141,8 @@ inline uint16_t CPUCore::getCptr() const {
 }
 
 inline void CPUCore::stackPush(uint8_t hi, uint8_t lo) {
-    mainMemory[--stackPointer] = hi;
-    mainMemory[--stackPointer] = lo;
+    setMemory(--stackPointer, hi);
+    setMemory(--stackPointer, lo);
 }
 
 inline void CPUCore::stackPush(uint16_t val) {
@@ -154,8 +158,8 @@ inline uint16_t CPUCore::stackPop() {
 }
 
 inline void CPUCore::stackPop(uint8_t &hi, uint8_t &lo) {
-    lo = mainMemory[stackPointer++];
-    hi = mainMemory[stackPointer++];
+    lo = getMemory(stackPointer++);
+    hi = getMemory(stackPointer++);
 }
 
 inline bool CPUCore::getFlag(FlagBit bit) const {
@@ -169,6 +173,22 @@ inline void CPUCore::setFlag(FlagBit bit, bool isSet) {
     } else {
         registers[REGISTER_F] &= ~(bit);
     }
+}
+
+inline void CPUCore::setMemory(uint16_t address, uint8_t val) {
+#if BUILD_FOR_TESTING
+    mainMemory[address] = val;
+#else
+    memoryController->setByte(address, val);
+#endif
+}
+
+inline uint8_t CPUCore::getMemory(uint16_t address) const {
+#if BUILD_FOR_TESTING
+    return mainMemory[address];
+#else
+    return memoryController->readByte(address);
+#endif
 }
 
 }

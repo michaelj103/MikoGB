@@ -148,8 +148,8 @@ int CPUInstructions::loadPtrImmediate16FromSP(const uint8_t *opcode, CPUCore &co
     //Split the stack pointer into 2 bytes and store each at addr. Little-endian
     uint8_t spLo = 0, spHi = 0;
     splitWord16(core.stackPointer, spLo, spHi);
-    core.mainMemory[addr] = spLo;
-    core.mainMemory[addr+1] = spHi;
+    core.setMemory(addr, spLo);
+    core.setMemory(addr+1, spHi);
     return 5;
 }
 

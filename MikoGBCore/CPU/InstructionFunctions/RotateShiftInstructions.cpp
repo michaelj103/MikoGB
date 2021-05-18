@@ -74,10 +74,10 @@ int CPUInstructions::rotateLeftRegisterCarryOut(const uint8_t *opcode, CPUCore &
 
 int CPUInstructions::rotateLeftPtrHLCarryOut(const uint8_t *opcode, CPUCore &core) {
     const uint16_t hlPtr = core.getHLptr();
-    const uint8_t mVal = core.mainMemory[hlPtr];
+    const uint8_t mVal = core.getMemory(hlPtr);
     const uint8_t finalVal = (mVal << 1) | ((mVal & 0x80) >> 7);
     core.setFlag(FlagBit::Carry, (mVal & 0x80) == 0x80);
-    core.mainMemory[hlPtr] = finalVal;
+    core.setMemory(hlPtr, finalVal);
     core.setFlag(FlagBit::H, false);
     core.setFlag(FlagBit::N, false);
     core.setFlag(FlagBit::Zero, finalVal == 0);
@@ -101,11 +101,11 @@ int CPUInstructions::rotateLeftRegisterThroughCarry(const uint8_t *opcode, CPUCo
 
 int CPUInstructions::rotateLeftPtrHLThroughCarry(const uint8_t *opcode, CPUCore &core) {
     const uint16_t hlPtr = core.getHLptr();
-    const uint8_t mVal = core.mainMemory[hlPtr];
+    const uint8_t mVal = core.getMemory(hlPtr);
     const uint8_t carryVal = core.getFlag(FlagBit::Carry) ? 1 : 0;
     const uint8_t finalVal = (mVal << 1) | carryVal;
     core.setFlag(FlagBit::Carry, (mVal & 0x80) == 0x80);
-    core.mainMemory[hlPtr] = finalVal;
+    core.setMemory(hlPtr, finalVal);
     core.setFlag(FlagBit::H, false);
     core.setFlag(FlagBit::N, false);
     core.setFlag(FlagBit::Zero, finalVal == 0);
@@ -128,10 +128,10 @@ int CPUInstructions::rotateRightRegisterCarryOut(const uint8_t *opcode, CPUCore 
 
 int CPUInstructions::rotateRightPtrHLCarryOut(const uint8_t *opcode, CPUCore &core) {
     const uint16_t hlPtr = core.getHLptr();
-    const uint8_t mVal = core.mainMemory[hlPtr];
+    const uint8_t mVal = core.getMemory(hlPtr);
     const uint8_t finalVal = (mVal >> 1) | ((mVal & 0x01) << 7);
     core.setFlag(FlagBit::Carry, (mVal & 0x01) == 0x01);
-    core.mainMemory[hlPtr] = finalVal;
+    core.setMemory(hlPtr, finalVal);
     core.setFlag(FlagBit::H, false);
     core.setFlag(FlagBit::N, false);
     core.setFlag(FlagBit::Zero, finalVal == 0);
@@ -155,11 +155,11 @@ int CPUInstructions::rotateRightRegisterThroughCarry(const uint8_t *opcode, CPUC
 
 int CPUInstructions::rotateRightPtrHLThroughCarry(const uint8_t *opcode, CPUCore &core) {
     const uint16_t hlPtr = core.getHLptr();
-    const uint8_t mVal = core.mainMemory[hlPtr];
+    const uint8_t mVal = core.getMemory(hlPtr);
     const uint8_t carryVal = core.getFlag(FlagBit::Carry) ? 0x80 : 0;
     const uint8_t finalVal = (mVal >> 1) | carryVal;
     core.setFlag(FlagBit::Carry, (mVal & 0x01) == 0x01);
-    core.mainMemory[hlPtr] = finalVal;
+    core.setMemory(hlPtr, finalVal);
     core.setFlag(FlagBit::H, false);
     core.setFlag(FlagBit::N, false);
     core.setFlag(FlagBit::Zero, finalVal == 0);
@@ -184,10 +184,10 @@ int CPUInstructions::shiftLeftRegisterFill0(const uint8_t *opcode, CPUCore &core
 
 int CPUInstructions::shiftLeftPtrHLFill0(const uint8_t *opcode, CPUCore &core) {
     const uint16_t hlPtr = core.getHLptr();
-    const uint8_t mVal = core.mainMemory[hlPtr];
+    const uint8_t mVal = core.getMemory(hlPtr);
     const uint8_t finalVal = mVal << 1;
     core.setFlag(FlagBit::Carry, (mVal & 0x80) == 0x80);
-    core.mainMemory[hlPtr] = finalVal;
+    core.setMemory(hlPtr, finalVal);
     core.setFlag(FlagBit::H, false);
     core.setFlag(FlagBit::N, false);
     core.setFlag(FlagBit::Zero, finalVal == 0);
@@ -210,10 +210,10 @@ int CPUInstructions::shiftRightRegisterFill0(const uint8_t *opcode, CPUCore &cor
 
 int CPUInstructions::shiftRightPtrHLFill0(const uint8_t *opcode, CPUCore &core) {
     const uint16_t hlPtr = core.getHLptr();
-    const uint8_t mVal = core.mainMemory[hlPtr];
+    const uint8_t mVal = core.getMemory(hlPtr);
     const uint8_t finalVal = mVal >> 1;
     core.setFlag(FlagBit::Carry, (mVal & 0x01) == 0x01);
-    core.mainMemory[hlPtr] = finalVal;
+    core.setMemory(hlPtr, finalVal);
     core.setFlag(FlagBit::H, false);
     core.setFlag(FlagBit::N, false);
     core.setFlag(FlagBit::Zero, finalVal == 0);
@@ -236,10 +236,10 @@ int CPUInstructions::shiftRightRegisterFillHigh(const uint8_t *opcode, CPUCore &
 
 int CPUInstructions::shiftRightPtrHLFillHigh(const uint8_t *opcode, CPUCore &core) {
     const uint16_t hlPtr = core.getHLptr();
-    const uint8_t mVal = core.mainMemory[hlPtr];
+    const uint8_t mVal = core.getMemory(hlPtr);
     const uint8_t finalVal = (mVal >> 1) | (mVal & 0x80); // shift right but preserve high bit
     core.setFlag(FlagBit::Carry, (mVal & 0x01) == 0x01);
-    core.mainMemory[hlPtr] = finalVal;
+    core.setMemory(hlPtr, finalVal);
     core.setFlag(FlagBit::H, false);
     core.setFlag(FlagBit::N, false);
     core.setFlag(FlagBit::Zero, finalVal == 0);
@@ -264,9 +264,9 @@ int CPUInstructions::swapRegister(const uint8_t *opcode, CPUCore &core) {
 
 int CPUInstructions::swapPtrHL(const uint8_t *opcode, CPUCore &core) {
     const uint16_t hlPtr = core.getHLptr();
-    const uint8_t mVal = core.mainMemory[hlPtr];
+    const uint8_t mVal = core.getMemory(hlPtr);
     const uint8_t finalVal = ((mVal & 0xF) << 4) | ((mVal & 0xF0) >> 4);
-    core.mainMemory[hlPtr] = finalVal;
+    core.setMemory(hlPtr, finalVal);
     core.setFlag(FlagBit::Carry, false);
     core.setFlag(FlagBit::H, false);
     core.setFlag(FlagBit::N, false);

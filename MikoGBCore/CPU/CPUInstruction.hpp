@@ -18,7 +18,11 @@ struct CPUInstruction {
     std::function<int(const uint8_t *, CPUCore &)> func = UnrecognizedInstruction;
     
     static void InitializeInstructionTable();
+#if BUILD_FOR_TESTING
     static const CPUInstruction &LookupInstruction(uint8_t *);
+#else
+    static const CPUInstruction &LookupInstruction(const MemoryController *, uint16_t);
+#endif
     
 private:
     static CPUInstruction *InstructionTable;

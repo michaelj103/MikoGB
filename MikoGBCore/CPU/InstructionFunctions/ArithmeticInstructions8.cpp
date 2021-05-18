@@ -42,7 +42,7 @@ int CPUInstructions::addAccWithRegister(const uint8_t *opcode, CPUCore &core) {
 
 int CPUInstructions::addAccWithPtrHL(const uint8_t *opcode, CPUCore &core) {
     const uint8_t a = core.registers[REGISTER_A];
-    const uint8_t b = core.mainMemory[core.getHLptr()];
+    const uint8_t b = core.getMemory(core.getHLptr());
     core.registers[REGISTER_A] = _Add8BitOperands(a, b, false, core);
     
     return 2;
@@ -68,7 +68,7 @@ int CPUInstructions::addAccWithRegisterAndCarry(const uint8_t *opcode, CPUCore &
 
 int CPUInstructions::addAccWithPtrHLAndCarry(const uint8_t *opcode, CPUCore &core) {
     const uint8_t a = core.registers[REGISTER_A];
-    const uint8_t b = core.mainMemory[core.getHLptr()];
+    const uint8_t b = core.getMemory(core.getHLptr());
     core.registers[REGISTER_A] = _Add8BitOperands(a, b, true, core);
     
     return 2;
@@ -124,7 +124,7 @@ int CPUInstructions::subAccWithImmediate8(const uint8_t *opcode, CPUCore &core) 
 
 int CPUInstructions::subAccWithPtrHL(const uint8_t *opcode, CPUCore &core) {
     const uint8_t a = core.registers[REGISTER_A];
-    const uint8_t b = core.mainMemory[core.getHLptr()];
+    const uint8_t b = core.getMemory(core.getHLptr());
     core.registers[REGISTER_A] = _Sub8BitOperands(a, b, false, core);
     
     return 2;
@@ -150,7 +150,7 @@ int CPUInstructions::subAccWithImmediate8AndCarry(const uint8_t *opcode, CPUCore
 
 int CPUInstructions::subAccWithPtrHLAndCarry(const uint8_t *opcode, CPUCore &core) {
     const uint8_t a = core.registers[REGISTER_A];
-    const uint8_t b = core.mainMemory[core.getHLptr()];
+    const uint8_t b = core.getMemory(core.getHLptr());
     core.registers[REGISTER_A] = _Sub8BitOperands(a, b, true, core);
     
     return 2;
@@ -187,7 +187,7 @@ int CPUInstructions::andAccWithImmediate8(const uint8_t *opcode, CPUCore &core) 
 
 int CPUInstructions::andAccWithPtrHL(const uint8_t *opcode, CPUCore &core) {
     const uint8_t a = core.registers[REGISTER_A];
-    const uint8_t b = core.mainMemory[core.getHLptr()];
+    const uint8_t b = core.getMemory(core.getHLptr());
     core.registers[REGISTER_A] = _And8BitOperands(a, b, core);
     
     return 2;
@@ -224,7 +224,7 @@ int CPUInstructions::orAccWithImmediate8(const uint8_t *opcode, MikoGB::CPUCore 
 
 int CPUInstructions::orAccWithPtrHL(const uint8_t *opcode, MikoGB::CPUCore &core) {
     const uint8_t a = core.registers[REGISTER_A];
-    const uint8_t b = core.mainMemory[core.getHLptr()];
+    const uint8_t b = core.getMemory(core.getHLptr());
     core.registers[REGISTER_A] = _Or8BitOperands(a, b, core);
     
     return 2;
@@ -261,7 +261,7 @@ int CPUInstructions::xorAccWithImmediate8(const uint8_t *opcode, CPUCore &core) 
 
 int CPUInstructions::xorAccWithPtrHL(const uint8_t *opcode, CPUCore &core) {
     const uint8_t a = core.registers[REGISTER_A];
-    const uint8_t b = core.mainMemory[core.getHLptr()];
+    const uint8_t b = core.getMemory(core.getHLptr());
     core.registers[REGISTER_A] = _Xor8BitOperands(a, b, core);
     
     return 2;
@@ -296,7 +296,7 @@ int CPUInstructions::cpAccWithImmediate8(const uint8_t *opcode, CPUCore &core) {
 
 int CPUInstructions::cpAccWithPtrHL(const uint8_t *opcode, CPUCore &core) {
     const uint8_t a = core.registers[REGISTER_A];
-    const uint8_t b = core.mainMemory[core.getHLptr()];
+    const uint8_t b = core.getMemory(core.getHLptr());
     _Cp8BitOperands(a, b, core);
     
     return 2;
@@ -327,8 +327,8 @@ int CPUInstructions::incRegister(const uint8_t *opcode, CPUCore &core) {
 
 int CPUInstructions::incPtrHL(const uint8_t *opcode, CPUCore &core) {
     const uint16_t ptrAddress = core.getHLptr();
-    const uint8_t val = core.mainMemory[ptrAddress];
-    core.mainMemory[ptrAddress] = _Inc8BitValue(val, core);
+    const uint8_t val = core.getMemory(ptrAddress);
+    core.setMemory(ptrAddress, _Inc8BitValue(val, core));
     
     return 3;
 }
@@ -358,8 +358,8 @@ int CPUInstructions::decRegister(const uint8_t *opcode, CPUCore &core) {
 
 int CPUInstructions::decPtrHL(const uint8_t *opcode, CPUCore &core) {
     const uint16_t ptrAddress = core.getHLptr();
-    const uint8_t val = core.mainMemory[ptrAddress];
-    core.mainMemory[ptrAddress] = _Dec8BitValue(val, core);
+    const uint8_t val = core.getMemory(ptrAddress);
+    core.setMemory(ptrAddress, _Dec8BitValue(val, core));
     
     return 3;
 }

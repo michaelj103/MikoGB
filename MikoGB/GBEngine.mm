@@ -39,6 +39,7 @@ static const size_t NumKeys = 8; //Number of gameboy keys
         _core->setScanlineCallback([scanlineBlock](const MikoGB::PixelBuffer &scanline, size_t line) {
             scanlineBlock(scanline, line);
         });
+        _core->prepTestROM();
         
         const size_t width = 160;
         const size_t height = 144;

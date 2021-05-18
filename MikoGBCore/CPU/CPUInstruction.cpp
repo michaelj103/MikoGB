@@ -45,6 +45,7 @@ int CPUInstruction::UnrecognizedInstruction(const uint8_t *opcode, CPUCore &core
     }
 }
 
+#if BUILD_FOR_TESTING
 const CPUInstruction &CPUInstruction::LookupInstruction(uint8_t *memoryPtr) {
     size_t idx = memoryPtr[0];
     if (idx == 0xCB) {
@@ -55,6 +56,20 @@ const CPUInstruction &CPUInstruction::LookupInstruction(uint8_t *memoryPtr) {
     
     return InstructionTable[idx];
 }
+
+#else
+
+const CPUInstruction &CPUInstruction::LookupInstruction(const MemoryController *mem, uint16_t pc) {
+    size_t idx = mem->readByte(pc);
+    if (idx == 0xCB) {
+        //Z80 Extended instruction set
+        //Index in the table is 0x1SS where SS is the extended opcode
+        idx = mem->readByte(pc+1) | 0x100;
+    }
+    
+    return InstructionTable[idx];
+}
+#endif /* BUILD_FOR_TESTING */
 
 #pragma mark - Instruction Definitions
 

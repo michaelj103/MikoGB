@@ -7,14 +7,21 @@
 
 #include "CPUCore.hpp"
 #include "CPUInstruction.hpp"
+#include "MemoryController.hpp"
 #include <algorithm>
 #include <stdexcept>
 
 using namespace std;
 using namespace MikoGB;
 
-static const size_t MainMemorySize = 1024 * 64; // 64 KiB
+CPUCore::CPUCore(MemoryController *memCon) {
+    memoryController = memCon;
+    reset();
+    CPUInstruction::InitializeInstructionTable();
+}
 
+#if BUILD_FOR_TESTING
+static const size_t MainMemorySize = 1024 * 64; // 64 KiB
 CPUCore::CPUCore(uint8_t *memory, size_t len) {
     mainMemory = new uint8_t[MainMemorySize]();
     if (memory) {
@@ -34,6 +41,21 @@ int CPUCore::step() {
     programCounter += instruction.size;
     return instruction.func(basePtr, *this);
 }
+
+#else
+
+int CPUCore::step() {
+    const uint16_t originalPC = programCounter;
+    const CPUInstruction &instruction = CPUInstruction::LookupInstruction(memoryController, programCounter);
+    programCounter += instruction.size;
+    uint8_t basePtr[3]; // max instruction size
+    for (int i = 0; i < instruction.size; ++i) {
+        basePtr[i] = memoryController->readByte(originalPC + i);
+    }
+    return instruction.func(basePtr, *this);
+}
+
+#endif
 
 void CPUCore::reset() {
     for (int i = 0; i < REGISTER_COUNT; ++i) {

@@ -19,6 +19,14 @@ GameBoyCore::~GameBoyCore() {
     delete _imp;
 }
 
+bool GameBoyCore::loadROMData(void *romData, size_t size) {
+    return _imp->loadROMData(romData, size);
+}
+
+void GameBoyCore::prepTestROM() {
+    _imp->prepTestROM();
+}
+
 void GameBoyCore::step() {
     _imp->step();
 }

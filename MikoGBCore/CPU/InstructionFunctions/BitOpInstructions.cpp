@@ -33,7 +33,7 @@ int CPUInstructions::bitReadFromPtrHL(const uint8_t *opcode, CPUCore &core) {
     
     // Check if the indicated bit is set and set flags appropriately
     const uint8_t mask = 1 << bitIdx;
-    const bool bitSet = (core.mainMemory[core.getHLptr()] & mask) == mask;
+    const bool bitSet = (core.getMemory(core.getHLptr()) & mask) == mask;
     core.setFlag(FlagBit::Zero, !bitSet);
     // H and N flag values always set via this instruction for some reason
     core.setFlag(FlagBit::H, true);
@@ -60,7 +60,9 @@ int CPUInstructions::bitSetPtrHL(const uint8_t *opcode, CPUCore &core) {
     
     // Set the specified bit
     const uint8_t mask = 1 << bitIdx;
-    core.mainMemory[core.getHLptr()] |= mask;
+    const uint16_t hlPtr = core.getHLptr();
+    const uint8_t currentVal = core.getMemory(hlPtr);
+    core.setMemory(hlPtr, currentVal | mask);
     return 4;
 }
 
@@ -83,6 +85,8 @@ int CPUInstructions::bitResetPtrHL(const uint8_t *opcode, CPUCore &core) {
     
     // Set the specified bit
     const uint8_t mask = 1 << bitIdx;
-    core.mainMemory[core.getHLptr()] ^= mask;
+    const uint16_t hlPtr = core.getHLptr();
+    const uint8_t currentVal = core.getMemory(hlPtr);
+    core.setMemory(hlPtr, currentVal ^ mask);
     return 4;
 }
