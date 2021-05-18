@@ -18,14 +18,14 @@ class NoMBC : public MemoryBankController {
         None,
         SingleBank,
     };
-    RAMType _ramType;
-    uint8_t *_ramData;
+    RAMType _ramType = RAMType::Invalid;
+    uint8_t *_ramData = nullptr;
     
 public:
     NoMBC(const CartridgeHeader &header);
     ~NoMBC();
     
-    bool configureWithROMData(void *romData, size_t size) override;
+    bool configureWithROMData(const void *romData, size_t size) override;
     uint8_t readROM(uint16_t addr) const override;
     uint8_t readRAM(uint16_t addr) const override;
     void writeRAM(uint16_t addr, uint8_t val) const override;

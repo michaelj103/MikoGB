@@ -51,20 +51,20 @@ class ViewController: NSViewController, NoROMViewDelegate {
     }
     
     func didSelectChooseRom(view: NoROMView) {
-//        let openPanel = NSOpenPanel()
-//        openPanel.canChooseFiles = true
-//        openPanel.canChooseDirectories = false
-//        openPanel.allowsMultipleSelection = false
-//        openPanel.begin { (response) in
-//            if response == NSApplication.ModalResponse.OK {
-//                let fileURL = openPanel.urls[0]
-//                self.loadROM(url: fileURL)
-//            }
-//        }
+        let openPanel = NSOpenPanel()
+        openPanel.canChooseFiles = true
+        openPanel.canChooseDirectories = false
+        openPanel.allowsMultipleSelection = false
+        openPanel.begin { (response) in
+            if response == NSApplication.ModalResponse.OK {
+                let fileURL = openPanel.urls[0]
+                self.loadROM(url: fileURL)
+            }
+        }
         
-        let gameView = GameView(engine: engine)
-        contentView = gameView
-        gameView.start()
+//        let gameView = GameView(engine: engine)
+//        contentView = gameView
+//        gameView.start()
     }
     
     override var acceptsFirstResponder: Bool {

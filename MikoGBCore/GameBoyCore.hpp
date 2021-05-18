@@ -20,7 +20,7 @@ public:
     GameBoyCore();
     ~GameBoyCore();
     
-    bool loadROMData(void *romData, size_t size);
+    bool loadROMData(const void *romData, size_t size);
     void prepTestROM();
     
     /// Step a single CPU instruction

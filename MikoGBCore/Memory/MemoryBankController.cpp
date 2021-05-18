@@ -27,7 +27,7 @@ MemoryBankController *MemoryBankController::CreateMBC(const CartridgeHeader &hea
     return mbc;
 }
 
-bool MemoryBankController::configureWithROMData(void *romData, size_t size) {
+bool MemoryBankController::configureWithROMData(const void *romData, size_t size) {
     if (_romData != nullptr) {
         cerr << "MBC may not be configured multiple times\n";
         return false;

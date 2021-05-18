@@ -19,7 +19,7 @@ GameBoyCore::~GameBoyCore() {
     delete _imp;
 }
 
-bool GameBoyCore::loadROMData(void *romData, size_t size) {
+bool GameBoyCore::loadROMData(const void *romData, size_t size) {
     return _imp->loadROMData(romData, size);
 }
 

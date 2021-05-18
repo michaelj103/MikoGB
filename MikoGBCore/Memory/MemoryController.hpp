@@ -20,7 +20,7 @@ public:
     MemoryController() = default;
     ~MemoryController();
     
-    bool configureWithROMData(void *romData, size_t size);
+    bool configureWithROMData(const void *romData, size_t size);
     bool configureWithEmptyData();
         
     uint8_t readByte(uint16_t addr) const;
@@ -29,13 +29,13 @@ public:
     const CartridgeHeader &getHeader() const { return _header; }
     
 private:
-    uint8_t *_permanentROM;
-    uint8_t *_videoRAM;
-    uint8_t *_highRangeMemory;
+    uint8_t *_permanentROM = nullptr;
+    uint8_t *_videoRAM= nullptr;
+    uint8_t *_highRangeMemory= nullptr;
     CartridgeHeader _header;
     bool _bootROMEnabled = true;
     
-    MemoryBankController *_mbc;
+    MemoryBankController *_mbc = nullptr;
 };
 
 }

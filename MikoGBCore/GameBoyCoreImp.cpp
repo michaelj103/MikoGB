@@ -17,7 +17,7 @@ GameBoyCoreImp::GameBoyCoreImp() {
     _gpu = new GPUCore(_cpu);
 }
 
-bool GameBoyCoreImp::loadROMData(void *romData, size_t size) {
+bool GameBoyCoreImp::loadROMData(const void *romData, size_t size) {
     // TODO: rather than creating everything in the constructor, (re-)create it on load
     return _memoryController->configureWithROMData(romData, size);
 }

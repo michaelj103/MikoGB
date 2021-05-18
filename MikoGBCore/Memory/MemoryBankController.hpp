@@ -21,7 +21,7 @@ public:
     
     static MemoryBankController *CreateMBC(const CartridgeHeader &header);
     
-    virtual bool configureWithROMData(void *romData, size_t size);
+    virtual bool configureWithROMData(const void *romData, size_t size);
     
     /// Read from currently switched ROM bank
     virtual uint8_t readROM(uint16_t addr) const = 0;
@@ -36,8 +36,8 @@ public:
     virtual void writeControlCode(uint16_t addr, uint8_t val) const = 0;
         
 protected:
-    uint8_t *_romData;
-    size_t _romSize;
+    uint8_t *_romData = nullptr;
+    size_t _romSize = 0;
     
 };
 

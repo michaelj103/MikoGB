@@ -32,7 +32,7 @@ NoMBC::~NoMBC() {
     delete _ramData;
 }
 
-bool NoMBC::configureWithROMData(void *romData, size_t size) {
+bool NoMBC::configureWithROMData(const void *romData, size_t size) {
     if (size != ExpectedDataSize) {
         cerr << "Unexpected ROM data size for no MBC: " << size << endl;
         return false;
@@ -59,5 +59,5 @@ void NoMBC::writeRAM(uint16_t addr, uint8_t val) const {
 }
 
 void NoMBC::writeControlCode(uint16_t addr, uint8_t val) const {
-    assert(false); // control codes aren't valid for NoMBC
+//    assert(false); // control codes aren't valid for NoMBC
 }

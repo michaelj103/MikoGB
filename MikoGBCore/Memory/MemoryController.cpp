@@ -39,7 +39,7 @@ static void _LogMemoryControllerErr(const string &msg) {
     cerr << "MemoryController Err: " << msg << "\n";
 }
 
-bool MemoryController::configureWithROMData(void *romData, size_t size) {
+bool MemoryController::configureWithROMData(const void *romData, size_t size) {
     if (size < PermanentROMSize) {
         _LogMemoryControllerErr("Data is too small to be a valid ROM");
         return false;

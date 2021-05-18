@@ -39,7 +39,6 @@ static const size_t NumKeys = 8; //Number of gameboy keys
         _core->setScanlineCallback([scanlineBlock](const MikoGB::PixelBuffer &scanline, size_t line) {
             scanlineBlock(scanline, line);
         });
-        _core->prepTestROM();
         
         const size_t width = 160;
         const size_t height = 144;
@@ -67,7 +66,14 @@ static const size_t NumKeys = 8; //Number of gameboy keys
 }
 
 - (BOOL)loadROM:(NSURL *)url {
-    return NO;
+    NSError *readErr = nil;
+    NSData *data = [NSData dataWithContentsOfURL:url options:NSDataReadingMappedIfSafe error:&readErr];
+    if (!data) {
+        NSLog(@"Failed to read data from URL \'%@\': %@", url, readErr);
+        return NO;
+    }
+    bool success = _core->loadROMData(data.bytes, data.length);
+    return success ? YES : NO;
 }
 
 - (void)_updateKeyStatesIfNeeded {

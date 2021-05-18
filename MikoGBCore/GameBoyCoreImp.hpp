@@ -20,7 +20,7 @@ public:
     GameBoyCoreImp();
     ~GameBoyCoreImp();
     
-    bool loadROMData(void *romData, size_t size);
+    bool loadROMData(const void *romData, size_t size);
     void prepTestROM();
     
     void step();
