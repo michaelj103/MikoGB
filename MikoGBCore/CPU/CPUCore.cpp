@@ -53,9 +53,6 @@ int CPUCore::step() {
     }
     
     const uint16_t originalPC = programCounter;
-    if (originalPC == 32755) {
-        printf("here\n");
-    }
     const CPUInstruction &instruction = CPUInstruction::LookupInstruction(memoryController, programCounter);
     programCounter += instruction.size;
     uint8_t basePtr[3]; // max instruction size

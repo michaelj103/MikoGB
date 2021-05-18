@@ -48,6 +48,8 @@ private:
     bool _bootROMEnabled = true;
     
     MemoryBankController *_mbc = nullptr;
+    
+    void _dmaTransfer(uint8_t);
 };
 
 }

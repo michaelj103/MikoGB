@@ -34,6 +34,9 @@ static const uint16_t HighRangeMemoryBaseAddr = 0xC000;
 static const size_t HighRangeMemorySize = 1024 * 16;     // 16 KiB of internal memory for various uses from 0xC000 - 0xFFFF
 //TODO: In CGB mode, there is additional bank switchable RAM in the high range
 
+// Relevant registers
+static uint16_t OAMBase = 0xFE00;
+
 // Relevant I/O registers. Writing triggers events
 static uint16_t DMATransferRegister = 0xFF46; //TODO: In CGB, new DMA transfer registers
 static uint16_t BootROMDisableRegister = 0xFF50;
@@ -130,7 +133,7 @@ void MemoryController::setByte(uint16_t addr, uint8_t val) {
         // Several special events are triggered when writing to the I/O registers in high range memory
         
         if (addr == DMATransferRegister) {
-            throw runtime_error("DMA transfer not implemented");
+            _dmaTransfer(val);
         } else if (addr == BootROMDisableRegister) {
             _bootROMEnabled = val == 0;
         }
@@ -140,4 +143,20 @@ void MemoryController::setByte(uint16_t addr, uint8_t val) {
 void MemoryController::requestInterrupt(InterruptFlag flag) {
     const uint8_t currentRequests = readByte(IFRegister);
     setByte(IFRegister, currentRequests | flag);
+}
+
+
+void MemoryController::_dmaTransfer(uint8_t byte) {
+    // DMA transfer is a special procedure to write chunks of data to OAM
+    // Bytes can be specified from 0x00 - 0xDF (e.g. 0xYY) and a transfer will be performed
+    // from 0xYY00 - 0xYY9F -> 0xFE00 - 0xFE9F, the OAM area
+    assert(byte <= 0xDF);
+    const uint16_t sourceBase = ((uint16_t)byte) << 8;
+    const uint16_t toTransfer = 0xA0; // 160 bytes
+    
+    for (uint16_t i = 0; i < toTransfer; ++i) {
+        const uint16_t src = sourceBase + i;
+        const uint16_t dst = OAMBase + i;
+        setByte(dst, readByte(src));
+    }
 }
