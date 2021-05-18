@@ -100,6 +100,9 @@ public:
     
     bool getFlag(FlagBit) const;
     void setFlag(FlagBit, bool);
+    
+private:
+    bool handleInterruptsIfNeeded();
 };
 
 

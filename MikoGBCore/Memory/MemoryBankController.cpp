@@ -34,6 +34,7 @@ bool MemoryBankController::configureWithROMData(const void *romData, size_t size
     }
     
     _romData = new uint8_t[size];
+    memcpy(_romData, romData, size);
     return true;
 }
 

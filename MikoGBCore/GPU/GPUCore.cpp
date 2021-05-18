@@ -100,9 +100,10 @@ void GPUCore::_setMode(LCDMode mode) {
     if (mode == HBlank) {
         // When we hit HBlank actually do the work of rendering the line and notifying client
         _renderScanline(_currentScanline);
+    } else if (mode == VBlank) {
+        _memoryController->requestInterrupt(MemoryController::VBlank);
     }
-    
-    //TODO: interrupts for vblank and stat modes
+    //TODO: interrupts stat modes
 }
 
 void GPUCore::updateWithCPUCycles(size_t cpuCycles) {

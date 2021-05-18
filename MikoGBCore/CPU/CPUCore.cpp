@@ -45,7 +45,17 @@ int CPUCore::step() {
 #else
 
 int CPUCore::step() {
+    if (handleInterruptsIfNeeded()) {
+        // There has been an interrupt. The handler puts the CPU into a state so that the next step will
+        // start the interrupt processing routine
+        // Per Pandocs and Z80 sheet, this should take about 5 cycles
+        return 5;
+    }
+    
     const uint16_t originalPC = programCounter;
+    if (originalPC == 32755) {
+        printf("here\n");
+    }
     const CPUInstruction &instruction = CPUInstruction::LookupInstruction(memoryController, programCounter);
     programCounter += instruction.size;
     uint8_t basePtr[3]; // max instruction size
@@ -70,6 +80,50 @@ void CPUCore::reset() {
     }
     programCounter = 0;
     stackPointer = 0;
+}
+
+bool CPUCore::handleInterruptsIfNeeded() {
+    if (!interruptsEnabled) {
+        return false;
+    }
+    
+    const uint8_t IE = getMemory(MemoryController::IERegister) & 0x1F; // Enabled interrupts
+    const uint8_t IF = getMemory(MemoryController::IFRegister) & 0x1F; // Requested interrupts
+    const uint8_t interruptsToProcess = IE & IF; // Mask requested interrupts with enabled
+    if (interruptsToProcess == 0) {
+        // No requested interrupts are enabled
+        return false;
+    }
+    
+    // There's an interrupt. Figure out where to jump...
+    uint16_t targetPC = 0;
+    uint8_t updatedIF = IF;
+    if (isMaskSet(interruptsToProcess, MemoryController::VBlank)) {
+        targetPC = 0x0040;
+        updatedIF ^= MemoryController::VBlank;
+    } else if (isMaskSet(interruptsToProcess, MemoryController::LCDStat)) {
+        targetPC = 0x0048;
+        updatedIF ^= MemoryController::LCDStat;
+    } else if (isMaskSet(interruptsToProcess, MemoryController::Timer)) {
+        targetPC = 0x0050;
+        updatedIF ^= MemoryController::Timer;
+    } else if (isMaskSet(interruptsToProcess, MemoryController::Serial)) {
+        targetPC = 0x0058;
+        updatedIF ^= MemoryController::Serial;
+    } else if (isMaskSet(interruptsToProcess, MemoryController::Joypad)) {
+        targetPC = 0x0060;
+        updatedIF ^= MemoryController::Joypad;
+    } else {
+        throw runtime_error("Interrupt processing error");
+    }
+    
+    //... And start the interrupt
+    setMemory(MemoryController::IFRegister, updatedIF);
+    interruptsEnabled = false;
+    stackPush(programCounter);
+    programCounter = targetPC;
+    
+    return true;
 }
 
 void CPUCore::halt() {

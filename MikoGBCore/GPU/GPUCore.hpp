@@ -15,13 +15,6 @@ namespace MikoGB {
 
 class MemoryController;
 
-enum LCDMode : uint8_t {
-    HBlank = 0,
-    VBlank = 1,
-    OAMScan = 2,
-    LCDTransfer = 3,
-};
-
 class GPUCore {
 public:
     GPUCore(MemoryController *);
@@ -42,6 +35,13 @@ public:
     void getBackground(PixelBufferImageCallback callback);
     
 private:
+    enum LCDMode : uint8_t {
+        HBlank = 0,
+        VBlank = 1,
+        OAMScan = 2,
+        LCDTransfer = 3,
+    };
+    
     MemoryController *_memoryController = nullptr;
     size_t _cycleCount = 0;
     uint8_t _currentScanline = 0;

@@ -136,3 +136,8 @@ void MemoryController::setByte(uint16_t addr, uint8_t val) {
         }
     }
 }
+
+void MemoryController::requestInterrupt(InterruptFlag flag) {
+    const uint8_t currentRequests = readByte(IFRegister);
+    setByte(IFRegister, currentRequests | flag);
+}
