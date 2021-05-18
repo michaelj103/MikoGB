@@ -13,7 +13,7 @@
 
 namespace MikoGB {
 
-class CPUCore;
+class MemoryController;
 
 enum LCDMode : uint8_t {
     HBlank = 0,
@@ -24,7 +24,7 @@ enum LCDMode : uint8_t {
 
 class GPUCore {
 public:
-    GPUCore(CPUCore *cpu);
+    GPUCore(MemoryController *);
     
     /// Expects CPU oscillation cycles (~4.2MHz, 4 per instruction cycle)
     void updateWithCPUCycles(size_t cpuCycles);
@@ -42,7 +42,7 @@ public:
     void getBackground(PixelBufferImageCallback callback);
     
 private:
-    CPUCore *_cpu = nullptr;
+    MemoryController *_memoryController = nullptr;
     size_t _cycleCount = 0;
     uint8_t _currentScanline = 0;
     void _incrementScanline();

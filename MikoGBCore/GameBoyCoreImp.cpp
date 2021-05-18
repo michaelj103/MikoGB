@@ -14,7 +14,7 @@ GameBoyCoreImp::GameBoyCoreImp() {
     // TODO: use shared pointers and get rid of the destructor
     _memoryController = new MemoryController();
     _cpu = new CPUCore(_memoryController);
-    _gpu = new GPUCore(_cpu);
+    _gpu = new GPUCore(_memoryController);
 }
 
 bool GameBoyCoreImp::loadROMData(const void *romData, size_t size) {
