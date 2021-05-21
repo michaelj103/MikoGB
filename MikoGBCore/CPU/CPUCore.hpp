@@ -161,8 +161,8 @@ inline uint16_t CPUCore::stackPop() {
 }
 
 inline void CPUCore::stackPop(uint8_t &hi, uint8_t &lo) {
-    lo = getMemory(stackPointer++);
-    hi = getMemory(stackPointer++);
+    lo = memoryController->readByte(stackPointer++);
+    hi = memoryController->readByte(stackPointer++);
 }
 
 inline bool CPUCore::getFlag(FlagBit bit) const {

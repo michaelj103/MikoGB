@@ -10,6 +10,7 @@
 #import <iostream>
 #import "GameBoyCore.hpp"
 #import <os/lock.h>
+#import "GBImageUtilities.h"
 
 static const size_t GBBytesPerLine = 160 * 4;
 static const size_t GBBytesPerImage = GBBytesPerLine * 144;
@@ -25,6 +26,8 @@ static const size_t NumKeys = 8; //Number of gameboy keys
     BOOL _keyPressedStates[NumKeys];
     BOOL _keyPressedChanged[NumKeys];
     BOOL _hasKeyChange;
+    
+    NSUInteger _frameCount;
 }
 
 - (instancetype)init {
@@ -91,7 +94,26 @@ static const size_t NumKeys = 8; //Number of gameboy keys
     os_unfair_lock_unlock(&_keyLock);
 }
 
+- (void)_writeOutTileMapAndBackground {
+    void (^tileMapBlock)(const MikoGB::PixelBuffer &) = ^void(const MikoGB::PixelBuffer &pixelBuffer) {
+        writePNG(pixelBuffer, @"tetrisMap.png");
+    };
+    
+    _core->getTileMap([tileMapBlock](const MikoGB::PixelBuffer &pixelBuffer){
+        tileMapBlock(pixelBuffer);
+    });
+    
+    void (^backgroundBlock)(const MikoGB::PixelBuffer &) = ^void(const MikoGB::PixelBuffer &pixelBuffer) {
+        writePNG(pixelBuffer, @"tetrisBackground.png");
+    };
+    
+    _core->getBackground([backgroundBlock](const MikoGB::PixelBuffer &pixelBuffer){
+        backgroundBlock(pixelBuffer);
+    });
+}
+
 - (void)emulateFrame {
+    _frameCount++;
     [self _updateKeyStatesIfNeeded];
     _core->emulateFrame();
 }

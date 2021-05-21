@@ -13,6 +13,8 @@ using namespace MikoGB;
 
 static size_t ExpectedDataSize = 1024 * 32; // 32 KiB
 static size_t RAMBankSize = 1024 * 8; // 8 KiB
+static uint16_t RAMBase = 0xA000;
+static uint16_t RAMMax = 0xC000;
 
 NoMBC::NoMBC(const CartridgeHeader &header) {
     switch (header.getRAMSize()) {
@@ -51,11 +53,21 @@ uint8_t NoMBC::readROM(uint16_t addr) const {
 }
 
 uint8_t NoMBC::readRAM(uint16_t addr) const {
-    return _ramData[addr];
+    if (_ramType == RAMType::SingleBank) {
+        assert(addr >= RAMBase && addr < RAMMax);
+        return _ramData[addr - RAMBase];
+    } else {
+        throw runtime_error("Read from external RAM but cartridge specifies no RAM");
+    }
 }
 
 void NoMBC::writeRAM(uint16_t addr, uint8_t val) const {
-    
+    if (_ramType == RAMType::SingleBank) {
+        assert(addr >= RAMBase && addr < RAMMax);
+        _ramData[addr - RAMBase] = val;
+    } else {
+        throw runtime_error("Write to external RAM but cartridge specifies no RAM");
+    }
 }
 
 void NoMBC::writeControlCode(uint16_t addr, uint8_t val) const {

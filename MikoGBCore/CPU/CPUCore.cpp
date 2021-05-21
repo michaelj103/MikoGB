@@ -84,8 +84,8 @@ bool CPUCore::handleInterruptsIfNeeded() {
         return false;
     }
     
-    const uint8_t IE = getMemory(MemoryController::IERegister) & 0x1F; // Enabled interrupts
-    const uint8_t IF = getMemory(MemoryController::IFRegister) & 0x1F; // Requested interrupts
+    const uint8_t IE = memoryController->readByte(MemoryController::IERegister) & 0x1F; // Enabled interrupts
+    const uint8_t IF = memoryController->readByte(MemoryController::IFRegister) & 0x1F; // Requested interrupts
     const uint8_t interruptsToProcess = IE & IF; // Mask requested interrupts with enabled
     if (interruptsToProcess == 0) {
         // No requested interrupts are enabled
@@ -119,7 +119,6 @@ bool CPUCore::handleInterruptsIfNeeded() {
     interruptsEnabled = false;
     stackPush(programCounter);
     programCounter = targetPC;
-    
     return true;
 }
 

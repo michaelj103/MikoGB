@@ -40,6 +40,7 @@ static uint16_t OAMBase = 0xFE00;
 // Relevant I/O registers. Writing triggers events
 static uint16_t DMATransferRegister = 0xFF46; //TODO: In CGB, new DMA transfer registers
 static uint16_t BootROMDisableRegister = 0xFF50;
+static uint16_t ControllerDataRegister = 0xFF00;
 
 static void _LogMemoryControllerErr(const string &msg) {
     cerr << "MemoryController Err: " << msg << "\n";
@@ -112,6 +113,13 @@ uint8_t MemoryController::readByte(uint16_t addr) const {
         // Ask the MBC to read from switchable RAM
         return _mbc->readROM(addr);
     } else {
+        
+        // For controller reads, always return no buttons pressed for now
+        // TODO: return correct controller stuff
+        if (addr == ControllerDataRegister) {
+            return 0x0F;
+        }
+        
         // Read from the high range memory
         return _highRangeMemory[addr - HighRangeMemoryBaseAddr];
     }

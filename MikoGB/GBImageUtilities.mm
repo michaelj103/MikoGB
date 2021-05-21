@@ -1,18 +1,13 @@
 //
-//  main.cpp
+//  GBImageUtilities.m
 //  MikoGB
 //
-//  Created on 5/4/21.
+//  Created on 5/19/21.
 //
 
-#import <Foundation/Foundation.h>
-#import <ImageIO/ImageIO.h>
-#include "GameboyCore.hpp"
-#include <iostream>
+#import "GBImageUtilities.h"
 
-using namespace std;
-
-CGImageRef createImageWithPixelBuffer(const MikoGB::PixelBuffer &pixelBuffer) {
+static CGImageRef createImageWithPixelBuffer(const MikoGB::PixelBuffer &pixelBuffer) {
     size_t width = pixelBuffer.width;
     size_t height = pixelBuffer.height;
     size_t bitsPerComponent = 8;
@@ -46,7 +41,7 @@ void writePNG(const MikoGB::PixelBuffer &pixelBuffer, NSString *filename) {
         return;
     }
         
-    NSArray<NSString *> *paths = NSSearchPathForDirectoriesInDomains(NSDesktopDirectory, NSUserDomainMask, YES);
+    NSArray<NSString *> *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *desktopPath = paths.firstObject;
     if (!desktopPath) {
         fprintf(stderr, "Failed to get desktop\n");
@@ -58,6 +53,8 @@ void writePNG(const MikoGB::PixelBuffer &pixelBuffer, NSString *filename) {
             CGImageDestinationAddImage(imageDest, image, NULL);
             if (!CGImageDestinationFinalize(imageDest)) {
                 fprintf(stderr, "Failed to finalize image destination\n");
+            } else {
+                NSLog(@"Successfully wrote to %@", destURL);
             }
             CFRelease(imageDest);
         } else {
@@ -66,33 +63,4 @@ void writePNG(const MikoGB::PixelBuffer &pixelBuffer, NSString *filename) {
     }
     
     CGImageRelease(image);
-}
-
-int main(int argc, const char * argv[]) {
-    MikoGB::GameBoyCore gbCore;
-    gbCore.prepTestROM();
-    int numFrames = 0;
-    while (gbCore.getPC() < 0xfa) {
-        gbCore.emulateFrame();
-        numFrames++;
-    }
-    cout << "Emulated " << numFrames << " frames\n";
-    
-    void (^tileMapBlock)(const MikoGB::PixelBuffer &) = ^void(const MikoGB::PixelBuffer &pixelBuffer) {
-        writePNG(pixelBuffer, @"tileMap.png");
-    };
-    
-    gbCore.getTileMap([tileMapBlock](const MikoGB::PixelBuffer &pixelBuffer){
-        tileMapBlock(pixelBuffer);
-    });
-    
-    void (^backgroundBlock)(const MikoGB::PixelBuffer &) = ^void(const MikoGB::PixelBuffer &pixelBuffer) {
-        writePNG(pixelBuffer, @"background.png");
-    };
-    
-    gbCore.getBackground([backgroundBlock](const MikoGB::PixelBuffer &pixelBuffer){
-        backgroundBlock(pixelBuffer);
-    });
-    
-    return 0;
 }
