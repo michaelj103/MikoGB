@@ -226,14 +226,21 @@ static uint16_t _GetBGTileBaseAddress(int32_t bgTileMapBase, uint8_t tileIdx, bo
     }
 }
 
+static inline uint8_t _GetPaletteCode(uint8_t byte0, uint8_t byte1, int x) {
+    int shift = 8 - x - 1;
+    const uint8_t lowBit = (byte0 >> shift) & 0x01;
+    const uint8_t highBit = (byte1 >> shift) & 0x01;
+    const uint8_t code = (highBit << 1) | lowBit;
+    return code;
+}
+
 static void _ReadBGTile(uint16_t addr, const MemoryController *mem, const Pixel *bgPalette, PixelBuffer &dest) {
     assert(dest.width == 8 && dest.height == 8);
     for (uint16_t y = 0; y < 16; y += 2) {
         uint8_t byte0 = mem->readByte(addr + y);
         uint8_t byte1 = mem->readByte(addr + y + 1);
         for (int x = 0; x < 8; ++x) {
-            int shift = 8 - x - 1;
-            uint8_t code = ((byte0 >> shift) & 0x1) | ((byte1 >> (shift-1)) & 0x2);
+            const uint8_t code = _GetPaletteCode(byte0, byte1, x);
             const Pixel &px = bgPalette[code];
             size_t idx = dest.indexOf(x, y/2);
             dest.pixels[idx] = px;
@@ -328,8 +335,7 @@ static uint8_t _DrawTileRowToScanline(uint16_t tileAddress, uint8_t tileRow, uin
     const uint8_t byte1 = mem->readByte(tileAddress + tileRowOffset + 1);
     uint8_t currentIdx = scanlinePos;
     for (int x = tileCol; x < 8; ++x) {
-        int shift = 8 - x - 1;
-        uint8_t code = ((byte0 >> shift) & 0x1) | ((byte1 >> (shift-1)) & 0x2);
+        const uint8_t code = _GetPaletteCode(byte0, byte1, x);
         const Pixel &px = bgPalette[code];
         scanline.pixels[currentIdx] = px;
         currentIdx++;
