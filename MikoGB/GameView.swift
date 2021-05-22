@@ -7,13 +7,22 @@
 
 import Cocoa
 
+enum GameViewState {
+    case Initial
+    case Playing
+    case Paused
+    case Error
+}
+
 class GameView : NSView, GBEngineImageDestination {
     
-    var displayLink: CVDisplayLink?
+    private var displayLink: CVDisplayLink?
     let engine: GBEngine
+    var state: GameViewState
     
     init(engine: GBEngine) {
         self.engine = engine
+        self.state = .Initial
         super.init(frame: NSZeroRect)
         self.wantsLayer = true
         self.engine.imageDestination = self
@@ -30,13 +39,29 @@ class GameView : NSView, GBEngineImageDestination {
     }
     
     func start() {
-        if (displayLink == nil) {
+        if let link = displayLink {
+            if !CVDisplayLinkIsRunning(link) {
+                let cvError = CVDisplayLinkStart(link)
+                if cvError == kCVReturnSuccess {
+                    state = .Playing
+                } else {
+                    print("Failed to restart display link")
+                    state = .Error
+                }
+            } else {
+                print("Game view is already running")
+                state = .Playing
+            }
+            
+        } else {
             var cvError = CVDisplayLinkCreateWithActiveCGDisplays(&displayLink)
             if (cvError != kCVReturnSuccess) {
+                print("Failed to create display link")
                 displayLink = nil
             }
             
             guard let resolvedLink = displayLink else {
+                state = .Error
                 return
             }
             
@@ -54,24 +79,49 @@ class GameView : NSView, GBEngineImageDestination {
                     return kCVReturnSuccess
                     }, Unmanaged.passUnretained(self).toOpaque())
                 if (cvError != kCVReturnSuccess) {
-                    displayLink = nil;
+                    print("Failed to set display link output callback")
+                    displayLink = nil
                 }
             }
             
             //if still successful, start the display link
             if (cvError == kCVReturnSuccess) {
-                cvError = CVDisplayLinkStart(resolvedLink);
+                cvError = CVDisplayLinkStart(resolvedLink)
                 if (cvError != kCVReturnSuccess) {
+                    print("Failed to start display link")
                     displayLink = nil
                 }
             }
+            
+            state = cvError == kCVReturnSuccess ? .Playing : .Error
+        }
+    }
+    
+    func pause() {
+        guard let link = displayLink else {
+            print("Cannot pause game view with no display link")
+            state = .Error
+            return
+        }
+        
+        if state == .Playing {
+            if CVDisplayLinkIsRunning(link) {
+                let cvResult = CVDisplayLinkStop(link)
+                if cvResult == kCVReturnSuccess {
+                    state = .Paused
+                } else {
+                    print("Failed to stop running display link")
+                }
+            } else {
+                assertionFailure("State is playing but display link isn't running")
+            }
+        } else {
+            print("Pause of a non-running game view does nothing")
         }
     }
     
     func engine(_ engine: GBEngine, receivedFrame frame: CGImage) {
-        DispatchQueue.main.async {
-            self.layer?.contents = frame
-        }
+        self.layer?.contents = frame
     }
     
     override var acceptsFirstResponder: Bool {

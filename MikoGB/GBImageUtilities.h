@@ -11,6 +11,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-void writePNG(const MikoGB::PixelBuffer &, NSString *filename);
+void writePNG(const MikoGB::PixelBuffer &pixelBuffer, NSURL * _Nullable directoryURL, NSString *filename);
 
 NS_ASSUME_NONNULL_END

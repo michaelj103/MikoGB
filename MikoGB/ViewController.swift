@@ -7,8 +7,9 @@
 
 import Cocoa
 
-class ViewController: NSViewController, NoROMViewDelegate {
+class ViewController: NSViewController, NoROMViewDelegate, NSMenuItemValidation {
 
+    private var gameView: GameView?
     private var contentView: NSView? {
         didSet {
             oldValue?.removeFromSuperview()
@@ -40,13 +41,22 @@ class ViewController: NSViewController, NoROMViewDelegate {
     }
     
     private func loadROM(url: URL) {
-        if (engine.loadROM(url)) {
-            let gameView = GameView(engine: engine)
-            contentView = gameView
-            gameView.start()
-//            audioController.startAudioEngine()
-        } else {
-            //TODO: present an alert
+        engine.loadROM(url) { [self] (success) in
+            if success {
+                let gameView = GameView(engine: engine)
+                self.contentView = gameView
+                self.gameView = gameView
+                gameView.start()
+//                audioController.startAudioEngine()
+            } else {
+                //TODO: present an alert
+            }
+        }
+    }
+    
+    private func writeDisplayState(to url: URL) {
+        engine.writeDisplayState(toDirectory: url) { (success) in
+            //TODO: present an alert on failure
         }
     }
     
@@ -61,14 +71,50 @@ class ViewController: NSViewController, NoROMViewDelegate {
                 self.loadROM(url: fileURL)
             }
         }
-        
-//        let gameView = GameView(engine: engine)
-//        contentView = gameView
-//        gameView.start()
     }
     
     override var acceptsFirstResponder: Bool {
         return true
+    }
+    
+    func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
+        var valid = true;
+        if menuItem.action == #selector(self.a_pauseEmulation) {
+            if gameView?.state == .Playing {
+                menuItem.title = "Pause Emulation"
+            } else {
+                menuItem.title = "Resume Emulation"
+            }
+        } else if menuItem.action == #selector(self.a_dumpDisplayState) {
+            valid = (gameView?.state == .Paused)
+        }
+        
+        return valid;
+    }
+    
+    @objc func a_pauseEmulation(_ sender: AnyObject) {
+        guard let gv = gameView else {
+            return
+        }
+        
+        if gv.state == .Playing {
+            gv.pause()
+        } else {
+            gv.start()
+        }
+    }
+    
+    @objc func a_dumpDisplayState(_ sender: AnyObject) {
+        let openPanel = NSOpenPanel()
+        openPanel.canChooseFiles = false
+        openPanel.canChooseDirectories = true
+        openPanel.allowsMultipleSelection = false
+        openPanel.begin { (response) in
+            if response == NSApplication.ModalResponse.OK {
+                let dirURL = openPanel.urls[0]
+                self.writeDisplayState(to: dirURL)
+            }
+        }
     }
 }
 

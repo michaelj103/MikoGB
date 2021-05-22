@@ -27,7 +27,10 @@ static const size_t NumKeys = 8; //Number of gameboy keys
     BOOL _keyPressedChanged[NumKeys];
     BOOL _hasKeyChange;
     
-    NSUInteger _frameCount;
+    dispatch_queue_t _emulationQueue;
+    os_unfair_lock _frameLock;
+    NSUInteger _lastRequestedFrameID;
+    NSUInteger _lastDeliveredFrameID;
 }
 
 - (instancetype)init {
@@ -42,6 +45,10 @@ static const size_t NumKeys = 8; //Number of gameboy keys
         _core->setScanlineCallback([scanlineBlock](const MikoGB::PixelBuffer &scanline, size_t line) {
             scanlineBlock(scanline, line);
         });
+        
+        dispatch_queue_attr_t attr = dispatch_queue_attr_make_with_qos_class(DISPATCH_QUEUE_SERIAL, QOS_CLASS_USER_INITIATED, 0);
+        _emulationQueue = dispatch_queue_create("EmulationQueue", attr);
+        _frameLock = OS_UNFAIR_LOCK_INIT;
         
         const size_t width = 160;
         const size_t height = 144;
@@ -68,15 +75,40 @@ static const size_t NumKeys = 8; //Number of gameboy keys
     CGContextRelease(_cgContext);
 }
 
-- (BOOL)loadROM:(NSURL *)url {
+- (void)loadROM:(NSURL *)url completion:(void (^)(BOOL))completion {
     NSError *readErr = nil;
     NSData *data = [NSData dataWithContentsOfURL:url options:NSDataReadingMappedIfSafe error:&readErr];
     if (!data) {
         NSLog(@"Failed to read data from URL \'%@\': %@", url, readErr);
-        return NO;
+        if (completion) {
+            completion(NO);
+        }
+        return;
     }
-    bool success = _core->loadROMData(data.bytes, data.length);
-    return success ? YES : NO;
+    
+    dispatch_async(_emulationQueue, ^{
+        bool success = self->_core->loadROMData(data.bytes, data.length);
+        if (completion) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completion(success ? YES : NO);
+            });
+        }
+    });
+}
+
+- (void)writeDisplayStateToDirectory:(NSURL *)directoryURL completion:(void (^)(BOOL))completion {
+    NSFileManager *fm = NSFileManager.defaultManager;
+    BOOL isDir = NO;
+    if (![fm fileExistsAtPath:directoryURL.path isDirectory:&isDir] || !isDir) {
+        if (completion) {
+            completion(NO);
+        }
+        return;
+    }
+    
+    dispatch_async(_emulationQueue, ^{
+        [self _writeOutTileMapAndBackground:directoryURL];
+    });
 }
 
 - (void)_updateKeyStatesIfNeeded {
@@ -94,9 +126,9 @@ static const size_t NumKeys = 8; //Number of gameboy keys
     os_unfair_lock_unlock(&_keyLock);
 }
 
-- (void)_writeOutTileMapAndBackground {
+- (void)_writeOutTileMapAndBackground:(NSURL *)dirURL {
     void (^tileMapBlock)(const MikoGB::PixelBuffer &) = ^void(const MikoGB::PixelBuffer &pixelBuffer) {
-        writePNG(pixelBuffer, @"tetrisMap.png");
+        writePNG(pixelBuffer, dirURL, @"tileMap.png");
     };
     
     _core->getTileMap([tileMapBlock](const MikoGB::PixelBuffer &pixelBuffer){
@@ -104,7 +136,7 @@ static const size_t NumKeys = 8; //Number of gameboy keys
     });
     
     void (^backgroundBlock)(const MikoGB::PixelBuffer &) = ^void(const MikoGB::PixelBuffer &pixelBuffer) {
-        writePNG(pixelBuffer, @"tetrisBackground.png");
+        writePNG(pixelBuffer, dirURL, @"background.png");
     };
     
     _core->getBackground([backgroundBlock](const MikoGB::PixelBuffer &pixelBuffer){
@@ -113,9 +145,24 @@ static const size_t NumKeys = 8; //Number of gameboy keys
 }
 
 - (void)emulateFrame {
-    _frameCount++;
-    [self _updateKeyStatesIfNeeded];
-    _core->emulateFrame();
+    // On macOS, this may come in on the high-priority display link thread
+    BOOL canRun = NO;
+    os_unfair_lock_lock(&_frameLock);
+    if (_lastRequestedFrameID == _lastDeliveredFrameID) {
+        canRun = YES;
+        _lastRequestedFrameID = (_lastRequestedFrameID + 1) % 100000;
+    }
+    os_unfair_lock_unlock(&_frameLock);
+    
+    if (canRun) {
+        dispatch_async(_emulationQueue, ^{
+            [self _updateKeyStatesIfNeeded];
+            self->_core->emulateFrame();
+        });
+    } else {
+        // Dropped a frame
+        NSLog(@"Dropped a frame");
+    }
 }
 
 - (void)_setDesiredState:(BOOL)desired forKeyCode:(GBEngineKeyCode)code {
@@ -141,8 +188,17 @@ static const size_t NumKeys = 8; //Number of gameboy keys
 
 - (void)_deliverFrameImage {
     CGImageRef image = CGBitmapContextCreateImage(_cgContext);
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self _mainQueue_deliverFrameImage:image];
+        CGImageRelease(image);
+    });
+}
+
+- (void)_mainQueue_deliverFrameImage:(CGImageRef)image {
     [self.imageDestination engine:self receivedFrame:image];
-    CGImageRelease(image);
+    os_unfair_lock_lock(&_frameLock);
+    _lastDeliveredFrameID = _lastRequestedFrameID;
+    os_unfair_lock_unlock(&_frameLock);
 }
 
 - (void)_handleScanline:(const MikoGB::PixelBuffer &)scanline line:(size_t)line {

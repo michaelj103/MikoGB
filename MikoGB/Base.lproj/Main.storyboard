@@ -103,18 +103,6 @@
                                                 <action selector="revertDocumentToSaved:" target="Ady-hI-5gd" id="iJ3-Pv-kwq"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem isSeparatorItem="YES" id="aJh-i4-bef"/>
-                                        <menuItem title="Page Setup…" keyEquivalent="P" id="qIS-W8-SiK">
-                                            <modifierMask key="keyEquivalentModifierMask" shift="YES" command="YES"/>
-                                            <connections>
-                                                <action selector="runPageLayout:" target="Ady-hI-5gd" id="Din-rz-gC5"/>
-                                            </connections>
-                                        </menuItem>
-                                        <menuItem title="Print…" keyEquivalent="p" id="aTl-1u-JFS">
-                                            <connections>
-                                                <action selector="print:" target="Ady-hI-5gd" id="qaZ-4w-aoO"/>
-                                            </connections>
-                                        </menuItem>
                                     </items>
                                 </menu>
                             </menuItem>
@@ -333,6 +321,24 @@
                                                     </menuItem>
                                                 </items>
                                             </menu>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
+                            <menuItem title="Emulation" id="J9D-Qs-Ue9">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="Emulation" id="JBJ-zc-JWG">
+                                    <items>
+                                        <menuItem title="Pause Emulation" keyEquivalent="p" id="ayQ-5K-PxC">
+                                            <connections>
+                                                <action selector="a_pauseEmulation:" target="Ady-hI-5gd" id="qqi-Is-iBd"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Dump Display State" id="F3l-MA-wHN">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="a_dumpDisplayState:" target="Ady-hI-5gd" id="AUI-mf-kD2"/>
+                                            </connections>
                                         </menuItem>
                                     </items>
                                 </menu>
@@ -678,7 +684,7 @@
                 <customObject id="YLy-65-1bz" customClass="NSFontManager"/>
                 <customObject id="Ady-hI-5gd" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="75" y="0.0"/>
+            <point key="canvasLocation" x="68" y="-108"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="R2V-B0-nI4">

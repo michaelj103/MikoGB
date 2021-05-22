@@ -28,7 +28,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, weak) id<GBEngineImageDestination> imageDestination;
 @property (nonatomic, weak) id<GBEngineAudioDestination> audioDestination;
 
-- (BOOL)loadROM:(NSURL *)url;
+- (void)loadROM:(NSURL *)url completion:(void (^_Nullable)(BOOL))completion;
+- (void)writeDisplayStateToDirectory:(NSURL *)directoryURL completion:(void (^_Nullable)(BOOL))completion;
 
 - (void)emulateFrame;
 
