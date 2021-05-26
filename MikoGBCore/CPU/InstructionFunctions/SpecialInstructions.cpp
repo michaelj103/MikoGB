@@ -162,12 +162,12 @@ int CPUInstructions::setCarryFlag(const uint8_t *opcode, CPUCore &core) {
 }
 
 int CPUInstructions::disableInterrupts(const uint8_t *opcode, CPUCore &core) {
-    core.interruptsEnabled = false;
+    core.interruptState = CPUCore::InterruptState::Disabled;
     return 1;
 }
 
 int CPUInstructions::enableInterrupts(const uint8_t *opcode, CPUCore &core) {
-    core.interruptsEnabled = true;
+    core.interruptState = CPUCore::InterruptState::Scheduled;
     return 1;
 }
 

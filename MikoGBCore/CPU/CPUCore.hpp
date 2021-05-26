@@ -57,7 +57,6 @@ public:
     uint8_t registers[REGISTER_COUNT];
     uint16_t programCounter;
     uint16_t stackPointer;
-    bool interruptsEnabled; // IME
     
     MemoryController *memoryController;
 #if BUILD_FOR_TESTING
@@ -100,6 +99,14 @@ public:
     
     bool getFlag(FlagBit) const;
     void setFlag(FlagBit, bool);
+    
+    // Interrupts
+    enum InterruptState {
+        Disabled,
+        Scheduled, // The EI command takes one extra cycle to "activate"
+        Enabled,
+    };
+    InterruptState interruptState;
     
 private:
     bool handleInterruptsIfNeeded();

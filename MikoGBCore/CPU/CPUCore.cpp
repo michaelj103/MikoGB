@@ -80,7 +80,10 @@ void CPUCore::reset() {
 }
 
 bool CPUCore::handleInterruptsIfNeeded() {
-    if (!interruptsEnabled) {
+    if (interruptState == InterruptState::Disabled) {
+        return false;
+    } else if (interruptState == InterruptState::Scheduled) {
+        interruptState = InterruptState::Enabled;
         return false;
     }
     
@@ -116,7 +119,7 @@ bool CPUCore::handleInterruptsIfNeeded() {
     
     //... And start the interrupt
     setMemory(MemoryController::IFRegister, updatedIF);
-    interruptsEnabled = false;
+    interruptState = InterruptState::Disabled;
     stackPush(programCounter);
     programCounter = targetPC;
     return true;

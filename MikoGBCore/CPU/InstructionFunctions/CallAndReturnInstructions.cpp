@@ -62,7 +62,7 @@ int CPUInstructions::returnSubroutine(const uint8_t *opcode, CPUCore &core) {
 
 int CPUInstructions::returnInterrupt(const uint8_t *opcode, CPUCore &core) {
     core.programCounter = core.stackPop();
-    core.interruptsEnabled = true;
+    core.interruptState = CPUCore::InterruptState::Enabled;
     return 4;
 }
 
