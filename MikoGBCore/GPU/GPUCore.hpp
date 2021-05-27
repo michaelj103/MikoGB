@@ -56,6 +56,7 @@ private:
     PixelBuffer _scanline;
     void _renderScanline(size_t line);
     void _renderBackgroundToScanline(size_t line, PixelBuffer &scanline);
+    void _renderSpritesToScanline(size_t line, PixelBuffer &scanline);
     PixelBufferScanlineCallback _scanlineCallback;
 };
 

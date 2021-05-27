@@ -16,6 +16,7 @@
 		290B3BCE247E00D500937D71 /* JumpInstructions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8C0DA246810640082C52B /* JumpInstructions.cpp */; };
 		290B3BD0247E048100937D71 /* Test8BitLoadInstructions.mm in Sources */ = {isa = PBXBuildFile; fileRef = 290B3BCF247E048100937D71 /* Test8BitLoadInstructions.mm */; };
 		290B3BD2247F51D100937D71 /* Test16BitLoadInstructions.mm in Sources */ = {isa = PBXBuildFile; fileRef = 290B3BD1247F51D100937D71 /* Test16BitLoadInstructions.mm */; };
+		290FF33F265F066E006812F4 /* MonochromePalette.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 290FF33D265F066D006812F4 /* MonochromePalette.hpp */; };
 		297E60062456426400EE150F /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297E60052456426400EE150F /* main.cpp */; };
 		29928195263DE721004691E5 /* Test16BitArithmeticInstructions.mm in Sources */ = {isa = PBXBuildFile; fileRef = 29928194263DE721004691E5 /* Test16BitArithmeticInstructions.mm */; };
 		2992819C263DE86C004691E5 /* ArithmeticInstructions16.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2992818B263DDEC8004691E5 /* ArithmeticInstructions16.cpp */; };
@@ -124,6 +125,7 @@
 /* Begin PBXFileReference section */
 		290B3BCF247E048100937D71 /* Test8BitLoadInstructions.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = Test8BitLoadInstructions.mm; sourceTree = "<group>"; };
 		290B3BD1247F51D100937D71 /* Test16BitLoadInstructions.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = Test16BitLoadInstructions.mm; sourceTree = "<group>"; };
+		290FF33D265F066D006812F4 /* MonochromePalette.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MonochromePalette.hpp; sourceTree = "<group>"; };
 		297E60032456426400EE150F /* RomAnalyzer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = RomAnalyzer; sourceTree = BUILT_PRODUCTS_DIR; };
 		297E60052456426400EE150F /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		297E600A2456532700EE150F /* CartridgeHeader.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = CartridgeHeader.cpp; sourceTree = "<group>"; };
@@ -291,6 +293,7 @@
 			children = (
 				2992830926426A32004691E5 /* GPUCore.hpp */,
 				2992830826426A32004691E5 /* GPUCore.cpp */,
+				290FF33D265F066D006812F4 /* MonochromePalette.hpp */,
 			);
 			path = GPU;
 			sourceTree = "<group>";
@@ -436,6 +439,7 @@
 				29A8FFD626535994007A26C9 /* MemoryBankController.hpp in Headers */,
 				299282FD264266A9004691E5 /* GameBoyCoreImp.hpp in Headers */,
 				29A8FF76265211B8007A26C9 /* MemoryController.hpp in Headers */,
+				290FF33F265F066E006812F4 /* MonochromePalette.hpp in Headers */,
 				29A8FFFA26537426007A26C9 /* NoMBC.hpp in Headers */,
 				2992830B26426A32004691E5 /* GPUCore.hpp in Headers */,
 			);

@@ -8,8 +8,11 @@
 #include "GPUCore.hpp"
 #include "MemoryController.hpp"
 #include "BitTwiddlingUtil.h"
+#include "MonochromePalette.hpp"
+#include <array>
 
 using namespace MikoGB;
+using namespace std;
 
 // A note on display timing
 // For now, assume a constant 456 cycles per scanline as measured in TCAGBD and other sources
@@ -52,6 +55,8 @@ static const uint16_t LYCRegister = 0xFF45; // LY Compare register (for interrup
 static const uint16_t BGPRegister = 0xFF47; // BG Palette data
 static const uint16_t OBP0Register = 0xFF48; // OBJ Palette 0 data
 static const uint16_t OBP1Register = 0xFF49; // OBJ Palette 1 data
+static const uint16_t OAMBase = 0xFE00; // base address of the 40 4-byte OAM codes
+static const uint16_t TileMapBase = 0x8000; // Base address of tile map
 
 static const size_t ScreenWidth = 160; // screen is 160x144
 static const size_t BackgroundCanvasSize = 256; // 256x256;
@@ -190,13 +195,7 @@ static inline Pixel _PixelForCode(uint8_t code) {
     }
 }
 
-static void _ReadBGPalette(Pixel *palette, const MemoryController *mem) {
-    const uint8_t paletteVal = mem->readByte(BGPRegister);
-    palette[0] = _PixelForCode(paletteVal & 0x03);
-    palette[1] = _PixelForCode((paletteVal & 0x0C) >> 2);
-    palette[2] = _PixelForCode((paletteVal & 0x30) >> 4);
-    palette[3] = _PixelForCode((paletteVal & 0xC0) >> 6);
-}
+#pragma mark - BG Utilities
 
 static void _GetBGTileMapInfo(int32_t &baseAddr, bool &signedMode, uint16_t &codeArea, const MemoryController *mem) {
     const uint8_t lcdc = mem->readByte(LCDCRegister);
@@ -205,7 +204,7 @@ static void _GetBGTileMapInfo(int32_t &baseAddr, bool &signedMode, uint16_t &cod
     baseAddr = 0x9000;
     signedMode = true;
     if (isMaskSet(lcdc, 0x10)) {
-        baseAddr = 0x8000;
+        baseAddr = TileMapBase;
         signedMode = false;
     }
     
@@ -234,14 +233,14 @@ static inline uint8_t _GetPaletteCode(uint8_t byte0, uint8_t byte1, int x) {
     return code;
 }
 
-static void _ReadBGTile(uint16_t addr, const MemoryController *mem, const Pixel *bgPalette, PixelBuffer &dest) {
+static void _ReadBGTile(uint16_t addr, const MemoryController *mem, const MonochromePalette &bgPalette, PixelBuffer &dest) {
     assert(dest.width == 8 && dest.height == 8);
     for (uint16_t y = 0; y < 16; y += 2) {
         uint8_t byte0 = mem->readByte(addr + y);
         uint8_t byte1 = mem->readByte(addr + y + 1);
         for (int x = 0; x < 8; ++x) {
             const uint8_t code = _GetPaletteCode(byte0, byte1, x);
-            const Pixel &px = bgPalette[code];
+            const Pixel &px = bgPalette.pixelForCode(code);
             size_t idx = dest.indexOf(x, y/2);
             dest.pixels[idx] = px;
         }
@@ -281,9 +280,7 @@ void GPUCore::getTileMap(PixelBufferImageCallback callback) {
     bool signedMode;
     uint16_t bgCodeArea;
     _GetBGTileMapInfo(bgTileMapBase, signedMode, bgCodeArea, _memoryController);
-    
-    Pixel bgPalette[4];
-    _ReadBGPalette(bgPalette, _memoryController);
+    MonochromePalette bgPalette = MonochromePalette(_memoryController->readByte(BGPRegister), false);
     
     PixelBuffer tileBuffer(8, 8);
     for (uint16_t i = 0; i <= 0xFF; ++i) {
@@ -308,9 +305,7 @@ void GPUCore::getBackground(PixelBufferImageCallback callback) {
     bool signedMode;
     uint16_t bgCodeArea;
     _GetBGTileMapInfo(bgTileMapBase, signedMode, bgCodeArea, _memoryController);
-    
-    Pixel bgPalette[4];
-    _ReadBGPalette(bgPalette, _memoryController);
+    MonochromePalette bgPalette = MonochromePalette(_memoryController->readByte(BGPRegister), false);
     
     const uint16_t NumberOfBGCodes = 1024; //1024: 32x32 tiles form the background
     PixelBuffer tileBuffer(8, 8);
@@ -328,23 +323,32 @@ void GPUCore::getBackground(PixelBufferImageCallback callback) {
     callback(background);
 }
 
-static uint8_t _DrawTileRowToScanline(uint16_t tileAddress, uint8_t tileRow, uint8_t tileCol, uint8_t scanlinePos, PixelBuffer &scanline, const MemoryController *mem, const Pixel *bgPalette) {
+static uint8_t _DrawTileRowToScanline(uint16_t tileAddress, uint8_t tileRow, uint8_t tileCol, bool flipX, uint8_t scanlinePos, PixelBuffer &scanline, const MemoryController *mem, const MonochromePalette &palette) {
     // the 2 bytes representing the given row in the tile
     const uint16_t tileRowOffset = tileRow * 2; // 2 bytes per row
     const uint8_t byte0 = mem->readByte(tileAddress + tileRowOffset);
     const uint8_t byte1 = mem->readByte(tileAddress + tileRowOffset + 1);
+    int x = tileCol;
     uint8_t currentIdx = scanlinePos;
-    for (int x = tileCol; x < 8; ++x) {
-        const uint8_t code = _GetPaletteCode(byte0, byte1, x);
-        const Pixel &px = bgPalette[code];
-        scanline.pixels[currentIdx] = px;
-        currentIdx++;
+    // Draw until the end of the tile or the end of the scanline
+    while (currentIdx < scanline.width && x < BackgroundTileSize) {
+        const int adjustedX = flipX ? BackgroundTileSize - x - 1 : x;
+        const uint8_t code = _GetPaletteCode(byte0, byte1, adjustedX);
+        if (!palette.isTransparent(code)) {
+            const Pixel &px = palette.pixelForCode(code);
+            scanline.pixels[currentIdx] = px;
+        }
+        ++currentIdx;
+        ++x;
     }
     
     return currentIdx - scanlinePos;
 }
 
 void GPUCore::_renderBackgroundToScanline(size_t lineNum, PixelBuffer &scanline) {
+    // NOTE: background can technically be disabled on DMG, but not CGB. Ignored here
+    // This simplifies the sprite priority logic later
+    
     // 1. Read relevant info for drawing the background of the current line
     const uint8_t scx = _memoryController->readByte(SCXRegister);
     const uint8_t scy = _memoryController->readByte(SCYRegister);
@@ -353,9 +357,7 @@ void GPUCore::_renderBackgroundToScanline(size_t lineNum, PixelBuffer &scanline)
     bool signedMode;
     uint16_t bgCodeArea;
     _GetBGTileMapInfo(bgTileMapBase, signedMode, bgCodeArea, _memoryController);
-    
-    Pixel bgPalette[4];
-    _ReadBGPalette(bgPalette, _memoryController);
+    MonochromePalette bgPalette = MonochromePalette(_memoryController->readByte(BGPRegister), false);
     
     // 2. Figure out what row of tile codes we need to draw and which row of those tiles is relevant
     const uint8_t bgY = (lineNum + scy) & 0xFF; // wrap around
@@ -374,12 +376,94 @@ void GPUCore::_renderBackgroundToScanline(size_t lineNum, PixelBuffer &scanline)
         
         // 3b. Now draw the line from the tile to the scanline using the helper
         const uint8_t tileCol = bgX % 8; // for all but the first tile, this should be 0
-        pixelsDrawn += _DrawTileRowToScanline(tileBaseAddress, tileRow, tileCol, pixelsDrawn, scanline, _memoryController, bgPalette);
+        pixelsDrawn += _DrawTileRowToScanline(tileBaseAddress, tileRow, tileCol, false, pixelsDrawn, scanline, _memoryController, bgPalette);
     }
+#if DEBUG
+    assert(pixelsDrawn == 160);
+#endif
+}
+
+#pragma mark - Sprite Utilities
+
+static bool _SpriteOnLine(size_t line, size_t spriteY, size_t spriteHeight) {
+    bool onLine = (spriteY <= line && (spriteY + spriteHeight) > line);
+    return onLine;
+}
+
+void GPUCore::_renderSpritesToScanline(size_t line, PixelBuffer &scanline) {
+    // 1. Read relevant display info for drawing sprites
+    const uint8_t lcdc = _memoryController->readByte(LCDCRegister);
+    if (!isMaskSet(lcdc, 0x02)) {
+        // OBJ off
+        return;
+    }
+    const size_t spriteWidth = BackgroundTileSize;
+    const bool doubleHeightMode = isMaskSet(lcdc, 0x04);
+    const size_t spriteHeight = doubleHeightMode ? BackgroundTileSize * 2 : BackgroundTileSize;
+    
+    // 2. Z-order priority. In DMG mode it's lowest X-pos with OAM code as the tiebreaker
+    // In CGB mode it's just lowest OAM code. Always using CGB Z-order mechanism for simplicity
+    // For both, only 10 sprites are drawn per line
+    array<int, 10> oamCodesOnLine;
+    const size_t currentSpriteLine = line + 16; // sprite y-coords are offset by 16 so they can be hidden above the screen
+    int numSpritesOnLine = 0;
+    for (int i = 0; i < 40; ++i) {
+        const uint16_t codeBase = OAMBase + (i * 4);
+        // first byte is y-coord
+        uint8_t spriteY = _memoryController->readByte(codeBase);
+        if (_SpriteOnLine(currentSpriteLine, spriteY, spriteHeight)) {
+            oamCodesOnLine[numSpritesOnLine] = i;
+            numSpritesOnLine++;
+            if (numSpritesOnLine >= 10) {
+                break;
+            }
+        }
+    }
+    
+    // No sprites with pixels on this line, nothing else to do
+    if (numSpritesOnLine == 0) {
+        return;
+    }
+    
+    // 3. Get palettes
+    MonochromePalette palette0 = MonochromePalette(_memoryController->readByte(OBP0Register), true);
+    MonochromePalette palette1 = MonochromePalette(_memoryController->readByte(OBP1Register), true);
+    
+    // 4. In reverse z-order, draw the sprites
+    const uint8_t chrCodeMask = doubleHeightMode ? 0xFE : 0xFF; // in double-height, ignore least significant bit
+    for (int i = numSpritesOnLine - 1; i >= 0; --i) {
+        const int oamCode = oamCodesOnLine[i];
+        const uint16_t codeBase = OAMBase + (oamCode * 4);
+        const uint8_t spriteX = _memoryController->readByte(codeBase + 1);
+        if (spriteX == 0 || spriteX >= 168) {
+            // off screen sprite
+            continue;
+        }
+        const uint8_t spriteY = _memoryController->readByte(codeBase);
+        const uint8_t chrCode = _memoryController->readByte(codeBase + 2) & chrCodeMask;
+        const uint8_t spriteAttr = _memoryController->readByte(codeBase + 3);
+//        if (isMaskSet(spriteAttr, 0x80)) {
+            // TODO: prioritize BG and window over sprite
+            // This seems to allow some transparency in the BG and window?
+//        }
+
+        const bool flipX = isMaskSet(spriteAttr, 0x20);
+        const bool flipY = isMaskSet(spriteAttr, 0x40);
+        const uint16_t tileBaseAddr = TileMapBase + (chrCode * BackgroundTileBytes);
+        const uint8_t tileRow = currentSpriteLine - spriteY;
+        const uint8_t adjustedRow = flipY ? spriteHeight - tileRow - 1 : tileRow;
+        const uint8_t tileCol = spriteX < spriteWidth ? spriteWidth - spriteX : 0;
+        const uint8_t scanlinePos = spriteX >= spriteWidth ? spriteX - spriteWidth : 0;
+        const MonochromePalette &palette = isMaskSet(spriteAttr, 0x10) ? palette1 : palette0;
+        _DrawTileRowToScanline(tileBaseAddr, adjustedRow, tileCol, flipX, scanlinePos, scanline, _memoryController, palette);
+    }
+    
 }
 
 void GPUCore::_renderScanline(size_t lineNum) {
     _renderBackgroundToScanline(lineNum, _scanline);
+    //TODO: render window
+    _renderSpritesToScanline(lineNum, _scanline);
     
     if (_scanlineCallback) {
         _scanlineCallback(_scanline, lineNum);
