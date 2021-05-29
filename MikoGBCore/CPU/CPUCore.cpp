@@ -102,9 +102,9 @@ bool CPUCore::handleInterruptsIfNeeded() {
     } else if (isMaskSet(interruptsToProcess, MemoryController::LCDStat)) {
         targetPC = 0x0048;
         updatedIF ^= MemoryController::LCDStat;
-    } else if (isMaskSet(interruptsToProcess, MemoryController::Timer)) {
+    } else if (isMaskSet(interruptsToProcess, MemoryController::TIMA)) {
         targetPC = 0x0050;
-        updatedIF ^= MemoryController::Timer;
+        updatedIF ^= MemoryController::TIMA;
     } else if (isMaskSet(interruptsToProcess, MemoryController::Serial)) {
         targetPC = 0x0058;
         updatedIF ^= MemoryController::Serial;

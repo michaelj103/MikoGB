@@ -10,6 +10,7 @@
 
 #include <cstdlib>
 #include "CartridgeHeader.hpp"
+#include "Timer.hpp"
 
 namespace MikoGB {
 
@@ -27,6 +28,8 @@ public:
         
     uint8_t readByte(uint16_t addr) const;
     void setByte(uint16_t addr, uint8_t val);
+    
+    void updateTimer(size_t cpuCycles);
         
     const CartridgeHeader &getHeader() const { return _header; }
     
@@ -34,7 +37,7 @@ public:
     enum InterruptFlag : uint8_t {
         VBlank      = 1 << 0,
         LCDStat     = 1 << 1,
-        Timer       = 1 << 2,
+        TIMA        = 1 << 2,
         Serial      = 1 << 3,
         Input       = 1 << 4,
     };
@@ -57,6 +60,7 @@ private:
     bool _bootROMEnabled = true;
     
     MemoryBankController *_mbc = nullptr;
+    Timer _timer;
     
     void _dmaTransfer(uint8_t);
 };

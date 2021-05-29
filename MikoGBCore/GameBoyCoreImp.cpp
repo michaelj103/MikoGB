@@ -32,6 +32,7 @@ void GameBoyCoreImp::step() {
     int instructionCycles = _cpu->step();
     size_t cpuCycles = instructionCycles * 4;
     _gpu->updateWithCPUCycles(cpuCycles);
+    _memoryController->updateTimer(cpuCycles);
 }
 
 void GameBoyCoreImp::emulateFrame() {
