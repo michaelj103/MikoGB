@@ -21,7 +21,7 @@ struct CPUInstruction {
 #if BUILD_FOR_TESTING
     static const CPUInstruction &LookupInstruction(uint8_t *);
 #else
-    static const CPUInstruction &LookupInstruction(const MemoryController *, uint16_t);
+    static const CPUInstruction &LookupInstruction(const MemoryController::Ptr &, uint16_t);
 #endif
     
 private:

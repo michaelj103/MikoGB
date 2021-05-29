@@ -7,15 +7,13 @@
 
 #include "CPUCore.hpp"
 #include "CPUInstruction.hpp"
-#include "MemoryController.hpp"
 #include <algorithm>
 #include <stdexcept>
 
 using namespace std;
 using namespace MikoGB;
 
-CPUCore::CPUCore(MemoryController *memCon) {
-    memoryController = memCon;
+CPUCore::CPUCore(MemoryController::Ptr &memCon): memoryController(memCon) {
     reset();
     CPUInstruction::InitializeInstructionTable();
 }
@@ -110,9 +108,9 @@ bool CPUCore::handleInterruptsIfNeeded() {
     } else if (isMaskSet(interruptsToProcess, MemoryController::Serial)) {
         targetPC = 0x0058;
         updatedIF ^= MemoryController::Serial;
-    } else if (isMaskSet(interruptsToProcess, MemoryController::Joypad)) {
+    } else if (isMaskSet(interruptsToProcess, MemoryController::Input)) {
         targetPC = 0x0060;
-        updatedIF ^= MemoryController::Joypad;
+        updatedIF ^= MemoryController::Input;
     } else {
         throw runtime_error("Interrupt processing error");
     }

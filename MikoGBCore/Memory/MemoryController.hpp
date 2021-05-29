@@ -14,11 +14,13 @@
 namespace MikoGB {
 
 class MemoryBankController;
+class Joypad;
 
 class MemoryController {
 public:
     MemoryController() = default;
     ~MemoryController();
+    using Ptr = std::shared_ptr<MemoryController>;
     
     bool configureWithROMData(const void *romData, size_t size);
     bool configureWithEmptyData();
@@ -34,16 +36,23 @@ public:
         LCDStat     = 1 << 1,
         Timer       = 1 << 2,
         Serial      = 1 << 3,
-        Joypad      = 1 << 4,
+        Input       = 1 << 4,
     };
     void requestInterrupt(InterruptFlag);
     static const uint16_t IFRegister = 0xFF0F; // Interrupt Request
     static const uint16_t IERegister = 0xFFFF; // Interrupt Enable
     
+    enum InputMask : uint8_t {
+        Button = 0x10, // A, B, Sel, Start
+        Directional = 0x20, // D-pad
+    };
+    InputMask selectedInputMask() const;
+    std::shared_ptr<Joypad> joypad;
+    
 private:
     uint8_t *_permanentROM = nullptr;
-    uint8_t *_videoRAM= nullptr;
-    uint8_t *_highRangeMemory= nullptr;
+    uint8_t *_videoRAM = nullptr;
+    uint8_t *_highRangeMemory = nullptr;
     CartridgeHeader _header;
     bool _bootROMEnabled = true;
     

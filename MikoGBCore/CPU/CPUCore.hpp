@@ -29,8 +29,6 @@
 
 namespace MikoGB {
 
-class MemoryController;
-
 enum FlagBit : uint8_t {
     Zero        = 1 << 7,
     N           = 1 << 6,
@@ -40,11 +38,12 @@ enum FlagBit : uint8_t {
 
 class CPUCore {
 public:
-    CPUCore(MemoryController *memoryController);
+    CPUCore(MemoryController::Ptr &memoryController);
 #if BUILD_FOR_TESTING
     CPUCore(uint8_t *memory, size_t len);
     ~CPUCore();
 #endif
+    using Ptr = std::shared_ptr<CPUCore>;
     
     /// Step one instruction. Returns elapsed cycle count
     int step();
@@ -58,7 +57,7 @@ public:
     uint16_t programCounter;
     uint16_t stackPointer;
     
-    MemoryController *memoryController;
+    MemoryController::Ptr &memoryController;
 #if BUILD_FOR_TESTING
     uint8_t *mainMemory;
 #endif

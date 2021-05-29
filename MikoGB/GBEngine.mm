@@ -17,6 +17,27 @@ static const size_t GBBytesPerImage = GBBytesPerLine * 144;
 
 static const size_t NumKeys = 8; //Number of gameboy keys
 
+static MikoGB::JoypadButton _ButtonForCode(GBEngineKeyCode code) {
+    switch (code) {
+        case GBEngineKeyCodeRight:
+            return MikoGB::JoypadButton::Right;
+        case GBEngineKeyCodeLeft:
+            return MikoGB::JoypadButton::Left;
+        case GBEngineKeyCodeUp:
+            return MikoGB::JoypadButton::Up;
+        case GBEngineKeyCodeDown:
+            return MikoGB::JoypadButton::Down;
+        case GBEngineKeyCodeA:
+            return MikoGB::JoypadButton::A;
+        case GBEngineKeyCodeB:
+            return MikoGB::JoypadButton::B;
+        case GBEngineKeyCodeSelect:
+            return MikoGB::JoypadButton::Select;
+        case GBEngineKeyCodeStart:
+            return MikoGB::JoypadButton::Start;
+    }
+}
+
 @implementation GBEngine {
     MikoGB::GameBoyCore *_core;
     uint8_t *_imageBuffer;
@@ -119,7 +140,8 @@ static const size_t NumKeys = 8; //Number of gameboy keys
             if (_keyPressedChanged[i]) {
                 _keyPressedChanged[i] = NO;
                 _keyPressedStates[i] = !_keyPressedStates[i];
-                //TODO: set the pressed state of the key on the core
+                bool state = _keyPressedStates[i] ? true : false;
+                _core->setButtonPressed(_ButtonForCode((GBEngineKeyCode)i), state);
             }
         }
     }

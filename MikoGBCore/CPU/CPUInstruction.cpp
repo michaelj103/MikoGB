@@ -59,7 +59,7 @@ const CPUInstruction &CPUInstruction::LookupInstruction(uint8_t *memoryPtr) {
 
 #else
 
-const CPUInstruction &CPUInstruction::LookupInstruction(const MemoryController *mem, uint16_t pc) {
+const CPUInstruction &CPUInstruction::LookupInstruction(const MemoryController::Ptr &mem, uint16_t pc) {
     size_t idx = mem->readByte(pc);
     if (idx == 0xCB) {
         //Z80 Extended instruction set

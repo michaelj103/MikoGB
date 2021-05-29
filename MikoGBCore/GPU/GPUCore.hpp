@@ -10,14 +10,14 @@
 
 #include <cstdlib>
 #include "PixelBuffer.hpp"
+#include "MemoryController.hpp"
 
 namespace MikoGB {
 
-class MemoryController;
-
 class GPUCore {
 public:
-    GPUCore(MemoryController *);
+    GPUCore(MemoryController::Ptr &);
+    using Ptr = std::shared_ptr<GPUCore>;
     
     /// Expects CPU oscillation cycles (~4.2MHz, 4 per instruction cycle)
     void updateWithCPUCycles(size_t cpuCycles);
@@ -42,7 +42,7 @@ private:
         LCDTransfer = 3,
     };
     
-    MemoryController *_memoryController = nullptr;
+    MemoryController::Ptr &_memoryController;
     size_t _cycleCount = 0;
     uint8_t _currentScanline = 0;
     void _incrementScanline();

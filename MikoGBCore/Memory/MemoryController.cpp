@@ -8,6 +8,7 @@
 #include "MemoryController.hpp"
 #include "CartridgeHeader.hpp"
 #include "MemoryBankController.hpp"
+#include "Joypad.hpp"
 #include <iostream>
 
 using namespace std;
@@ -114,10 +115,13 @@ uint8_t MemoryController::readByte(uint16_t addr) const {
         return _mbc->readROM(addr);
     } else {
         
-        // For controller reads, always return no buttons pressed for now
-        // TODO: return correct controller stuff
         if (addr == ControllerDataRegister) {
-            return 0x0F;
+            if (joypad) {
+                return joypad->readJoypadRegister();
+            } else {
+                // no buttons pressed
+                return 0x0F;
+            }
         }
         
         // Read from the high range memory
@@ -153,6 +157,11 @@ void MemoryController::requestInterrupt(InterruptFlag flag) {
     setByte(IFRegister, currentRequests | flag);
 }
 
+MemoryController::InputMask MemoryController::selectedInputMask() const {
+    uint16_t idx = ControllerDataRegister - HighRangeMemoryBaseAddr;
+    uint8_t regVal = _highRangeMemory[idx] & 0x30;
+    return static_cast<InputMask>(regVal);
+}
 
 void MemoryController::_dmaTransfer(uint8_t byte) {
     // DMA transfer is a special procedure to write chunks of data to OAM

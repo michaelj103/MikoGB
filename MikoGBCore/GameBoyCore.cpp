@@ -35,6 +35,10 @@ void GameBoyCore::emulateFrame() {
     _imp->emulateFrame();
 }
 
+void GameBoyCore::setButtonPressed(JoypadButton button, bool set) {
+    _imp->setButtonPressed(button, set);
+}
+
 void GameBoyCore::setScanlineCallback(PixelBufferScanlineCallback callback) {
     _imp->setScanlineCallback(callback);
 }

@@ -10,6 +10,7 @@
 
 #include <cstdlib>
 #include "PixelBuffer.hpp"
+#include "GameBoyCoreTypes.h"
 
 namespace MikoGB {
 
@@ -29,6 +30,8 @@ public:
     /// Emulate at least 1 full frame. If a frame is partially rendered when called, that frame will be finished first and
     /// then the next one will be emulated to completion
     void emulateFrame();
+    
+    void setButtonPressed(JoypadButton, bool);
     
     void setScanlineCallback(PixelBufferScanlineCallback callback);
     

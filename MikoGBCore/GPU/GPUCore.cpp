@@ -6,7 +6,6 @@
 //
 
 #include "GPUCore.hpp"
-#include "MemoryController.hpp"
 #include "BitTwiddlingUtil.h"
 #include "MonochromePalette.hpp"
 #include <array>
@@ -64,12 +63,12 @@ static const uint8_t BackgroundTileSize = 8; // BG tiles are always 8x8
 static const uint16_t BackgroundTilesPerRow = 32; // BG canvas is 32x32 tiles for 256x256 px
 static const uint16_t BackgroundTileBytes = 16; // BG tiles are 16 bytes, 2bpp
 
-static inline bool _IsLCDOn(const MemoryController *mem) {
+static inline bool _IsLCDOn(const MemoryController::Ptr &mem) {
     bool isOn = (mem->readByte(LCDCRegister) & 0x80) == 0x80;
     return isOn;
 }
 
-GPUCore::GPUCore(MemoryController *mem): _memoryController(mem), _scanline(ScreenWidth, 1) {}
+GPUCore::GPUCore(MemoryController::Ptr &mem): _memoryController(mem), _scanline(ScreenWidth, 1) {}
 
 // Clear all state as needed when the LCD is disabled
 void GPUCore::_turnOff() {
@@ -176,28 +175,9 @@ void GPUCore::updateWithCPUCycles(size_t cpuCycles) {
     _wasOn = isOn;
 }
 
-static inline Pixel _PixelForCode(uint8_t code) {
-    switch (code) {
-        case 0:
-            // White
-            return Pixel(0xFF);
-        case 1:
-            // Light Gray
-            return Pixel(0xBF);
-        case 2:
-            // Dark Gray
-            return Pixel(0x40);
-        case 3:
-            // Black
-            return Pixel(0x00);
-        default:
-            return Pixel();
-    }
-}
-
 #pragma mark - BG Utilities
 
-static void _GetBGTileMapInfo(int32_t &baseAddr, bool &signedMode, uint16_t &codeArea, const MemoryController *mem) {
+static void _GetBGTileMapInfo(int32_t &baseAddr, bool &signedMode, uint16_t &codeArea, const MemoryController::Ptr &mem) {
     const uint8_t lcdc = mem->readByte(LCDCRegister);
     // Range of background tiles is either 0x9000 with codes being signed offsets (0x8800-0x97FF)
     // or they start at 0x8000 with codes being unsigned offsets (0x8000-0x8FFF)
@@ -233,7 +213,7 @@ static inline uint8_t _GetPaletteCode(uint8_t byte0, uint8_t byte1, int x) {
     return code;
 }
 
-static void _ReadBGTile(uint16_t addr, const MemoryController *mem, const MonochromePalette &bgPalette, PixelBuffer &dest) {
+static void _ReadBGTile(uint16_t addr, const MemoryController::Ptr &mem, const MonochromePalette &bgPalette, PixelBuffer &dest) {
     assert(dest.width == 8 && dest.height == 8);
     for (uint16_t y = 0; y < 16; y += 2) {
         uint8_t byte0 = mem->readByte(addr + y);
@@ -323,7 +303,7 @@ void GPUCore::getBackground(PixelBufferImageCallback callback) {
     callback(background);
 }
 
-static uint8_t _DrawTileRowToScanline(uint16_t tileAddress, uint8_t tileRow, uint8_t tileCol, bool flipX, uint8_t scanlinePos, PixelBuffer &scanline, const MemoryController *mem, const MonochromePalette &palette) {
+static uint8_t _DrawTileRowToScanline(uint16_t tileAddress, uint8_t tileRow, uint8_t tileCol, bool flipX, uint8_t scanlinePos, PixelBuffer &scanline, const MemoryController::Ptr &mem, const MonochromePalette &palette) {
     // the 2 bytes representing the given row in the tile
     const uint16_t tileRowOffset = tileRow * 2; // 2 bytes per row
     const uint8_t byte0 = mem->readByte(tileAddress + tileRowOffset);
