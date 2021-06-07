@@ -46,8 +46,8 @@ public:
     static const uint16_t IERegister = 0xFFFF; // Interrupt Enable
     
     enum InputMask : uint8_t {
-        Button = 0x10, // A, B, Sel, Start
-        Directional = 0x20, // D-pad
+        Directional = 0x10, // D-pad
+        Button = 0x20, // A, B, Sel, Start
     };
     InputMask selectedInputMask() const;
     std::shared_ptr<Joypad> joypad;

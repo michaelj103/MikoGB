@@ -11,13 +11,13 @@
 
 using namespace MikoGB;
 
-static const uint32_t DivOverflow = 0xFFFF;
+static const uint32_t DivMax = 0xFFFF;
 
 bool Timer::updateWithCPUCycles(size_t cpuCycles) {
     // update DIV
     _divRegister += cpuCycles;
-    if (_divRegister > DivOverflow) {
-        _divRegister -= DivOverflow;
+    if (_divRegister > DivMax) {
+        _divRegister -= DivMax;
     }
     
     // update TIMA

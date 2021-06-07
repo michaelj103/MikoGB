@@ -20,10 +20,11 @@ void Joypad::setButtonPressed(JoypadButton button, bool set) {
         _setButtons |= mask;
         // signal the interrupt if necessary
         // Not super clear across sources, but I believe the interrupt is only set for the selected inputs
+        // Note that the selection of inputs is inverted, unset means selected
         MemoryController::InputMask inputMask = _memoryController->selectedInputMask();
-        if (bVal <= 3 && isMaskSet(inputMask, MemoryController::InputMask::Directional)) {
+        if (bVal <= 3 && !isMaskSet(inputMask, MemoryController::InputMask::Directional)) {
             _memoryController->requestInterrupt(MemoryController::InterruptFlag::Input);
-        } else if (bVal > 3 && isMaskSet(inputMask, MemoryController::InputMask::Button)) {
+        } else if (bVal > 3 && !isMaskSet(inputMask, MemoryController::InputMask::Button)) {
             _memoryController->requestInterrupt(MemoryController::InterruptFlag::Input);
         }
         
@@ -46,13 +47,12 @@ uint8_t Joypad::readJoypadRegister() const {
     
     // Some assumptions with how this works, no documentation is very clear to me. Basically to read joypad input,
     // Games will write the selection masks and then read the low 4 bits. It's feasible (though silly) that both
-    // may be selected at the same time. I'm assuming they would effectively OR together
+    // may be selected at the same time. I'm assuming that directional has priority but maybe that's not true
     uint8_t joypadReg = 0;
     MemoryController::InputMask inputMask = _memoryController->selectedInputMask();
-    if (isMaskSet(inputMask, MemoryController::InputMask::Directional)) {
+    if (!isMaskSet(inputMask, MemoryController::InputMask::Directional)) {
         joypadReg |= directional;
-    }
-    if (isMaskSet(inputMask, MemoryController::InputMask::Button)) {
+    } else if (!isMaskSet(inputMask, MemoryController::InputMask::Button)) {
         joypadReg |= button;
     }
     

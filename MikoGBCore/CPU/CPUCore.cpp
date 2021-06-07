@@ -50,6 +50,12 @@ int CPUCore::step() {
         return 5;
     }
     
+    if (_isHalted) {
+        // Could return 1 but don't necessarily want to loop too tightly
+        // Might turn a "low power" mode into a "high power" busy loop
+        return 4;
+    }
+    
     const uint16_t originalPC = programCounter;
     const CPUInstruction &instruction = CPUInstruction::LookupInstruction(memoryController, programCounter);
     programCounter += instruction.size;
@@ -78,11 +84,17 @@ void CPUCore::reset() {
 }
 
 bool CPUCore::handleInterruptsIfNeeded() {
-    if (interruptState == InterruptState::Disabled) {
-        return false;
-    } else if (interruptState == InterruptState::Scheduled) {
-        interruptState = InterruptState::Enabled;
-        return false;
+    bool wasNotEnabled = interruptState != InterruptState::Enabled;
+    if (wasNotEnabled) {
+        if (interruptState == InterruptState::Scheduled) {
+            interruptState = InterruptState::Enabled;
+        }
+        // If interrupts are not enabled, bail unless we're in HALT mode
+        // HALT is exited when an enabled interrupt is triggered regardless
+        // of the global interrupt enabled state
+        if (!_isHalted) {
+            return false;
+        }
     }
     
     const uint8_t IE = memoryController->readByte(MemoryController::IERegister) & 0x1F; // Enabled interrupts
@@ -93,7 +105,15 @@ bool CPUCore::handleInterruptsIfNeeded() {
         return false;
     }
     
-    // There's an interrupt. Figure out where to jump...
+    // There's an interrupt. If in HALT, mode get out and double check if we want to jump or continue
+    if (_isHalted) {
+        _isHalted = false;
+        if (wasNotEnabled) {
+            return false;
+        }
+    }
+    
+    // There's an interrupt and we want to jump. So, figure out where to jump
     uint16_t targetPC = 0;
     uint8_t updatedIF = IF;
     if (isMaskSet(interruptsToProcess, MemoryController::VBlank)) {
@@ -124,7 +144,7 @@ bool CPUCore::handleInterruptsIfNeeded() {
 }
 
 void CPUCore::halt() {
-    throw runtime_error("HALT mode not implemented");
+    _isHalted = true;
 }
 
 void CPUCore::stop() {

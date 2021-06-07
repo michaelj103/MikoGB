@@ -109,6 +109,7 @@ public:
     
 private:
     bool handleInterruptsIfNeeded();
+    bool _isHalted;
 };
 
 
