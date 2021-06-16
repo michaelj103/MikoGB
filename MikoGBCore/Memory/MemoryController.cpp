@@ -116,7 +116,7 @@ uint8_t MemoryController::readByte(uint16_t addr) const {
         return _videoRAM[addr - VRAMBaseAddr];
     } else if (addr < HighRangeMemoryBaseAddr) {
         // Ask the MBC to read from switchable RAM
-        return _mbc->readROM(addr);
+        return _mbc->readRAM(addr);
     } else {
         
         if (addr == ControllerDataRegister) {

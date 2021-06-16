@@ -28,8 +28,8 @@ public:
     bool configureWithROMData(const void *romData, size_t size) override;
     uint8_t readROM(uint16_t addr) const override;
     uint8_t readRAM(uint16_t addr) const override;
-    void writeRAM(uint16_t addr, uint8_t val) const override;
-    void writeControlCode(uint16_t addr, uint8_t val) const override;
+    void writeRAM(uint16_t addr, uint8_t val) override;
+    void writeControlCode(uint16_t addr, uint8_t val) override;
 };
 
 }

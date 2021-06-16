@@ -7,6 +7,7 @@
 
 #include "MemoryBankController.hpp"
 #include "NoMBC.hpp"
+#include "MBC1.hpp"
 
 #include <iostream>
 
@@ -18,6 +19,9 @@ MemoryBankController *MemoryBankController::CreateMBC(const CartridgeHeader &hea
     switch (header.getType()) {
         case CartridgeType::ROM_Only:
             mbc = new NoMBC(header);
+            break;
+        case CartridgeType::MBC1:
+            mbc = new MBC1(header);
             break;
             
         default:
@@ -39,5 +43,5 @@ bool MemoryBankController::configureWithROMData(const void *romData, size_t size
 }
 
 MemoryBankController::~MemoryBankController() {
-    delete _romData;
+    delete [] _romData;
 }

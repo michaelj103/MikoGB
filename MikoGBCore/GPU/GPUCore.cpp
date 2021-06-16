@@ -84,10 +84,24 @@ void GPUCore::_incrementScanline() {
     _currentScanline = (_currentScanline + 1) % LCDScanlineCount;
     _memoryController->setByte(LYRegister, _currentScanline);
     
-    //TODO: LYC interrupt if enabled
-//    if (_currentScanline == _cpu->getMemory(LYCRegister)) {
-//
-//    }
+    bool doesMatchLYC = _currentScanline == _memoryController->readByte(LYCRegister);
+    const uint8_t currentStat = _memoryController->readByte(LCDStatRegister);
+    const uint8_t matchFlagMask = 0x04;
+    bool didMatchLYC = isMaskSet(currentStat, matchFlagMask);
+    if (doesMatchLYC && !didMatchLYC) {
+        // New match, set the match flag and trigger interrupt if enabled
+        uint8_t updatedStat = currentStat | matchFlagMask;
+        _memoryController->setByte(LCDStatRegister, updatedStat);
+        
+        bool LYCIntEnabled = isMaskSet(currentStat, 0x40);
+        if (LYCIntEnabled) {
+            _memoryController->requestInterrupt(MemoryController::LCDStat);
+        }
+    } else if (!doesMatchLYC && didMatchLYC) {
+        // No longer a match. Reset the match flag
+        uint8_t updatedStat = currentStat & ~(matchFlagMask);
+        _memoryController->setByte(LCDStatRegister, updatedStat);
+    }
 }
 
 void GPUCore::_setMode(LCDMode mode) {

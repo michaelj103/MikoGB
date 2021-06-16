@@ -31,7 +31,7 @@ NoMBC::NoMBC(const CartridgeHeader &header) {
 }
 
 NoMBC::~NoMBC() {
-    delete _ramData;
+    delete [] _ramData;
 }
 
 bool NoMBC::configureWithROMData(const void *romData, size_t size) {
@@ -61,7 +61,7 @@ uint8_t NoMBC::readRAM(uint16_t addr) const {
     }
 }
 
-void NoMBC::writeRAM(uint16_t addr, uint8_t val) const {
+void NoMBC::writeRAM(uint16_t addr, uint8_t val) {
     if (_ramType == RAMType::SingleBank) {
         assert(addr >= RAMBase && addr < RAMMax);
         _ramData[addr - RAMBase] = val;
@@ -70,6 +70,6 @@ void NoMBC::writeRAM(uint16_t addr, uint8_t val) const {
     }
 }
 
-void NoMBC::writeControlCode(uint16_t addr, uint8_t val) const {
+void NoMBC::writeControlCode(uint16_t addr, uint8_t val) {
 //    assert(false); // control codes aren't valid for NoMBC
 }

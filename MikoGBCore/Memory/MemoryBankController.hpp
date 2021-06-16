@@ -30,10 +30,10 @@ public:
     virtual uint8_t readRAM(uint16_t addr) const = 0;
     
     /// Write to external RAM, potentially switched
-    virtual void writeRAM(uint16_t addr, uint8_t val) const = 0;
+    virtual void writeRAM(uint16_t addr, uint8_t val) = 0;
     
     /// Write to the ROM area which is a control code (or invalid)
-    virtual void writeControlCode(uint16_t addr, uint8_t val) const = 0;
+    virtual void writeControlCode(uint16_t addr, uint8_t val) = 0;
         
 protected:
     uint8_t *_romData = nullptr;
