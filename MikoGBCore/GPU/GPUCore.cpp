@@ -68,7 +68,7 @@ static inline bool _IsLCDOn(const MemoryController::Ptr &mem) {
     return isOn;
 }
 
-GPUCore::GPUCore(MemoryController::Ptr &mem): _memoryController(mem), _scanline(ScreenWidth, 1) {}
+GPUCore::GPUCore(MemoryController::Ptr &mem): _memoryController(mem), _scanline(ScreenWidth) {}
 
 // Clear all state as needed when the LCD is disabled
 void GPUCore::_turnOff() {
@@ -317,7 +317,7 @@ void GPUCore::getBackground(PixelBufferImageCallback callback) {
     callback(background);
 }
 
-static uint8_t _DrawTileRowToScanline(uint16_t tileAddress, uint8_t tileRow, uint8_t tileCol, bool flipX, uint8_t scanlinePos, PixelBuffer &scanline, const MemoryController::Ptr &mem, const MonochromePalette &palette) {
+static uint8_t _DrawTileRowToScanline(uint16_t tileAddress, uint8_t tileRow, uint8_t tileCol, bool flipX, LCDScanline::WriteType writeType, uint8_t scanlinePos, LCDScanline &scanline, const MemoryController::Ptr &mem, const MonochromePalette &palette) {
     // the 2 bytes representing the given row in the tile
     const uint16_t tileRowOffset = tileRow * 2; // 2 bytes per row
     const uint8_t byte0 = mem->readByte(tileAddress + tileRowOffset);
@@ -325,13 +325,11 @@ static uint8_t _DrawTileRowToScanline(uint16_t tileAddress, uint8_t tileRow, uin
     int x = tileCol;
     uint8_t currentIdx = scanlinePos;
     // Draw until the end of the tile or the end of the scanline
-    while (currentIdx < scanline.width && x < BackgroundTileSize) {
+    const size_t width = scanline.getWidth();
+    while (currentIdx < width && x < BackgroundTileSize) {
         const int adjustedX = flipX ? BackgroundTileSize - x - 1 : x;
         const uint8_t code = _GetPaletteCode(byte0, byte1, adjustedX);
-        if (!palette.isTransparent(code)) {
-            const Pixel &px = palette.pixelForCode(code);
-            scanline.pixels[currentIdx] = px;
-        }
+        scanline.writePixel(currentIdx, code, palette, writeType);
         ++currentIdx;
         ++x;
     }
@@ -339,7 +337,7 @@ static uint8_t _DrawTileRowToScanline(uint16_t tileAddress, uint8_t tileRow, uin
     return currentIdx - scanlinePos;
 }
 
-void GPUCore::_renderBackgroundToScanline(size_t lineNum, PixelBuffer &scanline) {
+void GPUCore::_renderBackgroundToScanline(size_t lineNum, LCDScanline &scanline) {
     // NOTE: background can technically be disabled on DMG, but not CGB. Ignored here
     // This simplifies the sprite priority logic later
     
@@ -370,7 +368,7 @@ void GPUCore::_renderBackgroundToScanline(size_t lineNum, PixelBuffer &scanline)
         
         // 3b. Now draw the line from the tile to the scanline using the helper
         const uint8_t tileCol = bgX % 8; // for all but the first tile, this should be 0
-        pixelsDrawn += _DrawTileRowToScanline(tileBaseAddress, tileRow, tileCol, false, pixelsDrawn, scanline, _memoryController, bgPalette);
+        pixelsDrawn += _DrawTileRowToScanline(tileBaseAddress, tileRow, tileCol, false, LCDScanline::WriteType::Background, pixelsDrawn, scanline, _memoryController, bgPalette);
     }
 #if DEBUG
     assert(pixelsDrawn == 160);
@@ -379,12 +377,12 @@ void GPUCore::_renderBackgroundToScanline(size_t lineNum, PixelBuffer &scanline)
 
 #pragma mark - Sprite Utilities
 
-static bool _SpriteOnLine(size_t line, size_t spriteY, size_t spriteHeight) {
+static bool _IsSpriteOnLine(size_t line, size_t spriteY, size_t spriteHeight) {
     bool onLine = (spriteY <= line && (spriteY + spriteHeight) > line);
     return onLine;
 }
 
-void GPUCore::_renderSpritesToScanline(size_t line, PixelBuffer &scanline) {
+void GPUCore::_renderSpritesToScanline(size_t line, LCDScanline &scanline) {
     // 1. Read relevant display info for drawing sprites
     const uint8_t lcdc = _memoryController->readByte(LCDCRegister);
     if (!isMaskSet(lcdc, 0x02)) {
@@ -405,7 +403,7 @@ void GPUCore::_renderSpritesToScanline(size_t line, PixelBuffer &scanline) {
         const uint16_t codeBase = OAMBase + (i * 4);
         // first byte is y-coord
         uint8_t spriteY = _memoryController->readByte(codeBase);
-        if (_SpriteOnLine(currentSpriteLine, spriteY, spriteHeight)) {
+        if (_IsSpriteOnLine(currentSpriteLine, spriteY, spriteHeight)) {
             oamCodesOnLine[numSpritesOnLine] = i;
             numSpritesOnLine++;
             if (numSpritesOnLine >= 10) {
@@ -436,10 +434,7 @@ void GPUCore::_renderSpritesToScanline(size_t line, PixelBuffer &scanline) {
         const uint8_t spriteY = _memoryController->readByte(codeBase);
         const uint8_t chrCode = _memoryController->readByte(codeBase + 2) & chrCodeMask;
         const uint8_t spriteAttr = _memoryController->readByte(codeBase + 3);
-//        if (isMaskSet(spriteAttr, 0x80)) {
-            // TODO: prioritize BG and window over sprite
-            // This seems to allow some transparency in the BG and window?
-//        }
+        const LCDScanline::WriteType writeType = isMaskSet(spriteAttr, 0x80) ? LCDScanline::WriteType::SpriteLowPriority : LCDScanline::WriteType::SpriteHighPriority;
 
         const bool flipX = isMaskSet(spriteAttr, 0x20);
         const bool flipY = isMaskSet(spriteAttr, 0x40);
@@ -449,7 +444,7 @@ void GPUCore::_renderSpritesToScanline(size_t line, PixelBuffer &scanline) {
         const uint8_t tileCol = spriteX < spriteWidth ? spriteWidth - spriteX : 0;
         const uint8_t scanlinePos = spriteX >= spriteWidth ? spriteX - spriteWidth : 0;
         const MonochromePalette &palette = isMaskSet(spriteAttr, 0x10) ? palette1 : palette0;
-        _DrawTileRowToScanline(tileBaseAddr, adjustedRow, tileCol, flipX, scanlinePos, scanline, _memoryController, palette);
+        _DrawTileRowToScanline(tileBaseAddr, adjustedRow, tileCol, flipX, writeType, scanlinePos, scanline, _memoryController, palette);
     }
     
 }
@@ -460,6 +455,6 @@ void GPUCore::_renderScanline(size_t lineNum) {
     _renderSpritesToScanline(lineNum, _scanline);
     
     if (_scanlineCallback) {
-        _scanlineCallback(_scanline, lineNum);
+        _scanlineCallback(_scanline.getPixelData(), lineNum);
     }
 }

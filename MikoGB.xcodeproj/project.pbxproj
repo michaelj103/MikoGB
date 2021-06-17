@@ -23,6 +23,7 @@
 		290FF37B2662110A006812F4 /* Timer.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 290FF3792662110A006812F4 /* Timer.hpp */; };
 		29198790267481FA009D7C45 /* MBC1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2919878E267481FA009D7C45 /* MBC1.cpp */; };
 		29198791267481FA009D7C45 /* MBC1.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 2919878F267481FA009D7C45 /* MBC1.hpp */; };
+		2919879F267BF936009D7C45 /* LCDScanline.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 2919879D267BF936009D7C45 /* LCDScanline.hpp */; };
 		297E60062456426400EE150F /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297E60052456426400EE150F /* main.cpp */; };
 		29928195263DE721004691E5 /* Test16BitArithmeticInstructions.mm in Sources */ = {isa = PBXBuildFile; fileRef = 29928194263DE721004691E5 /* Test16BitArithmeticInstructions.mm */; };
 		2992819C263DE86C004691E5 /* ArithmeticInstructions16.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2992818B263DDEC8004691E5 /* ArithmeticInstructions16.cpp */; };
@@ -139,6 +140,7 @@
 		290FF3792662110A006812F4 /* Timer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Timer.hpp; sourceTree = "<group>"; };
 		2919878E267481FA009D7C45 /* MBC1.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = MBC1.cpp; sourceTree = "<group>"; };
 		2919878F267481FA009D7C45 /* MBC1.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MBC1.hpp; sourceTree = "<group>"; };
+		2919879D267BF936009D7C45 /* LCDScanline.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = LCDScanline.hpp; sourceTree = "<group>"; };
 		297E60032456426400EE150F /* RomAnalyzer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = RomAnalyzer; sourceTree = BUILT_PRODUCTS_DIR; };
 		297E60052456426400EE150F /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		297E600A2456532700EE150F /* CartridgeHeader.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = CartridgeHeader.cpp; sourceTree = "<group>"; };
@@ -316,6 +318,7 @@
 				2992830926426A32004691E5 /* GPUCore.hpp */,
 				2992830826426A32004691E5 /* GPUCore.cpp */,
 				290FF33D265F066D006812F4 /* MonochromePalette.hpp */,
+				2919879D267BF936009D7C45 /* LCDScanline.hpp */,
 			);
 			path = GPU;
 			sourceTree = "<group>";
@@ -469,6 +472,7 @@
 				290FF37B2662110A006812F4 /* Timer.hpp in Headers */,
 				299282FD264266A9004691E5 /* GameBoyCoreImp.hpp in Headers */,
 				290FF358265F671C006812F4 /* Joypad.hpp in Headers */,
+				2919879F267BF936009D7C45 /* LCDScanline.hpp in Headers */,
 				29A8FF76265211B8007A26C9 /* MemoryController.hpp in Headers */,
 				290FF33F265F066E006812F4 /* MonochromePalette.hpp in Headers */,
 				29A8FFFA26537426007A26C9 /* NoMBC.hpp in Headers */,

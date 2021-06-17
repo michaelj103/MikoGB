@@ -11,6 +11,7 @@
 #include <cstdlib>
 #include "PixelBuffer.hpp"
 #include "MemoryController.hpp"
+#include "LCDScanline.hpp"
 
 namespace MikoGB {
 
@@ -53,10 +54,10 @@ private:
     bool _wasOn = false;
     void _turnOff();
     
-    PixelBuffer _scanline;
+    LCDScanline _scanline;
     void _renderScanline(size_t line);
-    void _renderBackgroundToScanline(size_t line, PixelBuffer &scanline);
-    void _renderSpritesToScanline(size_t line, PixelBuffer &scanline);
+    void _renderBackgroundToScanline(size_t line, LCDScanline &scanline);
+    void _renderSpritesToScanline(size_t line, LCDScanline &scanline);
     PixelBufferScanlineCallback _scanlineCallback;
 };
 
