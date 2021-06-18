@@ -115,13 +115,27 @@ void GPUCore::_setMode(LCDMode mode) {
     uint8_t updatedStat = (currentStat & 0xFC) | mode;
     _memoryController->setByte(LCDStatRegister, updatedStat);
     
-    if (mode == HBlank) {
-        // When we hit HBlank actually do the work of rendering the line and notifying client
-        _renderScanline(_currentScanline);
-    } else if (mode == VBlank) {
-        _memoryController->requestInterrupt(MemoryController::VBlank);
+    switch (mode) {
+        case HBlank:
+            _renderScanline(_currentScanline);
+            if (isMaskSet(updatedStat, 0x08)) {
+                _memoryController->requestInterrupt(MemoryController::LCDStat);
+            }
+            break;
+        case VBlank:
+            _memoryController->requestInterrupt(MemoryController::VBlank);
+            if (isMaskSet(updatedStat, 0x10)) {
+                _memoryController->requestInterrupt(MemoryController::LCDStat);
+            }
+            break;
+        case OAMScan:
+            if (isMaskSet(updatedStat, 0x20)) {
+                _memoryController->requestInterrupt(MemoryController::LCDStat);
+            }
+            break;
+        case LCDTransfer:
+            break;
     }
-    //TODO: interrupts stat modes
 }
 
 void GPUCore::updateWithCPUCycles(size_t cpuCycles) {
