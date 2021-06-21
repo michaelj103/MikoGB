@@ -74,7 +74,7 @@ int CPUInstructions::bitResetRegister(const uint8_t *opcode, CPUCore &core) {
     
     // Reset the specified bit
     const uint8_t mask = 1 << bitIdx;
-    core.registers[reg] ^= mask;
+    core.registers[reg] &= ~mask;
     return 2;
 }
 
