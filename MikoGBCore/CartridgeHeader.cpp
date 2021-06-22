@@ -35,13 +35,19 @@ static CartridgeType _CartridgeTypeFromByte(uint8_t byte) {
         case 0x00:
             return CartridgeType::ROM_Only;
         case 0x01:
-            //e.g. Super Mario Land
+            // e.g. Super Mario Land
             return CartridgeType::MBC1;
+        case 0x02:
+            // TODO: find an example of this case
+            return CartridgeType::MBC1_RAM;
+        case 0x03:
+            // e.g. Super Mario Land 2
+            return CartridgeType::MBC1_RAM_BATT;
         case 0x13:
-            //e.g. Pokemon Red/Blue
+            // e.g. Pokemon Red/Blue
             return CartridgeType::MBC3_RAM_BATT;
         case 0x1B:
-            //e.g. Pokemon Yellow
+            // e.g. Pokemon Yellow
             return CartridgeType::MBC5_RAM_BATT;
         default:
             return CartridgeType::Unsupported;
@@ -54,13 +60,19 @@ static string _CartridgeTypeDescription(uint8_t byte) {
         case CartridgeType::ROM_Only:
             return "ROM ONLY";
         case CartridgeType::MBC1:
-            //e.g. Super Mario Land
+            // e.g. Super Mario Land
             return "MBC1";
+        case CartridgeType::MBC1_RAM:
+            // TODO: find an example
+            return "MBC1+RAM";
+        case CartridgeType::MBC1_RAM_BATT:
+            // e.g. Super Mario Land 2
+            return "MBC1+RAM+BATTERY";
         case CartridgeType::MBC3_RAM_BATT:
-            //e.g. Pokemon Red/Blue
+            // e.g. Pokemon Red/Blue
             return "MBC3+RAM+BATTERY";
         case CartridgeType::MBC5_RAM_BATT:
-            //e.g. Pokemon Yellow
+            // e.g. Pokemon Yellow
             return "MBC5+RAM+BATTERY";
         case CartridgeType::Unsupported:
             return "Unsupported " + to_string((int)byte);

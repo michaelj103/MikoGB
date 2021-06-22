@@ -21,6 +21,8 @@ MemoryBankController *MemoryBankController::CreateMBC(const CartridgeHeader &hea
             mbc = new NoMBC(header);
             break;
         case CartridgeType::MBC1:
+        case CartridgeType::MBC1_RAM:
+        case CartridgeType::MBC1_RAM_BATT:
             mbc = new MBC1(header);
             break;
             

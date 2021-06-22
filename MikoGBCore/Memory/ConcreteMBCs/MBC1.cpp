@@ -11,6 +11,7 @@ using namespace std;
 using namespace MikoGB;
 
 static size_t SwitchableROMBaseAddr = 0x4000;
+static size_t SwitchableRAMBaseAddr = 0xA000;
 static size_t ROMBankSize = 1024 * 16; // 16 KiB
 static size_t RAMBankSize = 1024 * 8; // 8 KiB
 
@@ -142,11 +143,24 @@ uint8_t MBC1::readROM(uint16_t addr) const {
     return _romData[romIdx];
 }
 
+static inline size_t _RAMDataIndex(uint16_t addr, int bankNum) {
+    const size_t baseIdx = bankNum * ROMBankSize;
+    const size_t ramIdx = baseIdx + (addr - SwitchableRAMBaseAddr);
+    return ramIdx;
+}
+
 uint8_t MBC1::readRAM(uint16_t addr) const {
-    //TODO: RAM reading
-    return 0xFF;
+    if (!_ramEnabled || _ramBankCount <= 0) {
+        return 0xFF;
+    }
+    const size_t ramIdx = _RAMDataIndex(addr, _ramBank);
+    return _ramData[ramIdx];
 }
 
 void MBC1::writeRAM(uint16_t addr, uint8_t val) {
-    //TODO: RAM writing
+    if (!_ramEnabled || _ramBankCount <= 0) {
+        return;
+    }
+    const size_t ramIdx = _RAMDataIndex(addr, _ramBank);
+    _ramData[ramIdx] = val;
 }

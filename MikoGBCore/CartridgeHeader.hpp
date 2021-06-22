@@ -17,6 +17,8 @@ enum class CartridgeType {
     Unsupported,
     ROM_Only,
     MBC1,
+    MBC1_RAM,
+    MBC1_RAM_BATT,
     MBC3_RAM_BATT,
     MBC5_RAM_BATT,
 };
