@@ -653,6 +653,12 @@
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="eu3-7i-yIM"/>
+                                        <menuItem title="Debugger" keyEquivalent="d" id="6R4-t2-O4r">
+                                            <connections>
+                                                <action selector="a_showDebugger:" target="Ady-hI-5gd" id="gb1-gn-7ug"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem isSeparatorItem="YES" id="32o-pd-n2V"/>
                                         <menuItem title="Bring All to Front" id="LE2-aR-0XJ">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
@@ -719,7 +725,7 @@
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="75" y="762"/>
+            <point key="canvasLocation" x="75" y="950"/>
         </scene>
     </scenes>
 </document>

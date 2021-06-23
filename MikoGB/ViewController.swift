@@ -31,7 +31,7 @@ class ViewController: NSViewController, NoROMViewDelegate, NSMenuItemValidation 
         contentView = emptyView
         self.view.addSubview(emptyView)
         
-        engine = GBEngine()
+        engine = AppStateManager.sharedInstance.engine
 //        audioController = AudioController(engine: engine)
     }
     
