@@ -13,11 +13,15 @@ class DebuggerWindowController: NSWindowController {
     @IBOutlet var consoleOutputView: NSTextView!
     @IBOutlet var consoleScrollView: NSScrollView!
     
+    private let _textController = DebuggerConsoleController()
+    
     override func windowDidLoad() {
         super.windowDidLoad()
-
-        // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
-        consoleOutputView.string = "Enter 'help' to see available commands"
+        
+        self.window?.contentMinSize = NSSize(width: 575, height: 250)
+        
+        _textController.textView = consoleOutputView
+        _textController.append("Enter 'help' to see available commands", style: .Prompt)
     }
     
     func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
@@ -39,10 +43,10 @@ class DebuggerWindowController: NSWindowController {
         if str.isEmpty {
             NSSound.beep()
         } else {
-            print("Got \"\(str)\"")
-            consoleOutputView.string.append("\n\(str)")
+            _textController.append(str, style: .UserInput)
             textEntryField.stringValue = ""
             
+            // Defer scroll until after layout
             DispatchQueue.main.async {
                 self.scrollConsoleToBottom()
             }
