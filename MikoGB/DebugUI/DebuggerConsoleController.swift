@@ -21,12 +21,12 @@ class DebuggerConsoleController {
     
     init() {
         var defaultAttrs = [NSAttributedString.Key : Any]()
-        defaultAttrs[NSAttributedString.Key.font] = NSFont(name: "Helvetica", size: 12.0)
+        defaultAttrs[NSAttributedString.Key.font] = NSFont(name: "PTMono-Regular", size: 12.0)
         defaultAttrs[NSAttributedString.Key.foregroundColor] = NSColor.textColor
         _defaultAttributes = defaultAttrs
         
         var inputAttrs = [NSAttributedString.Key : Any]()
-        let descriptor = NSFontDescriptor(name: "Helvetica", size: 12.0).withSymbolicTraits([.bold])
+        let descriptor = NSFontDescriptor(name: "PTMono-Regular", size: 12.0).withSymbolicTraits([.bold])
         inputAttrs[NSAttributedString.Key.font] = NSFont(descriptor: descriptor, size: 0.0)
         inputAttrs[NSAttributedString.Key.foregroundColor] = NSColor.textColor
         _inputAttributes = inputAttrs
