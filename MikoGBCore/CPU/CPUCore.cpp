@@ -81,6 +81,7 @@ void CPUCore::reset() {
     }
     programCounter = 0;
     stackPointer = 0;
+    _isHalted = false;
 }
 
 bool CPUCore::handleInterruptsIfNeeded() {
