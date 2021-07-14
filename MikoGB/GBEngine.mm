@@ -50,8 +50,7 @@ static MikoGB::JoypadButton _ButtonForCode(GBEngineKeyCode code) {
     
     dispatch_queue_t _emulationQueue;
     os_unfair_lock _frameLock;
-    NSUInteger _lastRequestedFrameID;
-    NSUInteger _lastDeliveredFrameID;
+    BOOL _isProcessingFrame;
 }
 
 - (instancetype)init {
@@ -169,22 +168,34 @@ static MikoGB::JoypadButton _ButtonForCode(GBEngineKeyCode code) {
 - (void)emulateFrame {
     // On macOS, this may come in on the high-priority display link thread
     BOOL canRun = NO;
+    BOOL dropped = NO;
     os_unfair_lock_lock(&_frameLock);
-    if (_lastRequestedFrameID == _lastDeliveredFrameID) {
-        canRun = YES;
-        _lastRequestedFrameID = (_lastRequestedFrameID + 1) % 100000;
-    }
+    dropped = _isProcessingFrame;
+    canRun = !dropped;
+    //TODO: add notion of paused emulation (e.g. breakpoint)
     os_unfair_lock_unlock(&_frameLock);
     
     if (canRun) {
         dispatch_async(_emulationQueue, ^{
-            [self _updateKeyStatesIfNeeded];
-            self->_core->emulateFrame();
+            [self _emulationQueue_emulateFrame];
         });
-    } else {
-        // Dropped a frame
+    } else if (dropped) {
+        // Dropped a frame if the previous frame has not finished processing when the next one starts
         NSLog(@"Dropped a frame");
     }
+}
+
+- (void)_emulationQueue_emulateFrame {
+    os_unfair_lock_lock(&_frameLock);
+    _isProcessingFrame = YES;
+    os_unfair_lock_unlock(&_frameLock);
+    
+    [self _updateKeyStatesIfNeeded];
+    self->_core->emulateFrame();
+    
+    os_unfair_lock_lock(&_frameLock);
+    _isProcessingFrame = NO;
+    os_unfair_lock_unlock(&_frameLock);
 }
 
 - (void)_setDesiredState:(BOOL)desired forKeyCode:(GBEngineKeyCode)code {
@@ -218,9 +229,6 @@ static MikoGB::JoypadButton _ButtonForCode(GBEngineKeyCode code) {
 
 - (void)_mainQueue_deliverFrameImage:(CGImageRef)image {
     [self.imageDestination engine:self receivedFrame:image];
-    os_unfair_lock_lock(&_frameLock);
-    _lastDeliveredFrameID = _lastRequestedFrameID;
-    os_unfair_lock_unlock(&_frameLock);
 }
 
 - (void)_handleScanline:(const MikoGB::PixelBuffer &)scanline line:(size_t)line {
