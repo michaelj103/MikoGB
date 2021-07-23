@@ -35,6 +35,22 @@ void GameBoyCore::emulateFrame() {
     _imp->emulateFrame();
 }
 
+void GameBoyCore::setExternallyRunnable(bool runnable) {
+    _imp->setExternallyRunnable(runnable);
+}
+
+bool GameBoyCore::isExternallyRunnable() const {
+    return _imp->isExternallyRunnable();
+}
+
+bool GameBoyCore::isRunnable() const {
+    return _imp->isRunnable();
+}
+
+void GameBoyCore::setRunnableChangedCallback(RunnableChangedCallback callback) {
+    _imp->setRunnableChangedCallback(callback);
+}
+
 void GameBoyCore::setButtonPressed(JoypadButton button, bool set) {
     _imp->setButtonPressed(button, set);
 }

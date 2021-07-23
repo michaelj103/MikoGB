@@ -51,6 +51,9 @@ static MikoGB::JoypadButton _ButtonForCode(GBEngineKeyCode code) {
     dispatch_queue_t _emulationQueue;
     os_unfair_lock _frameLock;
     BOOL _isProcessingFrame;
+    BOOL _isRunnable;
+    
+    NSHashTable<id<GBEngineObserver>> *_observers;
 }
 
 - (instancetype)init {
@@ -65,6 +68,14 @@ static MikoGB::JoypadButton _ButtonForCode(GBEngineKeyCode code) {
         _core->setScanlineCallback([scanlineBlock](const MikoGB::PixelBuffer &scanline, size_t line) {
             scanlineBlock(scanline, line);
         });
+        
+        void (^runnableBlock)(bool) = ^void(bool isRunnable) {
+            [weakSelf _handleRunnableChange:isRunnable];
+        };
+        _core->setRunnableChangedCallback([runnableBlock](bool isRunnable) {
+            runnableBlock(isRunnable);
+        });
+        _isRunnable = _core->isRunnable() ? YES : NO;
         
         dispatch_queue_attr_t attr = dispatch_queue_attr_make_with_qos_class(DISPATCH_QUEUE_SERIAL, QOS_CLASS_USER_INITIATED, 0);
         _emulationQueue = dispatch_queue_create("EmulationQueue", attr);
@@ -85,6 +96,7 @@ static MikoGB::JoypadButton _ButtonForCode(GBEngineKeyCode code) {
             _keyPressedStates[i] = NO;
             _keyPressedChanged[i] = NO;
         }
+        _observers = [NSHashTable weakObjectsHashTable];
     }
     return self;
 }
@@ -171,8 +183,7 @@ static MikoGB::JoypadButton _ButtonForCode(GBEngineKeyCode code) {
     BOOL dropped = NO;
     os_unfair_lock_lock(&_frameLock);
     dropped = _isProcessingFrame;
-    canRun = !dropped;
-    //TODO: add notion of paused emulation (e.g. breakpoint)
+    canRun = !dropped && _isRunnable;
     os_unfair_lock_unlock(&_frameLock);
     
     if (canRun) {
@@ -196,6 +207,26 @@ static MikoGB::JoypadButton _ButtonForCode(GBEngineKeyCode code) {
     os_unfair_lock_lock(&_frameLock);
     _isProcessingFrame = NO;
     os_unfair_lock_unlock(&_frameLock);
+}
+
+- (BOOL)isRunnable {
+    BOOL isRunnable = NO;
+    os_unfair_lock_lock(&_frameLock);
+    isRunnable = _isRunnable;
+    os_unfair_lock_unlock(&_frameLock);
+    return isRunnable;
+}
+
+- (void)setDesiredRunnable:(BOOL)desiredRunnable {
+    if (desiredRunnable == _desiredRunnable) {
+        return;
+    }
+    _desiredRunnable = desiredRunnable;
+    
+    dispatch_async(_emulationQueue, ^{
+        bool r = desiredRunnable ? true : false;
+        self->_core->setExternallyRunnable(r);
+    });
 }
 
 - (void)_setDesiredState:(BOOL)desired forKeyCode:(GBEngineKeyCode)code {
@@ -231,6 +262,7 @@ static MikoGB::JoypadButton _ButtonForCode(GBEngineKeyCode code) {
     [self.imageDestination engine:self receivedFrame:image];
 }
 
+// Expected on emulation queue
 - (void)_handleScanline:(const MikoGB::PixelBuffer &)scanline line:(size_t)line {
     size_t bufferOffset = GBBytesPerLine * line;
     uint8_t *buffer = _imageBuffer;
@@ -245,6 +277,34 @@ static MikoGB::JoypadButton _ButtonForCode(GBEngineKeyCode code) {
     
     if (line >= 143) {
         [self _deliverFrameImage];
+    }
+}
+
+// Expected on emulation queue
+- (void)_handleRunnableChange:(bool)isRunnable {
+    BOOL b_isRunnable = isRunnable ? YES : NO;
+    os_unfair_lock_lock(&_frameLock);
+    _isRunnable = b_isRunnable;
+    os_unfair_lock_unlock(&_frameLock);
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self _notifyObserversOfRunnable:b_isRunnable];
+    });
+}
+
+#pragma mark - Observation
+
+- (void)registerObserver:(id<GBEngineObserver>)observer {
+    [_observers addObject:observer];
+}
+
+- (void)unregisterObserver:(id<GBEngineObserver>)observer {
+    [_observers removeObject:observer];
+}
+
+- (void)_notifyObserversOfRunnable:(BOOL)isRunnable {
+    NSHashTable<id<GBEngineObserver>> *observersCopy = [_observers copy];
+    for (id<GBEngineObserver> observer in observersCopy) {
+        [observer engine:self runnableDidChange:isRunnable];
     }
 }
 

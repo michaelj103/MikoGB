@@ -21,6 +21,8 @@ enum class JoypadButton {
     Start = 7
 };
 
+using RunnableChangedCallback = std::function<void(bool isRunnable)>;
+
 }
 
 #endif /* GameBoyCoreTypes_h */

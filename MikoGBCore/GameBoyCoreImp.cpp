@@ -38,13 +38,23 @@ void GameBoyCoreImp::step() {
 void GameBoyCoreImp::emulateFrame() {
     auto gpu = _gpu.get();
     // If we're in the middle of a frame, run until the start of the next
-    while (gpu->getCurrentScanline() != 0) {
+    while (gpu->getCurrentScanline() != 0 && _isExternallyRunnable) {
         step();
     }
     
     // Run until v-blank at line 144
-    while (gpu->getCurrentScanline() < 144) {
+    while (gpu->getCurrentScanline() < 144 && _isExternallyRunnable) {
         step();
+    }
+}
+
+void GameBoyCoreImp::setExternallyRunnable(bool runnable) {
+    if (runnable == _isExternallyRunnable) {
+        return;
+    }
+    _isExternallyRunnable = runnable;
+    if (_runnableChangedCallback) {
+        _runnableChangedCallback(runnable);
     }
 }
 

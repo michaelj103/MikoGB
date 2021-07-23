@@ -14,7 +14,7 @@ enum GameViewState {
     case Error
 }
 
-class GameView : NSView, GBEngineImageDestination {
+class GameView : NSView, GBEngineImageDestination, GBEngineObserver {
     
     private var displayLink: CVDisplayLink?
     let engine: GBEngine
@@ -26,6 +26,7 @@ class GameView : NSView, GBEngineImageDestination {
         super.init(frame: NSZeroRect)
         self.wantsLayer = true
         self.engine.imageDestination = self
+        self.engine.register(self)
         
         self.layer?.backgroundColor = NSColor.blue.cgColor
     }
@@ -39,6 +40,10 @@ class GameView : NSView, GBEngineImageDestination {
     }
     
     func start() {
+        engine.desiredRunnable = true
+    }
+    
+    private func _startDisplayLink() {
         if let link = displayLink {
             if !CVDisplayLinkIsRunning(link) {
                 let cvError = CVDisplayLinkStart(link)
@@ -98,6 +103,10 @@ class GameView : NSView, GBEngineImageDestination {
     }
     
     func pause() {
+        engine.desiredRunnable = false
+    }
+    
+    private func _pauseDisplayLink() {
         guard let link = displayLink else {
             print("Cannot pause game view with no display link")
             state = .Error
@@ -122,6 +131,14 @@ class GameView : NSView, GBEngineImageDestination {
     
     func engine(_ engine: GBEngine, receivedFrame frame: CGImage) {
         self.layer?.contents = frame
+    }
+    
+    func engine(_ engine: GBEngine, runnableDidChange isRunnable: Bool) {
+        if isRunnable {
+            _startDisplayLink()
+        } else {
+            _pauseDisplayLink()
+        }
     }
     
     override var acceptsFirstResponder: Bool {

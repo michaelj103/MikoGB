@@ -28,6 +28,11 @@ public:
     
     void emulateFrame();
     
+    void setExternallyRunnable(bool);
+    bool isExternallyRunnable() const { return _isExternallyRunnable; }
+    bool isRunnable() const { return _isExternallyRunnable; }
+    void setRunnableChangedCallback(RunnableChangedCallback callback) { _runnableChangedCallback = callback; }
+    
     void setScanlineCallback(PixelBufferScanlineCallback callback);
     
     void setButtonPressed(JoypadButton, bool);
@@ -41,6 +46,10 @@ private:
     GPUCore::Ptr _gpu;
     MemoryController::Ptr _memoryController;
     Joypad::Ptr _joypad;
+    
+    //TODO: runnable should probably be a CPU notion once there are internal triggers?
+    bool _isExternallyRunnable = false;
+    RunnableChangedCallback _runnableChangedCallback;
     
     friend class GameBoyCore;
 };
