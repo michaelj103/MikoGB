@@ -37,6 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)emulateFrame;
 
+- (void)setDesiredRunnable:(BOOL)runnable completion:(void (^_Nullable)(void))completion;
 @property (nonatomic) BOOL desiredRunnable;
 @property (readonly, nonatomic, getter=isRunnable) BOOL runnable;
 

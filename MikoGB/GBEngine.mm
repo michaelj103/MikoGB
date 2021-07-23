@@ -217,8 +217,11 @@ static MikoGB::JoypadButton _ButtonForCode(GBEngineKeyCode code) {
     return isRunnable;
 }
 
-- (void)setDesiredRunnable:(BOOL)desiredRunnable {
+- (void)setDesiredRunnable:(BOOL)desiredRunnable completion:(void (^_Nullable)(void))completion {
     if (desiredRunnable == _desiredRunnable) {
+        if (completion) {
+            completion();
+        }
         return;
     }
     _desiredRunnable = desiredRunnable;
@@ -226,7 +229,16 @@ static MikoGB::JoypadButton _ButtonForCode(GBEngineKeyCode code) {
     dispatch_async(_emulationQueue, ^{
         bool r = desiredRunnable ? true : false;
         self->_core->setExternallyRunnable(r);
+        if (completion) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completion();
+            });
+        }
     });
+}
+
+- (void)setDesiredRunnable:(BOOL)desiredRunnable {
+    [self setDesiredRunnable:desiredRunnable completion:nil];
 }
 
 - (void)_setDesiredState:(BOOL)desired forKeyCode:(GBEngineKeyCode)code {

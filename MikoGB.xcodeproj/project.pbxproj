@@ -85,6 +85,8 @@
 		29C3DB8D2655B0ED00DCFA33 /* GBImageUtilities.mm in Sources */ = {isa = PBXBuildFile; fileRef = 29C3DB8C2655B0ED00DCFA33 /* GBImageUtilities.mm */; };
 		29D3C93F247DFC6A0096D21B /* TestCPUCoreBasics.mm in Sources */ = {isa = PBXBuildFile; fileRef = 29D3C93E247DFC6A0096D21B /* TestCPUCoreBasics.mm */; };
 		29D3C942247DFDE80096D21B /* TestCPUCoreUtilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29D3C940247DFDE80096D21B /* TestCPUCoreUtilities.cpp */; };
+		29DD393826AA596800D6EC2E /* DebuggerCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29DD393726AA596800D6EC2E /* DebuggerCommand.swift */; };
+		29DD393A26AA5A2700D6EC2E /* DebuggerPauseCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29DD393926AA5A2700D6EC2E /* DebuggerPauseCommand.swift */; };
 		29F082862647B9C400FA5F67 /* NoROMView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F082852647B9C400FA5F67 /* NoROMView.swift */; };
 		29F0829C2647BA0D00FA5F67 /* GBEngine.mm in Sources */ = {isa = PBXBuildFile; fileRef = 29F0829B2647BA0D00FA5F67 /* GBEngine.mm */; };
 		29F082A32647BA3800FA5F67 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F082A22647BA3800FA5F67 /* GameView.swift */; };
@@ -221,6 +223,8 @@
 		29D3C93E247DFC6A0096D21B /* TestCPUCoreBasics.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = TestCPUCoreBasics.mm; sourceTree = "<group>"; };
 		29D3C940247DFDE80096D21B /* TestCPUCoreUtilities.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = TestCPUCoreUtilities.cpp; sourceTree = "<group>"; };
 		29D3C941247DFDE80096D21B /* TestCPUCoreUtilities.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = TestCPUCoreUtilities.hpp; sourceTree = "<group>"; };
+		29DD393726AA596800D6EC2E /* DebuggerCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebuggerCommand.swift; sourceTree = "<group>"; };
+		29DD393926AA5A2700D6EC2E /* DebuggerPauseCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebuggerPauseCommand.swift; sourceTree = "<group>"; };
 		29F082852647B9C400FA5F67 /* NoROMView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoROMView.swift; sourceTree = "<group>"; };
 		29F0828C2647B9F700FA5F67 /* MikoGB-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MikoGB-Bridging-Header.h"; sourceTree = "<group>"; };
 		29F0829A2647BA0D00FA5F67 /* GBEngine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GBEngine.h; sourceTree = "<group>"; };
@@ -289,6 +293,8 @@
 				291987D2268300FA009D7C45 /* Debugger.xib */,
 				291987DE2683087A009D7C45 /* DebuggerWindowController.swift */,
 				291987F32683FBBF009D7C45 /* DebuggerConsoleController.swift */,
+				29DD393726AA596800D6EC2E /* DebuggerCommand.swift */,
+				29DD393926AA5A2700D6EC2E /* DebuggerPauseCommand.swift */,
 				295BCB742693CF0100E80FCC /* CommandParser.swift */,
 			);
 			path = DebugUI;
@@ -731,9 +737,11 @@
 				2992837E264733B3004691E5 /* WindowController.swift in Sources */,
 				295BCB752693CF0100E80FCC /* CommandParser.swift in Sources */,
 				29F082A32647BA3800FA5F67 /* GameView.swift in Sources */,
+				29DD393A26AA5A2700D6EC2E /* DebuggerPauseCommand.swift in Sources */,
 				299282B52642449D004691E5 /* AppDelegate.swift in Sources */,
 				295BCB772693CF1900E80FCC /* SimpleError.swift in Sources */,
 				291987ED26830A6E009D7C45 /* AppStateManager.swift in Sources */,
+				29DD393826AA596800D6EC2E /* DebuggerCommand.swift in Sources */,
 				291987F42683FBBF009D7C45 /* DebuggerConsoleController.swift in Sources */,
 				29C3DB8D2655B0ED00DCFA33 /* GBImageUtilities.mm in Sources */,
 			);
