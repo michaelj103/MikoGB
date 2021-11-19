@@ -131,7 +131,7 @@ using namespace std;
     MikoGB::CPUCore core(allocatedMemory.data(), allocatedMemory.size());
     core.stackPointer = 0xFFFE;
     core.programCounter = 0x4444;
-    core.interruptsEnabled = false;
+    core.interruptState = MikoGB::CPUCore::Disabled;
     
     XCTAssertEqual(core.step(), 6);
     XCTAssertEqual(core.stackPointer, 0xFFFC);
@@ -142,7 +142,7 @@ using namespace std;
     XCTAssertEqual(core.step(), 4);
     XCTAssertEqual(core.stackPointer, 0xFFFE);
     XCTAssertEqual(core.programCounter, 0x4447);
-    XCTAssertEqual(core.interruptsEnabled, true);
+    XCTAssertEqual(core.interruptState, MikoGB::CPUCore::Enabled);
 }
 
 #pragma mark - RET cc

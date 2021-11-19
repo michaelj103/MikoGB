@@ -20,7 +20,8 @@ CPUCore::CPUCore(MemoryController::Ptr &memCon): memoryController(memCon) {
 
 #if BUILD_FOR_TESTING
 static const size_t MainMemorySize = 1024 * 64; // 64 KiB
-CPUCore::CPUCore(uint8_t *memory, size_t len) {
+static shared_ptr<MemoryController> testMemoryController = make_shared<MemoryController>();
+CPUCore::CPUCore(uint8_t *memory, size_t len): memoryController(testMemoryController) {
     mainMemory = new uint8_t[MainMemorySize]();
     if (memory) {
         memcpy(mainMemory, memory, std::min(len, MainMemorySize));

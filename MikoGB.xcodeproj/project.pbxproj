@@ -85,6 +85,10 @@
 		29C3DB8D2655B0ED00DCFA33 /* GBImageUtilities.mm in Sources */ = {isa = PBXBuildFile; fileRef = 29C3DB8C2655B0ED00DCFA33 /* GBImageUtilities.mm */; };
 		29D3C93F247DFC6A0096D21B /* TestCPUCoreBasics.mm in Sources */ = {isa = PBXBuildFile; fileRef = 29D3C93E247DFC6A0096D21B /* TestCPUCoreBasics.mm */; };
 		29D3C942247DFDE80096D21B /* TestCPUCoreUtilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29D3C940247DFDE80096D21B /* TestCPUCoreUtilities.cpp */; };
+		29D6748E2747273800BF9F2E /* MBC1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2919878E267481FA009D7C45 /* MBC1.cpp */; };
+		29D6748F2747273A00BF9F2E /* MBC3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 291987C326829212009D7C45 /* MBC3.cpp */; };
+		29D674902747275C00BF9F2E /* Timer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 290FF3782662110A006812F4 /* Timer.cpp */; };
+		29D674912747276A00BF9F2E /* Joypad.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 290FF355265F671C006812F4 /* Joypad.cpp */; };
 		29DD393826AA596800D6EC2E /* DebuggerCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29DD393726AA596800D6EC2E /* DebuggerCommand.swift */; };
 		29DD393A26AA5A2700D6EC2E /* DebuggerPauseCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29DD393926AA5A2700D6EC2E /* DebuggerPauseCommand.swift */; };
 		29F082862647B9C400FA5F67 /* NoROMView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F082852647B9C400FA5F67 /* NoROMView.swift */; };
@@ -617,7 +621,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1240;
-				LastUpgradeCheck = 1250;
+				LastUpgradeCheck = 1310;
 				ORGANIZATIONNAME = "Michael Brandt";
 				TargetAttributes = {
 					297E60022456426400EE150F = {
@@ -753,6 +757,8 @@
 			files = (
 				290B3BC8247E00B400937D71 /* CPUCore.cpp in Sources */,
 				290B3BD0247E048100937D71 /* Test8BitLoadInstructions.mm in Sources */,
+				29D674912747276A00BF9F2E /* Joypad.cpp in Sources */,
+				29D6748F2747273A00BF9F2E /* MBC3.cpp in Sources */,
 				299281C32640A17D004691E5 /* TestRotateShiftInstructions.mm in Sources */,
 				290B3BCD247E00D200937D71 /* BitOpInstructions.cpp in Sources */,
 				290B3BCB247E00CE00937D71 /* LoadInstructions16.cpp in Sources */,
@@ -765,6 +771,7 @@
 				290B3BCA247E00CB00937D71 /* LoadInstructions8.cpp in Sources */,
 				29928195263DE721004691E5 /* Test16BitArithmeticInstructions.mm in Sources */,
 				299281A6263F885E004691E5 /* CallAndReturnInstructions.cpp in Sources */,
+				29D6748E2747273800BF9F2E /* MBC1.cpp in Sources */,
 				290B3BCE247E00D500937D71 /* JumpInstructions.cpp in Sources */,
 				290B3BCC247E00D000937D71 /* ArithmeticInstructions8.cpp in Sources */,
 				2992819C263DE86C004691E5 /* ArithmeticInstructions16.cpp in Sources */,
@@ -773,6 +780,7 @@
 				29A8FFF826537426007A26C9 /* NoMBC.cpp in Sources */,
 				299281AE2640739C004691E5 /* TestCallAndReturnInstructions.mm in Sources */,
 				29A8FF74265211B8007A26C9 /* MemoryController.cpp in Sources */,
+				29D674902747275C00BF9F2E /* Timer.cpp in Sources */,
 				290B3BD2247F51D100937D71 /* Test16BitLoadInstructions.mm in Sources */,
 				29A8FF86265211E4007A26C9 /* GPUCore.cpp in Sources */,
 			);
