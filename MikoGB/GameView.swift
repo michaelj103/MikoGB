@@ -16,7 +16,7 @@ enum GameViewState {
 
 class GameView : NSView, GBEngineImageDestination, GBEngineObserver {
     
-    private var displayLink: CVDisplayLink?
+    private var dispatchTimer: DispatchSourceTimer?
     let engine: GBEngine
     var state: GameViewState
     
@@ -43,101 +43,52 @@ class GameView : NSView, GBEngineImageDestination, GBEngineObserver {
         engine.desiredRunnable = true
     }
     
-    private func _startDisplayLink() {
-        if let link = displayLink {
-            if !CVDisplayLinkIsRunning(link) {
-                let cvError = CVDisplayLinkStart(link)
-                if cvError == kCVReturnSuccess {
-                    state = .Playing
-                } else {
-                    print("Failed to restart display link")
-                    state = .Error
-                }
-            } else {
-                print("Game view is already running")
-                state = .Playing
-            }
-            
+    private func _startTimer() {
+        if let timer = dispatchTimer {
+            timer.resume()
         } else {
-            var cvError = CVDisplayLinkCreateWithActiveCGDisplays(&displayLink)
-            if (cvError != kCVReturnSuccess) {
-                print("Failed to create display link")
-                displayLink = nil
+            let timer = DispatchSource.makeTimerSource(flags: .strict, queue: DispatchQueue.main)
+            let framerate = 1.0 / 60.0
+            timer.schedule(deadline: DispatchTime.now() + framerate, repeating: framerate)
+            timer.setEventHandler { [weak self] in
+                let time = CFAbsoluteTimeGetCurrent()
+                self?._handleTimer(time)
             }
-            
-            guard let resolvedLink = displayLink else {
-                state = .Error
-                return
-            }
-            
-            //if still successful, set the display link output callback
-            if (cvError == kCVReturnSuccess) {
-                cvError = CVDisplayLinkSetOutputCallback(resolvedLink, {
-                    (link : CVDisplayLink, currentTime : UnsafePointer<CVTimeStamp>, outputTime : UnsafePointer<CVTimeStamp>, _ : CVOptionFlags, _ : UnsafeMutablePointer<CVOptionFlags>, sourceUnsafeRaw : UnsafeMutableRawPointer?) -> CVReturn in
-                    
-                    if let sourceUnsafeRaw = sourceUnsafeRaw {
-                        let viewUnmanaged = Unmanaged<GameView>.fromOpaque(sourceUnsafeRaw)
-                        let timestamp: CFTimeInterval = Double(currentTime.pointee.videoTime) / Double(currentTime.pointee.videoTimeScale)
-                        viewUnmanaged.takeUnretainedValue()._handleTimer(timestamp)
-                    }
-                    
-                    return kCVReturnSuccess
-                    }, Unmanaged.passUnretained(self).toOpaque())
-                if (cvError != kCVReturnSuccess) {
-                    print("Failed to set display link output callback")
-                    displayLink = nil
-                }
-            }
-            
-            //if still successful, start the display link
-            if (cvError == kCVReturnSuccess) {
-                cvError = CVDisplayLinkStart(resolvedLink)
-                if (cvError != kCVReturnSuccess) {
-                    print("Failed to start display link")
-                    displayLink = nil
-                }
-            }
-            
-            state = cvError == kCVReturnSuccess ? .Playing : .Error
+            timer.activate()
+            dispatchTimer = timer
         }
+        state = .Playing
     }
     
-    func pause() {
-        engine.desiredRunnable = false
-    }
-    
-    private func _pauseDisplayLink() {
-        guard let link = displayLink else {
-            print("Cannot pause game view with no display link")
+    private func _pauseTimer() {
+        guard let timer = dispatchTimer else {
+            print("Cannot pause game view with no timer")
             state = .Error
             return
         }
         
         if state == .Playing {
-            if CVDisplayLinkIsRunning(link) {
-                let cvResult = CVDisplayLinkStop(link)
-                if cvResult == kCVReturnSuccess {
-                    state = .Paused
-                } else {
-                    print("Failed to stop running display link")
-                }
-            } else {
-                assertionFailure("State is playing but display link isn't running")
-            }
+            timer.suspend()
+            state = .Paused
         } else {
             print("Pause of a non-running game view does nothing")
         }
     }
     
+    
+    func pause() {
+        engine.desiredRunnable = false
+    }
+        
     func engine(_ engine: GBEngine, receivedFrame frame: CGImage) {
         self.layer?.contents = frame
     }
     
     func engine(_ engine: GBEngine, runnableDidChange isRunnable: Bool) {
         if isRunnable {
-            _startDisplayLink()
+            _startTimer()
         } else {
-            _pauseDisplayLink()
+            _pauseTimer()
         }
     }
     

@@ -178,7 +178,7 @@ static MikoGB::JoypadButton _ButtonForCode(GBEngineKeyCode code) {
 }
 
 - (void)emulateFrame {
-    // On macOS, this may come in on the high-priority display link thread
+    // Thread safe to allow more freedom for clients in terms of timer mechanisms
     BOOL canRun = NO;
     BOOL dropped = NO;
     os_unfair_lock_lock(&_frameLock);
