@@ -309,7 +309,7 @@ void CPUInstruction::InitializeInstructionTable() {
     InstructionTable[0xB7] = { 1, orAccWithRegister }; // OR A
     InstructionTable[0xF6] = { 2, orAccWithImmediate8 }; // OR n
     
-    // XOR Instructions
+    // 8-bit XOR Instructions
     InstructionTable[0xA8] = { 1, xorAccWithRegister }; // XOR B
     InstructionTable[0xA9] = { 1, xorAccWithRegister }; // XOR C
     InstructionTable[0xAA] = { 1, xorAccWithRegister }; // XOR D
@@ -320,7 +320,7 @@ void CPUInstruction::InitializeInstructionTable() {
     InstructionTable[0xAF] = { 1, xorAccWithRegister }; // XOR A
     InstructionTable[0xEE] = { 2, xorAccWithImmediate8 }; // XOR n
     
-    // CP Instructions
+    // 8-bit CP Instructions
     InstructionTable[0xB8] = { 1, cpAccWithRegister }; // CP B
     InstructionTable[0xB9] = { 1, cpAccWithRegister }; // CP C
     InstructionTable[0xBA] = { 1, cpAccWithRegister }; // CP D

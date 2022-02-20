@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2902EA9227C0712A00186976 /* Breakpoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2902EA9027C0712A00186976 /* Breakpoint.cpp */; };
+		2902EA9327C0712A00186976 /* Breakpoint.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 2902EA9127C0712A00186976 /* Breakpoint.hpp */; };
+		2902EA9627C216ED00186976 /* DisassembledInstruction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2902EA9427C216ED00186976 /* DisassembledInstruction.cpp */; };
+		2902EA9727C216ED00186976 /* DisassembledInstruction.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 2902EA9527C216ED00186976 /* DisassembledInstruction.hpp */; };
 		290B3BC8247E00B400937D71 /* CPUCore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297E6137245FEA5D00EE150F /* CPUCore.cpp */; };
 		290B3BC9247E00C000937D71 /* CPUInstruction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297E613C245FECDF00EE150F /* CPUInstruction.cpp */; };
 		290B3BCA247E00CB00937D71 /* LoadInstructions8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8C0BA2462685F0082C52B /* LoadInstructions8.cpp */; };
@@ -144,6 +148,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		2902EA9027C0712A00186976 /* Breakpoint.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Breakpoint.cpp; sourceTree = "<group>"; };
+		2902EA9127C0712A00186976 /* Breakpoint.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Breakpoint.hpp; sourceTree = "<group>"; };
+		2902EA9427C216ED00186976 /* DisassembledInstruction.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = DisassembledInstruction.cpp; sourceTree = "<group>"; };
+		2902EA9527C216ED00186976 /* DisassembledInstruction.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = DisassembledInstruction.hpp; sourceTree = "<group>"; };
 		290B3BCF247E048100937D71 /* Test8BitLoadInstructions.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = Test8BitLoadInstructions.mm; sourceTree = "<group>"; };
 		290B3BD1247F51D100937D71 /* Test16BitLoadInstructions.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = Test16BitLoadInstructions.mm; sourceTree = "<group>"; };
 		290FF33D265F066D006812F4 /* MonochromePalette.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MonochromePalette.hpp; sourceTree = "<group>"; };
@@ -304,6 +312,15 @@
 			path = DebugUI;
 			sourceTree = "<group>";
 		};
+		291C563C27C070580049D188 /* Debugging */ = {
+			isa = PBXGroup;
+			children = (
+				2902EA9127C0712A00186976 /* Breakpoint.hpp */,
+				2902EA9027C0712A00186976 /* Breakpoint.cpp */,
+			);
+			path = Debugging;
+			sourceTree = "<group>";
+		};
 		297E5FEC2456421B00EE150F = {
 			isa = PBXGroup;
 			children = (
@@ -344,6 +361,8 @@
 				297E6137245FEA5D00EE150F /* CPUCore.cpp */,
 				297E613D245FECDF00EE150F /* CPUInstruction.hpp */,
 				297E613C245FECDF00EE150F /* CPUInstruction.cpp */,
+				2902EA9527C216ED00186976 /* DisassembledInstruction.hpp */,
+				2902EA9427C216ED00186976 /* DisassembledInstruction.cpp */,
 				29A8C0BD2462686D0082C52B /* InstructionFunctions */,
 			);
 			path = CPU;
@@ -376,6 +395,7 @@
 				297E613B245FEB9B00EE150F /* CPU */,
 				299281D726423469004691E5 /* GPU */,
 				290FF354265F66AA006812F4 /* Joypad */,
+				291C563C27C070580049D188 /* Debugging */,
 			);
 			path = MikoGBCore;
 			sourceTree = "<group>";
@@ -509,6 +529,7 @@
 				299281FE2642416A004691E5 /* GameBoyCore.hpp in Headers */,
 				29198791267481FA009D7C45 /* MBC1.hpp in Headers */,
 				29A8FF9226521A71007A26C9 /* CartridgeHeader.hpp in Headers */,
+				2902EA9727C216ED00186976 /* DisassembledInstruction.hpp in Headers */,
 				299283192643AF00004691E5 /* PixelBuffer.hpp in Headers */,
 				29A8FFD626535994007A26C9 /* MemoryBankController.hpp in Headers */,
 				290FF37B2662110A006812F4 /* Timer.hpp in Headers */,
@@ -520,6 +541,7 @@
 				290FF33F265F066E006812F4 /* MonochromePalette.hpp in Headers */,
 				29A8FFFA26537426007A26C9 /* NoMBC.hpp in Headers */,
 				2992830B26426A32004691E5 /* GPUCore.hpp in Headers */,
+				2902EA9327C0712A00186976 /* Breakpoint.hpp in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -700,6 +722,7 @@
 				2992825A26424262004691E5 /* JumpInstructions.cpp in Sources */,
 				2992826326424265004691E5 /* CallAndReturnInstructions.cpp in Sources */,
 				29A8FF8C26521A6E007A26C9 /* CartridgeHeader.cpp in Sources */,
+				2902EA9227C0712A00186976 /* Breakpoint.cpp in Sources */,
 				290FF37A2662110A006812F4 /* Timer.cpp in Sources */,
 				2992821726424240004691E5 /* CPUCore.cpp in Sources */,
 				2992823626424255004691E5 /* LoadInstructions16.cpp in Sources */,
@@ -710,6 +733,7 @@
 				29A8FFF926537426007A26C9 /* NoMBC.cpp in Sources */,
 				2992826C26424268004691E5 /* RotateShiftInstructions.cpp in Sources */,
 				2992822D26424252004691E5 /* LoadInstructions8.cpp in Sources */,
+				2902EA9627C216ED00186976 /* DisassembledInstruction.cpp in Sources */,
 				299282752642426B004691E5 /* SpecialInstructions.cpp in Sources */,
 				2992825126424260004691E5 /* BitOpInstructions.cpp in Sources */,
 				2992823B2642425A004691E5 /* ArithmeticInstructions8.cpp in Sources */,

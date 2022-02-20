@@ -68,7 +68,7 @@ int CPUCore::step() {
 #if DEBUG
     // Detect an overflow of the PC into the address space just above the ROM area
     // Note that >= 0x8000 isn't adequate because technically it's valid to run instructions from HRAM
-    bool pcOverflow = programCounter >= 0x8000 && programCounter < 0xA000;
+    bool pcOverflow = programCounter >= 0x8000 && programCounter < 0xFF80;
     assert(!pcOverflow);
 #endif
     return steps;
