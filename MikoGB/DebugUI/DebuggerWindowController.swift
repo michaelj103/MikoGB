@@ -27,8 +27,8 @@ class DebuggerWindowController: NSWindowController, NSTableViewDataSource {
     override func windowDidLoad() {
         super.windowDidLoad()
         
-        self.window?.contentMinSize = NSSize(width: 600, height: 450)
-        self.window?.setContentSize(NSSize(width: 600, height: 450))
+        self.window?.contentMinSize = NSSize(width: 700, height: 500)
+        self.window?.setContentSize(NSSize(width: 700, height: 500))
         
         _textController.textView = consoleOutputView
         _textController.append("Enter 'help' to see available commands", style: .Prompt)
