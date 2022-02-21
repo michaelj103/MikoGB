@@ -52,6 +52,9 @@ public:
     InputMask selectedInputMask() const;
     std::shared_ptr<Joypad> joypad;
     
+    // Debugging and introspection
+    int currentROMBank() const;
+    
 private:
     uint8_t *_permanentROM = nullptr;
     uint8_t *_videoRAM = nullptr;

@@ -73,3 +73,16 @@ void GameBoyCoreImp::getTileMap(PixelBufferImageCallback callback) {
 void GameBoyCoreImp::getBackground(PixelBufferImageCallback callback) {
     _gpu->getBackground(callback);
 }
+
+Disassembler::Ptr GameBoyCoreImp::_accessDisassembler() {
+    if (!_disassembler) {
+        _disassembler = make_shared<Disassembler>();
+    }
+    return _disassembler;
+}
+
+std::vector<DisassembledInstruction> GameBoyCoreImp::getDisassembledInstructions(int lookAheadCount) {
+    Disassembler::Ptr disassembler = _accessDisassembler();
+    uint16_t pc = _cpu->programCounter;
+    return disassembler->disassembleInstructions(pc, lookAheadCount, _memoryController);
+}

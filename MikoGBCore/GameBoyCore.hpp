@@ -53,6 +53,8 @@ public:
     
     void getBackground(PixelBufferImageCallback callback);
     
+    std::vector<DisassembledInstruction> getDisassembledInstructions(int lookAheadCount);
+    
 private:
     GameBoyCoreImp *_imp;
 };

@@ -9,8 +9,10 @@
 /* Begin PBXBuildFile section */
 		2902EA9227C0712A00186976 /* Breakpoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2902EA9027C0712A00186976 /* Breakpoint.cpp */; };
 		2902EA9327C0712A00186976 /* Breakpoint.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 2902EA9127C0712A00186976 /* Breakpoint.hpp */; };
-		2902EA9627C216ED00186976 /* DisassembledInstruction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2902EA9427C216ED00186976 /* DisassembledInstruction.cpp */; };
-		2902EA9727C216ED00186976 /* DisassembledInstruction.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 2902EA9527C216ED00186976 /* DisassembledInstruction.hpp */; };
+		2902EA9627C216ED00186976 /* Disassembler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2902EA9427C216ED00186976 /* Disassembler.cpp */; };
+		2902EA9727C216ED00186976 /* Disassembler.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 2902EA9527C216ED00186976 /* Disassembler.hpp */; };
+		2902EA9927C3542000186976 /* InstructionTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2902EA9827C3542000186976 /* InstructionTableCell.swift */; };
+		2902EA9B27C355C100186976 /* DebuggerInstructionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2902EA9A27C355C100186976 /* DebuggerInstructionController.swift */; };
 		290B3BC8247E00B400937D71 /* CPUCore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297E6137245FEA5D00EE150F /* CPUCore.cpp */; };
 		290B3BC9247E00C000937D71 /* CPUInstruction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297E613C245FECDF00EE150F /* CPUInstruction.cpp */; };
 		290B3BCA247E00CB00937D71 /* LoadInstructions8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8C0BA2462685F0082C52B /* LoadInstructions8.cpp */; };
@@ -150,8 +152,10 @@
 /* Begin PBXFileReference section */
 		2902EA9027C0712A00186976 /* Breakpoint.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Breakpoint.cpp; sourceTree = "<group>"; };
 		2902EA9127C0712A00186976 /* Breakpoint.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Breakpoint.hpp; sourceTree = "<group>"; };
-		2902EA9427C216ED00186976 /* DisassembledInstruction.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = DisassembledInstruction.cpp; sourceTree = "<group>"; };
-		2902EA9527C216ED00186976 /* DisassembledInstruction.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = DisassembledInstruction.hpp; sourceTree = "<group>"; };
+		2902EA9427C216ED00186976 /* Disassembler.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Disassembler.cpp; sourceTree = "<group>"; };
+		2902EA9527C216ED00186976 /* Disassembler.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Disassembler.hpp; sourceTree = "<group>"; };
+		2902EA9827C3542000186976 /* InstructionTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionTableCell.swift; sourceTree = "<group>"; };
+		2902EA9A27C355C100186976 /* DebuggerInstructionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebuggerInstructionController.swift; sourceTree = "<group>"; };
 		290B3BCF247E048100937D71 /* Test8BitLoadInstructions.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = Test8BitLoadInstructions.mm; sourceTree = "<group>"; };
 		290B3BD1247F51D100937D71 /* Test16BitLoadInstructions.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = Test16BitLoadInstructions.mm; sourceTree = "<group>"; };
 		290FF33D265F066D006812F4 /* MonochromePalette.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MonochromePalette.hpp; sourceTree = "<group>"; };
@@ -303,7 +307,9 @@
 			isa = PBXGroup;
 			children = (
 				291987D2268300FA009D7C45 /* Debugger.xib */,
+				2902EA9827C3542000186976 /* InstructionTableCell.swift */,
 				291987DE2683087A009D7C45 /* DebuggerWindowController.swift */,
+				2902EA9A27C355C100186976 /* DebuggerInstructionController.swift */,
 				291987F32683FBBF009D7C45 /* DebuggerConsoleController.swift */,
 				29DD393726AA596800D6EC2E /* DebuggerCommand.swift */,
 				29DD393926AA5A2700D6EC2E /* DebuggerPauseCommand.swift */,
@@ -361,8 +367,8 @@
 				297E6137245FEA5D00EE150F /* CPUCore.cpp */,
 				297E613D245FECDF00EE150F /* CPUInstruction.hpp */,
 				297E613C245FECDF00EE150F /* CPUInstruction.cpp */,
-				2902EA9527C216ED00186976 /* DisassembledInstruction.hpp */,
-				2902EA9427C216ED00186976 /* DisassembledInstruction.cpp */,
+				2902EA9527C216ED00186976 /* Disassembler.hpp */,
+				2902EA9427C216ED00186976 /* Disassembler.cpp */,
 				29A8C0BD2462686D0082C52B /* InstructionFunctions */,
 			);
 			path = CPU;
@@ -529,7 +535,7 @@
 				299281FE2642416A004691E5 /* GameBoyCore.hpp in Headers */,
 				29198791267481FA009D7C45 /* MBC1.hpp in Headers */,
 				29A8FF9226521A71007A26C9 /* CartridgeHeader.hpp in Headers */,
-				2902EA9727C216ED00186976 /* DisassembledInstruction.hpp in Headers */,
+				2902EA9727C216ED00186976 /* Disassembler.hpp in Headers */,
 				299283192643AF00004691E5 /* PixelBuffer.hpp in Headers */,
 				29A8FFD626535994007A26C9 /* MemoryBankController.hpp in Headers */,
 				290FF37B2662110A006812F4 /* Timer.hpp in Headers */,
@@ -643,7 +649,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1240;
-				LastUpgradeCheck = 1310;
+				LastUpgradeCheck = 1320;
 				ORGANIZATIONNAME = "Michael Brandt";
 				TargetAttributes = {
 					297E60022456426400EE150F = {
@@ -733,7 +739,7 @@
 				29A8FFF926537426007A26C9 /* NoMBC.cpp in Sources */,
 				2992826C26424268004691E5 /* RotateShiftInstructions.cpp in Sources */,
 				2992822D26424252004691E5 /* LoadInstructions8.cpp in Sources */,
-				2902EA9627C216ED00186976 /* DisassembledInstruction.cpp in Sources */,
+				2902EA9627C216ED00186976 /* Disassembler.cpp in Sources */,
 				299282752642426B004691E5 /* SpecialInstructions.cpp in Sources */,
 				2992825126424260004691E5 /* BitOpInstructions.cpp in Sources */,
 				2992823B2642425A004691E5 /* ArithmeticInstructions8.cpp in Sources */,
@@ -759,6 +765,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				29F082862647B9C400FA5F67 /* NoROMView.swift in Sources */,
+				2902EA9B27C355C100186976 /* DebuggerInstructionController.swift in Sources */,
+				2902EA9927C3542000186976 /* InstructionTableCell.swift in Sources */,
 				29F0829C2647BA0D00FA5F67 /* GBEngine.mm in Sources */,
 				291987E02683087A009D7C45 /* DebuggerWindowController.swift in Sources */,
 				299282B72642449D004691E5 /* ViewController.swift in Sources */,

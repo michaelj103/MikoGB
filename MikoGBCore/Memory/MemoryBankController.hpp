@@ -34,6 +34,8 @@ public:
     
     /// Write to the ROM area which is a control code (or invalid)
     virtual void writeControlCode(uint16_t addr, uint8_t val) = 0;
+    
+    virtual int currentROMBank() const = 0;
         
 protected:
     uint8_t *_romData = nullptr;

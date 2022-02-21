@@ -262,6 +262,26 @@ static MikoGB::JoypadButton _ButtonForCode(GBEngineKeyCode code) {
     [self _setDesiredState:NO forKeyCode:keyCode];
 }
 
+- (NSArray<NSString *> *)disassembledInstructions {
+    NSMutableArray<NSString *> *disassembledInstructions = [NSMutableArray array];
+    std::vector<MikoGB::DisassembledInstruction> instructions = _core->getDisassembledInstructions(10);
+    for (MikoGB::DisassembledInstruction &instruction : instructions) {
+        NSString *addressString = nil;
+        if (instruction.romBank == -1) {
+            addressString = [NSString stringWithFormat:@"RAM: 0x%X", instruction.addr];
+        } else {
+            addressString = [NSString stringWithFormat:@"%d: 0x%X", instruction.romBank, instruction.addr];
+        }
+        [disassembledInstructions addObject:addressString];
+        
+        const char *cStr = instruction.description.c_str();
+        NSString *desc = [NSString stringWithCString:cStr encoding:NSASCIIStringEncoding];
+        [disassembledInstructions addObject:desc];
+    }
+    
+    return disassembledInstructions;
+}
+
 - (void)_deliverFrameImage {
     CGImageRef image = CGBitmapContextCreateImage(_cgContext);
     dispatch_async(dispatch_get_main_queue(), ^{

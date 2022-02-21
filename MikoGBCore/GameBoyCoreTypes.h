@@ -8,6 +8,8 @@
 #ifndef GameBoyCoreTypes_h
 #define GameBoyCoreTypes_h
 
+#include <string>
+
 namespace MikoGB {
 
 enum class JoypadButton {
@@ -22,6 +24,12 @@ enum class JoypadButton {
 };
 
 using RunnableChangedCallback = std::function<void(bool isRunnable)>;
+
+struct DisassembledInstruction {
+    int romBank = 0; // -1 indicates HRAM, e.g. not in ROM but in writable instruction area
+    uint16_t addr = 0;
+    std::string description;
+};
 
 }
 

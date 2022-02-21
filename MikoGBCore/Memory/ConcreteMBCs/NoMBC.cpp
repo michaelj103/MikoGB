@@ -74,3 +74,8 @@ void NoMBC::writeControlCode(uint16_t addr, uint8_t val) {
     // Some ROMs write them anyway. Might be a relic from when the game was under development?
 //    assert(false); // control codes aren't valid for NoMBC
 }
+
+int NoMBC::currentROMBank() const {
+    // there is only 1 and it cannot be changed
+    return 1;
+}

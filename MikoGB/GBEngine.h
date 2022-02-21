@@ -45,6 +45,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setKeyDown:(GBEngineKeyCode)keyCode;
 - (void)setKeyUp:(GBEngineKeyCode)keyCode;
 
+// Debugger
+- (NSArray<NSString *> *)disassembledInstructions;
+
 @end
 
 

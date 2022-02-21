@@ -148,3 +148,7 @@ void MBC3::writeRAM(uint16_t addr, uint8_t val) {
     const size_t ramIdx = _RAMDataIndex(addr, _ramBank);
     _ramData[ramIdx] = val;
 }
+
+int MBC3::currentROMBank() const {
+    return _romBank;
+}

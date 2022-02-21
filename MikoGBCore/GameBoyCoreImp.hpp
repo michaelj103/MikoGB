@@ -9,11 +9,13 @@
 #define GameBoyCoreImp_hpp
 
 #include <memory>
+#include <vector>
 #include "GameBoyCore.hpp"
 #include "CPUCore.hpp"
 #include "GPUCore.hpp"
 #include "MemoryController.hpp"
 #include "Joypad.hpp"
+#include "Disassembler.hpp"
 
 namespace MikoGB {
 
@@ -40,12 +42,15 @@ public:
     /// Debug utilities
     void getTileMap(PixelBufferImageCallback callback);
     void getBackground(PixelBufferImageCallback callback);
+    std::vector<DisassembledInstruction> getDisassembledInstructions(int lookAheadCount);
     
 private:
     CPUCore::Ptr _cpu;
     GPUCore::Ptr _gpu;
     MemoryController::Ptr _memoryController;
     Joypad::Ptr _joypad;
+    Disassembler::Ptr _disassembler;
+    Disassembler::Ptr _accessDisassembler();
     
     //TODO: runnable should probably be a CPU notion once there are internal triggers?
     bool _isExternallyRunnable = false;

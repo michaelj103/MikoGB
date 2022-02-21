@@ -190,6 +190,10 @@ MemoryController::InputMask MemoryController::selectedInputMask() const {
     return static_cast<InputMask>(regVal);
 }
 
+int MemoryController::currentROMBank() const {
+    return _mbc->currentROMBank();
+}
+
 void MemoryController::_dmaTransfer(uint8_t byte) {
     // DMA transfer is a special procedure to write chunks of data to OAM
     // Bytes can be specified from 0x00 - 0xDF (e.g. 0xYY) and a transfer will be performed

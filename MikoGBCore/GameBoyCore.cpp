@@ -70,3 +70,7 @@ void GameBoyCore::getTileMap(PixelBufferImageCallback callback) {
 void GameBoyCore::getBackground(PixelBufferImageCallback callback) {
     _imp->getBackground(callback);
 }
+
+std::vector<DisassembledInstruction> GameBoyCore::getDisassembledInstructions(int lookAheadCount) {
+    return _imp->getDisassembledInstructions(lookAheadCount);
+}
