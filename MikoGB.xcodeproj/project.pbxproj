@@ -13,6 +13,8 @@
 		2902EA9727C216ED00186976 /* Disassembler.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 2902EA9527C216ED00186976 /* Disassembler.hpp */; };
 		2902EA9927C3542000186976 /* InstructionTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2902EA9827C3542000186976 /* InstructionTableCell.swift */; };
 		2902EA9B27C355C100186976 /* DebuggerInstructionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2902EA9A27C355C100186976 /* DebuggerInstructionController.swift */; };
+		2902EA9D27C4C87C00186976 /* DebuggerStepCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2902EA9C27C4C87C00186976 /* DebuggerStepCommand.swift */; };
+		2902EA9F27C4CA9C00186976 /* DebuggerContinueCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2902EA9E27C4CA9C00186976 /* DebuggerContinueCommand.swift */; };
 		290B3BC8247E00B400937D71 /* CPUCore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297E6137245FEA5D00EE150F /* CPUCore.cpp */; };
 		290B3BC9247E00C000937D71 /* CPUInstruction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297E613C245FECDF00EE150F /* CPUInstruction.cpp */; };
 		290B3BCA247E00CB00937D71 /* LoadInstructions8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8C0BA2462685F0082C52B /* LoadInstructions8.cpp */; };
@@ -156,6 +158,8 @@
 		2902EA9527C216ED00186976 /* Disassembler.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Disassembler.hpp; sourceTree = "<group>"; };
 		2902EA9827C3542000186976 /* InstructionTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionTableCell.swift; sourceTree = "<group>"; };
 		2902EA9A27C355C100186976 /* DebuggerInstructionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebuggerInstructionController.swift; sourceTree = "<group>"; };
+		2902EA9C27C4C87C00186976 /* DebuggerStepCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebuggerStepCommand.swift; sourceTree = "<group>"; };
+		2902EA9E27C4CA9C00186976 /* DebuggerContinueCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebuggerContinueCommand.swift; sourceTree = "<group>"; };
 		290B3BCF247E048100937D71 /* Test8BitLoadInstructions.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = Test8BitLoadInstructions.mm; sourceTree = "<group>"; };
 		290B3BD1247F51D100937D71 /* Test16BitLoadInstructions.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = Test16BitLoadInstructions.mm; sourceTree = "<group>"; };
 		290FF33D265F066D006812F4 /* MonochromePalette.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MonochromePalette.hpp; sourceTree = "<group>"; };
@@ -313,6 +317,8 @@
 				291987F32683FBBF009D7C45 /* DebuggerConsoleController.swift */,
 				29DD393726AA596800D6EC2E /* DebuggerCommand.swift */,
 				29DD393926AA5A2700D6EC2E /* DebuggerPauseCommand.swift */,
+				2902EA9C27C4C87C00186976 /* DebuggerStepCommand.swift */,
+				2902EA9E27C4CA9C00186976 /* DebuggerContinueCommand.swift */,
 				295BCB742693CF0100E80FCC /* CommandParser.swift */,
 			);
 			path = DebugUI;
@@ -775,10 +781,12 @@
 				29F082A32647BA3800FA5F67 /* GameView.swift in Sources */,
 				29DD393A26AA5A2700D6EC2E /* DebuggerPauseCommand.swift in Sources */,
 				299282B52642449D004691E5 /* AppDelegate.swift in Sources */,
+				2902EA9F27C4CA9C00186976 /* DebuggerContinueCommand.swift in Sources */,
 				295BCB772693CF1900E80FCC /* SimpleError.swift in Sources */,
 				291987ED26830A6E009D7C45 /* AppStateManager.swift in Sources */,
 				29DD393826AA596800D6EC2E /* DebuggerCommand.swift in Sources */,
 				291987F42683FBBF009D7C45 /* DebuggerConsoleController.swift in Sources */,
+				2902EA9D27C4C87C00186976 /* DebuggerStepCommand.swift in Sources */,
 				29C3DB8D2655B0ED00DCFA33 /* GBImageUtilities.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

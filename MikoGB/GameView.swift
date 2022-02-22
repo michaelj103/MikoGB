@@ -92,6 +92,10 @@ class GameView : NSView, GBEngineImageDestination, GBEngineObserver {
         }
     }
     
+    func didUpdateSuspendedState(for engine: GBEngine) {
+        // means the state moved via something other than the timer. nothing to do
+    }
+    
     override var acceptsFirstResponder: Bool {
         return true
     }

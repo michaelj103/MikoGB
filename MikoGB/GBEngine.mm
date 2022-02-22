@@ -209,6 +209,26 @@ static MikoGB::JoypadButton _ButtonForCode(GBEngineKeyCode code) {
     os_unfair_lock_unlock(&_frameLock);
 }
 
+- (void)step:(NSInteger)stepCount {
+    dispatch_async(_emulationQueue, ^{
+        [self _emulationQueue_step:stepCount];
+    });
+}
+
+- (void)_emulationQueue_step:(NSInteger)stepCount {
+    if (_core->isRunnable()) {
+        // must be in a paused state to manually step
+        NSLog(@"Manual step requested but emulation is runnable. Must be paused");
+        return;
+    }
+    for (NSInteger i = 0; i < stepCount; i++) {
+        _core->step();
+    }
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self _notifyObserversOfSuspendedStateChange];
+    });
+}
+
 - (BOOL)isRunnable {
     BOOL isRunnable = NO;
     os_unfair_lock_lock(&_frameLock);
@@ -264,20 +284,22 @@ static MikoGB::JoypadButton _ButtonForCode(GBEngineKeyCode code) {
 
 - (NSArray<NSString *> *)disassembledInstructions {
     NSMutableArray<NSString *> *disassembledInstructions = [NSMutableArray array];
-    std::vector<MikoGB::DisassembledInstruction> instructions = _core->getDisassembledInstructions(10);
-    for (MikoGB::DisassembledInstruction &instruction : instructions) {
-        NSString *addressString = nil;
-        if (instruction.romBank == -1) {
-            addressString = [NSString stringWithFormat:@"RAM: 0x%X", instruction.addr];
-        } else {
-            addressString = [NSString stringWithFormat:@"%d: 0x%X", instruction.romBank, instruction.addr];
+    dispatch_sync(_emulationQueue, ^{
+        std::vector<MikoGB::DisassembledInstruction> instructions = _core->getDisassembledInstructions(10);
+        for (MikoGB::DisassembledInstruction &instruction : instructions) {
+            NSString *addressString = nil;
+            if (instruction.romBank == -1) {
+                addressString = [NSString stringWithFormat:@"RAM: 0x%X", instruction.addr];
+            } else {
+                addressString = [NSString stringWithFormat:@"%d: 0x%X", instruction.romBank, instruction.addr];
+            }
+            [disassembledInstructions addObject:addressString];
+            
+            const char *cStr = instruction.description.c_str();
+            NSString *desc = [NSString stringWithCString:cStr encoding:NSASCIIStringEncoding];
+            [disassembledInstructions addObject:desc];
         }
-        [disassembledInstructions addObject:addressString];
-        
-        const char *cStr = instruction.description.c_str();
-        NSString *desc = [NSString stringWithCString:cStr encoding:NSASCIIStringEncoding];
-        [disassembledInstructions addObject:desc];
-    }
+    });
     
     return disassembledInstructions;
 }
@@ -337,6 +359,13 @@ static MikoGB::JoypadButton _ButtonForCode(GBEngineKeyCode code) {
     NSHashTable<id<GBEngineObserver>> *observersCopy = [_observers copy];
     for (id<GBEngineObserver> observer in observersCopy) {
         [observer engine:self runnableDidChange:isRunnable];
+    }
+}
+
+- (void)_notifyObserversOfSuspendedStateChange {
+    NSHashTable<id<GBEngineObserver>> *observersCopy = [_observers copy];
+    for (id<GBEngineObserver> observer in observersCopy) {
+        [observer didUpdateSuspendedStateForEngine:self];
     }
 }
 

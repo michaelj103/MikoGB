@@ -35,8 +35,12 @@ class DebuggerWindowController: NSWindowController, NSTableViewDataSource {
         
         let engine = AppStateManager.sharedInstance.engine
         let pauseCommand = DebuggerPauseCommand(engine)
+        let continueCommand = DebuggerContinueCommand(engine)
+        let stepCommand = DebuggerStepCommand(engine)
         commands = [
             pauseCommand.commandName : pauseCommand,
+            continueCommand.commandName : continueCommand,
+            stepCommand.commandName : stepCommand,
         ]
         
         for (name, subCommand) in commands {

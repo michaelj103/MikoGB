@@ -46,6 +46,10 @@ class DebuggerInstructionController : NSObject, NSTableViewDataSource, GBEngineO
         _reloadData()
     }
     
+    func didUpdateSuspendedState(for engine: GBEngine) {
+        _reloadData()
+    }
+    
     private var addresses = [String]()
     private var instructions = [String]()
     private func _reloadData() {

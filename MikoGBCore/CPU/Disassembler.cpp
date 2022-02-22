@@ -10,6 +10,7 @@
 #include <vector>
 #include <sstream>
 #include <iomanip>
+#include <algorithm>
 #include "BitTwiddlingUtil.h"
 
 using namespace std;
@@ -135,9 +136,69 @@ std::vector<DisassembledInstruction> Disassembler::disassembleInstructions(uint1
             // failed to find the instruction in the table, so stop
             break;
         }
+        if (romBank != -1) {
+            KnownInstruction knownEntry = { romBank, currentPC, size };
+            _knownInstructions.insert(knownEntry);
+        }
         currentPC += size;
     }
     
+    return instructions;
+}
+
+std::vector<DisassembledInstruction> Disassembler::precedingDisassembledInstructions(uint16_t pc, int maxCount, const MemoryController::Ptr &mem) {
+    vector<DisassembledInstruction> instructions;
+    assert(pc < 0x8000 || (pc >= 0xFF80 && pc < 0xFFFF));
+    
+    // end if we exceed the boundary of the initial ROM bank
+    int romBank;
+    if (pc >= 0xFF80) {
+        // no cache for RAM instructions since they're writable and may have changed
+        return instructions;
+    } else if (pc >= 0x4000) {
+        romBank = mem->currentROMBank();
+    } else {
+        romBank = 0;
+    }
+    uint16_t size = 0;
+    (void)lookupInstruction(pc, mem, size);
+    if (size == 0) {
+        // The current instruction is unreadable so we can't walk back
+        return instructions;
+    }
+    KnownInstruction instructionKey = { romBank, pc, size };
+    auto cacheIterator = _knownInstructions.find(instructionKey);
+    if (cacheIterator == _knownInstructions.end()) {
+        // not in the cache, we can't work backwards
+        return instructions;
+    }
+    
+    // walk back and add instructions as long as the previous instruction is immediately before
+    uint16_t currentAddress = pc;
+    while (instructions.size() < maxCount) {
+        if (cacheIterator == _knownInstructions.begin()) {
+            // nothing left in front
+            break;
+        }
+        cacheIterator--;
+        const KnownInstruction &prev = *cacheIterator;
+        if (prev.romBank != romBank) {
+            // jumped banks, not preceding
+            break;
+        }
+        if (prev.addr + prev.size != currentAddress) {
+            // the previous instruction doesn't directly precede the last
+            break;
+        }
+        // the previous instruction *does* directly precede the last. So add it
+        uint16_t size = 0;
+        string description = lookupInstruction(currentAddress, mem, size);
+        DisassembledInstruction instruction = { romBank, currentAddress, description };
+        instructions.push_back(instruction);
+    }
+    
+    // we pushed in reverse order, so reverse the list before returning
+    std::reverse(instructions.begin(), instructions.end());
     return instructions;
 }
 

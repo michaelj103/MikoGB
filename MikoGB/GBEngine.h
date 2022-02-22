@@ -37,6 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)writeDisplayStateToDirectory:(NSURL *)directoryURL completion:(void (^_Nullable)(BOOL))completion;
 
 - (void)emulateFrame;
+- (void)step:(NSInteger)stepCount; // step a given number of instructions
 
 - (void)setDesiredRunnable:(BOOL)runnable completion:(void (^_Nullable)(void))completion;
 @property (nonatomic) BOOL desiredRunnable;
@@ -57,6 +58,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol GBEngineObserver <NSObject>
 - (void)engine:(GBEngine *)engine runnableDidChange:(BOOL)isRunnable;
+- (void)didUpdateSuspendedStateForEngine:(GBEngine *)engine;
 @end
 
 NS_ASSUME_NONNULL_END
