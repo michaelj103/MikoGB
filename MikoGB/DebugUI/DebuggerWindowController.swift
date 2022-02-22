@@ -162,7 +162,7 @@ class DebuggerWindowController: NSWindowController, NSTableViewDataSource, GBEng
     }
     
     private func _registerString(_ val: UInt8) -> String {
-        return NSString(format: "%02X", val) as String
+        return NSString(format: "0x%02X", val) as String
     }
     
     @IBOutlet var aRegLabel: NSTextField!
@@ -172,15 +172,23 @@ class DebuggerWindowController: NSWindowController, NSTableViewDataSource, GBEng
     @IBOutlet var eRegLabel: NSTextField!
     @IBOutlet var hRegLabel: NSTextField!
     @IBOutlet var lRegLabel: NSTextField!
+    @IBOutlet var zFlagLabel: NSTextField!
+    @IBOutlet var nFlagLabel: NSTextField!
+    @IBOutlet var hFlagLabel: NSTextField!
+    @IBOutlet var cFlagLabel: NSTextField!
     private func _updateRegisterLabels() {
         guard !isEngineRunnable, let regState = engine?.registerState() else {
-            aRegLabel.stringValue = "-"
-            bRegLabel.stringValue = "-"
-            cRegLabel.stringValue = "-"
-            dRegLabel.stringValue = "-"
-            eRegLabel.stringValue = "-"
-            hRegLabel.stringValue = "-"
-            lRegLabel.stringValue = "-"
+            aRegLabel.stringValue = "--"
+            bRegLabel.stringValue = "--"
+            cRegLabel.stringValue = "--"
+            dRegLabel.stringValue = "--"
+            eRegLabel.stringValue = "--"
+            hRegLabel.stringValue = "--"
+            lRegLabel.stringValue = "--"
+            zFlagLabel.stringValue = "-"
+            nFlagLabel.stringValue = "-"
+            hFlagLabel.stringValue = "-"
+            cFlagLabel.stringValue = "-"
             return
         }
         
@@ -191,5 +199,9 @@ class DebuggerWindowController: NSWindowController, NSTableViewDataSource, GBEng
         eRegLabel.stringValue = _registerString(regState.E)
         hRegLabel.stringValue = _registerString(regState.H)
         lRegLabel.stringValue = _registerString(regState.L)
+        zFlagLabel.stringValue = regState.ZFlag.boolValue ? "1" : "0"
+        nFlagLabel.stringValue = regState.NFlag.boolValue ? "1" : "0"
+        hFlagLabel.stringValue = regState.HFlag.boolValue ? "1" : "0"
+        cFlagLabel.stringValue = regState.CFlag.boolValue ? "1" : "0"
     }
 }
