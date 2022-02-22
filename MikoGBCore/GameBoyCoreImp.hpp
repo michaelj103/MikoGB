@@ -43,6 +43,7 @@ public:
     void getTileMap(PixelBufferImageCallback callback);
     void getBackground(PixelBufferImageCallback callback);
     std::vector<DisassembledInstruction> getDisassembledInstructions(int lookAheadCount);
+    RegisterState getRegisterState();
     
 private:
     CPUCore::Ptr _cpu;

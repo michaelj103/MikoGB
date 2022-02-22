@@ -31,6 +31,23 @@ struct DisassembledInstruction {
     std::string description;
 };
 
+struct RegisterState {
+    // registers
+    uint8_t B;
+    uint8_t C;
+    uint8_t D;
+    uint8_t E;
+    uint8_t H;
+    uint8_t L;
+    uint8_t A;
+    
+    // flags
+    bool ZFlag;
+    bool NFlag;
+    bool HFlag;
+    bool CFlag;
+};
+
 }
 
 #endif /* GameBoyCoreTypes_h */

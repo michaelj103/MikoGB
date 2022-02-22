@@ -55,6 +55,8 @@ public:
     
     std::vector<DisassembledInstruction> getDisassembledInstructions(int lookAheadCount);
     
+    RegisterState getRegisterState();
+    
 private:
     GameBoyCoreImp *_imp;
 };

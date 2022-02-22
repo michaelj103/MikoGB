@@ -304,6 +304,25 @@ static MikoGB::JoypadButton _ButtonForCode(GBEngineKeyCode code) {
     return disassembledInstructions;
 }
 
+- (GBRegisterState)registerState {
+    __block GBRegisterState state;
+    dispatch_sync(_emulationQueue, ^{
+        MikoGB::RegisterState rState = _core->getRegisterState();
+        state.B = rState.B;
+        state.C = rState.C;
+        state.D = rState.D;
+        state.E = rState.E;
+        state.H = rState.H;
+        state.L = rState.L;
+        state.A = rState.A;
+        state.ZFlag = (rState.ZFlag == true);
+        state.NFlag = (rState.NFlag == true);
+        state.HFlag = (rState.HFlag == true);
+        state.CFlag = (rState.CFlag == true);
+    });
+    return state;
+}
+
 - (void)_deliverFrameImage {
     CGImageRef image = CGBitmapContextCreateImage(_cgContext);
     dispatch_async(dispatch_get_main_queue(), ^{

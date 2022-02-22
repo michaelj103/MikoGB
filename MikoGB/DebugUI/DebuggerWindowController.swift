@@ -7,7 +7,7 @@
 
 import Cocoa
 
-class DebuggerWindowController: NSWindowController, NSTableViewDataSource {
+class DebuggerWindowController: NSWindowController, NSTableViewDataSource, GBEngineObserver {
     
     @IBOutlet var textEntryField: NSTextField!
     @IBOutlet var consoleOutputView: NSTextView!
@@ -24,6 +24,18 @@ class DebuggerWindowController: NSWindowController, NSTableViewDataSource {
         }
     }
     
+    private var isEngineRunnable = false
+    private var engine: GBEngine? {
+        willSet {
+            engine?.unregisterObserver(self)
+        }
+        didSet {
+            engine?.register(self)
+            isEngineRunnable = engine?.isRunnable ?? false
+            _updateStatusLabels()
+        }
+    }
+    
     override func windowDidLoad() {
         super.windowDidLoad()
         
@@ -34,6 +46,7 @@ class DebuggerWindowController: NSWindowController, NSTableViewDataSource {
         _textController.append("Enter 'help' to see available commands", style: .Prompt)
         
         let engine = AppStateManager.sharedInstance.engine
+        self.engine = engine
         let pauseCommand = DebuggerPauseCommand(engine)
         let continueCommand = DebuggerContinueCommand(engine)
         let stepCommand = DebuggerStepCommand(engine)
@@ -133,5 +146,50 @@ class DebuggerWindowController: NSWindowController, NSTableViewDataSource {
             textEntryField.stringValue = ""
             _runCommandString(str)
         }
+    }
+    
+    func engine(_ engine: GBEngine, runnableDidChange isRunnable: Bool) {
+        isEngineRunnable = isRunnable
+        _updateStatusLabels()
+    }
+    
+    func didUpdateSuspendedState(for engine: GBEngine) {
+        _updateStatusLabels()
+    }
+    
+    private func _updateStatusLabels() {
+        _updateRegisterLabels()
+    }
+    
+    private func _registerString(_ val: UInt8) -> String {
+        return NSString(format: "%02X", val) as String
+    }
+    
+    @IBOutlet var aRegLabel: NSTextField!
+    @IBOutlet var bRegLabel: NSTextField!
+    @IBOutlet var cRegLabel: NSTextField!
+    @IBOutlet var dRegLabel: NSTextField!
+    @IBOutlet var eRegLabel: NSTextField!
+    @IBOutlet var hRegLabel: NSTextField!
+    @IBOutlet var lRegLabel: NSTextField!
+    private func _updateRegisterLabels() {
+        guard !isEngineRunnable, let regState = engine?.registerState() else {
+            aRegLabel.stringValue = "-"
+            bRegLabel.stringValue = "-"
+            cRegLabel.stringValue = "-"
+            dRegLabel.stringValue = "-"
+            eRegLabel.stringValue = "-"
+            hRegLabel.stringValue = "-"
+            lRegLabel.stringValue = "-"
+            return
+        }
+        
+        aRegLabel.stringValue = _registerString(regState.A)
+        bRegLabel.stringValue = _registerString(regState.B)
+        cRegLabel.stringValue = _registerString(regState.C)
+        dRegLabel.stringValue = _registerString(regState.D)
+        eRegLabel.stringValue = _registerString(regState.E)
+        hRegLabel.stringValue = _registerString(regState.H)
+        lRegLabel.stringValue = _registerString(regState.L)
     }
 }

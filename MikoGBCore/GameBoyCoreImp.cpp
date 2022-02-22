@@ -86,3 +86,23 @@ std::vector<DisassembledInstruction> GameBoyCoreImp::getDisassembledInstructions
     uint16_t pc = _cpu->programCounter;
     return disassembler->disassembleInstructions(pc, lookAheadCount, _memoryController);
 }
+
+RegisterState GameBoyCoreImp::getRegisterState() {
+    uint8_t *registers = _cpu->registers;
+    RegisterState state;
+    state.B = registers[REGISTER_B];
+    state.C = registers[REGISTER_C];
+    state.D = registers[REGISTER_D];
+    state.E = registers[REGISTER_E];
+    state.H = registers[REGISTER_H];
+    state.L = registers[REGISTER_L];
+    state.A = registers[REGISTER_A];
+    
+    uint8_t flag = registers[REGISTER_F];
+    state.ZFlag = (flag & FlagBit::Zero) != 0;
+    state.NFlag = (flag & FlagBit::N) != 0;
+    state.HFlag = (flag & FlagBit::H) != 0;
+    state.CFlag = (flag & FlagBit::Carry) != 0;
+    
+    return state;
+}

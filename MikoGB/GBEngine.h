@@ -23,6 +23,23 @@ typedef NS_ENUM(NSInteger, GBEngineKeyCode) {
     GBEngineKeyCodeStart,
 };
 
+typedef struct _GBRegisterState {
+    // registers
+    uint8_t B;
+    uint8_t C;
+    uint8_t D;
+    uint8_t E;
+    uint8_t H;
+    uint8_t L;
+    uint8_t A;
+    
+    // flags
+    BOOL ZFlag;
+    BOOL NFlag;
+    BOOL HFlag;
+    BOOL CFlag;
+} GBRegisterState;
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface GBEngine : NSObject
@@ -48,6 +65,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 // Debugger
 - (NSArray<NSString *> *)disassembledInstructions;
+- (GBRegisterState)registerState;
 
 @end
 
