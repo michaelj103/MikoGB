@@ -11,9 +11,11 @@ import Foundation
 class DebuggerMemCommand : DebuggerCommand {
     let commandName = "mem"
     let engine: GBEngine
+    let console: DebuggerConsoleController
     
-    init(_ engine: GBEngine) {
+    init(_ engine: GBEngine, console: DebuggerConsoleController) {
         self.engine = engine
+        self.console = console
     }
     
     func configureSubcommand(command: Command) {
@@ -42,9 +44,9 @@ class DebuggerMemCommand : DebuggerCommand {
         let lowNib = Int(byte & 0x0F)
         
         let c1 = hexStr[hexStr.index(hexStr.startIndex, offsetBy: highNib)]
-        print(c1, terminator: "")
         let c2 = hexStr[hexStr.index(hexStr.startIndex, offsetBy: lowNib)]
-        print(c2)
+        let output = String(c1) + String(c2)
+        console.append(output, style: .Output)
     }
     
     func runCommand(input: CommandResult, outputHandler: @escaping (String) -> (), _ completion: @escaping () -> ()) {
@@ -62,16 +64,16 @@ class DebuggerMemCommand : DebuggerCommand {
         }
         
         if addr.isEmpty {
-            print("Must supply an address to read via -a")
+            console.append("Must supply an address to read via -a", style: .Output)
             completion()
         } else {
             var addressValue: UInt16?
             do {
                 addressValue = try _parseAddress(addr)
             } catch let error as SimpleError {
-                print(error.description)
+                console.append(error.description, style: .Output)
             } catch {
-                print("Unknown error: \(error)")
+                console.append("Unknown error: \(error)", style: .Output)
             }
             
             if let addressValue = addressValue {

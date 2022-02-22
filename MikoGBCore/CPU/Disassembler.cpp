@@ -136,17 +136,13 @@ std::vector<DisassembledInstruction> Disassembler::disassembleInstructions(uint1
             // failed to find the instruction in the table, so stop
             break;
         }
-        if (romBank != -1) {
-            KnownInstruction knownEntry = { romBank, currentPC, size };
-            _knownInstructions.insert(knownEntry);
-        }
         currentPC += size;
     }
     
     return instructions;
 }
 
-std::vector<DisassembledInstruction> Disassembler::precedingDisassembledInstructions(uint16_t pc, int maxCount, const MemoryController::Ptr &mem) {
+std::vector<DisassembledInstruction> Disassembler::precedingDisassembledInstructions(uint16_t pc, int maxCount, const MemoryController::Ptr &mem, const CPUCore::Ptr &cpu) {
     vector<DisassembledInstruction> instructions;
     assert(pc < 0x8000 || (pc >= 0xFF80 && pc < 0xFFFF));
     
@@ -166,17 +162,20 @@ std::vector<DisassembledInstruction> Disassembler::precedingDisassembledInstruct
         // The current instruction is unreadable so we can't walk back
         return instructions;
     }
-    KnownInstruction instructionKey = { romBank, pc, size };
-    auto cacheIterator = _knownInstructions.find(instructionKey);
-    if (cacheIterator == _knownInstructions.end()) {
-        // not in the cache, we can't work backwards
+    
+    set<KnownInstruction> knownInstructions = cpu->_previousInstructions.uniqueInstructions();
+    if (knownInstructions.empty()) {
         return instructions;
     }
+    KnownInstruction instructionKey = { romBank, pc, size };
+    // find the first item *not less than* the target instruction (aka >= instructionKey)
+    // therefore every entry ahead of it is an instruction ahead of instructionKey
+    auto cacheIterator = knownInstructions.lower_bound(instructionKey);
     
     // walk back and add instructions as long as the previous instruction is immediately before
     uint16_t currentAddress = pc;
     while (instructions.size() < maxCount) {
-        if (cacheIterator == _knownInstructions.begin()) {
+        if (cacheIterator == knownInstructions.begin()) {
             // nothing left in front
             break;
         }

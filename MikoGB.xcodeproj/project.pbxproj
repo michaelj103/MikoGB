@@ -16,6 +16,8 @@
 		2902EA9D27C4C87C00186976 /* DebuggerStepCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2902EA9C27C4C87C00186976 /* DebuggerStepCommand.swift */; };
 		2902EA9F27C4CA9C00186976 /* DebuggerContinueCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2902EA9E27C4CA9C00186976 /* DebuggerContinueCommand.swift */; };
 		2902EAA127C5520500186976 /* DebuggerMemCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2902EAA027C5520500186976 /* DebuggerMemCommand.swift */; };
+		2902EAA427C5A2F700186976 /* InstructionRingBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2902EAA227C5A2F700186976 /* InstructionRingBuffer.cpp */; };
+		2902EAA527C5A2F700186976 /* InstructionRingBuffer.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 2902EAA327C5A2F700186976 /* InstructionRingBuffer.hpp */; };
 		290B3BC8247E00B400937D71 /* CPUCore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297E6137245FEA5D00EE150F /* CPUCore.cpp */; };
 		290B3BC9247E00C000937D71 /* CPUInstruction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297E613C245FECDF00EE150F /* CPUInstruction.cpp */; };
 		290B3BCA247E00CB00937D71 /* LoadInstructions8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8C0BA2462685F0082C52B /* LoadInstructions8.cpp */; };
@@ -162,6 +164,8 @@
 		2902EA9C27C4C87C00186976 /* DebuggerStepCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebuggerStepCommand.swift; sourceTree = "<group>"; };
 		2902EA9E27C4CA9C00186976 /* DebuggerContinueCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebuggerContinueCommand.swift; sourceTree = "<group>"; };
 		2902EAA027C5520500186976 /* DebuggerMemCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebuggerMemCommand.swift; sourceTree = "<group>"; };
+		2902EAA227C5A2F700186976 /* InstructionRingBuffer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = InstructionRingBuffer.cpp; sourceTree = "<group>"; };
+		2902EAA327C5A2F700186976 /* InstructionRingBuffer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = InstructionRingBuffer.hpp; sourceTree = "<group>"; };
 		290B3BCF247E048100937D71 /* Test8BitLoadInstructions.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = Test8BitLoadInstructions.mm; sourceTree = "<group>"; };
 		290B3BD1247F51D100937D71 /* Test16BitLoadInstructions.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = Test16BitLoadInstructions.mm; sourceTree = "<group>"; };
 		290FF33D265F066D006812F4 /* MonochromePalette.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MonochromePalette.hpp; sourceTree = "<group>"; };
@@ -374,6 +378,8 @@
 			children = (
 				297E6138245FEA5D00EE150F /* CPUCore.hpp */,
 				297E6137245FEA5D00EE150F /* CPUCore.cpp */,
+				2902EAA327C5A2F700186976 /* InstructionRingBuffer.hpp */,
+				2902EAA227C5A2F700186976 /* InstructionRingBuffer.cpp */,
 				297E613D245FECDF00EE150F /* CPUInstruction.hpp */,
 				297E613C245FECDF00EE150F /* CPUInstruction.cpp */,
 				2902EA9527C216ED00186976 /* Disassembler.hpp */,
@@ -546,6 +552,7 @@
 				29A8FF9226521A71007A26C9 /* CartridgeHeader.hpp in Headers */,
 				2902EA9727C216ED00186976 /* Disassembler.hpp in Headers */,
 				299283192643AF00004691E5 /* PixelBuffer.hpp in Headers */,
+				2902EAA527C5A2F700186976 /* InstructionRingBuffer.hpp in Headers */,
 				29A8FFD626535994007A26C9 /* MemoryBankController.hpp in Headers */,
 				290FF37B2662110A006812F4 /* Timer.hpp in Headers */,
 				299282FD264266A9004691E5 /* GameBoyCoreImp.hpp in Headers */,
@@ -735,6 +742,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2992825A26424262004691E5 /* JumpInstructions.cpp in Sources */,
+				2902EAA427C5A2F700186976 /* InstructionRingBuffer.cpp in Sources */,
 				2992826326424265004691E5 /* CallAndReturnInstructions.cpp in Sources */,
 				29A8FF8C26521A6E007A26C9 /* CartridgeHeader.cpp in Sources */,
 				2902EA9227C0712A00186976 /* Breakpoint.cpp in Sources */,

@@ -50,7 +50,7 @@ class DebuggerWindowController: NSWindowController, NSTableViewDataSource, GBEng
         let pauseCommand = DebuggerPauseCommand(engine)
         let continueCommand = DebuggerContinueCommand(engine)
         let stepCommand = DebuggerStepCommand(engine)
-        let memCommand = DebuggerMemCommand(engine)
+        let memCommand = DebuggerMemCommand(engine, console: _textController)
         commands = [
             pauseCommand.commandName : pauseCommand,
             continueCommand.commandName : continueCommand,

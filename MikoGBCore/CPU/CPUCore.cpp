@@ -13,7 +13,7 @@
 using namespace std;
 using namespace MikoGB;
 
-CPUCore::CPUCore(MemoryController::Ptr &memCon): memoryController(memCon) {
+CPUCore::CPUCore(MemoryController::Ptr &memCon): memoryController(memCon), _previousInstructions(5000) {
     reset();
     CPUInstruction::InitializeInstructionTable();
 }
@@ -57,6 +57,7 @@ int CPUCore::step() {
         return 4;
     }
     
+    const uint16_t originalROMBank = memoryController->currentROMBank();
     const uint16_t originalPC = programCounter;
     const CPUInstruction &instruction = CPUInstruction::LookupInstruction(memoryController, programCounter);
     programCounter += instruction.size;
@@ -65,6 +66,10 @@ int CPUCore::step() {
         basePtr[i] = memoryController->readByte(originalPC + i);
     }
     int steps = instruction.func(basePtr, *this);
+    
+    KnownInstruction i = { originalROMBank, originalPC, instruction.size };
+    _previousInstructions.append(i);
+    
 #if DEBUG
     // Detect an overflow of the PC into the address space just above the ROM area
     // Note that >= 0x8000 isn't adequate because technically it's valid to run instructions from HRAM

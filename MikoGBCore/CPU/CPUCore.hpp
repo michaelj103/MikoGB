@@ -26,6 +26,7 @@
 #include <cstdlib>
 #include "BitTwiddlingUtil.h"
 #include "MemoryController.hpp"
+#include "InstructionRingBuffer.hpp"
 
 namespace MikoGB {
 
@@ -106,6 +107,8 @@ public:
         Enabled,
     };
     InterruptState interruptState;
+    
+    InstructionRingBuffer _previousInstructions;
     
 private:
     bool handleInterruptsIfNeeded();

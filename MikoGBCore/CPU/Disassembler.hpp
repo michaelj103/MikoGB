@@ -13,6 +13,7 @@
 #include <vector>
 #include <set>
 #include "MemoryController.hpp"
+#include "CPUCore.hpp"
 #include "GameboyCoreTypes.h"
 
 namespace MikoGB {
@@ -23,26 +24,11 @@ public:
     using Ptr = std::shared_ptr<Disassembler>;
     
     std::vector<DisassembledInstruction> disassembleInstructions(uint16_t, int, const MemoryController::Ptr &);
-    std::vector<DisassembledInstruction> precedingDisassembledInstructions(uint16_t, int, const MemoryController::Ptr &);
+    std::vector<DisassembledInstruction> precedingDisassembledInstructions(uint16_t, int, const MemoryController::Ptr &, const CPUCore::Ptr &);
     
 private:
     static void InitializeDisassemblyTable();
-    struct KnownInstruction {
-        int romBank;
-        uint16_t addr;
-        uint16_t size;
-    };
-    
-    std::set<KnownInstruction> _knownInstructions;
-    friend bool operator<(const KnownInstruction &a, const KnownInstruction &b);
 };
-
-inline bool operator<(const Disassembler::KnownInstruction &a, const Disassembler::KnownInstruction &b) {
-    if (a.romBank == b.romBank) {
-        return a.addr < b.addr;
-    }
-    return a.romBank < b.romBank;
-}
 
 }
 
