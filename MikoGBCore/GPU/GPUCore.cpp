@@ -54,6 +54,8 @@ static const uint16_t LYCRegister = 0xFF45; // LY Compare register (for interrup
 static const uint16_t BGPRegister = 0xFF47; // BG Palette data
 static const uint16_t OBP0Register = 0xFF48; // OBJ Palette 0 data
 static const uint16_t OBP1Register = 0xFF49; // OBJ Palette 1 data
+static const uint16_t WYRegister = 0xFF4A; // Window origin Y
+static const uint16_t WXRegister = 0xFF4B; // Window origin X
 static const uint16_t OAMBase = 0xFE00; // base address of the 40 4-byte OAM codes
 static const uint16_t TileMapBase = 0x8000; // Base address of tile map
 
@@ -389,6 +391,73 @@ void GPUCore::_renderBackgroundToScanline(size_t lineNum, LCDScanline &scanline)
 #endif
 }
 
+#pragma mark - Window Utilities
+
+static bool _windowStatus(int32_t &baseAddr, bool &signedMode, uint16_t &codeArea, const MemoryController::Ptr &mem) {
+    const uint8_t lcdc = mem->readByte(LCDCRegister);
+    bool windowEnabled = isMaskSet(lcdc, 0x20);
+    // Range of background tiles is either 0x9000 with codes being signed offsets (0x8800-0x97FF)
+    // or they start at 0x8000 with codes being unsigned offsets (0x8000-0x8FFF)
+    baseAddr = 0x9000;
+    signedMode = true;
+    if (isMaskSet(lcdc, 0x10)) {
+        baseAddr = TileMapBase;
+        signedMode = false;
+    }
+    
+    // Codes are 1024 bytes starting at one of 2 addresses
+    // note window is specified in bit 6 (0x40) while background was specified at bit 3 (0x8)
+    codeArea = 0x9800;
+    if (isMaskSet(lcdc, 0x40)) {
+        codeArea = 0x9C00;
+    }
+    return windowEnabled;
+}
+
+void GPUCore::_renderWindowToScanline(size_t lineNum, LCDScanline &scanline) {
+    // 1. read relevant info
+    int32_t bgTileMapBase;
+    bool signedMode;
+    uint16_t winCodeArea;
+    bool windowEnabled = _windowStatus(bgTileMapBase, signedMode, winCodeArea, _memoryController);
+    if (!windowEnabled) {
+        // not enabled, nothing to do
+        return;
+    }
+    const uint8_t wx = _memoryController->readByte(WXRegister);
+    const uint8_t wy = _memoryController->readByte(WYRegister);
+    if (wy > lineNum) {
+        // window doesn't start until after this scanline. nothing to do
+        return;
+    }
+    // TODO: confirm that window uses the BG palette
+    MonochromePalette bgPalette = MonochromePalette(_memoryController->readByte(BGPRegister), false);
+    
+    // 2. Figure out what row of tile codes we need to draw and which row of those tiles is relevant
+    const uint8_t winY = lineNum - wy;
+    const uint8_t bgTileY = winY / 8; // y index of the bg tile in the tilemap
+    const uint8_t tileRow = winY % 8; // the row in the 8x8 tile that is on this line
+    
+    // 3. Main loop, draw background tiles progressively to the scanline
+    uint8_t pixelsDrawn = wx - 7;
+    while (pixelsDrawn < ScreenWidth) {
+        // 3a. Figure out the next tile to draw, determine its code from the code area, then its address in the map
+        const uint8_t winX = (pixelsDrawn + 7) - wx;
+        const uint8_t bgTileX = winX / 8;
+        const uint16_t tileCodeAddress = winCodeArea + (bgTileY * BackgroundTilesPerRow) + bgTileX;
+        const uint8_t tileCode = _memoryController->readByte(tileCodeAddress);
+        const uint16_t tileBaseAddress = _GetBGTileBaseAddress(bgTileMapBase, tileCode, signedMode);
+        
+        // 3b. Now draw the line from the tile to the scanline using the helper
+        const uint8_t tileCol = winX % 8; // I believe this should always be zero
+        pixelsDrawn += _DrawTileRowToScanline(tileBaseAddress, tileRow, tileCol, false, LCDScanline::WriteType::Background, pixelsDrawn, scanline, _memoryController, bgPalette);
+    }
+#if DEBUG
+    assert(pixelsDrawn == 160);
+#endif
+    
+}
+
 #pragma mark - Sprite Utilities
 
 static bool _IsSpriteOnLine(size_t line, size_t spriteY, size_t spriteHeight) {
@@ -465,7 +534,7 @@ void GPUCore::_renderSpritesToScanline(size_t line, LCDScanline &scanline) {
 
 void GPUCore::_renderScanline(size_t lineNum) {
     _renderBackgroundToScanline(lineNum, _scanline);
-    //TODO: render window
+    _renderWindowToScanline(lineNum, _scanline);
     _renderSpritesToScanline(lineNum, _scanline);
     
     if (_scanlineCallback) {

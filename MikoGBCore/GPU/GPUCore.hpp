@@ -57,6 +57,7 @@ private:
     LCDScanline _scanline;
     void _renderScanline(size_t line);
     void _renderBackgroundToScanline(size_t line, LCDScanline &scanline);
+    void _renderWindowToScanline(size_t line, LCDScanline &scanline);
     void _renderSpritesToScanline(size_t line, LCDScanline &scanline);
     PixelBufferScanlineCallback _scanlineCallback;
 };
