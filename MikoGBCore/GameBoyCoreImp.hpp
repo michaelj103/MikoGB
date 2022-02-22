@@ -44,6 +44,7 @@ public:
     void getBackground(PixelBufferImageCallback callback);
     std::vector<DisassembledInstruction> getDisassembledInstructions(int lookAheadCount);
     RegisterState getRegisterState();
+    uint8_t readMem(uint16_t);
     
 private:
     CPUCore::Ptr _cpu;

@@ -66,6 +66,7 @@ NS_ASSUME_NONNULL_BEGIN
 // Debugger
 - (NSArray<NSString *> *)disassembledInstructions;
 - (GBRegisterState)registerState;
+- (uint8_t)readByte:(uint16_t)addr;
 
 @end
 

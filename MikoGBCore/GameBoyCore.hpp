@@ -57,6 +57,8 @@ public:
     
     RegisterState getRegisterState();
     
+    uint8_t readMem(uint16_t);
+    
 private:
     GameBoyCoreImp *_imp;
 };

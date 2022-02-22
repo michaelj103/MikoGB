@@ -78,3 +78,7 @@ std::vector<DisassembledInstruction> GameBoyCore::getDisassembledInstructions(in
 RegisterState GameBoyCore::getRegisterState() {
     return _imp->getRegisterState();
 }
+
+uint8_t GameBoyCore::readMem(uint16_t addr) {
+    return _imp->readMem(addr);
+}

@@ -323,6 +323,14 @@ static MikoGB::JoypadButton _ButtonForCode(GBEngineKeyCode code) {
     return state;
 }
 
+- (uint8_t)readByte:(uint16_t)addr {
+    __block uint8_t byte = 0;
+    dispatch_sync(_emulationQueue, ^{
+        byte = _core->readMem(addr);
+    });
+    return byte;
+}
+
 - (void)_deliverFrameImage {
     CGImageRef image = CGBitmapContextCreateImage(_cgContext);
     dispatch_async(dispatch_get_main_queue(), ^{

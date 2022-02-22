@@ -106,3 +106,7 @@ RegisterState GameBoyCoreImp::getRegisterState() {
     
     return state;
 }
+
+uint8_t GameBoyCoreImp::readMem(uint16_t addr) {
+    return _memoryController->readByte(addr);
+}
