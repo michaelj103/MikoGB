@@ -8,21 +8,32 @@
 import Foundation
 
 class DebuggerPauseCommand : DebuggerCommand {
-    let commandName = "pause"
     let engine: GBEngine
     
     init(_ engine: GBEngine) {
         self.engine = engine
     }
     
-    func configureSubcommand(command: Command) {
+    func respondsToInput(_ input: [String]) -> Bool {
+        guard let first = input.first else {
+            return false
+        }
         
+        if first == "pause" {
+            return true
+        }
+        return false
     }
     
-    func runCommand(input: CommandResult, outputHandler: @escaping (String) -> (), _ completion: @escaping () -> ()) {
+    func runCommand(input: [String], outputHandler: @escaping (String) -> (), _ completion: @escaping () -> ()) {
+        guard input.count == 1 else {
+            outputHandler("Command \'pause\' expects no arguments")
+            completion()
+            return
+        }
+        
         self.engine.setDesiredRunnable(false) {
             completion()
         }
     }
-    
 }

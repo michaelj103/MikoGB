@@ -9,17 +9,21 @@
 import Foundation
 
 class DebuggerMemCommand : DebuggerCommand {
-    let commandName = "mem"
     let engine: GBEngine
-    let console: DebuggerConsoleController
     
-    init(_ engine: GBEngine, console: DebuggerConsoleController) {
+    init(_ engine: GBEngine) {
         self.engine = engine
-        self.console = console
     }
     
-    func configureSubcommand(command: Command) {
-        command.registerOption(.string(nil), shortName: "a", longName: "addr", description: "address to read")
+    func respondsToInput(_ input: [String]) -> Bool {
+        guard let first = input.first else {
+            return false
+        }
+        
+        if first == "mem" {
+            return true
+        }
+        return false
     }
     
     private func _parseAddress(_ str: String) throws -> UInt16 {
@@ -38,7 +42,7 @@ class DebuggerMemCommand : DebuggerCommand {
         return value
     }
     
-    private func _printByte(_ byte: UInt8) {
+    private func _byteString(_ byte: UInt8) -> String {
         let hexStr = "0123456789ABCDEF"
         let highNib = Int((byte & 0xF0) >> 4)
         let lowNib = Int(byte & 0x0F)
@@ -46,44 +50,32 @@ class DebuggerMemCommand : DebuggerCommand {
         let c1 = hexStr[hexStr.index(hexStr.startIndex, offsetBy: highNib)]
         let c2 = hexStr[hexStr.index(hexStr.startIndex, offsetBy: lowNib)]
         let output = String(c1) + String(c2)
-        console.append(output, style: .Output)
+        return output
     }
     
-    func runCommand(input: CommandResult, outputHandler: @escaping (String) -> (), _ completion: @escaping () -> ()) {
-        let result = input.getResult("a")
-        let addr: String
-        switch result {
-        case .string(let s):
-            addr = s ?? ""
-        case .boolean(_):
-            fallthrough
-        case .float(_):
-            fallthrough
-        case .integer(_):
-            addr = ""
+    func runCommand(input: [String], outputHandler: @escaping (String) -> (), _ completion: @escaping () -> ()) {
+        guard input.count == 2 else {
+            outputHandler("Command \'mem\' expects an address argument")
+            completion()
+            return
         }
         
-        if addr.isEmpty {
-            console.append("Must supply an address to read via -a", style: .Output)
-            completion()
-        } else {
-            var addressValue: UInt16?
-            do {
-                addressValue = try _parseAddress(addr)
-            } catch let error as SimpleError {
-                console.append(error.description, style: .Output)
-            } catch {
-                console.append("Unknown error: \(error)", style: .Output)
-            }
-            
-            if let addressValue = addressValue {
-                let byte = engine.readByte(addressValue)
-                _printByte(byte)
-                completion()
-            } else {
-                completion()
-            }
+        let addr = input[1]
+        var addressValue: UInt16?
+        do {
+            addressValue = try _parseAddress(addr)
+        } catch let error as SimpleError {
+            outputHandler(error.description)
+        } catch {
+            outputHandler("Unknown error: \(error)")
         }
+        
+        if let addressValue = addressValue {
+            let byte = engine.readByte(addressValue)
+            let output = _byteString(byte)
+            outputHandler(output)
+        }
+        completion()
     }
     
 }

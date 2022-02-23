@@ -16,8 +16,7 @@ class DebuggerWindowController: NSWindowController, NSTableViewDataSource, GBEng
     
     private let _instructionController = DebuggerInstructionController()
     private let _textController = DebuggerConsoleController()
-    private let _commandParser = CommandParser()
-    private var commands = [String:DebuggerCommand]()
+    private var commands = [DebuggerCommand]()
     private var runningCommand: Bool = false {
         didSet {
             textEntryField.isEnabled = !runningCommand
@@ -50,18 +49,13 @@ class DebuggerWindowController: NSWindowController, NSTableViewDataSource, GBEng
         let pauseCommand = DebuggerPauseCommand(engine)
         let continueCommand = DebuggerContinueCommand(engine)
         let stepCommand = DebuggerStepCommand(engine)
-        let memCommand = DebuggerMemCommand(engine, console: _textController)
+        let memCommand = DebuggerMemCommand(engine)
         commands = [
-            pauseCommand.commandName : pauseCommand,
-            continueCommand.commandName : continueCommand,
-            stepCommand.commandName : stepCommand,
-            memCommand.commandName : memCommand,
+            pauseCommand,
+            continueCommand,
+            stepCommand,
+            memCommand,
         ]
-        
-        for (name, subCommand) in commands {
-            let parserCommand = _commandParser.rootCommand.registerSubcommand(name)
-            subCommand.configureSubcommand(command: parserCommand)
-        }
         
         _instructionController.engine = engine
         _instructionController.tableView = instructionTableView
@@ -81,46 +75,36 @@ class DebuggerWindowController: NSWindowController, NSTableViewDataSource, GBEng
         consoleScrollView.documentView?.scroll(newScrollOrigin)
     }
     
-    private func _runCommand(_ command: DebuggerCommand, parsedResult: CommandResult) {
-        command.runCommand(input: parsedResult) { str in
+    private func _runCommand(_ command: DebuggerCommand, input: [String]) {
+        command.runCommand(input: input) { str in
             self._appendConsoleText(str, style: .Output)
         } _: {
             self.runningCommand = false
         }
     }
     
+    private func _tokenize(_ string: String) -> [String] {
+        let substrings = string.split(separator: " ")
+        let strings = substrings.map { String($0) }
+        return strings
+    }
+    
     private func _runCommandString(_ str: String) {
         runningCommand = true
-        let args = CommandParser.tokenize(str)
-        let result: CommandResult?
-        do {
-            let baseResult = try _commandParser.parseArguments(args)
-            let results = baseResult.subcommandResults
-            if results.count == 1 {
-                result = results.first
-            } else {
-                result = nil
-                // TODO: configuration option on the parser?
-                _appendConsoleText("Chained commands are unsupported", style: .Output)
+        let args = _tokenize(str)
+        var result: Int? = nil
+        for (i, command) in commands.enumerated() {
+            if command.respondsToInput(args) {
+                result = i
+                break
             }
-        } catch let error as SimpleError {
-            result = nil
-            _appendConsoleText(error.description, style: .Output)
-        } catch {
-            result = nil
-            print(error)
-            _appendConsoleText("Unrecognized error", style: .Output)
         }
         
-        if let r = result {
-            let name = r.command.name!
-            if let cmd = commands[name] {
-                _runCommand(cmd, parsedResult: r)
-            } else {
-                _appendConsoleText("No runnable command found", style: .Output)
-                runningCommand = false
-            }
+        if let index = result {
+            let command = commands[index]
+            _runCommand(command, input: args)
         } else {
+            _appendConsoleText("Unrecognized command", style: .Output)
             runningCommand = false
         }
     }

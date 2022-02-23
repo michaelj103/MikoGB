@@ -9,32 +9,43 @@
 import Foundation
 
 class DebuggerStepCommand : DebuggerCommand {
-    let commandName = "step"
     let engine: GBEngine
     
     init(_ engine: GBEngine) {
         self.engine = engine
     }
     
-    func configureSubcommand(command: Command) {
-        command.registerOption(.integer(nil), shortName: "c", longName: nil, description: nil)
+    func respondsToInput(_ input: [String]) -> Bool {
+        guard let first = input.first else {
+            return false
+        }
+        if first == "step" || first == "s" {
+            return true
+        }
+        return false
     }
     
-    func runCommand(input: CommandResult, outputHandler: @escaping (String) -> (), _ completion: @escaping () -> ()) {
-        let result = input.getResult("c")
-        let steps: Int
-        switch result {
-        case .integer(let s):
-            steps = s ?? 1
-        case .boolean(_):
-            fallthrough
-        case .float(_):
-            fallthrough
-        case .string(_):
-            steps = 1
+    func runCommand(input: [String], outputHandler: @escaping (String) -> (), _ completion: @escaping () -> ()) {
+        guard input.count <= 2 else {
+            outputHandler("Command \'step\' expects up to 1 argument")
+            completion()
+            return
         }
-        self.engine.step(steps)
+        
+        var count: Int?
+        if input.count == 2 {
+            if let x = Int(input[1]), x > 0 {
+                count = x
+            } else {
+                outputHandler("Expects an integer number of steps greater than 0")
+            }
+        } else {
+            count = 1
+        }
+        
+        if let steps = count {
+            self.engine.step(steps)
+        }
         completion()
     }
-    
 }
