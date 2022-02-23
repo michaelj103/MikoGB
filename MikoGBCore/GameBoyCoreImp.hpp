@@ -30,9 +30,8 @@ public:
     
     void emulateFrame();
     
-    void setExternallyRunnable(bool);
-    bool isExternallyRunnable() const { return _isExternallyRunnable; }
-    bool isRunnable() const { return _isExternallyRunnable; }
+    void setRunnable(bool);
+    bool isRunnable() const { return _isRunnable; }
     void setRunnableChangedCallback(RunnableChangedCallback callback) { _runnableChangedCallback = callback; }
     
     void setScanlineCallback(PixelBufferScanlineCallback callback);
@@ -55,8 +54,7 @@ private:
     Disassembler::Ptr _disassembler;
     Disassembler::Ptr _accessDisassembler();
     
-    //TODO: runnable should probably be a CPU notion once there are internal triggers?
-    bool _isExternallyRunnable = false;
+    bool _isRunnable = false;
     RunnableChangedCallback _runnableChangedCallback;
     
     friend class GameBoyCore;

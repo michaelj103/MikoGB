@@ -6,6 +6,7 @@
 //
 
 #include "GameBoyCoreImp.hpp"
+#include "GameBoyCoreTypes.h"
 
 using namespace std;
 using namespace MikoGB;
@@ -33,26 +34,31 @@ void GameBoyCoreImp::step() {
     size_t cpuCycles = instructionCycles * 4;
     _gpu->updateWithCPUCycles(cpuCycles);
     _memoryController->updateTimer(cpuCycles);
+#if ENABLE_DEBUGGER
+    if (_cpu->isStoppedAtBreakpoint()) {
+        _isRunnable = false;
+    }
+#endif
 }
 
 void GameBoyCoreImp::emulateFrame() {
     auto gpu = _gpu.get();
     // If we're in the middle of a frame, run until the start of the next
-    while (gpu->getCurrentScanline() != 0 && _isExternallyRunnable) {
+    while (gpu->getCurrentScanline() != 0 && _isRunnable) {
         step();
     }
     
     // Run until v-blank at line 144
-    while (gpu->getCurrentScanline() < 144 && _isExternallyRunnable) {
+    while (gpu->getCurrentScanline() < 144 && _isRunnable) {
         step();
     }
 }
 
-void GameBoyCoreImp::setExternallyRunnable(bool runnable) {
-    if (runnable == _isExternallyRunnable) {
+void GameBoyCoreImp::setRunnable(bool runnable) {
+    if (runnable == _isRunnable) {
         return;
     }
-    _isExternallyRunnable = runnable;
+    _isRunnable = runnable;
     if (_runnableChangedCallback) {
         _runnableChangedCallback(runnable);
     }

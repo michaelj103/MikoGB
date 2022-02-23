@@ -35,12 +35,8 @@ void GameBoyCore::emulateFrame() {
     _imp->emulateFrame();
 }
 
-void GameBoyCore::setExternallyRunnable(bool runnable) {
-    _imp->setExternallyRunnable(runnable);
-}
-
-bool GameBoyCore::isExternallyRunnable() const {
-    return _imp->isExternallyRunnable();
+void GameBoyCore::setRunnable(bool runnable) {
+    _imp->setRunnable(runnable);
 }
 
 bool GameBoyCore::isRunnable() const {

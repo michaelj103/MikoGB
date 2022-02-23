@@ -35,8 +35,7 @@ public:
     /// emulation to proceed normally. Runnability also takes into account internal signals, mainly for debugging (e.g. breakpoints)
     /// When runnable, emulateFrame() and step() function normally
     /// When not runnable, emulateFrame() returns immediately, step() is available for a client to implement debug functionality
-    void setExternallyRunnable(bool);
-    bool isExternallyRunnable() const;
+    void setRunnable(bool);
     bool isRunnable() const;
     
     /// Set so clients are notified of changes to runnability, e.g. hitting a breakpoint
