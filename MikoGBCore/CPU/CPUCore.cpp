@@ -59,6 +59,13 @@ int CPUCore::step() {
     
     const uint16_t originalPC = programCounter;
     const uint16_t originalROMBank = originalPC < 0x4000 ? 0 : memoryController->currentROMBank();
+    if (!_stoppedAtBreakpoint && _breakpointManager.hasBreakpoints()) {
+        if (_breakpointManager.hasLineBreakpoint(originalROMBank, originalPC)) {
+            _stoppedAtBreakpoint = true;
+            return 0;
+        }
+    }
+    
     const CPUInstruction &instruction = CPUInstruction::LookupInstruction(memoryController, programCounter);
     programCounter += instruction.size;
     uint8_t basePtr[3]; // max instruction size
@@ -90,6 +97,7 @@ void CPUCore::reset() {
     programCounter = 0;
     stackPointer = 0;
     _isHalted = false;
+    _stoppedAtBreakpoint = false;
 }
 
 bool CPUCore::handleInterruptsIfNeeded() {

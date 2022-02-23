@@ -27,6 +27,7 @@
 #include "BitTwiddlingUtil.h"
 #include "MemoryController.hpp"
 #include "InstructionRingBuffer.hpp"
+#include "Breakpoint.hpp"
 
 namespace MikoGB {
 
@@ -109,10 +110,13 @@ public:
     InterruptState interruptState;
     
     InstructionRingBuffer _previousInstructions;
+    BreakpointManager _breakpointManager;
+    bool isStoppedAtBreakpoint() const { return _stoppedAtBreakpoint; }
     
 private:
     bool handleInterruptsIfNeeded();
     bool _isHalted;
+    bool _stoppedAtBreakpoint;
 };
 
 
