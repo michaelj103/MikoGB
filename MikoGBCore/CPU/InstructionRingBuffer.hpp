@@ -37,8 +37,9 @@ private:
 inline bool operator<(const KnownInstruction &a, const KnownInstruction &b) {
     if (a.romBank == b.romBank) {
         return a.addr < b.addr;
+    } else {
+        return a.romBank < b.romBank;
     }
-    return a.romBank < b.romBank;
 }
 
 }

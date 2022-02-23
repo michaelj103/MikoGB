@@ -52,9 +52,11 @@ class DebuggerInstructionController : NSObject, NSTableViewDataSource, GBEngineO
     
     private var addresses = [String]()
     private var instructions = [String]()
+    private var currentInstructionIndex = 0
     private func _reloadData() {
         addresses = []
         instructions = []
+        currentInstructionIndex = 0
         guard let engine = engine else {
             tableView?.reloadData()
             return
@@ -64,8 +66,10 @@ class DebuggerInstructionController : NSObject, NSTableViewDataSource, GBEngineO
             tableView?.reloadData()
             return
         }
-
-        let disas = engine.disassembledInstructions()
+        
+        var instructionIndex = 0
+        let disas = engine.disassembledInstructions(&instructionIndex)
+        currentInstructionIndex = instructionIndex
         var i = 0
         while i < disas.count {
             addresses.append(disas[i])
@@ -73,6 +77,7 @@ class DebuggerInstructionController : NSObject, NSTableViewDataSource, GBEngineO
             i += 2
         }
         tableView?.reloadData()
+        tableView?.selectRowIndexes(IndexSet(integer: currentInstructionIndex), byExtendingSelection: false)
     }
     
     func numberOfRows(in tableView: NSTableView) -> Int {

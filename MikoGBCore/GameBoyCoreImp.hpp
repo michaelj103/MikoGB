@@ -42,7 +42,7 @@ public:
     /// Debug utilities
     void getTileMap(PixelBufferImageCallback callback);
     void getBackground(PixelBufferImageCallback callback);
-    std::vector<DisassembledInstruction> getDisassembledInstructions(int lookAheadCount);
+    std::vector<DisassembledInstruction> getDisassembledInstructions(int lookAheadCount, int lookBehindCount, size_t *currentIdx);
     RegisterState getRegisterState();
     uint8_t readMem(uint16_t);
     

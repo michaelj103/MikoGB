@@ -64,7 +64,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setKeyUp:(GBEngineKeyCode)keyCode;
 
 // Debugger
-- (NSArray<NSString *> *)disassembledInstructions;
+- (NSArray<NSString *> *)disassembledInstructions:(size_t *)currentIndex;
 - (GBRegisterState)registerState;
 - (uint8_t)readByte:(uint16_t)addr;
 

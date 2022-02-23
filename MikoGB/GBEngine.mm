@@ -282,25 +282,35 @@ static MikoGB::JoypadButton _ButtonForCode(GBEngineKeyCode code) {
     [self _setDesiredState:NO forKeyCode:keyCode];
 }
 
-- (NSArray<NSString *> *)disassembledInstructions {
+static void _AddInstruction(const MikoGB::DisassembledInstruction &instruction, NSMutableArray<NSString *> *array) {
+    NSString *addressString = nil;
+    if (instruction.romBank == -1) {
+        addressString = [NSString stringWithFormat:@"RAM: 0x%X", instruction.addr];
+    } else {
+        addressString = [NSString stringWithFormat:@"%d: 0x%X", instruction.romBank, instruction.addr];
+    }
+    [array addObject:addressString];
+    
+    const char *cStr = instruction.description.c_str();
+    NSString *desc = [NSString stringWithCString:cStr encoding:NSASCIIStringEncoding];
+    [array addObject:desc];
+}
+
+- (NSArray<NSString *> *)disassembledInstructions:(size_t *)currentIndex {
     NSMutableArray<NSString *> *disassembledInstructions = [NSMutableArray array];
+    __block size_t startIndex = 0;
     dispatch_sync(_emulationQueue, ^{
-        std::vector<MikoGB::DisassembledInstruction> instructions = _core->getDisassembledInstructions(10);
-        for (MikoGB::DisassembledInstruction &instruction : instructions) {
-            NSString *addressString = nil;
-            if (instruction.romBank == -1) {
-                addressString = [NSString stringWithFormat:@"RAM: 0x%X", instruction.addr];
-            } else {
-                addressString = [NSString stringWithFormat:@"%d: 0x%X", instruction.romBank, instruction.addr];
-            }
-            [disassembledInstructions addObject:addressString];
-            
-            const char *cStr = instruction.description.c_str();
-            NSString *desc = [NSString stringWithCString:cStr encoding:NSASCIIStringEncoding];
-            [disassembledInstructions addObject:desc];
+        size_t tmpIdx = 0;
+        std::vector<MikoGB::DisassembledInstruction> instructions = _core->getDisassembledInstructions(10, 10, &tmpIdx);
+        startIndex = tmpIdx;
+        for (const MikoGB::DisassembledInstruction &instruction : instructions) {
+            _AddInstruction(instruction, disassembledInstructions);
         }
     });
     
+    if (currentIndex) {
+        *currentIndex = startIndex;
+    }
     return disassembledInstructions;
 }
 

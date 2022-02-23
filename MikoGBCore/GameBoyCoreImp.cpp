@@ -81,10 +81,22 @@ Disassembler::Ptr GameBoyCoreImp::_accessDisassembler() {
     return _disassembler;
 }
 
-std::vector<DisassembledInstruction> GameBoyCoreImp::getDisassembledInstructions(int lookAheadCount) {
+std::vector<DisassembledInstruction> GameBoyCoreImp::getDisassembledInstructions(int lookAheadCount, int lookBehindCount, size_t *currentIdx) {
     Disassembler::Ptr disassembler = _accessDisassembler();
     uint16_t pc = _cpu->programCounter;
-    return disassembler->disassembleInstructions(pc, lookAheadCount, _memoryController);
+    vector<DisassembledInstruction> forward = disassembler->disassembleInstructions(pc, lookAheadCount, _memoryController);
+    vector<DisassembledInstruction> backward = disassembler->precedingDisassembledInstructions(pc, lookBehindCount, _memoryController, _cpu);
+    
+    if (currentIdx) {
+        *currentIdx = backward.size();
+    }
+    
+    vector<DisassembledInstruction> combined;
+    combined.reserve(backward.size() + forward.size());
+    combined.insert(combined.end(), backward.begin(), backward.end());
+    combined.insert(combined.end(), forward.begin(), forward.end());
+    
+    return combined;
 }
 
 RegisterState GameBoyCoreImp::getRegisterState() {

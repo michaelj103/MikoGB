@@ -191,9 +191,10 @@ std::vector<DisassembledInstruction> Disassembler::precedingDisassembledInstruct
         }
         // the previous instruction *does* directly precede the last. So add it
         uint16_t size = 0;
-        string description = lookupInstruction(currentAddress, mem, size);
-        DisassembledInstruction instruction = { romBank, currentAddress, description };
+        string description = lookupInstruction(prev.addr, mem, size);
+        DisassembledInstruction instruction = { romBank, prev.addr, description };
         instructions.push_back(instruction);
+        currentAddress = prev.addr;
     }
     
     // we pushed in reverse order, so reverse the list before returning

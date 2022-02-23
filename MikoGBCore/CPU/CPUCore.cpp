@@ -57,8 +57,8 @@ int CPUCore::step() {
         return 4;
     }
     
-    const uint16_t originalROMBank = memoryController->currentROMBank();
     const uint16_t originalPC = programCounter;
+    const uint16_t originalROMBank = originalPC < 0x4000 ? 0 : memoryController->currentROMBank();
     const CPUInstruction &instruction = CPUInstruction::LookupInstruction(memoryController, programCounter);
     programCounter += instruction.size;
     uint8_t basePtr[3]; // max instruction size
@@ -67,8 +67,10 @@ int CPUCore::step() {
     }
     int steps = instruction.func(basePtr, *this);
     
-    KnownInstruction i = { originalROMBank, originalPC, instruction.size };
-    _previousInstructions.append(i);
+    if (originalPC < 0x8000) {
+        KnownInstruction i = { originalROMBank, originalPC, instruction.size };
+        _previousInstructions.append(i);
+    }
     
 #if DEBUG
     // Detect an overflow of the PC into the address space just above the ROM area

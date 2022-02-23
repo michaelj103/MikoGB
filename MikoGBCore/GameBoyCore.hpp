@@ -53,7 +53,7 @@ public:
     
     void getBackground(PixelBufferImageCallback callback);
     
-    std::vector<DisassembledInstruction> getDisassembledInstructions(int lookAheadCount);
+    std::vector<DisassembledInstruction> getDisassembledInstructions(int lookAheadCount, int lookBehindCount, size_t *currentIdx);
     
     RegisterState getRegisterState();
     
