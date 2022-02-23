@@ -62,7 +62,7 @@ static string DescriptionImmediate8Signed(uint8_t arg) {
 }
 
 static string lookupInstruction(uint16_t pc, const MemoryController::Ptr &mem, uint16_t &outSize) {
-    uint8_t idx = mem->readByte(pc);
+    size_t idx = mem->readByte(pc);
     uint16_t offset = 1;
     if (idx == 0xCB) {
         //Z80 Extended instruction set

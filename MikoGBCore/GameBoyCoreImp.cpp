@@ -36,7 +36,7 @@ void GameBoyCoreImp::step() {
     _memoryController->updateTimer(cpuCycles);
 #if ENABLE_DEBUGGER
     if (_cpu->isStoppedAtBreakpoint()) {
-        _isRunnable = false;
+        setRunnable(false);
     }
 #endif
 }

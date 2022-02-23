@@ -94,7 +94,7 @@ class DebuggerBreakpointCommand : DebuggerCommand {
             return
         }
         
-        if input[0] == "set" {
+        if input[1] == "set" {
             _runSetCommand(input: input, outputHandler: outputHandler, completion)
         } else {
             outputHandler("Unrecognized subcommand")
