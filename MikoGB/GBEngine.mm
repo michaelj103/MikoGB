@@ -243,7 +243,7 @@ static MikoGB::JoypadButton _ButtonForCode(GBEngineKeyCode code) {
     
     dispatch_async(_emulationQueue, ^{
         bool r = desiredRunnable ? true : false;
-        self->_core->setExternallyRunnable(r);
+        self->_core->setRunnable(r);
         if (completion) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 completion();
@@ -382,13 +382,8 @@ static void _AddInstruction(const MikoGB::DisassembledInstruction &instruction, 
     BOOL b_isRunnable = isRunnable ? YES : NO;
     os_unfair_lock_lock(&_frameLock);
     _isRunnable = b_isRunnable;
-    // sync up the desired state with reality in case this was an internal change
-    _desiredRunnable = b_isRunnable;
     os_unfair_lock_unlock(&_frameLock);
-    
-    // make sure external state matches internal state
-    _core->setExternallyRunnable(isRunnable);
-    
+        
     dispatch_async(dispatch_get_main_queue(), ^{
         [self _notifyObserversOfRunnable:b_isRunnable];
     });
