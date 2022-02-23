@@ -99,7 +99,7 @@ std::vector<DisassembledInstruction> GameBoyCoreImp::getDisassembledInstructions
     return combined;
 }
 
-RegisterState GameBoyCoreImp::getRegisterState() {
+RegisterState GameBoyCoreImp::getRegisterState() const {
     uint8_t *registers = _cpu->registers;
     RegisterState state;
     state.B = registers[REGISTER_B];
@@ -119,6 +119,10 @@ RegisterState GameBoyCoreImp::getRegisterState() {
     return state;
 }
 
-uint8_t GameBoyCoreImp::readMem(uint16_t addr) {
+uint8_t GameBoyCoreImp::readMem(uint16_t addr) const {
     return _memoryController->readByte(addr);
+}
+
+void GameBoyCoreImp::setLineBreakpoint(int romBank, uint16_t addr) {
+    _cpu->_breakpointManager.addLineBreakpoint(romBank, addr);
 }

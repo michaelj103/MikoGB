@@ -341,6 +341,15 @@ static void _AddInstruction(const MikoGB::DisassembledInstruction &instruction, 
     return byte;
 }
 
+- (BOOL)addLineBreakpointForBank:(int)romBank address:(uint16_t)address {
+    __block BOOL success = NO;
+    dispatch_sync(_emulationQueue, ^{
+        bool couldSet = _core->setLineBreakpoint(romBank, address);
+        success = couldSet ? YES : NO;
+    });
+    return success;
+}
+
 - (void)_deliverFrameImage {
     CGImageRef image = CGBitmapContextCreateImage(_cgContext);
     dispatch_async(dispatch_get_main_queue(), ^{

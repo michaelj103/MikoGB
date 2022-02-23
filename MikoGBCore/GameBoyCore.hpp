@@ -55,9 +55,11 @@ public:
     
     std::vector<DisassembledInstruction> getDisassembledInstructions(int lookAheadCount, int lookBehindCount, size_t *currentIdx);
     
-    RegisterState getRegisterState();
+    RegisterState getRegisterState() const;
     
-    uint8_t readMem(uint16_t);
+    uint8_t readMem(uint16_t) const;
+    
+    bool setLineBreakpoint(int romBank, uint16_t addr);
     
 private:
     GameBoyCoreImp *_imp;

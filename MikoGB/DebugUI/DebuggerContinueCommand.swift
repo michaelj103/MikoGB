@@ -27,7 +27,7 @@ class DebuggerContinueCommand : DebuggerCommand {
     
     func runCommand(input: [String], outputHandler: @escaping (String) -> (), _ completion: @escaping () -> ()) {
         guard input.count == 1 else {
-            outputHandler("Command \'continue\' expects no arguments")
+            outputHandler("Command \'\(input[0])\' expects no arguments")
             completion()
             return
         }

@@ -75,10 +75,20 @@ std::vector<DisassembledInstruction> GameBoyCore::getDisassembledInstructions(in
     return _imp->getDisassembledInstructions(lookAheadCount, lookBehindCount, currentIdx);
 }
 
-RegisterState GameBoyCore::getRegisterState() {
+RegisterState GameBoyCore::getRegisterState() const {
     return _imp->getRegisterState();
 }
 
-uint8_t GameBoyCore::readMem(uint16_t addr) {
+uint8_t GameBoyCore::readMem(uint16_t addr) const {
     return _imp->readMem(addr);
+}
+
+bool GameBoyCore::setLineBreakpoint(int romBank, uint16_t addr) {
+#if ENABLE_DEBUGGER
+    _imp->setLineBreakpoint(romBank, addr);
+    return true;
+#else
+    // breakpoints are not enabled in this build
+    return false;
+#endif
 }

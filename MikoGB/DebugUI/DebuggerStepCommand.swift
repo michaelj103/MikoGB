@@ -27,7 +27,7 @@ class DebuggerStepCommand : DebuggerCommand {
     
     func runCommand(input: [String], outputHandler: @escaping (String) -> (), _ completion: @escaping () -> ()) {
         guard input.count <= 2 else {
-            outputHandler("Command \'step\' expects up to 1 argument")
+            outputHandler("Command \'\(input[0])\' expects up to 1 argument")
             completion()
             return
         }

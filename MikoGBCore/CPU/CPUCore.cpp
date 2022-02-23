@@ -9,6 +9,7 @@
 #include "CPUInstruction.hpp"
 #include <algorithm>
 #include <stdexcept>
+#include "GameBoyCoreTypes.h"
 
 using namespace std;
 using namespace MikoGB;
@@ -58,14 +59,19 @@ int CPUCore::step() {
     }
     
     const uint16_t originalPC = programCounter;
+#if ENABLE_DEBUGGER
     const uint16_t originalROMBank = originalPC < 0x4000 ? 0 : memoryController->currentROMBank();
-    if (!_stoppedAtBreakpoint && _breakpointManager.hasBreakpoints()) {
+    if (_stoppedAtBreakpoint) {
+        // if we stopped on the last call, this call *should* only be triggered by intentional step/continue
+        // if it turns out that's not the case for a legit reason, could pass in a bool shouldContinueBreakpoints
+        _stoppedAtBreakpoint = false;
+    } else if (_breakpointManager.hasBreakpoints()) {
         if (_breakpointManager.hasLineBreakpoint(originalROMBank, originalPC)) {
             _stoppedAtBreakpoint = true;
             return 0;
         }
     }
-    
+#endif
     const CPUInstruction &instruction = CPUInstruction::LookupInstruction(memoryController, programCounter);
     programCounter += instruction.size;
     uint8_t basePtr[3]; // max instruction size
@@ -73,11 +79,12 @@ int CPUCore::step() {
         basePtr[i] = memoryController->readByte(originalPC + i);
     }
     int steps = instruction.func(basePtr, *this);
-    
+#if ENABLE_DEBUGGER
     if (originalPC < 0x8000) {
         KnownInstruction i = { originalROMBank, originalPC, instruction.size };
         _previousInstructions.append(i);
     }
+#endif
     
 #if DEBUG
     // Detect an overflow of the PC into the address space just above the ROM area

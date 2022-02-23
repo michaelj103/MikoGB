@@ -50,4 +50,10 @@ struct RegisterState {
 
 }
 
+// toggle to enable debugger features that have a memory and performan impact on the CPU emulation
+// These include:
+// - breakpoints
+// - instruction location cache for disassembly
+#define ENABLE_DEBUGGER 1
+
 #endif /* GameBoyCoreTypes_h */
