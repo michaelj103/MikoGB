@@ -48,6 +48,10 @@ bool MemoryBankController::configureWithROMData(const void *romData, size_t size
     return true;
 }
 
+void MemoryBankController::updateClock(size_t cpuCycles) {
+    // no-op for most MBCs
+}
+
 MemoryBankController::~MemoryBankController() {
     delete [] _romData;
 }

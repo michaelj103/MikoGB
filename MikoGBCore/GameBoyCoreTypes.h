@@ -54,6 +54,6 @@ struct RegisterState {
 // These include:
 // - breakpoints
 // - instruction location cache for disassembly
-#define ENABLE_DEBUGGER 1
+#define ENABLE_DEBUGGER 0
 
 #endif /* GameBoyCoreTypes_h */

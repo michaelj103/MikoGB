@@ -86,13 +86,29 @@ void MBC3::_updateBankNumbers() {
 #endif
     
     // determine RAM bank
-    if (_ramBankCode < 4) {
-        _ramBank = (int)_ramBankCode;
-    } else {
-        // Reading/writing to a clock register
-        // TODO: support MBC3 clock
-        assert(false);
+    _ramBank = (int)_ramBankCode;
+#if DEBUG
+    assert(_ramBank <= 3 || (_ramBank >= 0x08 && _ramBank <= 0x0C));
+#endif
+}
+
+void MBC3::_latchClockRegisters() {
+    const size_t cpuCyclesPerSecond = 1 << 22; // 4.2MHz (2^22)
+    const size_t totalSeconds = _clockCount / cpuCyclesPerSecond;
+    _clockRegisters[MBC3Clock::RTC_S] = totalSeconds % 60;
+    const size_t totalMinutes = totalSeconds / 60;
+    _clockRegisters[MBC3Clock::RTC_M] = totalMinutes % 60;
+    const size_t totalHours = totalMinutes / 60;
+    _clockRegisters[MBC3Clock::RTC_H] = totalHours % 24;
+    const size_t totalDays = totalHours / 24;
+    _clockRegisters[MBC3Clock::RTC_DL] = (totalDays & 0xFF);
+    size_t daysMask = (totalDays & 0x100) >> 8;
+    if (totalDays > 0x1FF) {
+        // carry bit always stays set until explicitly reset
+        daysMask |= 0x80;
     }
+    
+    _clockRegisters[MBC3Clock::RTC_DH] |= daysMask;
 }
 
 void MBC3::writeControlCode(uint16_t addr, uint8_t val) {
@@ -110,11 +126,13 @@ void MBC3::writeControlCode(uint16_t addr, uint8_t val) {
         _updateBankNumbers();
     } else if (addr < 0x8000) {
         // Writing to clock latch. Only 0 and 1 are valid. Changing from 0->1 "latches" the clock values
-        _latchVal = val;
-#if DEBUG
-        //TODO: MBC3 built-in clock
-        assert(false);
-#endif
+        if (_latchVal != val) {
+            _latchVal = val;
+            if (_latchVal == 1) {
+                // we latched the clock. copy the current values
+                _latchClockRegisters();
+            }
+        }
     } else {
         // Should be unreachable
         assert(false);
@@ -137,16 +155,49 @@ uint8_t MBC3::readRAM(uint16_t addr) const {
     if (!_ramEnabled || _ramBankCount <= 0) {
         return 0xFF;
     }
-    const size_t ramIdx = _RAMDataIndex(addr, _ramBank);
-    return _ramData[ramIdx];
+    if (_ramBank <= 0x03) {
+        // one of 4 true ram banks
+        const size_t ramIdx = _RAMDataIndex(addr, _ramBank);
+        return _ramData[ramIdx];
+    } else {
+        // clock register
+        assert(_ramBank >= 0x08 && _ramBank <= 0x0C);
+        int idx = _ramBank - 0x08;
+        return _clockRegisters[idx];
+    }
 }
 
 void MBC3::writeRAM(uint16_t addr, uint8_t val) {
     if (!_ramEnabled || _ramBankCount <= 0) {
         return;
     }
-    const size_t ramIdx = _RAMDataIndex(addr, _ramBank);
-    _ramData[ramIdx] = val;
+    if (_ramBank <= 0x03) {
+        // one of 4 true ram banks
+        const size_t ramIdx = _RAMDataIndex(addr, _ramBank);
+        _ramData[ramIdx] = val;
+    } else {
+        // clock register
+        assert(_ramBank >= 0x08 && _ramBank <= 0x0C);
+        MBC3Clock clockRegister = static_cast<MBC3Clock>(_ramBank - 0x08);
+        _writeClockRegister(clockRegister, val);
+    }
+}
+
+void MBC3::updateClock(size_t cpuCycles) {
+    bool running = ((_clockRegisters[MBC3Clock::RTC_DH - MBC3Clock::RTC_S] & 0x40) == 0);
+    if (running) {
+        _clockCount += cpuCycles;
+    }
+}
+
+void MBC3::_writeClockRegister(MBC3Clock reg, uint8_t val) {
+//    switch (reg) {
+//        case MBC3Clock::RTC_S:
+//
+//    }
+    
+    // TODO: clock writing. clock writing is weird.
+    assert(false);
 }
 
 int MBC3::currentROMBank() const {

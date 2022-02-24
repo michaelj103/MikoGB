@@ -177,6 +177,7 @@ void MemoryController::updateTimer(size_t cpuCycles) {
     if (interrupt) {
         requestInterrupt(TIMA);
     }
+    _mbc->updateClock(cpuCycles);
 }
 
 void MemoryController::requestInterrupt(InterruptFlag flag) {

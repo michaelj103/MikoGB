@@ -35,7 +35,12 @@ public:
     /// Write to the ROM area which is a control code (or invalid)
     virtual void writeControlCode(uint16_t addr, uint8_t val) = 0;
     
+    /// Get the current ROM bank number. For debugging or diagnostics
     virtual int currentROMBank() const = 0;
+    
+    /// Some MBCs maintain a clock. Supply CPU cycle counts to the MBC to keep this up to date
+    /// CPU cycles are 4 * instruction cycles and the CPU oscillates at 4.2MHz (2^22)
+    virtual void updateClock(size_t cpuCycles);
         
 protected:
     uint8_t *_romData = nullptr;
