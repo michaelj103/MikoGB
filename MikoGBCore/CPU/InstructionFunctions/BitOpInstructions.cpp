@@ -87,6 +87,7 @@ int CPUInstructions::bitResetPtrHL(const uint8_t *opcode, CPUCore &core) {
     const uint8_t mask = 1 << bitIdx;
     const uint16_t hlPtr = core.getHLptr();
     const uint8_t currentVal = core.getMemory(hlPtr);
-    core.setMemory(hlPtr, currentVal ^ mask);
+    const uint8_t targetVal = currentVal & ~mask;
+    core.setMemory(hlPtr, targetVal);
     return 4;
 }
