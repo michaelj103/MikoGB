@@ -11,6 +11,7 @@
 #import "GameBoyCore.hpp"
 #import <os/lock.h>
 #import "GBImageUtilities.h"
+#import "GBAudioWriter.h"
 
 static const size_t GBBytesPerLine = 160 * 4;
 static const size_t GBBytesPerImage = GBBytesPerLine * 144;
@@ -54,6 +55,7 @@ static MikoGB::JoypadButton _ButtonForCode(GBEngineKeyCode code) {
     BOOL _isRunnable;
     
     NSHashTable<id<GBEngineObserver>> *_observers;
+    GBAudioWriter *_audioWriter;
 }
 
 - (instancetype)init {
@@ -104,6 +106,9 @@ static MikoGB::JoypadButton _ButtonForCode(GBEngineKeyCode code) {
             _keyPressedChanged[i] = NO;
         }
         _observers = [NSHashTable weakObjectsHashTable];
+        
+        _audioWriter = [[GBAudioWriter alloc] init];
+        self.audioDestination = _audioWriter;
     }
     return self;
 }

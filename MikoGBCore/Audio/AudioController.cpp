@@ -9,6 +9,8 @@
 #include "AudioController.hpp"
 #include "BitTwiddlingUtil.h"
 
+#include <iostream>
+
 using namespace std;
 using namespace MikoGB;
 
@@ -42,7 +44,7 @@ void AudioController::updateWithCPUCycles(int cycles) {
     _sound1.updateWithCycles(cycles);
     _sound2.updateWithCycles(cycles);
     // TODO: others!
-    
+
     // this isn't technically correct if the input cycles is large (~190 or more)
     // but the input cycles should only be the duration of a cpu instruction so up to ~10
     // if there can be multiple samples per update we'd need to do something more complicated
@@ -53,6 +55,33 @@ void AudioController::updateWithCPUCycles(int cycles) {
         _emitSample();
     }
 }
+
+// Alternative version of the updater that updates per sample and not excessively
+//void AudioController::updateWithCPUCycles(int cycles) {
+//    int cyclesUpdated = 0;
+//    int audioCycles = (cycles * SamplesPerSecond);
+//    while (audioCycles > 0) {
+//        if (audioCycles >= _nextSampleCounter) {
+//            // if we'll hit a cycle, run until then
+//            int cpuCycles = _nextSampleCounter / SamplesPerSecond;
+//            audioCycles -= _nextSampleCounter;
+//            _nextSampleCounter = SampleCounterBase;
+//
+//            // update until the sample will be emitted and then emit
+//            _sound1.updateWithCycles(cpuCycles);
+//            _sound2.updateWithCycles(cpuCycles);
+//            cyclesUpdated += cpuCycles;
+//
+//            _emitSample();
+//        } else {
+//            int remainingCPUCycles = cycles - cyclesUpdated;
+//            _nextSampleCounter -= audioCycles;
+//            audioCycles = 0;
+//            _sound1.updateWithCycles(remainingCPUCycles);
+//            _sound2.updateWithCycles(remainingCPUCycles);
+//        }
+//    }
+//}
 
 // get left/right channel volumes as double from 0.0 - 1.0
 static void ChannelVolumes(uint8_t val, double &leftChannel, double &rightChannel) {
@@ -119,7 +148,7 @@ void AudioController::_emitSample() {
     leftSample /= 4.0;
     rightSample /= 4.0;
     
-    int16_t integerLeftSample = (leftSample * _leftVolume) * SampleMaxVolume;
-    int16_t integerRightSample = (rightSample * _rightVolume) * SampleMaxVolume;
+    int16_t integerLeftSample = (leftSample * _leftVolume) * SampleMaxVolume * 0.95;
+    int16_t integerRightSample = (rightSample * _rightVolume) * SampleMaxVolume * 0.95;
     _sampleCallback(integerLeftSample, integerRightSample);
 }

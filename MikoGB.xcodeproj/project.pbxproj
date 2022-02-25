@@ -28,6 +28,8 @@
 		2902EAB627C8BDBA00186976 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2902EAB527C8BDBA00186976 /* AVFoundation.framework */; };
 		2902EAB927C8C03100186976 /* Sound2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2902EAB727C8C03100186976 /* Sound2.cpp */; };
 		2902EABA27C8C03100186976 /* Sound2.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 2902EAB827C8C03100186976 /* Sound2.hpp */; };
+		2902EABF27C961E200186976 /* WavFile.c in Sources */ = {isa = PBXBuildFile; fileRef = 2902EABB27C961E200186976 /* WavFile.c */; };
+		2902EAC027C961E200186976 /* GBAudioWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 2902EABC27C961E200186976 /* GBAudioWriter.m */; };
 		290B3BC8247E00B400937D71 /* CPUCore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297E6137245FEA5D00EE150F /* CPUCore.cpp */; };
 		290B3BC9247E00C000937D71 /* CPUInstruction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297E613C245FECDF00EE150F /* CPUInstruction.cpp */; };
 		290B3BCA247E00CB00937D71 /* LoadInstructions8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8C0BA2462685F0082C52B /* LoadInstructions8.cpp */; };
@@ -185,6 +187,10 @@
 		2902EAB527C8BDBA00186976 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		2902EAB727C8C03100186976 /* Sound2.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Sound2.cpp; sourceTree = "<group>"; };
 		2902EAB827C8C03100186976 /* Sound2.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Sound2.hpp; sourceTree = "<group>"; };
+		2902EABB27C961E200186976 /* WavFile.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = WavFile.c; sourceTree = "<group>"; };
+		2902EABC27C961E200186976 /* GBAudioWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GBAudioWriter.m; sourceTree = "<group>"; };
+		2902EABD27C961E200186976 /* WavFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WavFile.h; sourceTree = "<group>"; };
+		2902EABE27C961E200186976 /* GBAudioWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GBAudioWriter.h; sourceTree = "<group>"; };
 		290B3BCF247E048100937D71 /* Test8BitLoadInstructions.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = Test8BitLoadInstructions.mm; sourceTree = "<group>"; };
 		290B3BD1247F51D100937D71 /* Test16BitLoadInstructions.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = Test16BitLoadInstructions.mm; sourceTree = "<group>"; };
 		290FF33D265F066D006812F4 /* MonochromePalette.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MonochromePalette.hpp; sourceTree = "<group>"; };
@@ -489,6 +495,10 @@
 				29F0829B2647BA0D00FA5F67 /* GBEngine.mm */,
 				29C3DB8B2655B0ED00DCFA33 /* GBImageUtilities.h */,
 				29C3DB8C2655B0ED00DCFA33 /* GBImageUtilities.mm */,
+				2902EABE27C961E200186976 /* GBAudioWriter.h */,
+				2902EABC27C961E200186976 /* GBAudioWriter.m */,
+				2902EABB27C961E200186976 /* WavFile.c */,
+				2902EABD27C961E200186976 /* WavFile.h */,
 				291987D1268300E1009D7C45 /* DebugUI */,
 				299282B82642449F004691E5 /* Assets.xcassets */,
 				299282BA2642449F004691E5 /* Main.storyboard */,
@@ -833,6 +843,7 @@
 				2902EAB427C8BD2900186976 /* AudioController.swift in Sources */,
 				2992837E264733B3004691E5 /* WindowController.swift in Sources */,
 				29F082A32647BA3800FA5F67 /* GameView.swift in Sources */,
+				2902EABF27C961E200186976 /* WavFile.c in Sources */,
 				29DD393A26AA5A2700D6EC2E /* DebuggerPauseCommand.swift in Sources */,
 				299282B52642449D004691E5 /* AppDelegate.swift in Sources */,
 				2902EA9F27C4CA9C00186976 /* DebuggerContinueCommand.swift in Sources */,
@@ -841,6 +852,7 @@
 				29DD393826AA596800D6EC2E /* DebuggerCommand.swift in Sources */,
 				291987F42683FBBF009D7C45 /* DebuggerConsoleController.swift in Sources */,
 				2902EA9D27C4C87C00186976 /* DebuggerStepCommand.swift in Sources */,
+				2902EAC027C961E200186976 /* GBAudioWriter.m in Sources */,
 				29C3DB8D2655B0ED00DCFA33 /* GBImageUtilities.mm in Sources */,
 				2902EAA727C6C27600186976 /* DebuggerBreakpointCommand.swift in Sources */,
 				2902EAA127C5520500186976 /* DebuggerMemCommand.swift in Sources */,

@@ -14,7 +14,7 @@
 namespace MikoGB {
 
 struct CPUInstruction {
-    uint16_t size = 0;
+    uint16_t size = 3; // default to 3 so that UnrecognizedInstruction exception can work
     std::function<int(const uint8_t *, CPUCore &)> func = UnrecognizedInstruction;
     
     static void InitializeInstructionTable();

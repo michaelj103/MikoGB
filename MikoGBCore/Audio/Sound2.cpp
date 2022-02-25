@@ -80,16 +80,16 @@ int Sound2::getVolume() const {
         switch (_duty) {
             case 0:
                 // 12.5% aka 1/8
-                return _waveDutyPeriod == 0 ? _envelopeVolume : 0;
+                return _waveDutyPeriod == 0 ? _envelopeVolume : -_envelopeVolume;
             case 1:
                 // 25% aka 2/8
-                return _waveDutyPeriod < 2 ? _envelopeVolume : 0;
+                return _waveDutyPeriod < 2 ? _envelopeVolume : -_envelopeVolume;
             case 2:
                 // 50% aka 4/8 aka normal
-                return _waveDutyPeriod < 4 ? _envelopeVolume : 0;
+                return _waveDutyPeriod < 4 ? _envelopeVolume : -_envelopeVolume;
             case 3:
                 // 75% aka 6/8
-                return _waveDutyPeriod < 6 ? _envelopeVolume : 0;
+                return _waveDutyPeriod < 6 ? _envelopeVolume : -_envelopeVolume;
             default:
                 assert(false);
         }

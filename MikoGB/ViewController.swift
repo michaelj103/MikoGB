@@ -21,7 +21,7 @@ class ViewController: NSViewController, NoROMViewDelegate, NSMenuItemValidation 
     }
     
     private var engine: GBEngine!
-    private var audioController: AudioController!
+//    private var audioController: AudioController!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,7 +32,7 @@ class ViewController: NSViewController, NoROMViewDelegate, NSMenuItemValidation 
         self.view.addSubview(emptyView)
         
         engine = AppStateManager.sharedInstance.engine
-        audioController = AudioController(engine: engine)
+//        audioController = AudioController(engine: engine)
     }
     
     override func viewDidLayout() {
@@ -47,7 +47,7 @@ class ViewController: NSViewController, NoROMViewDelegate, NSMenuItemValidation 
                 self.contentView = gameView
                 self.gameView = gameView
                 gameView.start()
-                audioController.startAudioEngine()
+//                audioController.startAudioEngine()
             } else {
                 //TODO: present an alert
             }
