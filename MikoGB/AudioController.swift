@@ -19,8 +19,8 @@ class AudioController : NSObject, GBEngineAudioDestination {
     
     init(engine: GBEngine) {
         self.engine = engine
-        self.leftAudioSampleBuffer = RingBuffer<Float32>(repeating: 0, count: 4096)
-        self.rightAudioSampleBuffer = RingBuffer<Float32>(repeating: 0, count: 4096)
+        self.leftAudioSampleBuffer = RingBuffer<Float32>(repeating: 0, count: 16384)
+        self.rightAudioSampleBuffer = RingBuffer<Float32>(repeating: 0, count: 16384)
         super.init()
         self.engine.audioDestination = self
     }
@@ -42,8 +42,10 @@ class AudioController : NSObject, GBEngineAudioDestination {
             var rightBuf: UnsafeMutableBufferPointer<Float32> = UnsafeMutableBufferPointer(ablPointer[1])
             self.bufferQueue.sync {
 //                if (self.leftAudioSampleBuffer.count >= Int(frameCount)) {
-                let leftReadCount = self.leftAudioSampleBuffer.count
-                let rightReadCount = self.rightAudioSampleBuffer.count
+                let maxCount = Int(frameCount)
+                let leftReadCount = min(self.leftAudioSampleBuffer.count, maxCount)
+                let rightReadCount = min(self.rightAudioSampleBuffer.count, maxCount)
+//                print("MJB: requested \(maxCount) leftover \(self.leftAudioSampleBuffer.count)")
                 try! self.leftAudioSampleBuffer.read(into: &leftBuf, count: leftReadCount)
                 try! self.rightAudioSampleBuffer.read(into: &rightBuf, count: rightReadCount)
 //                } else {
