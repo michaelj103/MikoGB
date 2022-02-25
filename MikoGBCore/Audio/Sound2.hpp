@@ -1,19 +1,19 @@
 //
-//  Sound1.hpp
+//  Sound2.hpp
 //  MikoGBCore
 //
 //  Created by Michael Brandt on 2/24/22.
 //  Copyright © 2022 Michael Brandt. All rights reserved.
 //
 
-#ifndef Sound1_hpp
-#define Sound1_hpp
+#ifndef Sound2_hpp
+#define Sound2_hpp
 
 #include <cstdlib>
 
 namespace MikoGB {
 
-class Sound1 {
+class Sound2 {
 public:
     void updateWithCycles(int cycles);
     
@@ -26,13 +26,6 @@ public:
     
 private:
     bool _isRunning;
-    
-    // sweep
-    int _sweepTime = 0; // CPU cycles per sweep event. 0 means sweep disabled
-    int _sweepSign = 1;
-    int _sweepShift = 0;
-    int _sweepCounter = 0; // remaining CPU cycles until next sweep event
-    void _resetSweep(uint8_t val);
     
     // duty & duration
     int _duty = 0;
@@ -63,4 +56,4 @@ private:
 
 }
 
-#endif /* Sound1_hpp */
+#endif /* Sound2_hpp */

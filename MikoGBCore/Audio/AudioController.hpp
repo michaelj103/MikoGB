@@ -11,6 +11,7 @@
 
 #include <array>
 #include "Sound1.hpp"
+#include "Sound2.hpp"
 #include "GameBoyCoreTypes.h"
 
 namespace MikoGB {
@@ -39,6 +40,7 @@ private:
     double _leftVolume = 0.0;
     double _rightVolume = 0.0;
     Sound1 _sound1;
+    Sound2 _sound2;
     
     int _nextSampleCounter = 0;
     void _emitSample();

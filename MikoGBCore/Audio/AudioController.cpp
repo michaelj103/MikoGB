@@ -12,9 +12,13 @@
 using namespace std;
 using namespace MikoGB;
 
-// sound 1 register ranges
+// sound 1 register range
 static const uint16_t NR10Register = 0xFF10; // Sound 1 sweep register
 static const uint16_t NR14Register = 0xFF14; // Sound 1 frequency hi and control
+
+// sound 2 register range
+static const uint16_t NR21Register = 0xFF16; // Sound 2 duty and duration register
+static const uint16_t NR24Register = 0xFF19; // Sound 2 frequency hi and control
 
 static const uint16_t NR50Register = 0xFF24; // Channel control
 static const uint16_t NR51Register = 0xFF25; // Sound selection register
@@ -36,6 +40,7 @@ AudioController::AudioController() {
 
 void AudioController::updateWithCPUCycles(int cycles) {
     _sound1.updateWithCycles(cycles);
+    _sound2.updateWithCycles(cycles);
     // TODO: others!
     
     // this isn't technically correct if the input cycles is large (~190 or more)
@@ -59,8 +64,10 @@ static void ChannelVolumes(uint8_t val, double &leftChannel, double &rightChanne
 
 void AudioController::writeAudioRegister(uint16_t addr, uint8_t val) {
     uint8_t updatedVal = val;
-    if (addr <= NR14Register) {
-        updatedVal = _sound1.sound1Write(addr - NR10Register, val);
+    if (addr >= NR10Register && addr <= NR14Register) {
+        updatedVal = _sound1.soundWrite(addr - NR10Register, val);
+    } else if (addr >= NR21Register && addr <= NR24Register) {
+        updatedVal = _sound2.soundWrite(addr - NR21Register, val);
     } else if (addr == NR50Register) {
         // channel control
         ChannelVolumes(val, _leftVolume, _rightVolume);
@@ -75,8 +82,8 @@ uint8_t AudioController::readAudioRegister(uint16_t addr) const {
     if (addr == NR52Register) {
         uint8_t baseVal = _audioRegisters[addr - AudioRegisterBase] & 0x80;
         baseVal |= (_sound1.isRunning() ? 1 : 0);
+        baseVal |= (_sound2.isRunning() ? 1 : 0) << 1;
         // TODO: others!
-//        baseVal |= (_sound2.isRunning() ? 1 : 0) << 1;
     }
     return _audioRegisters[addr - AudioRegisterBase];
 }
@@ -90,6 +97,7 @@ void AudioController::_emitSample() {
     
     // get current individual sound volumes as double 0.0 - 1.0
     double sound1 = (double)_sound1.getVolume() / 15.0;
+    double sound2 = (double)_sound2.getVolume() / 15.0;
     // TODO: others!
     
     double leftSample = 0.0;
@@ -98,8 +106,14 @@ void AudioController::_emitSample() {
     if (isMaskSet(selectionValue, 0x10)) {
         leftSample += sound1;
     }
+    if (isMaskSet(selectionValue, 0x20)) {
+        leftSample += sound2;
+    }
     if (isMaskSet(selectionValue, 0x1)) {
         rightSample += sound1;
+    }
+    if (isMaskSet(selectionValue, 0x2)) {
+        rightSample += sound2;
     }
     
     leftSample /= 4.0;
