@@ -11,6 +11,7 @@
 #include <cstdlib>
 #include "CartridgeHeader.hpp"
 #include "Timer.hpp"
+#include "AudioController.hpp"
 
 namespace MikoGB {
 
@@ -29,7 +30,7 @@ public:
     uint8_t readByte(uint16_t addr) const;
     void setByte(uint16_t addr, uint8_t val);
     
-    void updateTimer(size_t cpuCycles);
+    void updateWithCPUCycles(size_t cpuCycles);
         
     const CartridgeHeader &getHeader() const { return _header; }
     
@@ -45,12 +46,16 @@ public:
     static const uint16_t IFRegister = 0xFF0F; // Interrupt Request
     static const uint16_t IERegister = 0xFFFF; // Interrupt Enable
     
+    // Joypad
     enum InputMask : uint8_t {
         Directional = 0x10, // D-pad
         Button = 0x20, // A, B, Sel, Start
     };
     InputMask selectedInputMask() const;
     std::shared_ptr<Joypad> joypad;
+    
+    // Audio
+    void setAudioSampleCallback(AudioSampleCallback callback);
     
     // Debugging and introspection
     int currentROMBank() const;
@@ -64,6 +69,7 @@ private:
     
     MemoryBankController *_mbc = nullptr;
     Timer _timer;
+    AudioController _audioController;
     
     void _dmaTransfer(uint8_t);
 };

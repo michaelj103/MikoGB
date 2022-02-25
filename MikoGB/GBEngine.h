@@ -76,6 +76,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)engine:(GBEngine *)engine receivedFrame:(CGImageRef)frame;
 @end
 
+@protocol GBEngineAudioDestination <NSObject>
+- (void)engine:(GBEngine *)engine receivedAudioSampleLeft:(int16_t)left right:(int16_t)right;
+@end
+
 @protocol GBEngineObserver <NSObject>
 - (void)engine:(GBEngine *)engine runnableDidChange:(BOOL)isRunnable;
 - (void)didUpdateSuspendedStateForEngine:(GBEngine *)engine;

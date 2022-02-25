@@ -64,9 +64,16 @@ static MikoGB::JoypadButton _ButtonForCode(GBEngineKeyCode code) {
             [weakSelf _handleScanline:scanline line:line];
         };
         
+        void (^audioBlock)(int16_t, int16_t) = ^void(int16_t l, int16_t r) {
+            [weakSelf _handleAudioSampleLeft:l right:r];
+        };
+        
         _core = new MikoGB::GameBoyCore();
         _core->setScanlineCallback([scanlineBlock](const MikoGB::PixelBuffer &scanline, size_t line) {
             scanlineBlock(scanline, line);
+        });
+        _core->setAudioSampleCallback([audioBlock](int16_t l, int16_t r){
+            audioBlock(l, r);
         });
         
         void (^runnableBlock)(bool) = ^void(bool isRunnable) {
@@ -373,6 +380,10 @@ static void _AddInstruction(const MikoGB::DisassembledInstruction &instruction, 
     if (line >= 143) {
         [self _deliverFrameImage];
     }
+}
+
+- (void)_handleAudioSampleLeft:(int16_t)left right:(int16_t)right {
+    [self.audioDestination engine:self receivedAudioSampleLeft:left right:right];
 }
 
 // Expected on emulation queue

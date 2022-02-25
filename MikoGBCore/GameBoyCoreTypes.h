@@ -48,6 +48,9 @@ struct RegisterState {
     bool CFlag;
 };
 
+// audio callback is left sample, right sample
+using AudioSampleCallback = std::function<void(const int16_t, const int16_t)>;
+
 }
 
 // toggle to enable debugger features that have a memory and performan impact on the CPU emulation

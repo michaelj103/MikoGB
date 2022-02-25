@@ -35,6 +35,7 @@ public:
     void setRunnableChangedCallback(RunnableChangedCallback callback) { _runnableChangedCallback = callback; }
     
     void setScanlineCallback(PixelBufferScanlineCallback callback);
+    void setAudioSampleCallback(AudioSampleCallback callback);
     
     void setButtonPressed(JoypadButton, bool);
     

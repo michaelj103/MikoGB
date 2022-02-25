@@ -55,6 +55,10 @@ void GameBoyCore::setScanlineCallback(PixelBufferScanlineCallback callback) {
     _imp->setScanlineCallback(callback);
 }
 
+void GameBoyCore::setAudioSampleCallback(AudioSampleCallback callback) {
+    _imp->setAudioSampleCallback(callback);
+}
+
 uint16_t GameBoyCore::getPC() const {
     return _imp->_cpu->programCounter;
 }

@@ -33,7 +33,7 @@ void GameBoyCoreImp::step() {
     int instructionCycles = _cpu->step();
     size_t cpuCycles = instructionCycles * 4;
     _gpu->updateWithCPUCycles(cpuCycles);
-    _memoryController->updateTimer(cpuCycles);
+    _memoryController->updateWithCPUCycles(cpuCycles);
 #if ENABLE_DEBUGGER
     if (_cpu->isStoppedAtBreakpoint()) {
         setRunnable(false);
@@ -70,6 +70,10 @@ void GameBoyCoreImp::setButtonPressed(JoypadButton button, bool set) {
 
 void GameBoyCoreImp::setScanlineCallback(PixelBufferScanlineCallback callback) {
     _gpu->setScanlineCallback(callback);
+}
+
+void GameBoyCoreImp::setAudioSampleCallback(AudioSampleCallback callback) {
+    _memoryController->setAudioSampleCallback(callback);
 }
 
 void GameBoyCoreImp::getTileMap(PixelBufferImageCallback callback) {

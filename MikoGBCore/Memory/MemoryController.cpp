@@ -46,6 +46,8 @@ static const uint16_t DIVRegister = 0xFF04; // Div is basically the CPU cycle co
 static const uint16_t TIMARegister = 0xFF05; // Timer counts according to TAC
 static const uint16_t TMARegister = 0xFF06; // Timer modulo replaces TIMA when it overflows
 static const uint16_t TACRegister = 0xFF07; // Timer control register
+static const uint16_t AudioRegisterBegin = 0xFF10; // NR10, lowest audio control register
+static const uint16_t AudioRegisterEnd = 0xFF3F; // end of wave pattern RAM. Highest audio control register
 
 static void _LogMemoryControllerErr(const string &msg) {
     cerr << "MemoryController Err: " << msg << "\n";
@@ -130,6 +132,9 @@ uint8_t MemoryController::readByte(uint16_t addr) const {
             return _timer.getDiv();
         } else if (addr == TIMARegister) {
             return _timer.getTIMA();
+        } else if (addr >= AudioRegisterBegin && addr <= AudioRegisterEnd) {
+            // read from audio controller
+            return _audioController.readAudioRegister(addr);
         }
         
         // Read from the high range memory
@@ -165,6 +170,9 @@ void MemoryController::setByte(uint16_t addr, uint8_t val) {
             _timer.setTMA(val);
         } else if (addr == TACRegister) {
             _timer.setTAC(val);
+        } else if (addr >= AudioRegisterBegin && addr <= AudioRegisterEnd) {
+            // write to audio controller
+            _audioController.writeAudioRegister(addr, val);
         }
         
         // Write to high range memory
@@ -172,12 +180,13 @@ void MemoryController::setByte(uint16_t addr, uint8_t val) {
     }
 }
 
-void MemoryController::updateTimer(size_t cpuCycles) {
+void MemoryController::updateWithCPUCycles(size_t cpuCycles) {
     bool interrupt = _timer.updateWithCPUCycles(cpuCycles);
     if (interrupt) {
         requestInterrupt(TIMA);
     }
     _mbc->updateClock(cpuCycles);
+    _audioController.updateWithCPUCycles((int)cpuCycles);
 }
 
 void MemoryController::requestInterrupt(InterruptFlag flag) {
@@ -189,6 +198,10 @@ MemoryController::InputMask MemoryController::selectedInputMask() const {
     uint16_t idx = ControllerDataRegister - HighRangeMemoryBaseAddr;
     uint8_t regVal = _highRangeMemory[idx] & 0x30;
     return static_cast<InputMask>(regVal);
+}
+
+void MemoryController::setAudioSampleCallback(AudioSampleCallback callback) {
+    _audioController.setSampleCallback(callback);
 }
 
 int MemoryController::currentROMBank() const {

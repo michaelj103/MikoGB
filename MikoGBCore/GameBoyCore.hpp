@@ -44,6 +44,7 @@ public:
     void setButtonPressed(JoypadButton, bool);
     
     void setScanlineCallback(PixelBufferScanlineCallback callback);
+    void setAudioSampleCallback(AudioSampleCallback callback);
     
     uint16_t getPC() const;
     
