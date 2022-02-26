@@ -23,10 +23,10 @@ static const int DutyPatternLength = 8;
 // Duty patterns from pan docs. They don't really make a difference though vs idx <= count
 static const array<array<double, DutyPatternLength>, 4> DutyPatterns =
 {{
-    { -1., -1., -1., -1., -1., -1., -1., 1. },
-    { 1., -1., -1., -1., -1., -1., -1., 1. },
-    { 1., -1., -1., -1., -1., 1., 1., 1. },
-    { -1., 1., 1., 1., 1., 1., 1., -1. },
+    { 0., 0., 0., 0., 0., 0., 0., 1. },
+    { 1., 0., 0., 0., 0., 0., 0., 1. },
+    { 1., 0., 0., 0., 0., 1., 1., 1. },
+    { 0., 1., 1., 1., 1., 1., 1., 0. },
 }};
 
 void SquareSound::updateWithCycles(int cycles) {
@@ -165,22 +165,14 @@ void SquareSound::_resetEnvelope(uint8_t val) {
 }
 
 void SquareSound::_resetFreqLow(uint8_t val) {
-    int freqOld = _freq;
     // freq is 11 bits. keep top 3 and add in the low 8
     _freq = (_freq & 0x700) | val;
-    if (freqOld != _freq) {
-        _updateFreqCounter();
-    }
 }
 
 void SquareSound::_resetFreqHigh(uint8_t val) {
-    int freqOld = _freq;
     // freq is 11 bits, keep bottom 8 and add the top 3
     int freqUpdate = val & 7;
     _freq = (_freq & 0xFF) | (freqUpdate << 8);
-    if (freqOld != _freq) {
-        _updateFreqCounter();
-    }
     // duration enable is here for whatever reason
     _durationEnabled = isMaskSet(val, 0x40);
     
@@ -198,7 +190,7 @@ void SquareSound::_updateFreqCounter() {
     // cycles per duty update
     _freqCycles = 4 * (2048 - _freq);
     _freqCounter = _freqCycles;
-//    _waveDutyPeriod = 0;
+    _waveDutyPeriod = 0;
 }
 
 void SquareSound::_initialize() {
