@@ -32,7 +32,9 @@ static const uint16_t AudioRegisterBase = NR10Register;
 // this isn't an integer, so to keep the timing right, work fractionally
 // each update(cycles) ticks cycles*SamplesPerSecond off of this number
 // we emit a sample when it hits <= 0 and reset to += (1 << 22) to account for fracional drift
-static const int SampleCounterBase = 1 << 22;
+// Instead of the actual clock speed (1<22) as the counter base, use the GPU speed, which is
+// 456 cycles per scanline, 154 scanlines per frame, 60 frames per second
+static const int SampleCounterBase = 456 * 154 * 60;
 static const int SamplesPerSecond = 44100;
 static const int16_t SampleMaxVolume = INT16_MAX;
 

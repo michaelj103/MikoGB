@@ -19,6 +19,12 @@ class AudioController : NSObject, GBEngineAudioDestination {
     
     private static let bufferSize = 16384
     
+    // AUDIO_SAMPLE_RATE <- search for this and uncomment to track and print actual audio sample rate
+//    private var lastCFTime: Double = 0.0
+//    private var elapsedTime: Double = 0.0
+//    private var weightedSampleRatio: Double = 1.0
+//    private var receivedSamples: Int = 0
+    
     init(engine: GBEngine) {
         self.engine = engine
         self.leftAudioSampleBuffer = RingBuffer<Float32>(repeating: 0, count: AudioController.bufferSize)
@@ -38,19 +44,8 @@ class AudioController : NSObject, GBEngineAudioDestination {
                                         channels: 2,
                                         interleaved: outputFormat.isInterleaved)
         
-        // TODO: weak self?
-        let srcNode = AVAudioSourceNode { isSilence, _, frameCount, audioBufferList -> OSStatus in
-            let ablPointer = UnsafeMutableAudioBufferListPointer(audioBufferList)
-            var leftBuf: UnsafeMutableBufferPointer<Float32> = UnsafeMutableBufferPointer(ablPointer[0])
-            var rightBuf: UnsafeMutableBufferPointer<Float32> = UnsafeMutableBufferPointer(ablPointer[1])
-            self.bufferQueue.sync {
-                let maxCount = Int(frameCount)
-                let leftReadCount = min(self.leftAudioSampleBuffer.count, maxCount)
-                let rightReadCount = min(self.rightAudioSampleBuffer.count, maxCount)
-//                print("MJB: requested \(maxCount) leftover \(self.leftAudioSampleBuffer.count)")
-                try! self.leftAudioSampleBuffer.read(into: &leftBuf, count: leftReadCount)
-                try! self.rightAudioSampleBuffer.read(into: &rightBuf, count: rightReadCount)
-            }
+        let srcNode = AVAudioSourceNode { [weak self] _, _, frameCount, audioBufferList -> OSStatus in
+            self?._audioCallback(frameCount: frameCount, audioBufferList: audioBufferList)
             return noErr
         }
         
@@ -63,9 +58,40 @@ class AudioController : NSObject, GBEngineAudioDestination {
         self.audioEngine = engine
     }
     
+    func _audioCallback(frameCount: AVAudioFrameCount, audioBufferList: UnsafeMutablePointer<AudioBufferList>) {
+        let ablPointer = UnsafeMutableAudioBufferListPointer(audioBufferList)
+        var leftBuf: UnsafeMutableBufferPointer<Float32> = UnsafeMutableBufferPointer(ablPointer[0])
+        var rightBuf: UnsafeMutableBufferPointer<Float32> = UnsafeMutableBufferPointer(ablPointer[1])
+        
+        self.bufferQueue.sync {
+            // AUDIO_SAMPLE_RATE
+//            let cfTime = CFAbsoluteTimeGetCurrent()
+//            let diff = cfTime - lastCFTime
+//            lastCFTime = cfTime
+//            elapsedTime += diff
+//            if elapsedTime >= 1.0 {
+//                let actualSampleRate = Double(receivedSamples) / elapsedTime
+//                let ratio = actualSampleRate / 44100.0
+//                weightedSampleRatio = (0.95 * weightedSampleRatio) + (0.05 * ratio)
+//                print("sample rate \(weightedSampleRatio * 44100.0)")
+//                elapsedTime = 0.0
+//                receivedSamples = 0
+//            }
+            
+            let maxCount = Int(frameCount)
+            let leftReadCount = min(leftAudioSampleBuffer.count, maxCount)
+            let rightReadCount = min(rightAudioSampleBuffer.count, maxCount)
+//            print("MJB: requested \(maxCount) leftover \(self.leftAudioSampleBuffer.count)")
+            try! leftAudioSampleBuffer.read(into: &leftBuf, count: leftReadCount)
+            try! rightAudioSampleBuffer.read(into: &rightBuf, count: rightReadCount)
+        }
+    }
+    
     func startAudioEngine() {
         _initializeAudioEngine()
         do {
+            // AUDIO_SAMPLE_RATE
+//            lastCFTime = CFAbsoluteTimeGetCurrent()
             try self.audioEngine?.start()
         } catch {
             print("Failed to start audio engine \(error)")
@@ -79,6 +105,8 @@ class AudioController : NSObject, GBEngineAudioDestination {
     
     func engine(_ engine: GBEngine, receivedAudioSampleLeft left: Int16, right: Int16) {
         bufferQueue.sync {
+            // AUDIO_SAMPLE_RATE
+//            receivedSamples += 1
             let leftFloat = Float32(Float(left)/32768.0)
             let rightFloat = Float32(Float(right)/32768.0)
             leftAudioSampleBuffer.write(leftFloat)
