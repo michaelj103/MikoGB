@@ -22,8 +22,8 @@ public:
     // returns the value to store for future reads
     uint8_t soundWrite(uint16_t offset, uint8_t val);
     
-    // volume is a value from 0-15
-    int getVolume() const;
+    // volume is a value from -1.0 - 1.0
+    double getVolume() const;
     bool isRunning() const { return _isRunning; }
     
 private:

@@ -126,9 +126,9 @@ void AudioController::_emitSample() {
         return;
     }
     
-    // get current individual sound volumes as double 0.0 - 1.0
-    double sound1 = (double)_sound1.getVolume() / 15.0;
-    double sound2 = (double)_sound2.getVolume() / 15.0;
+    // get current individual sound volumes as double -1.0 - 1.0
+    double sound1 = (double)_sound1.getVolume();
+    double sound2 = (double)_sound2.getVolume();
     // TODO: others!
     
     double leftSample = 0.0;

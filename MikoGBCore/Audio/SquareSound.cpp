@@ -19,6 +19,16 @@ static const int SweepTimeCycles = 1 << 15; // 128Hz with 4.2MHz CPU: 2^22 / 2^7
 static const int DurationTimeCycles = 1 << 14; // 256Hz with 4.2MHz CPU: 2^22 / 2^8 = 1 << 14
 static const int EnvelopeTimeCycles = 1 << 16; // 64Hz with 4.2MHz CPU: 2^22 / 2^6 = 1 << 16
 
+static const int DutyPatternLength = 8;
+// Duty patterns from pan docs. They don't really make a difference though vs idx <= count
+static const array<array<double, DutyPatternLength>, 4> DutyPatterns =
+{{
+    { -1., -1., -1., -1., -1., -1., -1., 1. },
+    { 1., -1., -1., -1., -1., -1., -1., 1. },
+    { 1., -1., -1., -1., -1., 1., 1., 1. },
+    { -1., 1., 1., 1., 1., 1., 1., -1. },
+}};
+
 void SquareSound::updateWithCycles(int cycles) {
     if (!_isRunning) {
         return;
@@ -71,7 +81,7 @@ void SquareSound::updateWithCycles(int cycles) {
         // we need to update the current duty period. Might happen a couple times per instruction
         // for very high frequency sounds
         _freqCounter += _freqCycles;
-        _waveDutyPeriod = (_waveDutyPeriod + 1) % 8;
+        _waveDutyPeriod = (_waveDutyPeriod + 1) % DutyPatternLength;
     }
 }
 
@@ -105,21 +115,22 @@ uint8_t SquareSound::soundWrite(uint16_t offset, uint8_t val) {
     return 0;
 }
 
-int SquareSound::getVolume() const {
+double SquareSound::getVolume() const {
     if (_isRunning) {
+        double env = (double)_envelopeVolume / 15.0;
         switch (_duty) {
             case 0:
                 // 12.5% aka 1/8
-                return _waveDutyPeriod == 0 ? _envelopeVolume : -_envelopeVolume;
+                return DutyPatterns[0][_waveDutyPeriod] * env;
             case 1:
                 // 25% aka 2/8
-                return _waveDutyPeriod < 2 ? _envelopeVolume : -_envelopeVolume;
+                return DutyPatterns[1][_waveDutyPeriod] * env;
             case 2:
                 // 50% aka 4/8 aka normal
-                return _waveDutyPeriod < 4 ? _envelopeVolume : -_envelopeVolume;
+                return DutyPatterns[2][_waveDutyPeriod] * env;
             case 3:
                 // 75% aka 6/8
-                return _waveDutyPeriod < 6 ? _envelopeVolume : -_envelopeVolume;
+                return DutyPatterns[3][_waveDutyPeriod] * env;
             default:
                 assert(false);
         }
@@ -187,7 +198,7 @@ void SquareSound::_updateFreqCounter() {
     // cycles per duty update
     _freqCycles = 4 * (2048 - _freq);
     _freqCounter = _freqCycles;
-    _waveDutyPeriod = 0;
+//    _waveDutyPeriod = 0;
 }
 
 void SquareSound::_initialize() {
