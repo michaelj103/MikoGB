@@ -90,23 +90,23 @@ uint8_t SquareSound::soundWrite(uint16_t offset, uint8_t val) {
     uint16_t trueOffset = _hasSweep ? offset : offset + 1;
     switch (trueOffset) {
         case 0:
-            // 0xFF10, NR10: Sound 1 sweep register
+            // NR10: Sound 1 sweep register
             _resetSweep(val);
             return val;
         case 1:
-            // 0xFF11, NR11: Sound 1 duty and duration register
+            // NR11/NR21: Sound 1/2 duty and duration register
             _resetDutyAndDuration(val);
             return val & 0xC0; // only top 2 bits are readable
         case 2:
-            // 0xFF12, NR12: Sound 1 envelope register
+            // NR12/NR22: Sound 1/2 envelope register
             _resetEnvelope(val);
             return val;
         case 3:
-            // 0xFF13, NR13: Sound 1 frequency low register
+            // NR13/NR23: Sound 1/2 frequency low register
             _resetFreqLow(val);
             return 0; // not readable
         case 4:
-            // 0xFF14, NR14: Sound 1 frequency hi and control
+            // NR14/NR24: Sound 1/2 frequency hi and control
             _resetFreqHigh(val);
             return val & 0x40; // only bit 6 is readable
         default:
@@ -147,8 +147,8 @@ void SquareSound::_resetSweep(uint8_t val) {
 }
 
 void SquareSound::_resetDutyAndDuration(uint8_t val) {
-    _duty = (val & 0xC0) >> 6; // bits 7-8 represent duty
-    // bits 0-6 are duration count. sound lasts (64-count) increments of 1/256
+    _duty = (val & 0xC0) >> 6; // bits 6-7 represent duty
+    // bits 0-5 are duration count. sound lasts (64-count) increments of 1/256
     int durationCounts = (val & 0x3F);
     _durationTime = (64 - durationCounts) * DurationTimeCycles;
     _durationCounter = _durationTime;

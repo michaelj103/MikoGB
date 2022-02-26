@@ -28,6 +28,8 @@
 		2902EAB627C8BDBA00186976 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2902EAB527C8BDBA00186976 /* AVFoundation.framework */; };
 		2902EABF27C961E200186976 /* WavFile.c in Sources */ = {isa = PBXBuildFile; fileRef = 2902EABB27C961E200186976 /* WavFile.c */; };
 		2902EAC027C961E200186976 /* GBAudioWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 2902EABC27C961E200186976 /* GBAudioWriter.m */; };
+		2902EAD827CAD5D300186976 /* NoiseSound.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2902EAD627CAD5D300186976 /* NoiseSound.cpp */; };
+		2902EAD927CAD5D300186976 /* NoiseSound.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 2902EAD727CAD5D300186976 /* NoiseSound.hpp */; };
 		290B3BC8247E00B400937D71 /* CPUCore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297E6137245FEA5D00EE150F /* CPUCore.cpp */; };
 		290B3BC9247E00C000937D71 /* CPUInstruction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297E613C245FECDF00EE150F /* CPUInstruction.cpp */; };
 		290B3BCA247E00CB00937D71 /* LoadInstructions8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8C0BA2462685F0082C52B /* LoadInstructions8.cpp */; };
@@ -187,6 +189,8 @@
 		2902EABC27C961E200186976 /* GBAudioWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GBAudioWriter.m; sourceTree = "<group>"; };
 		2902EABD27C961E200186976 /* WavFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WavFile.h; sourceTree = "<group>"; };
 		2902EABE27C961E200186976 /* GBAudioWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GBAudioWriter.h; sourceTree = "<group>"; };
+		2902EAD627CAD5D300186976 /* NoiseSound.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = NoiseSound.cpp; sourceTree = "<group>"; };
+		2902EAD727CAD5D300186976 /* NoiseSound.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = NoiseSound.hpp; sourceTree = "<group>"; };
 		290B3BCF247E048100937D71 /* Test8BitLoadInstructions.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = Test8BitLoadInstructions.mm; sourceTree = "<group>"; };
 		290B3BD1247F51D100937D71 /* Test16BitLoadInstructions.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = Test16BitLoadInstructions.mm; sourceTree = "<group>"; };
 		290FF33D265F066D006812F4 /* MonochromePalette.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MonochromePalette.hpp; sourceTree = "<group>"; };
@@ -332,6 +336,8 @@
 				2902EAA927C85C8F00186976 /* AudioController.cpp */,
 				2902EAAE27C889BB00186976 /* SquareSound.hpp */,
 				2902EAAD27C889BB00186976 /* SquareSound.cpp */,
+				2902EAD727CAD5D300186976 /* NoiseSound.hpp */,
+				2902EAD627CAD5D300186976 /* NoiseSound.cpp */,
 			);
 			path = Audio;
 			sourceTree = "<group>";
@@ -590,6 +596,7 @@
 				299281FE2642416A004691E5 /* GameBoyCore.hpp in Headers */,
 				2902EAAC27C85C8F00186976 /* AudioController.hpp in Headers */,
 				29198791267481FA009D7C45 /* MBC1.hpp in Headers */,
+				2902EAD927CAD5D300186976 /* NoiseSound.hpp in Headers */,
 				29A8FF9226521A71007A26C9 /* CartridgeHeader.hpp in Headers */,
 				2902EA9727C216ED00186976 /* Disassembler.hpp in Headers */,
 				299283192643AF00004691E5 /* PixelBuffer.hpp in Headers */,
@@ -809,6 +816,7 @@
 				291987C526829212009D7C45 /* MBC3.cpp in Sources */,
 				29A8FF75265211B8007A26C9 /* MemoryController.cpp in Sources */,
 				2992830A26426A32004691E5 /* GPUCore.cpp in Sources */,
+				2902EAD827CAD5D300186976 /* NoiseSound.cpp in Sources */,
 				29A8FFD526535994007A26C9 /* MemoryBankController.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

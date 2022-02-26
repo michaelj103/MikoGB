@@ -22,6 +22,10 @@ static const uint16_t NR14Register = 0xFF14; // Sound 1 frequency hi and control
 static const uint16_t NR21Register = 0xFF16; // Sound 2 duty and duration register
 static const uint16_t NR24Register = 0xFF19; // Sound 2 frequency hi and control
 
+// sound 4 register range
+static const uint16_t NR41Register = 0xFF20; // Sound 4 duration register
+static const uint16_t NR44Register = 0xFF23; // Sound 4 control register
+
 static const uint16_t NR50Register = 0xFF24; // Channel control
 static const uint16_t NR51Register = 0xFF25; // Sound selection register
 static const uint16_t NR52Register = 0xFF26; // Sound on/off register
@@ -45,6 +49,7 @@ AudioController::AudioController(): _sound1(true), _sound2(false) {
 void AudioController::updateWithCPUCycles(int cycles) {
     _sound1.updateWithCycles(cycles);
     _sound2.updateWithCycles(cycles);
+    _sound4.updateWithCycles(cycles);
     // TODO: others!
 
     // this isn't technically correct if the input cycles is large (~190 or more)
@@ -72,6 +77,7 @@ void AudioController::updateWithCPUCycles(int cycles) {
 //            // update until the sample will be emitted and then emit
 //            _sound1.updateWithCycles(cpuCycles);
 //            _sound2.updateWithCycles(cpuCycles);
+//            _sound4.updateWithCycles(cpuCycles);
 //            cyclesUpdated += cpuCycles;
 //
 //            _emitSample();
@@ -81,6 +87,7 @@ void AudioController::updateWithCPUCycles(int cycles) {
 //            audioCycles = 0;
 //            _sound1.updateWithCycles(remainingCPUCycles);
 //            _sound2.updateWithCycles(remainingCPUCycles);
+//            _sound4.updateWithCycles(cpuCycles);
 //        }
 //    }
 //}
@@ -99,6 +106,8 @@ void AudioController::writeAudioRegister(uint16_t addr, uint8_t val) {
         updatedVal = _sound1.soundWrite(addr - NR10Register, val);
     } else if (addr >= NR21Register && addr <= NR24Register) {
         updatedVal = _sound2.soundWrite(addr - NR21Register, val);
+    } else if (addr >= NR41Register && addr <= NR44Register) {
+        updatedVal = _sound4.soundWrite(addr - NR41Register, val);
     } else if (addr == NR50Register) {
         // channel control
         ChannelVolumes(val, _leftVolume, _rightVolume);
@@ -114,6 +123,7 @@ uint8_t AudioController::readAudioRegister(uint16_t addr) const {
         uint8_t baseVal = _audioRegisters[addr - AudioRegisterBase] & 0x80;
         baseVal |= (_sound1.isRunning() ? 1 : 0);
         baseVal |= (_sound2.isRunning() ? 1 : 0) << 1;
+        baseVal |= (_sound4.isRunning() ? 1 : 0) << 3;
         // TODO: others!
     }
     return _audioRegisters[addr - AudioRegisterBase];
@@ -126,9 +136,10 @@ void AudioController::_emitSample() {
         return;
     }
     
-    // get current individual sound volumes as double -1.0 - 1.0
+    // get current individual sound volumes
     double sound1 = (double)_sound1.getVolume();
     double sound2 = (double)_sound2.getVolume();
+    double sound4 = (double)_sound4.getVolume();
     // TODO: others!
     
     double leftSample = 0.0;
@@ -140,11 +151,17 @@ void AudioController::_emitSample() {
     if (isMaskSet(selectionValue, 0x20)) {
         leftSample += sound2;
     }
+    if (isMaskSet(selectionValue, 0x80)) {
+        leftSample += sound4;
+    }
     if (isMaskSet(selectionValue, 0x1)) {
         rightSample += sound1;
     }
     if (isMaskSet(selectionValue, 0x2)) {
         rightSample += sound2;
+    }
+    if (isMaskSet(selectionValue, 0x8)) {
+        rightSample += sound4;
     }
     
     leftSample /= 4.0;

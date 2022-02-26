@@ -11,6 +11,7 @@
 
 #include <array>
 #include "SquareSound.hpp"
+#include "NoiseSound.hpp"
 #include "GameBoyCoreTypes.h"
 
 namespace MikoGB {
@@ -40,6 +41,7 @@ private:
     double _rightVolume = 0.0;
     SquareSound _sound1;
     SquareSound _sound2;
+    NoiseSound _sound4;
     
     int _nextSampleCounter = 0;
     void _emitSample();
