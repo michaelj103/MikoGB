@@ -17,10 +17,12 @@ class AudioController : NSObject, GBEngineAudioDestination {
     private let bufferQueue = DispatchQueue(label: "AudioControllerBufferQueue")
     private var audioEngine: AVAudioEngine?
     
+    private static let bufferSize = 16384
+    
     init(engine: GBEngine) {
         self.engine = engine
-        self.leftAudioSampleBuffer = RingBuffer<Float32>(repeating: 0, count: 16384)
-        self.rightAudioSampleBuffer = RingBuffer<Float32>(repeating: 0, count: 16384)
+        self.leftAudioSampleBuffer = RingBuffer<Float32>(repeating: 0, count: AudioController.bufferSize)
+        self.rightAudioSampleBuffer = RingBuffer<Float32>(repeating: 0, count: AudioController.bufferSize)
         super.init()
         self.engine.audioDestination = self
     }
@@ -36,26 +38,18 @@ class AudioController : NSObject, GBEngineAudioDestination {
                                         channels: 2,
                                         interleaved: outputFormat.isInterleaved)
         
+        // TODO: weak self?
         let srcNode = AVAudioSourceNode { isSilence, _, frameCount, audioBufferList -> OSStatus in
             let ablPointer = UnsafeMutableAudioBufferListPointer(audioBufferList)
             var leftBuf: UnsafeMutableBufferPointer<Float32> = UnsafeMutableBufferPointer(ablPointer[0])
             var rightBuf: UnsafeMutableBufferPointer<Float32> = UnsafeMutableBufferPointer(ablPointer[1])
             self.bufferQueue.sync {
-//                if (self.leftAudioSampleBuffer.count >= Int(frameCount)) {
                 let maxCount = Int(frameCount)
                 let leftReadCount = min(self.leftAudioSampleBuffer.count, maxCount)
                 let rightReadCount = min(self.rightAudioSampleBuffer.count, maxCount)
 //                print("MJB: requested \(maxCount) leftover \(self.leftAudioSampleBuffer.count)")
                 try! self.leftAudioSampleBuffer.read(into: &leftBuf, count: leftReadCount)
                 try! self.rightAudioSampleBuffer.read(into: &rightBuf, count: rightReadCount)
-//                } else {
-//                    print("Skipped")
-//                    isSilence.pointee = true
-//                    for frame in 0..<Int(frameCount) {
-//                        leftBuf[frame] = 0
-//                        rightBuf[frame] = 0
-//                    }
-//                }
             }
             return noErr
         }
@@ -85,10 +79,10 @@ class AudioController : NSObject, GBEngineAudioDestination {
     
     func engine(_ engine: GBEngine, receivedAudioSampleLeft left: Int16, right: Int16) {
         bufferQueue.sync {
-                let leftFloat = Float32(Float(left)/32768.0)
-                let rightFloat = Float32(Float(right)/32768.0)
-                leftAudioSampleBuffer.write(leftFloat)
-                rightAudioSampleBuffer.write(rightFloat)
+            let leftFloat = Float32(Float(left)/32768.0)
+            let rightFloat = Float32(Float(right)/32768.0)
+            leftAudioSampleBuffer.write(leftFloat)
+            rightAudioSampleBuffer.write(rightFloat)
         }
     }
 }

@@ -76,6 +76,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)engine:(GBEngine *)engine receivedFrame:(CGImageRef)frame;
 @end
 
+// Audio destination callbacks come in on the internal emulation queue because they happen so damn fast,
+// it's not desirable to bounce around threads
 @protocol GBEngineAudioDestination <NSObject>
 - (void)engine:(GBEngine *)engine receivedAudioSampleLeft:(int16_t)left right:(int16_t)right;
 @end

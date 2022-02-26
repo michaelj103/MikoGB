@@ -55,7 +55,7 @@ static MikoGB::JoypadButton _ButtonForCode(GBEngineKeyCode code) {
     BOOL _isRunnable;
     
     NSHashTable<id<GBEngineObserver>> *_observers;
-    GBAudioWriter *_audioWriter;
+//    GBAudioWriter *_audioWriter;
 }
 
 - (instancetype)init {
@@ -107,8 +107,8 @@ static MikoGB::JoypadButton _ButtonForCode(GBEngineKeyCode code) {
         }
         _observers = [NSHashTable weakObjectsHashTable];
         
-        _audioWriter = [[GBAudioWriter alloc] init];
-        self.audioDestination = _audioWriter;
+//        _audioWriter = [[GBAudioWriter alloc] init];
+//        self.audioDestination = _audioWriter;
     }
     return self;
 }
