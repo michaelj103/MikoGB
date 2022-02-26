@@ -36,9 +36,9 @@ static const uint16_t AudioRegisterBase = NR10Register;
 // 456 cycles per scanline, 154 scanlines per frame, 60 frames per second
 static const int SampleCounterBase = 456 * 154 * 60;
 static const int SamplesPerSecond = 44100;
-static const int16_t SampleMaxVolume = INT16_MAX;
+static const int16_t SampleMaxVolume = INT16_MAX * 0.9;
 
-AudioController::AudioController() {
+AudioController::AudioController(): _sound1(true), _sound2(false) {
     _nextSampleCounter = SampleCounterBase;
 }
 
@@ -150,7 +150,7 @@ void AudioController::_emitSample() {
     leftSample /= 4.0;
     rightSample /= 4.0;
     
-    int16_t integerLeftSample = (leftSample * _leftVolume) * SampleMaxVolume * 0.95;
-    int16_t integerRightSample = (rightSample * _rightVolume) * SampleMaxVolume * 0.95;
+    int16_t integerLeftSample = (leftSample * _leftVolume) * SampleMaxVolume;
+    int16_t integerRightSample = (rightSample * _rightVolume) * SampleMaxVolume;
     _sampleCallback(integerLeftSample, integerRightSample);
 }

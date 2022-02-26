@@ -1,20 +1,22 @@
 //
-//  Sound1.hpp
+//  SquareSound.hpp
 //  MikoGBCore
 //
 //  Created by Michael Brandt on 2/24/22.
 //  Copyright © 2022 Michael Brandt. All rights reserved.
 //
 
-#ifndef Sound1_hpp
-#define Sound1_hpp
+#ifndef SquareSound_hpp
+#define SquareSound_hpp
 
 #include <cstdlib>
 
 namespace MikoGB {
 
-class Sound1 {
+class SquareSound {
 public:
+    SquareSound(bool hasSweep): _hasSweep(hasSweep) {}
+    
     void updateWithCycles(int cycles);
     
     // returns the value to store for future reads
@@ -25,7 +27,8 @@ public:
     bool isRunning() const { return _isRunning; }
     
 private:
-    bool _isRunning;
+    bool _isRunning = false;
+    const bool _hasSweep;
     
     // sweep
     int _sweepTime = 0; // CPU cycles per sweep event. 0 means sweep disabled
@@ -63,4 +66,4 @@ private:
 
 }
 
-#endif /* Sound1_hpp */
+#endif /* SquareSound_hpp */
