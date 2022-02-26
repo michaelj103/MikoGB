@@ -44,7 +44,7 @@ bool NoMBC::configureWithROMData(const void *romData, size_t size) {
         return false;
     }
     
-    _ramData = new uint8_t[RAMBankSize];
+    _ramData = new uint8_t[RAMBankSize]();
     return MemoryBankController::configureWithROMData(romData, size);
 }
 

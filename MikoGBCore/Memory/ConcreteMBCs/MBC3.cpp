@@ -70,7 +70,7 @@ bool MBC3::configureWithROMData(const void *romData, size_t size) {
     
     if (_ramBankCount > 0) {
         size_t ramSize = RAMBankSize * _ramBankCount;
-        _ramData = new uint8_t[ramSize];
+        _ramData = new uint8_t[ramSize]();
     }
     
     return MemoryBankController::configureWithROMData(romData, size);

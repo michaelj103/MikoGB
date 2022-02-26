@@ -65,7 +65,7 @@ bool MemoryController::configureWithROMData(const void *romData, size_t size) {
     }
     
     // Map the permanent ROM and read the header data from it
-    _permanentROM = new uint8_t[PermanentROMSize];
+    _permanentROM = new uint8_t[PermanentROMSize]();
     memcpy(_permanentROM, romData, PermanentROMSize);
     _header.readHeaderData(_permanentROM);
     
@@ -75,8 +75,8 @@ bool MemoryController::configureWithROMData(const void *romData, size_t size) {
         return false;
     }
     
-    _videoRAM = new uint8_t[VRAMSize];
-    _highRangeMemory = new uint8_t[HighRangeMemorySize];
+    _videoRAM = new uint8_t[VRAMSize]();
+    _highRangeMemory = new uint8_t[HighRangeMemorySize]();
     
     bool success = _mbc->configureWithROMData(romData, size);
     return success;
@@ -84,9 +84,9 @@ bool MemoryController::configureWithROMData(const void *romData, size_t size) {
 
 bool MemoryController::configureWithEmptyData() {
     assert(_permanentROM == nullptr && _videoRAM == nullptr && _highRangeMemory == nullptr && _mbc == nullptr);
-    _permanentROM = new uint8_t[PermanentROMSize];
-    _videoRAM = new uint8_t[VRAMSize];
-    _highRangeMemory = new uint8_t[HighRangeMemorySize];
+    _permanentROM = new uint8_t[PermanentROMSize]();
+    _videoRAM = new uint8_t[VRAMSize]();
+    _highRangeMemory = new uint8_t[HighRangeMemorySize]();
     
     const size_t ptr = 0x104;
     for (size_t i = 0; i < 48; ++i) {
