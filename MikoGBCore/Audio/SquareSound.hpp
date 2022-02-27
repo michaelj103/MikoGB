@@ -13,6 +13,9 @@
 
 namespace MikoGB {
 
+/// Models the state of a square waveform generator (the GB has two types, one with sweep and one without)
+/// Told about writes to relevant memory offsets as they happen (mapped audio registers) and elapsed cycles
+/// after every CPU step. Output is a sample which can be requested at any time, expected to be requested at 44100kHz
 class SquareSound {
 public:
     SquareSound(bool hasSweep): _hasSweep(hasSweep) {}
@@ -22,8 +25,8 @@ public:
     // returns the value to store for future reads
     uint8_t soundWrite(uint16_t offset, uint8_t val);
     
-    // volume is a value from 0.0 - 1.0
-    double getVolume() const;
+    // sample is a value from 0.0 - 1.0
+    double getSample() const;
     bool isRunning() const { return _isRunning; }
     
 private:

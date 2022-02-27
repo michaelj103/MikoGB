@@ -30,6 +30,8 @@
 		2902EAC027C961E200186976 /* GBAudioWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 2902EABC27C961E200186976 /* GBAudioWriter.m */; };
 		2902EAD827CAD5D300186976 /* NoiseSound.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2902EAD627CAD5D300186976 /* NoiseSound.cpp */; };
 		2902EAD927CAD5D300186976 /* NoiseSound.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 2902EAD727CAD5D300186976 /* NoiseSound.hpp */; };
+		2902EADC27CB54B800186976 /* WaveformSound.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2902EADA27CB54B800186976 /* WaveformSound.cpp */; };
+		2902EADD27CB54B800186976 /* WaveformSound.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 2902EADB27CB54B800186976 /* WaveformSound.hpp */; };
 		290B3BC8247E00B400937D71 /* CPUCore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297E6137245FEA5D00EE150F /* CPUCore.cpp */; };
 		290B3BC9247E00C000937D71 /* CPUInstruction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297E613C245FECDF00EE150F /* CPUInstruction.cpp */; };
 		290B3BCA247E00CB00937D71 /* LoadInstructions8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8C0BA2462685F0082C52B /* LoadInstructions8.cpp */; };
@@ -191,6 +193,8 @@
 		2902EABE27C961E200186976 /* GBAudioWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GBAudioWriter.h; sourceTree = "<group>"; };
 		2902EAD627CAD5D300186976 /* NoiseSound.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = NoiseSound.cpp; sourceTree = "<group>"; };
 		2902EAD727CAD5D300186976 /* NoiseSound.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = NoiseSound.hpp; sourceTree = "<group>"; };
+		2902EADA27CB54B800186976 /* WaveformSound.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = WaveformSound.cpp; sourceTree = "<group>"; };
+		2902EADB27CB54B800186976 /* WaveformSound.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = WaveformSound.hpp; sourceTree = "<group>"; };
 		290B3BCF247E048100937D71 /* Test8BitLoadInstructions.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = Test8BitLoadInstructions.mm; sourceTree = "<group>"; };
 		290B3BD1247F51D100937D71 /* Test16BitLoadInstructions.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = Test16BitLoadInstructions.mm; sourceTree = "<group>"; };
 		290FF33D265F066D006812F4 /* MonochromePalette.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MonochromePalette.hpp; sourceTree = "<group>"; };
@@ -336,6 +340,8 @@
 				2902EAA927C85C8F00186976 /* AudioController.cpp */,
 				2902EAAE27C889BB00186976 /* SquareSound.hpp */,
 				2902EAAD27C889BB00186976 /* SquareSound.cpp */,
+				2902EADB27CB54B800186976 /* WaveformSound.hpp */,
+				2902EADA27CB54B800186976 /* WaveformSound.cpp */,
 				2902EAD727CAD5D300186976 /* NoiseSound.hpp */,
 				2902EAD627CAD5D300186976 /* NoiseSound.cpp */,
 			);
@@ -602,6 +608,7 @@
 				299283192643AF00004691E5 /* PixelBuffer.hpp in Headers */,
 				2902EAA527C5A2F700186976 /* InstructionRingBuffer.hpp in Headers */,
 				29A8FFD626535994007A26C9 /* MemoryBankController.hpp in Headers */,
+				2902EADD27CB54B800186976 /* WaveformSound.hpp in Headers */,
 				290FF37B2662110A006812F4 /* Timer.hpp in Headers */,
 				2902EAB027C889BB00186976 /* SquareSound.hpp in Headers */,
 				299282FD264266A9004691E5 /* GameBoyCoreImp.hpp in Headers */,
@@ -798,6 +805,7 @@
 				290FF37A2662110A006812F4 /* Timer.cpp in Sources */,
 				2992821726424240004691E5 /* CPUCore.cpp in Sources */,
 				2992823626424255004691E5 /* LoadInstructions16.cpp in Sources */,
+				2902EADC27CB54B800186976 /* WaveformSound.cpp in Sources */,
 				2902EAAB27C85C8F00186976 /* AudioController.cpp in Sources */,
 				29198790267481FA009D7C45 /* MBC1.cpp in Sources */,
 				290FF357265F671C006812F4 /* Joypad.cpp in Sources */,

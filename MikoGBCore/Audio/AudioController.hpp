@@ -11,6 +11,7 @@
 
 #include <array>
 #include "SquareSound.hpp"
+#include "WaveformSound.hpp"
 #include "NoiseSound.hpp"
 #include "GameBoyCoreTypes.h"
 
@@ -41,6 +42,7 @@ private:
     double _rightVolume = 0.0;
     SquareSound _sound1;
     SquareSound _sound2;
+    WaveformSound _sound3;
     NoiseSound _sound4;
     
     int _nextSampleCounter = 0;

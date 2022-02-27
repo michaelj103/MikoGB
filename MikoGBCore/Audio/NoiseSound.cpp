@@ -11,8 +11,6 @@
 #include "BitTwiddlingUtil.h"
 #include <array>
 
-#include <iostream>
-
 using namespace std;
 using namespace MikoGB;
 
@@ -55,7 +53,10 @@ void NoiseSound::updateWithCycles(int cycles) {
     }
 }
 
-double NoiseSound::getVolume() const {
+double NoiseSound::getSample() const {
+    if (!_isRunning) {
+        return 0.0;
+    }
     double level = (_lfsrRegister & 0x1) == 0 ? 1.0 : 0.0;
     double volume = (double)_envelopeVolume / 15.0;
     double sample = level * volume;

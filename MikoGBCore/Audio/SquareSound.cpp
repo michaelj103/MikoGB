@@ -115,7 +115,7 @@ uint8_t SquareSound::soundWrite(uint16_t offset, uint8_t val) {
     return 0;
 }
 
-double SquareSound::getVolume() const {
+double SquareSound::getSample() const {
     if (_isRunning) {
         double env = (double)_envelopeVolume / 15.0;
         switch (_duty) {
