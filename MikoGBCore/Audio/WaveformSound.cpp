@@ -32,6 +32,7 @@ void WaveformSound::updateWithCycles(int cycles) {
     if (_freqCycles > 0) {
         _freqCounter -= cycles;
         while (_freqCounter <= 0) {
+            _freqCounter += _freqCycles;
             // we need to shift the sample index. there are 32 samples
             _waveSampleIndex  = (_waveSampleIndex + 1) % 32;
         }
@@ -43,8 +44,10 @@ double WaveformSound::getSample() const {
         return 0.0;
     }
     
-    uint8_t sample = _samples[_waveSampleIndex] >> _outputLevel;
-    return (double)sample / 15.0;
+    uint8_t sample = _samples[_waveSampleIndex] >> (_outputLevel - 1);
+    double analog = (double)sample / 15.0;
+    double adjustedAnalog = (analog * 2.0) - 1.0;
+    return adjustedAnalog;
 }
 
 uint8_t WaveformSound::soundWrite(uint16_t offset, uint8_t val) {
@@ -83,7 +86,7 @@ void WaveformSound::customSampleWrite(uint16_t offset, uint8_t val) {
     uint8_t highSample = (val & 0xF0) >> 4;
     uint8_t lowSample = (val & 0x0F);
     _samples[sampleIdx] = highSample;
-    _samples[sampleIdx] = lowSample;
+    _samples[sampleIdx + 1] = lowSample;
 }
 
 void WaveformSound::_resetEnabled(uint8_t val) {
