@@ -45,11 +45,13 @@ void NoiseSound::updateWithCycles(int cycles) {
     }
     
     // sample
-    _freqCounter -= cycles;
-    while (_freqCounter <= 0) {
-        // we need to shift the LFSR register each frequency "tick"
-        _freqCounter += _freqCycles;
-        _lfsrShift();
+    if (_freqCycles > 0) {
+        _freqCounter -= cycles;
+        while (_freqCounter <= 0) {
+            // we need to shift the LFSR register each frequency "tick"
+            _freqCounter += _freqCycles;
+            _lfsrShift();
+        }
     }
 }
 
