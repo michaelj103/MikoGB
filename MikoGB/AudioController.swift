@@ -17,7 +17,8 @@ class AudioController : NSObject, GBEngineAudioDestination {
     private let bufferQueue = DispatchQueue(label: "AudioControllerBufferQueue")
     private var audioEngine: AVAudioEngine?
     
-    private static let bufferSize = 16384
+    private static let bufferSize = 1 << 13
+    private static let bufferDrop = bufferSize / 2
     
     // AUDIO_SAMPLE_RATE <- search for this and uncomment to track and print actual audio sample rate
 //    private var lastCFTime: Double = 0.0
@@ -111,6 +112,11 @@ class AudioController : NSObject, GBEngineAudioDestination {
             let rightFloat = Float32(Float(right)/32768.0)
             leftAudioSampleBuffer.write(leftFloat)
             rightAudioSampleBuffer.write(rightFloat)
+            if leftAudioSampleBuffer.isFull {
+                print("Audio skip")
+                leftAudioSampleBuffer.drop(AudioController.bufferDrop)
+                rightAudioSampleBuffer.drop(AudioController.bufferDrop)
+            }
         }
     }
 }

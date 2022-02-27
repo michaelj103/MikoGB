@@ -55,7 +55,7 @@ struct RingBuffer<T> {
             throw SimpleError("Reading from an empty ring buffer")
         }
         let tmp = _buffer[_readIdx]
-        _readIdx = (_readIdx + 1) % _buffer.count;
+        _readIdx = (_readIdx + 1) % _buffer.count
         count -= 1
         return tmp
     }
@@ -73,6 +73,12 @@ struct RingBuffer<T> {
         for i in 0..<readSize {
             buf[i] = try read()
         }
+    }
+    
+    mutating func drop(_ dropCount: Int) {
+        let actualDropCount = min(count, dropCount)
+        _readIdx = (_readIdx + actualDropCount) % _buffer.count
+        count -= actualDropCount
     }
 }
 
