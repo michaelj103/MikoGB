@@ -114,7 +114,7 @@ void AudioController::writeAudioRegister(uint16_t addr, uint8_t val) {
         updatedVal = _sound1.soundWrite(addr - NR10Register, val);
     } else if (addr >= NR21Register && addr <= NR24Register) {
         updatedVal = _sound2.soundWrite(addr - NR21Register, val);
-    } else if (addr >= NR30Register && addr <= NR30Register) {
+    } else if (addr >= NR30Register && addr <= NR34Register) {
         updatedVal = _sound3.soundWrite(addr - NR30Register, val);
     } else if (addr >= NR41Register && addr <= NR44Register) {
         updatedVal = _sound4.soundWrite(addr - NR41Register, val);
