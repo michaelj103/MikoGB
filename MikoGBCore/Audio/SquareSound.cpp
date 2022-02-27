@@ -118,24 +118,33 @@ uint8_t SquareSound::soundWrite(uint16_t offset, uint8_t val) {
 double SquareSound::getSample() const {
     if (_isRunning) {
         double env = (double)_envelopeVolume / 15.0;
+        double output = 0.0;
         switch (_duty) {
             case 0:
                 // 12.5% aka 1/8
-                return DutyPatterns[0][_waveDutyPeriod] * env;
+                output = DutyPatterns[0][_waveDutyPeriod] * env;
+                break;
             case 1:
                 // 25% aka 2/8
-                return DutyPatterns[1][_waveDutyPeriod] * env;
+                output = DutyPatterns[1][_waveDutyPeriod] * env;
+                break;
             case 2:
                 // 50% aka 4/8 aka normal
-                return DutyPatterns[2][_waveDutyPeriod] * env;
+                output = DutyPatterns[2][_waveDutyPeriod] * env;
+                break;
             case 3:
                 // 75% aka 6/8
-                return DutyPatterns[3][_waveDutyPeriod] * env;
+                output = DutyPatterns[3][_waveDutyPeriod] * env;
+                break;
             default:
                 assert(false);
         }
+        
+        // linearly translate from [0.0, 1.0] to [-1.0, 1.0]
+        double analog = (output * 2.0) - 1.0;
+        return analog;
     }
-    return 0;
+    return 0.0;
 }
 
 void SquareSound::_resetSweep(uint8_t val) {

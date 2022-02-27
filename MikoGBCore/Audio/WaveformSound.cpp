@@ -44,8 +44,9 @@ double WaveformSound::getSample() const {
         return 0.0;
     }
     
-    uint8_t sample = _samples[_waveSampleIndex] >> (_outputLevel - 1);
-    double analog = (double)sample / 15.0;
+    uint8_t digitalSample = _samples[_waveSampleIndex] >> (_outputLevel - 1);
+    // adjust the digital sample from [0,F] -> [0.0, 1.0] -> [-1.0, 1.0]
+    double analog = (double)digitalSample / 15.0;
     double adjustedAnalog = (analog * 2.0) - 1.0;
     return adjustedAnalog;
 }

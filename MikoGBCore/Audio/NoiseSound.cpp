@@ -60,7 +60,10 @@ double NoiseSound::getSample() const {
     double level = (_lfsrRegister & 0x1) == 0 ? 1.0 : 0.0;
     double volume = (double)_envelopeVolume / 15.0;
     double sample = level * volume;
-    return sample;
+    
+    // Adjust the analog sample from [0.0, 1.0] -> [-1.0, 1.0]
+    double adjustedSample = (sample * 2.0) - 1.0;
+    return adjustedSample;
 }
 
 uint8_t NoiseSound::soundWrite(uint16_t offset, uint8_t val) {
