@@ -430,7 +430,6 @@ void GPUCore::_renderWindowToScanline(size_t lineNum, LCDScanline &scanline) {
         // window doesn't start until after this scanline. nothing to do
         return;
     }
-    // TODO: confirm that window uses the BG palette
     MonochromePalette bgPalette = MonochromePalette(_memoryController->readByte(BGPRegister), false);
     
     // 2. Figure out what row of tile codes we need to draw and which row of those tiles is relevant
@@ -439,21 +438,26 @@ void GPUCore::_renderWindowToScanline(size_t lineNum, LCDScanline &scanline) {
     const uint8_t tileRow = winY % 8; // the row in the 8x8 tile that is on this line
     
     // 3. Main loop, draw background tiles progressively to the scanline
-    uint8_t pixelsDrawn = wx - 7;
-    while (pixelsDrawn < ScreenWidth) {
+    // window can potentially draw off the screen to the left by 7 px if wx < 7, so add 7 to the width for drawing purposes
+    uint8_t screenPosition = wx >= 7 ? wx - 7 : 0;
+    uint8_t windowPosition = wx < 7 ? 7 - wx : 0;
+    
+    while (screenPosition < ScreenWidth) {
         // 3a. Figure out the next tile to draw, determine its code from the code area, then its address in the map
-        const uint8_t winX = (pixelsDrawn + 7) - wx;
+        const uint8_t winX = windowPosition;
         const uint8_t bgTileX = winX / 8;
         const uint16_t tileCodeAddress = winCodeArea + (bgTileY * BackgroundTilesPerRow) + bgTileX;
         const uint8_t tileCode = _memoryController->readByte(tileCodeAddress);
         const uint16_t tileBaseAddress = _GetBGTileBaseAddress(bgTileMapBase, tileCode, signedMode);
         
         // 3b. Now draw the line from the tile to the scanline using the helper
-        const uint8_t tileCol = winX % 8; // I believe this should always be zero
-        pixelsDrawn += _DrawTileRowToScanline(tileBaseAddress, tileRow, tileCol, false, LCDScanline::WriteType::Background, pixelsDrawn, scanline, _memoryController, bgPalette);
+        const uint8_t tileCol = windowPosition % 8;
+        const uint8_t pixelsDrawn = _DrawTileRowToScanline(tileBaseAddress, tileRow, tileCol, false, LCDScanline::WriteType::Background, screenPosition, scanline, _memoryController, bgPalette);
+        screenPosition += pixelsDrawn;
+        windowPosition += pixelsDrawn;
     }
 #if DEBUG
-    assert(pixelsDrawn == 160);
+    assert(screenPosition == 160);
 #endif
     
 }
