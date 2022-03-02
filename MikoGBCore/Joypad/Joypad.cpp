@@ -40,7 +40,7 @@ bool Joypad::getButtonPressed(JoypadButton button) const {
 }
 
 uint8_t Joypad::readJoypadRegister() const {
-    // Button input is inverted
+    // Button input is inverted. 1 means *not* pressed
     const uint8_t inverted = ~_setButtons;
     const uint8_t directional = inverted & 0x0F;
     const uint8_t button = (inverted >> 4) & 0x0F;
@@ -54,6 +54,11 @@ uint8_t Joypad::readJoypadRegister() const {
         joypadReg |= directional;
     } else if (!isMaskSet(inputMask, MemoryController::InputMask::Button)) {
         joypadReg |= button;
+    } else {
+        // Figuring this out was a long process but this caused a weird graphical glitch at the beginning of lots of games
+        // (pokemon, donkey kong lands, kirby dreamland 2) and completely broke Kirby button input
+        // For whatever reason, quite a few games depend on the joypad register returning no buttons pressed in this case
+        joypadReg |= 0x0F;
     }
     
     return joypadReg;
