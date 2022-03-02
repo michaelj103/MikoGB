@@ -27,8 +27,10 @@ public:
     void append(const KnownInstruction &i);
     
     std::set<KnownInstruction> uniqueInstructions() const;
+    std::vector<KnownInstruction> previousInstructions(size_t maxCount) const;
     
 private:
+    std::set<KnownInstruction> _uniqueInstructions;
     std::vector<KnownInstruction> _buffer;
     size_t _startPosition = 0;
     size_t _count = 0;

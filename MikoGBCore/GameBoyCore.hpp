@@ -53,7 +53,11 @@ public:
     
     void getBackground(PixelBufferImageCallback callback);
     
-    std::vector<DisassembledInstruction> getDisassembledInstructions(int lookAheadCount, int lookBehindCount, size_t *currentIdx);
+    /// returns the disassembled instructions surrounding the current instruction
+    std::vector<DisassembledInstruction> getDisassembledInstructions(int lookAheadCount, int lookBehindCount, size_t *currentIdx) const;
+    
+    /// returns `count` instructions that were executed before the current instruction. Not super useful if in a long running loop, but useful to roll back jumps/calls
+    std::vector<DisassembledInstruction> getDisassembledPreviousInstructions(int count) const;
     
     RegisterState getRegisterState() const;
     

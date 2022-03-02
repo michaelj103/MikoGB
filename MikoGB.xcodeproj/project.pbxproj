@@ -92,6 +92,7 @@
 		2992833C264528F1004691E5 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2992833B264528F1004691E5 /* ImageIO.framework */; };
 		29928343264528F9004691E5 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 29928342264528F9004691E5 /* CoreServices.framework */; };
 		2992837E264733B3004691E5 /* WindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2992837D264733B3004691E5 /* WindowController.swift */; };
+		299BD2FE27CEEF4000940D12 /* DebuggerRollbackCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 299BD2FD27CEEF4000940D12 /* DebuggerRollbackCommand.swift */; };
 		29A8000A265387BB007A26C9 /* CartridgeHeader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297E600A2456532700EE150F /* CartridgeHeader.cpp */; };
 		29A8FF74265211B8007A26C9 /* MemoryController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8FF72265211B8007A26C9 /* MemoryController.cpp */; };
 		29A8FF75265211B8007A26C9 /* MemoryController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8FF72265211B8007A26C9 /* MemoryController.cpp */; };
@@ -253,6 +254,7 @@
 		2992833B264528F1004691E5 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 		29928342264528F9004691E5 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
 		2992837D264733B3004691E5 /* WindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowController.swift; sourceTree = "<group>"; };
+		299BD2FD27CEEF4000940D12 /* DebuggerRollbackCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebuggerRollbackCommand.swift; sourceTree = "<group>"; };
 		29A8C0B9246147190082C52B /* BitTwiddlingUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BitTwiddlingUtil.h; sourceTree = "<group>"; };
 		29A8C0BA2462685F0082C52B /* LoadInstructions8.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = LoadInstructions8.cpp; sourceTree = "<group>"; };
 		29A8C0BB2462685F0082C52B /* LoadInstructions8.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = LoadInstructions8.hpp; sourceTree = "<group>"; };
@@ -371,6 +373,7 @@
 				2902EA9E27C4CA9C00186976 /* DebuggerContinueCommand.swift */,
 				2902EAA027C5520500186976 /* DebuggerMemCommand.swift */,
 				2902EAA627C6C27600186976 /* DebuggerBreakpointCommand.swift */,
+				299BD2FD27CEEF4000940D12 /* DebuggerRollbackCommand.swift */,
 			);
 			path = DebugUI;
 			sourceTree = "<group>";
@@ -847,6 +850,7 @@
 				2902EA9927C3542000186976 /* InstructionTableCell.swift in Sources */,
 				29F0829C2647BA0D00FA5F67 /* GBEngine.mm in Sources */,
 				291987E02683087A009D7C45 /* DebuggerWindowController.swift in Sources */,
+				299BD2FE27CEEF4000940D12 /* DebuggerRollbackCommand.swift in Sources */,
 				299282B72642449D004691E5 /* ViewController.swift in Sources */,
 				2902EAB427C8BD2900186976 /* AudioController.swift in Sources */,
 				2992837E264733B3004691E5 /* WindowController.swift in Sources */,

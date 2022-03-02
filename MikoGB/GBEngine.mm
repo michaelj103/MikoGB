@@ -321,6 +321,17 @@ static void _AddInstruction(const MikoGB::DisassembledInstruction &instruction, 
     return disassembledInstructions;
 }
 
+- (NSArray<NSString *> *)lastExecutedInstructions {
+    NSMutableArray<NSString *> *disassembledInstructions = [NSMutableArray array];
+    dispatch_sync(_emulationQueue, ^{
+        std::vector<MikoGB::DisassembledInstruction> instructions = _core->getDisassembledPreviousInstructions(10);
+        for (const MikoGB::DisassembledInstruction &instruction : instructions) {
+            _AddInstruction(instruction, disassembledInstructions);
+        }
+    });
+    return disassembledInstructions;
+}
+
 - (GBRegisterState)registerState {
     __block GBRegisterState state;
     dispatch_sync(_emulationQueue, ^{

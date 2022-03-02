@@ -109,6 +109,12 @@ std::vector<DisassembledInstruction> GameBoyCoreImp::getDisassembledInstructions
     return combined;
 }
 
+std::vector<DisassembledInstruction> GameBoyCoreImp::getDisassembledPreviousInstructions(int count) {
+    Disassembler::Ptr disassembler = _accessDisassembler();
+    vector<DisassembledInstruction> disassembled = disassembler->lastExecutedInstructions(count, _memoryController, _cpu);
+    return disassembled;
+}
+
 RegisterState GameBoyCoreImp::getRegisterState() const {
     uint8_t *registers = _cpu->registers;
     RegisterState state;

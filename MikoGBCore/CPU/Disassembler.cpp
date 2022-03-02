@@ -103,7 +103,7 @@ static string lookupInstruction(uint16_t pc, const MemoryController::Ptr &mem, u
     assert(0);
 }
 
-std::vector<DisassembledInstruction> Disassembler::disassembleInstructions(uint16_t pc, int maxCount, const MemoryController::Ptr &mem) {
+std::vector<DisassembledInstruction> Disassembler::disassembleInstructions(uint16_t pc, int maxCount, const MemoryController::Ptr &mem) const {
     vector<DisassembledInstruction> instructions;
     assert(pc < 0x8000 || (pc >= 0xFF80 && pc < 0xFFFF));
     
@@ -142,7 +142,7 @@ std::vector<DisassembledInstruction> Disassembler::disassembleInstructions(uint1
     return instructions;
 }
 
-std::vector<DisassembledInstruction> Disassembler::precedingDisassembledInstructions(uint16_t pc, int maxCount, const MemoryController::Ptr &mem, const CPUCore::Ptr &cpu) {
+std::vector<DisassembledInstruction> Disassembler::precedingDisassembledInstructions(uint16_t pc, int maxCount, const MemoryController::Ptr &mem, const CPUCore::Ptr &cpu) const {
     vector<DisassembledInstruction> instructions;
     assert(pc < 0x8000 || (pc >= 0xFF80 && pc < 0xFFFF));
     
@@ -200,6 +200,24 @@ std::vector<DisassembledInstruction> Disassembler::precedingDisassembledInstruct
     // we pushed in reverse order, so reverse the list before returning
     std::reverse(instructions.begin(), instructions.end());
     return instructions;
+}
+
+std::vector<DisassembledInstruction> Disassembler::lastExecutedInstructions(int maxCount, const MemoryController::Ptr &mem, const CPUCore::Ptr &cpu) const {
+    const int currentBank = mem->currentROMBank();
+    vector<KnownInstruction> knownInstructions = cpu->_previousInstructions.previousInstructions(maxCount);
+    vector<DisassembledInstruction> disassembled;
+    for (const auto &prev : knownInstructions) {
+        if (prev.romBank != 0 && prev.romBank != currentBank) {
+            // The last instruction was in a ROM bank that is no longer in memory
+            // Could look this up in theory if needed, would need to pipe a debug function through the memory controller
+            break;
+        }
+        uint16_t size = 0;
+        string description = lookupInstruction(prev.addr, mem, size);
+        DisassembledInstruction instruction = { prev.romBank, prev.addr, description };
+        disassembled.push_back(instruction);
+    }
+    return disassembled;
 }
 
 Disassembler::Disassembler() {

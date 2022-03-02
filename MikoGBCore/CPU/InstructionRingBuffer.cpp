@@ -7,6 +7,7 @@
 //
 
 #include "InstructionRingBuffer.hpp"
+#include <algorithm>
 
 using namespace std;
 using namespace MikoGB;
@@ -27,14 +28,27 @@ void InstructionRingBuffer::append(const KnownInstruction &i) {
         // not full yet, so just bump the count up
         _count += 1;
     }
+    _uniqueInstructions.insert(i);
 }
 
 std::set<KnownInstruction> InstructionRingBuffer::uniqueInstructions() const {
-    set<KnownInstruction> instructionSet;
-    const size_t bufferSpace = _buffer.size();
-    for (size_t i = 0; i < _count; ++i) {
-        size_t idx = (_startPosition + i) % bufferSpace;
-        instructionSet.insert(_buffer[idx]);
+    // screw it, just track every instruction that's been executed. Requires precompiler flag anyway
+    return _uniqueInstructions;
+}
+
+std::vector<KnownInstruction> InstructionRingBuffer::previousInstructions(size_t maxCount) const {
+    vector<KnownInstruction> instructions;
+    const size_t readSize = std::min(maxCount, _count);
+    size_t currentPosition = _startPosition;
+    for (size_t i = 0; i < readSize; ++i) {
+        if (currentPosition == 0) {
+            currentPosition = _buffer.size() - 1;
+        } else {
+            currentPosition -= 1;
+        }
+        
+        instructions.push_back(_buffer[currentPosition]);
     }
-    return instructionSet;
+    
+    return instructions;
 }

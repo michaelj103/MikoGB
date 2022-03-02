@@ -60,6 +60,8 @@ public:
     // Debugging and introspection
     int currentROMBank() const;
     
+    bool bootROMEnabled() const { return _bootROMEnabled; }
+    
 private:
     uint8_t *_permanentROM = nullptr;
     uint8_t *_videoRAM = nullptr;

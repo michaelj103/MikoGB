@@ -23,8 +23,9 @@ public:
     Disassembler();
     using Ptr = std::shared_ptr<Disassembler>;
     
-    std::vector<DisassembledInstruction> disassembleInstructions(uint16_t, int, const MemoryController::Ptr &);
-    std::vector<DisassembledInstruction> precedingDisassembledInstructions(uint16_t, int, const MemoryController::Ptr &, const CPUCore::Ptr &);
+    std::vector<DisassembledInstruction> disassembleInstructions(uint16_t, int, const MemoryController::Ptr &) const;
+    std::vector<DisassembledInstruction> precedingDisassembledInstructions(uint16_t, int, const MemoryController::Ptr &, const CPUCore::Ptr &) const;
+    std::vector<DisassembledInstruction> lastExecutedInstructions(int maxCount, const MemoryController::Ptr &mem, const CPUCore::Ptr &cpu) const;
     
 private:
     static void InitializeDisassemblyTable();

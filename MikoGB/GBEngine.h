@@ -65,6 +65,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 // Debugger
 - (NSArray<NSString *> *)disassembledInstructions:(size_t *)currentIndex;
+- (NSArray<NSString *> *)lastExecutedInstructions;
 - (GBRegisterState)registerState;
 - (uint8_t)readByte:(uint16_t)addr;
 - (BOOL)addLineBreakpointForBank:(int)romBank address:(uint16_t)address;

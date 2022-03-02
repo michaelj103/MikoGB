@@ -43,6 +43,7 @@ public:
     void getTileMap(PixelBufferImageCallback callback);
     void getBackground(PixelBufferImageCallback callback);
     std::vector<DisassembledInstruction> getDisassembledInstructions(int lookAheadCount, int lookBehindCount, size_t *currentIdx);
+    std::vector<DisassembledInstruction> getDisassembledPreviousInstructions(int count);
     RegisterState getRegisterState() const;
     uint8_t readMem(uint16_t) const;
     void setLineBreakpoint(int romBank, uint16_t addr);
