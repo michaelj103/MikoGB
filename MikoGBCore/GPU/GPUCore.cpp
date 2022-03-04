@@ -426,7 +426,7 @@ void GPUCore::_renderWindowToScanline(size_t lineNum, LCDScanline &scanline) {
     }
     const uint8_t wx = _memoryController->readByte(WXRegister);
     const uint8_t wy = _memoryController->readByte(WYRegister);
-    if (wy > lineNum) {
+    if (wy > lineNum || wx >= ScreenWidth + 7) {
         // window doesn't start until after this scanline. nothing to do
         return;
     }
