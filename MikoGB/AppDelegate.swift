@@ -7,6 +7,8 @@
 
 import Cocoa
 
+let TerminationNotification = NSNotification.Name(rawValue: "MikoGBApplicationWillTerminate")
+
 @main
 class AppDelegate: NSObject, NSApplicationDelegate {
 
@@ -16,6 +18,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationWillTerminate(_ aNotification: Notification) {
         // Insert code here to tear down your application
+        NotificationCenter.default.post(name: TerminationNotification, object: nil)
     }
     
     func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {

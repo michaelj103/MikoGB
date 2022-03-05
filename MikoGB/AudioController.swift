@@ -32,6 +32,10 @@ class AudioController : NSObject, GBEngineAudioDestination {
         self.rightAudioSampleBuffer = RingBuffer<Float32>(repeating: 0, count: AudioController.bufferSize)
         super.init()
         self.engine.audioDestination = self
+        
+        NotificationCenter.default.addObserver(forName: TerminationNotification, object: nil, queue: nil) { [weak self] _ in
+            self?.stopAudioEngine()
+        }
     }
     
     private func _initializeAudioEngine() {
