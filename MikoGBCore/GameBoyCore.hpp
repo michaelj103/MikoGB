@@ -46,6 +46,10 @@ public:
     void setScanlineCallback(PixelBufferScanlineCallback callback);
     void setAudioSampleCallback(AudioSampleCallback callback);
     
+    /// Save state management
+    bool isPersistenceStale() const;
+    void resetPersistence();
+    
     uint16_t getPC() const;
     
     /// Debug utilities

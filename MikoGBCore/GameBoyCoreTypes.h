@@ -48,7 +48,7 @@ struct RegisterState {
     bool CFlag;
 };
 
-// audio callback is left sample, right sample
+/// audio callback is left sample, right sample
 using AudioSampleCallback = std::function<void(const int16_t, const int16_t)>;
 
 }

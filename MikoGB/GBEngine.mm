@@ -12,6 +12,7 @@
 #import <os/lock.h>
 #import "GBImageUtilities.h"
 #import "GBAudioWriter.h"
+#import "GBRateLimitTimer.h"
 
 static const size_t GBBytesPerLine = 160 * 4;
 static const size_t GBBytesPerImage = GBBytesPerLine * 144;
@@ -53,6 +54,8 @@ static MikoGB::JoypadButton _ButtonForCode(GBEngineKeyCode code) {
     os_unfair_lock _frameLock;
     BOOL _isProcessingFrame;
     BOOL _isRunnable;
+    
+    GBRateLimitTimer *_persistenceTimer;
     
     NSHashTable<id<GBEngineObserver>> *_observers;
 //    GBAudioWriter *_audioWriter;
@@ -106,6 +109,10 @@ static MikoGB::JoypadButton _ButtonForCode(GBEngineKeyCode code) {
             _keyPressedChanged[i] = NO;
         }
         _observers = [NSHashTable weakObjectsHashTable];
+        
+        _persistenceTimer = [[GBRateLimitTimer alloc] initWithDelay:15.0 targetQueue:dispatch_get_main_queue() eventBlock:^{
+            NSLog(@"MJB: Persistence event");
+        }];
         
 //        _audioWriter = [[GBAudioWriter alloc] init];
 //        self.audioDestination = _audioWriter;
@@ -214,11 +221,18 @@ static MikoGB::JoypadButton _ButtonForCode(GBEngineKeyCode code) {
     os_unfair_lock_unlock(&_frameLock);
     
     [self _updateKeyStatesIfNeeded];
-    self->_core->emulateFrame();
+    _core->emulateFrame();
     
     os_unfair_lock_lock(&_frameLock);
     _isProcessingFrame = NO;
     os_unfair_lock_unlock(&_frameLock);
+    
+    // update persistence
+    if (_core->isPersistenceStale()) {
+        _core->resetPersistence();
+        NSLog(@"MJB: persistence input");
+        [_persistenceTimer input];
+    }
 }
 
 - (void)step:(NSInteger)stepCount {

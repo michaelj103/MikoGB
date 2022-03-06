@@ -57,6 +57,10 @@ public:
     // Audio
     void setAudioSampleCallback(AudioSampleCallback callback);
     
+    // Persistence
+    bool isPersistenceStale() const;
+    void resetPersistence();
+    
     // Debugging and introspection
     int currentROMBank() const;
     

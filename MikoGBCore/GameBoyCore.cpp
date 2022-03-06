@@ -59,6 +59,14 @@ void GameBoyCore::setAudioSampleCallback(AudioSampleCallback callback) {
     _imp->setAudioSampleCallback(callback);
 }
 
+bool GameBoyCore::isPersistenceStale() const {
+    return _imp->isPersistenceStale();
+}
+
+void GameBoyCore::resetPersistence() {
+    _imp->resetPersistence();
+}
+
 uint16_t GameBoyCore::getPC() const {
     return _imp->_cpu->programCounter;
 }

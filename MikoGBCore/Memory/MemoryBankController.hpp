@@ -21,6 +21,9 @@ public:
     
     static MemoryBankController *CreateMBC(const CartridgeHeader &header);
     
+    bool isPersistenceStale() const { return _isPersistenceStale; }
+    void resetPersistence() { _isPersistenceStale = false; }
+    
     virtual bool configureWithROMData(const void *romData, size_t size);
     
     /// Read from currently switched ROM bank
@@ -45,7 +48,7 @@ public:
 protected:
     uint8_t *_romData = nullptr;
     size_t _romSize = 0;
-    
+    bool _isPersistenceStale = false;
 };
 
 }

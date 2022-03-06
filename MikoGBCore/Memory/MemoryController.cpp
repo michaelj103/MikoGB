@@ -204,6 +204,20 @@ void MemoryController::setAudioSampleCallback(AudioSampleCallback callback) {
     _audioController.setSampleCallback(callback);
 }
 
+bool MemoryController::isPersistenceStale() const {
+    if (_mbc) {
+        return _mbc->isPersistenceStale();
+    } else {
+        return false;
+    }
+}
+
+void MemoryController::resetPersistence() {
+    if (_mbc) {
+        _mbc->resetPersistence();
+    }
+}
+
 int MemoryController::currentROMBank() const {
     return _mbc->currentROMBank();
 }

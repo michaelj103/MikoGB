@@ -37,6 +37,9 @@ public:
     void setScanlineCallback(PixelBufferScanlineCallback callback);
     void setAudioSampleCallback(AudioSampleCallback callback);
     
+    bool isPersistenceStale() const;
+    void resetPersistence();
+    
     void setButtonPressed(JoypadButton, bool);
     
     /// Debug utilities

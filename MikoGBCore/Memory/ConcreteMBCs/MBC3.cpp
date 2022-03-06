@@ -174,7 +174,10 @@ void MBC3::writeRAM(uint16_t addr, uint8_t val) {
     if (_ramBank <= 0x03) {
         // one of 4 true ram banks
         const size_t ramIdx = _RAMDataIndex(addr, _ramBank);
-        _ramData[ramIdx] = val;
+        if (val != _ramData[ramIdx]) {
+            _ramData[ramIdx] = val;
+            _isPersistenceStale = true;
+        }
     } else {
         // clock register
         assert(_ramBank >= 0x08 && _ramBank <= 0x0C);

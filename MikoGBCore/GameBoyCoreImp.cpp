@@ -76,6 +76,14 @@ void GameBoyCoreImp::setAudioSampleCallback(AudioSampleCallback callback) {
     _memoryController->setAudioSampleCallback(callback);
 }
 
+bool GameBoyCoreImp::isPersistenceStale() const {
+    return _memoryController->isPersistenceStale();
+}
+
+void GameBoyCoreImp::resetPersistence() {
+    _memoryController->resetPersistence();
+}
+
 void GameBoyCoreImp::getTileMap(PixelBufferImageCallback callback) {
     _gpu->getTileMap(callback);
 }
