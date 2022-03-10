@@ -230,7 +230,6 @@ static MikoGB::JoypadButton _ButtonForCode(GBEngineKeyCode code) {
     // update persistence
     if (_core->isPersistenceStale()) {
         _core->resetPersistence();
-        NSLog(@"MJB: persistence input");
         [_persistenceTimer input];
     }
 }

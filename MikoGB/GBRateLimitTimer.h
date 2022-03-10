@@ -17,8 +17,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (readonly, nonatomic) dispatch_queue_t targetQueue;
 @property (readonly, nonatomic, copy) dispatch_block_t eventBlock;
 
-// call when the rate limited event occurs
+/// call when the rate limited event occurs
 - (void)input;
+
+/// no longer emit events. Once cancelled a timer can't be reused
+- (void)cancel;
 
 - (instancetype)init NS_UNAVAILABLE;
 

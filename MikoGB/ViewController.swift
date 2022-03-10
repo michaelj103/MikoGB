@@ -22,6 +22,7 @@ class ViewController: NSViewController, NoROMViewDelegate, NSMenuItemValidation 
     
     private var engine: GBEngine!
     private var audioController: AudioController!
+    private var persistenceManager: PersistenceManager!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,6 +34,7 @@ class ViewController: NSViewController, NoROMViewDelegate, NSMenuItemValidation 
         
         engine = AppStateManager.sharedInstance.engine
         audioController = AudioController(engine: engine)
+        persistenceManager = AppStateManager.sharedInstance.persistenceManager
     }
     
     override func viewDidLayout() {
@@ -42,15 +44,28 @@ class ViewController: NSViewController, NoROMViewDelegate, NSMenuItemValidation 
     
     private func loadROM(url: URL) {
         engine.loadROM(url) { [self] (success) in
-            if success {
-                let gameView = GameView(engine: engine)
-                self.contentView = gameView
-                self.gameView = gameView
-                gameView.start()
-                audioController.startAudioEngine()
-            } else {
-                //TODO: present an alert
-            }
+            _romDidLoad(url, success: success)
+        }
+    }
+    
+    private func _loadSaveData(_ url: URL) {
+        // TODO: MJB: appropriate fallbacks instead of crash
+        let entry = try! persistenceManager.loadSaveEntry(url)
+        if let data = try! persistenceManager.loadSaveData(entry) {
+            // now, do something with the data
+        }
+    }
+    
+    private func _romDidLoad(_ url: URL, success: Bool) {
+        if success {
+            _loadSaveData(url)
+            let gameView = GameView(engine: engine)
+            self.contentView = gameView
+            self.gameView = gameView
+            gameView.start()
+            audioController.startAudioEngine()
+        } else {
+            //TODO: present an alert
         }
     }
     

@@ -713,14 +713,5 @@ void CPUInstruction::InitializeInstructionTable() {
     InstructionTable[0x135] = { 2, swapRegister }; // SWAP L
     InstructionTable[0x136] = { 2, swapPtrHL }; // SWAP (HL)
     InstructionTable[0x137] = { 2, swapRegister }; // SWAP A
-    
-    size_t instCount = 0;
-    for (size_t i = 0; i < 512; ++i) {
-        CPUInstruction &inst = InstructionTable[i];
-        if (inst.size > 0) {
-            instCount++;
-        }
-    }
-    cout << "Loaded " << instCount << " Instructions" << endl;
 }
 

@@ -94,6 +94,8 @@
 		2992837E264733B3004691E5 /* WindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2992837D264733B3004691E5 /* WindowController.swift */; };
 		299BD2FE27CEEF4000940D12 /* DebuggerRollbackCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 299BD2FD27CEEF4000940D12 /* DebuggerRollbackCommand.swift */; };
 		299BD30127D5450800940D12 /* GBRateLimitTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = 299BD30027D5450800940D12 /* GBRateLimitTimer.m */; };
+		299BD30327D56D8F00940D12 /* PersistenceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 299BD30227D56D8F00940D12 /* PersistenceManager.swift */; };
+		299BD30527D92FAD00940D12 /* SaveEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 299BD30427D92FAD00940D12 /* SaveEntry.swift */; };
 		29A8000A265387BB007A26C9 /* CartridgeHeader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297E600A2456532700EE150F /* CartridgeHeader.cpp */; };
 		29A8FF74265211B8007A26C9 /* MemoryController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8FF72265211B8007A26C9 /* MemoryController.cpp */; };
 		29A8FF75265211B8007A26C9 /* MemoryController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8FF72265211B8007A26C9 /* MemoryController.cpp */; };
@@ -258,6 +260,8 @@
 		299BD2FD27CEEF4000940D12 /* DebuggerRollbackCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebuggerRollbackCommand.swift; sourceTree = "<group>"; };
 		299BD2FF27D5450800940D12 /* GBRateLimitTimer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GBRateLimitTimer.h; sourceTree = "<group>"; };
 		299BD30027D5450800940D12 /* GBRateLimitTimer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GBRateLimitTimer.m; sourceTree = "<group>"; };
+		299BD30227D56D8F00940D12 /* PersistenceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceManager.swift; sourceTree = "<group>"; };
+		299BD30427D92FAD00940D12 /* SaveEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveEntry.swift; sourceTree = "<group>"; };
 		29A8C0B9246147190082C52B /* BitTwiddlingUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BitTwiddlingUtil.h; sourceTree = "<group>"; };
 		29A8C0BA2462685F0082C52B /* LoadInstructions8.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = LoadInstructions8.cpp; sourceTree = "<group>"; };
 		29A8C0BB2462685F0082C52B /* LoadInstructions8.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = LoadInstructions8.hpp; sourceTree = "<group>"; };
@@ -503,6 +507,8 @@
 				2902EAB227C8BD2900186976 /* AudioController.swift */,
 				2902EAB127C8BD2900186976 /* RingBuffer.swift */,
 				295BCB762693CF1900E80FCC /* SimpleError.swift */,
+				299BD30227D56D8F00940D12 /* PersistenceManager.swift */,
+				299BD30427D92FAD00940D12 /* SaveEntry.swift */,
 				29F0829A2647BA0D00FA5F67 /* GBEngine.h */,
 				29F0829B2647BA0D00FA5F67 /* GBEngine.mm */,
 				299BD2FF27D5450800940D12 /* GBRateLimitTimer.h */,
@@ -854,6 +860,7 @@
 				2902EA9B27C355C100186976 /* DebuggerInstructionController.swift in Sources */,
 				2902EA9927C3542000186976 /* InstructionTableCell.swift in Sources */,
 				29F0829C2647BA0D00FA5F67 /* GBEngine.mm in Sources */,
+				299BD30327D56D8F00940D12 /* PersistenceManager.swift in Sources */,
 				291987E02683087A009D7C45 /* DebuggerWindowController.swift in Sources */,
 				299BD2FE27CEEF4000940D12 /* DebuggerRollbackCommand.swift in Sources */,
 				299282B72642449D004691E5 /* ViewController.swift in Sources */,
@@ -869,6 +876,7 @@
 				29DD393826AA596800D6EC2E /* DebuggerCommand.swift in Sources */,
 				291987F42683FBBF009D7C45 /* DebuggerConsoleController.swift in Sources */,
 				2902EA9D27C4C87C00186976 /* DebuggerStepCommand.swift in Sources */,
+				299BD30527D92FAD00940D12 /* SaveEntry.swift in Sources */,
 				299BD30127D5450800940D12 /* GBRateLimitTimer.m in Sources */,
 				2902EAC027C961E200186976 /* GBAudioWriter.m in Sources */,
 				29C3DB8D2655B0ED00DCFA33 /* GBImageUtilities.mm in Sources */,

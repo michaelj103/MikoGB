@@ -11,6 +11,7 @@
 
 @implementation GBRateLimitTimer {
     BOOL _isWaiting;
+    BOOL _isCancelled;
     CFAbsoluteTime _lastEventTime;
     os_unfair_lock _stateLock;
 }
@@ -29,9 +30,15 @@
 - (void)_handleTimer {
     CFAbsoluteTime currentTime = CFAbsoluteTimeGetCurrent();
     CFAbsoluteTime lastTime = 0.0;
+    BOOL isCancelled = NO;
     os_unfair_lock_lock(&_stateLock);
     lastTime = _lastEventTime;
+    isCancelled = _isCancelled;
     os_unfair_lock_unlock(&_stateLock);
+    
+    if (isCancelled) {
+        return;
+    }
     
     NSTimeInterval delaySeconds = [self delay];
     NSTimeInterval difference = currentTime - lastTime;
@@ -54,23 +61,34 @@
 
 - (void)input {
     BOOL isWaiting = NO;
+    BOOL isCancelled = NO;
     CFAbsoluteTime eventTime = CFAbsoluteTimeGetCurrent();
     os_unfair_lock_lock(&_stateLock);
     isWaiting = _isWaiting;
     _lastEventTime = eventTime;
     // either already waiting or we will be momentarily. Need to toggle now to avoid race conditions
     _isWaiting = YES;
+    isCancelled = _isCancelled;
     os_unfair_lock_unlock(&_stateLock);
+    
+    if (isCancelled) {
+        return;
+    }
     
     NSTimeInterval delaySeconds = [self delay];
     dispatch_queue_t targetQueue = [self targetQueue];
     if (!isWaiting) {
-        NSLog(@"MJB: Persistence triggered");
         __weak typeof(self) weakSelf = self;
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delaySeconds * NSEC_PER_SEC)), targetQueue, ^{
             [weakSelf _handleTimer];
         });
     }
+}
+
+- (void)cancel {
+    os_unfair_lock_lock(&_stateLock);
+    _isCancelled = YES;
+    os_unfair_lock_unlock(&_stateLock);
 }
 
 @end

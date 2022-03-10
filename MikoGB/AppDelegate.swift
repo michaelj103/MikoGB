@@ -13,7 +13,7 @@ let TerminationNotification = NSNotification.Name(rawValue: "MikoGBApplicationWi
 class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
-        // Insert code here to initialize your application
+        try! PersistenceManager.prepare()
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {

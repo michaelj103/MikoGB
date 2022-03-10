@@ -11,6 +11,7 @@ class AppStateManager {
     static let sharedInstance = AppStateManager()
     
     let engine = GBEngine()
+    let persistenceManager = PersistenceManager()
     
     private var _debuggerWindowController: DebuggerWindowController?
     var debuggerWindowController: DebuggerWindowController {
