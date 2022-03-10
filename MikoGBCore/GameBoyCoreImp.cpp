@@ -33,6 +33,10 @@ size_t GameBoyCoreImp::saveDataSize() const {
     return _memoryController->saveDataSize();
 }
 
+size_t GameBoyCoreImp::copySaveData(void *buffer, size_t size) const {
+    return _memoryController->copySaveData(buffer, size);
+}
+
 void GameBoyCoreImp::step() {
     int instructionCycles = _cpu->step();
     size_t cpuCycles = instructionCycles * 4;

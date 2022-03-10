@@ -178,7 +178,7 @@ void MBC3::writeRAM(uint16_t addr, uint8_t val) {
         const size_t ramIdx = _RAMDataIndex(addr, _ramBank);
         if (val != _ramData[ramIdx]) {
             _ramData[ramIdx] = val;
-            _isPersistenceStale = true;
+            _isPersistenceStale = _batteryBackup;
         }
     } else {
         // clock register
@@ -214,5 +214,13 @@ size_t MBC3::saveDataSize() const {
         return _ramBankCount * RAMBankSize;
     } else {
         return 0;
+    }
+}
+
+void *MBC3::getSaveData() const {
+    if (_batteryBackup) {
+        return _ramData;
+    } else {
+        return nullptr;
     }
 }

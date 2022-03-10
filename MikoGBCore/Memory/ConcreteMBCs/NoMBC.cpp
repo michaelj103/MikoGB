@@ -83,3 +83,7 @@ int NoMBC::currentROMBank() const {
 size_t NoMBC::saveDataSize() const {
     return 0;
 }
+
+void *NoMBC::getSaveData() const {
+    return nullptr;
+}

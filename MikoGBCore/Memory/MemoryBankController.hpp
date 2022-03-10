@@ -46,6 +46,7 @@ public:
     virtual void updateClock(size_t cpuCycles);
     
     virtual size_t saveDataSize() const = 0;
+    virtual void *getSaveData() const = 0;
         
 protected:
     uint8_t *_romData = nullptr;

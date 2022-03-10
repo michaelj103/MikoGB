@@ -31,6 +31,10 @@ size_t GameBoyCore::saveDataSize() const {
     return _imp->saveDataSize();
 }
 
+size_t GameBoyCore::copySaveData(void *buffer, size_t size) const {
+    return _imp->copySaveData(buffer, size);
+}
+
 void GameBoyCore::step() {
     _imp->step();
 }

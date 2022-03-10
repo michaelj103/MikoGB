@@ -164,7 +164,10 @@ void MBC1::writeRAM(uint16_t addr, uint8_t val) {
         return;
     }
     const size_t ramIdx = _RAMDataIndex(addr, _ramBank);
-    _ramData[ramIdx] = val;
+    if (val != _ramData[ramIdx]) {
+        _ramData[ramIdx] = val;
+        _isPersistenceStale = _batteryBackup;
+    }
 }
 
 int MBC1::currentROMBank() const {
@@ -176,5 +179,13 @@ size_t MBC1::saveDataSize() const {
         return _ramBankCount * RAMBankSize;
     } else {
         return 0;
+    }
+}
+
+void *MBC1::getSaveData() const {
+    if (_batteryBackup) {
+        return _ramData;
+    } else {
+        return nullptr;
     }
 }

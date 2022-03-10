@@ -33,6 +33,7 @@ public:
     void updateClock(size_t cpuCycles) override;
     int currentROMBank() const override;
     size_t saveDataSize() const override;
+    void *getSaveData() const override;
     
 private:
     int _romBankCount;

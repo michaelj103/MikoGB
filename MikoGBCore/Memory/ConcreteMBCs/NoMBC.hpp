@@ -32,6 +32,7 @@ public:
     void writeControlCode(uint16_t addr, uint8_t val) override;
     int currentROMBank() const override;
     size_t saveDataSize() const override;
+    void *getSaveData() const override;
 };
 
 }

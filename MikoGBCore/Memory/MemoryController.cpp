@@ -244,3 +244,19 @@ size_t MemoryController::saveDataSize() const {
         return 0;
     }
 }
+
+size_t MemoryController::copySaveData(void *buffer, size_t size) const {
+    if (!_mbc) {
+        return 0;
+    }
+    
+    size_t dataSize = _mbc->saveDataSize();
+    if (size < dataSize) {
+        // don't copy if the buffer is too small
+        return 0;
+    }
+    
+    void *saveData = _mbc->getSaveData();
+    memcpy(buffer, saveData, dataSize);
+    return dataSize;
+}
