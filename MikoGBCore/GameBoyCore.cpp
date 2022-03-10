@@ -27,6 +27,10 @@ void GameBoyCore::prepTestROM() {
     _imp->prepTestROM();
 }
 
+bool GameBoyCore::supportsSaveData() const {
+    return _imp->supportsSaveData();
+}
+
 void GameBoyCore::step() {
     _imp->step();
 }

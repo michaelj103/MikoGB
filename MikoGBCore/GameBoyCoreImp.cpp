@@ -29,6 +29,10 @@ void GameBoyCoreImp::prepTestROM() {
     _memoryController->configureWithEmptyData();
 }
 
+bool GameBoyCoreImp::supportsSaveData() const {
+    return _memoryController->supportsSave();
+}
+
 void GameBoyCoreImp::step() {
     int instructionCycles = _cpu->step();
     size_t cpuCycles = instructionCycles * 4;

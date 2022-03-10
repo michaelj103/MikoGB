@@ -23,6 +23,7 @@ public:
     
     bool loadROMData(const void *romData, size_t size);
     void prepTestROM();
+    bool supportsSaveData() const;
     
     /// Step a single CPU instruction
     void step();

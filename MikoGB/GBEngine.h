@@ -40,6 +40,8 @@ typedef struct _GBRegisterState {
     BOOL CFlag;
 } GBRegisterState;
 
+typedef void (^ROMLoadCompletion)(BOOL success, BOOL supportsSaveData);
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface GBEngine : NSObject
@@ -50,7 +52,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)registerObserver:(id<GBEngineObserver>)observer;
 - (void)unregisterObserver:(id<GBEngineObserver>)observer;
 
-- (void)loadROM:(NSURL *)url completion:(void (^_Nullable)(BOOL))completion;
+- (void)loadROM:(NSURL *)url completion:(nullable ROMLoadCompletion)completion;
 - (void)writeDisplayStateToDirectory:(NSURL *)directoryURL completion:(void (^_Nullable)(BOOL))completion;
 
 - (void)emulateFrame;

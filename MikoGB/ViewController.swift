@@ -43,8 +43,8 @@ class ViewController: NSViewController, NoROMViewDelegate, NSMenuItemValidation 
     }
     
     private func loadROM(url: URL) {
-        engine.loadROM(url) { [self] (success) in
-            _romDidLoad(url, success: success)
+        engine.loadROM(url) { [self] (success, supportsSaveData) in
+            _romDidLoad(url, success: success, supportsSaveData: supportsSaveData)
         }
     }
     
@@ -56,9 +56,11 @@ class ViewController: NSViewController, NoROMViewDelegate, NSMenuItemValidation 
         }
     }
     
-    private func _romDidLoad(_ url: URL, success: Bool) {
+    private func _romDidLoad(_ url: URL, success: Bool, supportsSaveData: Bool) {
         if success {
-            _loadSaveData(url)
+            if supportsSaveData {
+                _loadSaveData(url)
+            }
             let gameView = GameView(engine: engine)
             self.contentView = gameView
             self.gameView = gameView

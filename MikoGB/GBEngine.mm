@@ -126,22 +126,23 @@ static MikoGB::JoypadButton _ButtonForCode(GBEngineKeyCode code) {
     CGContextRelease(_cgContext);
 }
 
-- (void)loadROM:(NSURL *)url completion:(void (^)(BOOL))completion {
+- (void)loadROM:(NSURL *)url completion:(ROMLoadCompletion)completion {
     NSError *readErr = nil;
     NSData *data = [NSData dataWithContentsOfURL:url options:NSDataReadingMappedIfSafe error:&readErr];
     if (!data) {
         NSLog(@"Failed to read data from URL \'%@\': %@", url, readErr);
         if (completion) {
-            completion(NO);
+            completion(NO, NO);
         }
         return;
     }
     
     dispatch_async(_emulationQueue, ^{
         bool success = self->_core->loadROMData(data.bytes, data.length);
+        BOOL supportsSaveData = self->_core->supportsSaveData() ? YES : NO;
         if (completion) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                completion(success ? YES : NO);
+                completion(success ? YES : NO, supportsSaveData);
             });
         }
     });

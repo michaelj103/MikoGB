@@ -15,18 +15,22 @@
 using namespace std;
 using namespace MikoGB;
 
-MemoryBankController *MemoryBankController::CreateMBC(const CartridgeHeader &header) {
+MemoryBankController *MemoryBankController::CreateMBC(const CartridgeHeader &header, bool &supportsSave) {
     MemoryBankController *mbc = nullptr;
+    supportsSave = false;
     switch (header.getType()) {
         case CartridgeType::ROM_Only:
             mbc = new NoMBC(header);
             break;
+        case CartridgeType::MBC1_RAM_BATT:
+            supportsSave = true;
+            // fall through to non-battery MBC1s
         case CartridgeType::MBC1:
         case CartridgeType::MBC1_RAM:
-        case CartridgeType::MBC1_RAM_BATT:
             mbc = new MBC1(header);
             break;
         case CartridgeType::MBC3_RAM_BATT:
+            supportsSave = true;
             mbc = new MBC3(header);
             break;
             

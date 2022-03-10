@@ -19,7 +19,7 @@ public:
     MemoryBankController() = default;
     virtual ~MemoryBankController();
     
-    static MemoryBankController *CreateMBC(const CartridgeHeader &header);
+    static MemoryBankController *CreateMBC(const CartridgeHeader &header, bool &supportsSaves);
     
     bool isPersistenceStale() const { return _isPersistenceStale; }
     void resetPersistence() { _isPersistenceStale = false; }
