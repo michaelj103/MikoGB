@@ -77,15 +77,21 @@ class ViewController: NSViewController, NoROMViewDelegate, NSMenuItemValidation 
         }
     }
     
+    private var isChoosingROM = false
     func didSelectChooseRom(view: NoROMView) {
+        if isChoosingROM {
+            return
+        }
+        isChoosingROM = true
         let openPanel = NSOpenPanel()
         openPanel.canChooseFiles = true
         openPanel.canChooseDirectories = false
         openPanel.allowsMultipleSelection = false
-        openPanel.begin { (response) in
+        openPanel.begin { [weak self] (response) in
+            self?.isChoosingROM = false
             if response == NSApplication.ModalResponse.OK {
                 let fileURL = openPanel.urls[0]
-                self.loadROM(url: fileURL)
+                self?.loadROM(url: fileURL)
             }
         }
     }
