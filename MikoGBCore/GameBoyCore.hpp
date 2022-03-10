@@ -25,6 +25,7 @@ public:
     void prepTestROM();
     size_t saveDataSize() const;
     size_t copySaveData(void *buffer, size_t size) const;
+    bool loadSaveData(const void *saveData, size_t size);
     
     /// Step a single CPU instruction
     void step();

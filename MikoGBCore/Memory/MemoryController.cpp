@@ -260,3 +260,11 @@ size_t MemoryController::copySaveData(void *buffer, size_t size) const {
     memcpy(buffer, saveData, dataSize);
     return dataSize;
 }
+
+bool MemoryController::loadSaveData(const void *saveData, size_t size) {
+    if (!_mbc) {
+        return false;
+    }
+    
+    return _mbc->loadSaveData(saveData, size);
+}

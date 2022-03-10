@@ -67,6 +67,7 @@ public:
     bool bootROMEnabled() const { return _bootROMEnabled; }
     size_t saveDataSize() const;
     size_t copySaveData(void *buffer, size_t size) const;
+    bool loadSaveData(const void *saveData, size_t size);
     
 private:
     uint8_t *_permanentROM = nullptr;

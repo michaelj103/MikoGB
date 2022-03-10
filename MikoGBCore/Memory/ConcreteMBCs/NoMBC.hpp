@@ -33,6 +33,7 @@ public:
     int currentROMBank() const override;
     size_t saveDataSize() const override;
     void *getSaveData() const override;
+    bool loadSaveData(const void *saveData, size_t size) override;
 };
 
 }

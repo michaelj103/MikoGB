@@ -224,3 +224,17 @@ void *MBC3::getSaveData() const {
         return nullptr;
     }
 }
+
+bool MBC3::loadSaveData(const void *saveData, size_t size) {
+    if (_batteryBackup) {
+        size_t expectedSize = saveDataSize();
+        if (expectedSize != size) {
+            return false;
+        }
+        
+        memcpy(_ramData, saveData, size);
+        return true;
+    } else {
+        return false;
+    }
+}

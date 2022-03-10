@@ -87,3 +87,7 @@ size_t NoMBC::saveDataSize() const {
 void *NoMBC::getSaveData() const {
     return nullptr;
 }
+
+bool NoMBC::loadSaveData(const void *saveData, size_t size) {
+    return false;
+}

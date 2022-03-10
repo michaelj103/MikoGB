@@ -47,6 +47,7 @@ public:
     
     virtual size_t saveDataSize() const = 0;
     virtual void *getSaveData() const = 0;
+    virtual bool loadSaveData(const void *saveData, size_t size) = 0;
         
 protected:
     uint8_t *_romData = nullptr;
