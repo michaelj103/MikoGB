@@ -79,3 +79,7 @@ int NoMBC::currentROMBank() const {
     // there is only 1 and it cannot be changed
     return 1;
 }
+
+size_t NoMBC::saveDataSize() const {
+    return 0;
+}

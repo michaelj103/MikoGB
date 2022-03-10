@@ -29,8 +29,8 @@ void GameBoyCoreImp::prepTestROM() {
     _memoryController->configureWithEmptyData();
 }
 
-bool GameBoyCoreImp::supportsSaveData() const {
-    return _memoryController->supportsSave();
+size_t GameBoyCoreImp::saveDataSize() const {
+    return _memoryController->saveDataSize();
 }
 
 void GameBoyCoreImp::step() {

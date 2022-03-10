@@ -139,7 +139,7 @@ static MikoGB::JoypadButton _ButtonForCode(GBEngineKeyCode code) {
     
     dispatch_async(_emulationQueue, ^{
         bool success = self->_core->loadROMData(data.bytes, data.length);
-        BOOL supportsSaveData = self->_core->supportsSaveData() ? YES : NO;
+        BOOL supportsSaveData = self->_core->saveDataSize() > 0 ? YES : NO;
         if (completion) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 completion(success ? YES : NO, supportsSaveData);

@@ -50,6 +50,8 @@ MBC3::MBC3(const CartridgeHeader &header) {
             _ramBankCount = -1;
             break;
     }
+    
+    _batteryBackup = header.hasBatteryBackup();
 }
 
 MBC3::~MBC3() {
@@ -205,4 +207,12 @@ void MBC3::_writeClockRegister(MBC3Clock reg, uint8_t val) {
 
 int MBC3::currentROMBank() const {
     return _romBank;
+}
+
+size_t MBC3::saveDataSize() const {
+    if (_batteryBackup) {
+        return _ramBankCount * RAMBankSize;
+    } else {
+        return 0;
+    }
 }

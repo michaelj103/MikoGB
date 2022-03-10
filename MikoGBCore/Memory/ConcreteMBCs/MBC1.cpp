@@ -63,6 +63,8 @@ MBC1::MBC1(const CartridgeHeader &header) {
             _ramBankCount = -1;
             break;
     }
+    
+    _batteryBackup = header.hasBatteryBackup();
 }
 
 MBC1::~MBC1() {
@@ -167,4 +169,12 @@ void MBC1::writeRAM(uint16_t addr, uint8_t val) {
 
 int MBC1::currentROMBank() const {
     return _romBank;
+}
+
+size_t MBC1::saveDataSize() const {
+    if (_batteryBackup) {
+        return _ramBankCount * RAMBankSize;
+    } else {
+        return 0;
+    }
 }

@@ -269,6 +269,26 @@ CartridgeRAMSize CartridgeHeader::getRAMSize() const {
     return _CartridgeRAMSizeFromByte(_ramSize);
 }
 
+bool CartridgeHeader::hasBatteryBackup() const {
+    CartridgeType type = _CartridgeTypeFromByte(_cartridgeType);
+    switch (type) {
+        case CartridgeType::ROM_Only:
+            return false;
+        case CartridgeType::MBC1:
+            return false;
+        case CartridgeType::MBC1_RAM:
+            return false;
+        case CartridgeType::MBC1_RAM_BATT:
+            return true;
+        case CartridgeType::MBC3_RAM_BATT:
+            return true;
+        case CartridgeType::MBC5_RAM_BATT:
+            return true;
+        case CartridgeType::Unsupported:
+            return false;
+    }
+}
+
 namespace MikoGB {
 std::ostream &operator<<(std::ostream &os, const CartridgeHeader &cartridge) {
     cout << "Cartridge Info:\n=======================";

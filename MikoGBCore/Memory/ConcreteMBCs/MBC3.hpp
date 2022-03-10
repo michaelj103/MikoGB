@@ -32,6 +32,7 @@ public:
     void writeControlCode(uint16_t addr, uint8_t val) override;
     void updateClock(size_t cpuCycles) override;
     int currentROMBank() const override;
+    size_t saveDataSize() const override;
     
 private:
     int _romBankCount;
@@ -45,6 +46,7 @@ private:
     size_t _clockCount = 0;
     int _romBank = 1;
     int _ramBank = 0;
+    bool _batteryBackup = false;
     
     uint8_t _clockRegisters[5];
     

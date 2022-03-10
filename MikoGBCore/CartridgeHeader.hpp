@@ -56,6 +56,7 @@ public:
     CartridgeType getType() const;
     CartridgeROMSize getROMSize() const;
     CartridgeRAMSize getRAMSize() const;
+    bool hasBatteryBackup() const;
     
 private:
     std::string _title;

@@ -19,7 +19,7 @@ public:
     MemoryBankController() = default;
     virtual ~MemoryBankController();
     
-    static MemoryBankController *CreateMBC(const CartridgeHeader &header, bool &supportsSaves);
+    static MemoryBankController *CreateMBC(const CartridgeHeader &header);
     
     bool isPersistenceStale() const { return _isPersistenceStale; }
     void resetPersistence() { _isPersistenceStale = false; }
@@ -44,6 +44,8 @@ public:
     /// Some MBCs maintain a clock. Supply CPU cycle counts to the MBC to keep this up to date
     /// CPU cycles are 4 * instruction cycles and the CPU oscillates at 4.2MHz (2^22)
     virtual void updateClock(size_t cpuCycles);
+    
+    virtual size_t saveDataSize() const = 0;
         
 protected:
     uint8_t *_romData = nullptr;

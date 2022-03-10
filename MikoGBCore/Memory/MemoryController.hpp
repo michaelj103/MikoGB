@@ -65,7 +65,7 @@ public:
     int currentROMBank() const;
     
     bool bootROMEnabled() const { return _bootROMEnabled; }
-    bool supportsSave() const { return _supportsSave; }
+    size_t saveDataSize() const;
     
 private:
     uint8_t *_permanentROM = nullptr;
@@ -73,7 +73,7 @@ private:
     uint8_t *_highRangeMemory = nullptr;
     CartridgeHeader _header;
     bool _bootROMEnabled = true;
-    bool _supportsSave = false;
+    size_t _saveDataSize = false;
     
     MemoryBankController *_mbc = nullptr;
     Timer _timer;

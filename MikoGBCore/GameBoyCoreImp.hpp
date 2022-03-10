@@ -25,7 +25,7 @@ public:
     
     bool loadROMData(const void *romData, size_t size);
     void prepTestROM();
-    bool supportsSaveData() const;
+    size_t saveDataSize() const;
     
     void step();
     

@@ -69,14 +69,12 @@ bool MemoryController::configureWithROMData(const void *romData, size_t size) {
     memcpy(_permanentROM, romData, PermanentROMSize);
     _header.readHeaderData(_permanentROM);
     
-    bool supportsSave = false;
-    _mbc = MemoryBankController::CreateMBC(_header, supportsSave);
+    _mbc = MemoryBankController::CreateMBC(_header);
     if (!_mbc) {
         _LogMemoryControllerErr("Unable to create MBC from header data");
         return false;
     }
     
-    _supportsSave = supportsSave;
     _videoRAM = new uint8_t[VRAMSize]();
     _highRangeMemory = new uint8_t[HighRangeMemorySize]();
     
@@ -236,5 +234,13 @@ void MemoryController::_dmaTransfer(uint8_t byte) {
         const uint16_t src = sourceBase + i;
         const uint16_t dst = OAMBase + i;
         setByte(dst, readByte(src));
+    }
+}
+
+size_t MemoryController::saveDataSize() const {
+    if (_mbc) {
+        return _mbc->saveDataSize();
+    } else {
+        return 0;
     }
 }
