@@ -111,7 +111,8 @@ static MikoGB::JoypadButton _ButtonForCode(GBEngineKeyCode code) {
         _observers = [NSHashTable weakObjectsHashTable];
         
         _persistenceTimer = [[GBRateLimitTimer alloc] initWithDelay:15.0 targetQueue:dispatch_get_main_queue() eventBlock:^{
-            NSLog(@"MJB: Persistence event");
+            GBEngine *strongSelf = weakSelf;
+            [strongSelf.saveDestination engineIsReadyToPersistSaveData:strongSelf];
         }];
         
 //        _audioWriter = [[GBAudioWriter alloc] init];
@@ -146,6 +147,58 @@ static MikoGB::JoypadButton _ButtonForCode(GBEngineKeyCode code) {
             });
         }
     });
+}
+
+- (void)loadSaveData:(NSData *)data completion:(nullable RAMLoadCompletion)completion {
+    dispatch_async(_emulationQueue, ^{
+        const void *saveData = data.bytes;
+        size_t size = (size_t)data.length;
+        bool success = self->_core->loadSaveData(saveData, size);
+        if (completion) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completion(success ? YES : NO);
+            });
+        }
+    });
+}
+
+- (NSData *)_emulationQueue_getSaveData {
+    size_t copiedSize = 0;
+    NSData *copiedData = nil;
+    size_t saveDataSize = _core->saveDataSize();
+    if (saveDataSize > 0) {
+        NSMutableData *data = [NSMutableData dataWithLength:saveDataSize];
+        void *buffer = data.mutableBytes;
+        copiedSize = self->_core->copySaveData(buffer, saveDataSize);
+        copiedData = data;
+    }
+    
+    if (copiedSize > 0) {
+        return copiedData;
+    } else {
+        return nil;
+    }
+}
+
+- (void)getSaveData:(SaveDataCompletion)completion {
+    dispatch_async(_emulationQueue, ^{
+        NSData *copiedData = [self _emulationQueue_getSaveData];
+        completion(copiedData);
+    });
+}
+
+- (BOOL)isSaveDataStale {
+    return _persistenceTimer.isPending;
+}
+
+- (nullable NSData *)synchronousGetSaveData {
+    __block NSData *data = nil;
+    // Consider timeout for this
+    dispatch_sync(_emulationQueue, ^{
+        data = [self _emulationQueue_getSaveData];
+    });
+    
+    return data;
 }
 
 - (void)writeDisplayStateToDirectory:(NSURL *)directoryURL completion:(void (^)(BOOL))completion {

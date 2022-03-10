@@ -118,10 +118,15 @@ class PersistenceManager {
         }
     }
     
-    func loadSaveData(_ entry: SaveEntry) throws -> Data? {
-        let fileManager = FileManager.default
+    private func _activeSavePath(for entry: SaveEntry) -> String {
         let saveFileName = NSString(string: entry.name).appendingPathExtension("sav")!
         let saveFilePath = NSString(string: PersistenceManager.activeSavesPath).appendingPathComponent(saveFileName)
+        return saveFilePath
+    }
+    
+    func loadSaveData(_ entry: SaveEntry) throws -> Data? {
+        let fileManager = FileManager.default
+        let saveFilePath = _activeSavePath(for: entry)
         var isDir: ObjCBool = false
         if fileManager.fileExists(atPath: saveFilePath, isDirectory: &isDir) {
             if isDir.boolValue {
@@ -134,6 +139,13 @@ class PersistenceManager {
         } else {
             return nil
         }
+    }
+    
+    func writeSaveData(_ data: Data, for entry: SaveEntry) throws {
+        let saveFilePath = _activeSavePath(for: entry)
+        let url = URL(fileURLWithPath: saveFilePath)
+        try data.write(to: url)
+        print("Wrote save data to \"\(saveFilePath)\"")
     }
 }
 

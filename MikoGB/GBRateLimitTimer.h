@@ -17,6 +17,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (readonly, nonatomic) dispatch_queue_t targetQueue;
 @property (readonly, nonatomic, copy) dispatch_block_t eventBlock;
 
+@property (readonly, nonatomic) BOOL isPending;
+
 /// call when the rate limited event occurs
 - (void)input;
 

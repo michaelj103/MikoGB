@@ -91,4 +91,15 @@
     os_unfair_lock_unlock(&_stateLock);
 }
 
+- (BOOL)isPending {
+    BOOL isPending = NO;
+    os_unfair_lock_lock(&_stateLock);
+    if (!_isCancelled) {
+        isPending = _isWaiting;
+    }
+    os_unfair_lock_unlock(&_stateLock);
+    
+    return isPending;
+}
+
 @end

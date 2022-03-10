@@ -10,7 +10,10 @@
 
 @protocol GBEngineImageDestination;
 @protocol GBEngineAudioDestination;
+@protocol GBEngineSaveDestination;
 @protocol GBEngineObserver;
+
+NS_ASSUME_NONNULL_BEGIN
 
 typedef NS_ENUM(NSInteger, GBEngineKeyCode) {
     GBEngineKeyCodeRight,
@@ -41,18 +44,23 @@ typedef struct _GBRegisterState {
 } GBRegisterState;
 
 typedef void (^ROMLoadCompletion)(BOOL success, BOOL supportsSaveData);
-
-NS_ASSUME_NONNULL_BEGIN
+typedef void (^RAMLoadCompletion)(BOOL success);
+typedef void (^SaveDataCompletion)( NSData * _Nullable data);
 
 @interface GBEngine : NSObject
 
 @property (nonatomic, weak) id<GBEngineImageDestination> imageDestination;
 @property (nonatomic, weak) id<GBEngineAudioDestination> audioDestination;
+@property (nonatomic, weak) id<GBEngineSaveDestination> saveDestination;
 
 - (void)registerObserver:(id<GBEngineObserver>)observer;
 - (void)unregisterObserver:(id<GBEngineObserver>)observer;
 
 - (void)loadROM:(NSURL *)url completion:(nullable ROMLoadCompletion)completion;
+- (void)loadSaveData:(NSData *)data completion:(nullable RAMLoadCompletion)completion;
+- (void)getSaveData:(SaveDataCompletion)completion;
+@property (readonly, nonatomic) BOOL isSaveDataStale;
+- (nullable NSData *)synchronousGetSaveData;
 - (void)writeDisplayStateToDirectory:(NSURL *)directoryURL completion:(void (^_Nullable)(BOOL))completion;
 
 - (void)emulateFrame;
@@ -85,9 +93,14 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)engine:(GBEngine *)engine receivedAudioSampleLeft:(int16_t)left right:(int16_t)right;
 @end
 
+@protocol GBEngineSaveDestination <NSObject>
+- (void)engineIsReadyToPersistSaveData:(GBEngine *)engine;
+@end
+
 @protocol GBEngineObserver <NSObject>
 - (void)engine:(GBEngine *)engine runnableDidChange:(BOOL)isRunnable;
 - (void)didUpdateSuspendedStateForEngine:(GBEngine *)engine;
 @end
+
 
 NS_ASSUME_NONNULL_END

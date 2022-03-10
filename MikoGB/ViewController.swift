@@ -7,7 +7,7 @@
 
 import Cocoa
 
-class ViewController: NSViewController, NoROMViewDelegate, NSMenuItemValidation {
+class ViewController: NSViewController, NoROMViewDelegate, NSMenuItemValidation, GBEngineSaveDestination {
 
     private var gameView: GameView?
     private var contentView: NSView? {
@@ -35,6 +35,11 @@ class ViewController: NSViewController, NoROMViewDelegate, NSMenuItemValidation 
         engine = AppStateManager.sharedInstance.engine
         audioController = AudioController(engine: engine)
         persistenceManager = AppStateManager.sharedInstance.persistenceManager
+        engine.saveDestination = self
+        
+        NotificationCenter.default.addObserver(forName: TerminationNotification, object: nil, queue: nil) { [weak self] _ in
+            self?._prepareForTermination()
+        }
     }
     
     override func viewDidLayout() {
@@ -48,26 +53,74 @@ class ViewController: NSViewController, NoROMViewDelegate, NSMenuItemValidation 
         }
     }
     
-    private func _loadSaveData(_ url: URL) {
+    private func _loadSaveData(_ url: URL, completion: (Bool)->()) {
         // TODO: MJB: appropriate fallbacks instead of crash
         let entry = try! persistenceManager.loadSaveEntry(url)
+        loadedSaveDataEntry = entry
         if let data = try! persistenceManager.loadSaveData(entry) {
             // now, do something with the data
+            engine.loadSave(data) { [weak self] (success) in
+                self?._saveDataDidLoad(success)
+            }
+        } else {
+            // there's no data, which is a valid case (e.g. starting a game for the first time or after deleting save data)
+            completion(true)
         }
     }
     
+    private var loadedSaveDataEntry: SaveEntry?
     private func _romDidLoad(_ url: URL, success: Bool, supportsSaveData: Bool) {
         if success {
             if supportsSaveData {
-                _loadSaveData(url)
+                _loadSaveData(url) { _saveDataDidLoad($0) }
+            } else {
+                loadedSaveDataEntry = nil
+                _startEmulation()
             }
-            let gameView = GameView(engine: engine)
-            self.contentView = gameView
-            self.gameView = gameView
-            gameView.start()
-            audioController.startAudioEngine()
         } else {
             //TODO: present an alert
+            preconditionFailure("failure to load ROM data is unhandled")
+        }
+    }
+    
+    private func _saveDataDidLoad(_ success: Bool) {
+        if success {
+            _startEmulation()
+        } else {
+            //TODO: present an alert
+            preconditionFailure("failure to load save data is unhandled")
+        }
+    }
+    
+    private func _startEmulation() {
+        let gameView = GameView(engine: engine)
+        self.contentView = gameView
+        self.gameView = gameView
+        gameView.start()
+        audioController.startAudioEngine()
+    }
+    
+    func engineIsReady(toPersistSaveData engine: GBEngine) {
+        engine.getSaveData { (data) in
+            // capture strong reference
+            self._persistSaveData(data)
+        }
+    }
+    
+    private func _persistSaveData(_ data: Data?) {
+        guard let data = data, let entry = loadedSaveDataEntry else {
+            return
+        }
+        
+        // TODO: catch errors and handle gracefully
+        try! persistenceManager.writeSaveData(data, for: entry)
+    }
+    
+    private func _prepareForTermination() {
+        if engine.isSaveDataStale {
+            print("Writing stale save data on quit")
+            let data = engine.synchronousGetSaveData()
+            _persistSaveData(data)
         }
     }
     
