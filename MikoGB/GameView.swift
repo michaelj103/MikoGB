@@ -37,6 +37,16 @@ class GameView : NSView, GBEngineImageDestination, GBEngineObserver {
     
     private func _handleTimer(_ timestamp: CFTimeInterval) {
         self.engine.emulateFrame()
+        // toggle speed mode if requested
+        if _switchModes {
+            // cancel and recreate the timer at the new desired framerate
+            _switchModes = false
+            if let timer = dispatchTimer {
+                timer.cancel()
+                dispatchTimer = nil
+                _startTimer()
+            }
+        }
     }
     
     func start() {
@@ -48,7 +58,7 @@ class GameView : NSView, GBEngineImageDestination, GBEngineObserver {
             timer.resume()
         } else {
             let timer = DispatchSource.makeTimerSource(flags: .strict, queue: DispatchQueue.main)
-            let framerate = 1.0 / 60.0
+            let framerate = desiredFramerate
             timer.schedule(deadline: DispatchTime.now() + framerate, repeating: framerate)
             timer.setEventHandler { [weak self] in
                 let time = CFAbsoluteTimeGetCurrent()
@@ -78,6 +88,24 @@ class GameView : NSView, GBEngineImageDestination, GBEngineObserver {
     
     func pause() {
         engine.desiredRunnable = false
+    }
+    
+    private var _switchModes = false
+    private var _isInSpeedMode = false
+    private var desiredFramerate = 1.0 / 60.0
+    private func _toggleSpeedMode() {
+        // ignore multiple toggles during the same frame (fast fingers!)
+        if !_switchModes {
+            _switchModes = true
+            _isInSpeedMode = !_isInSpeedMode
+            if _isInSpeedMode {
+                // 90fps (1.5x speed)
+                desiredFramerate = 1.0 / 90.0
+            } else {
+                // 60fps (normal)
+                desiredFramerate = 1.0 / 60.0
+            }
+        }
     }
         
     func engine(_ engine: GBEngine, receivedFrame frame: CGImage) {
@@ -119,6 +147,8 @@ class GameView : NSView, GBEngineImageDestination, GBEngineObserver {
                 engine.setKeyDown(.A)
             case 0x07:
                 engine.setKeyDown(.B)
+            case 0x31:
+                _toggleSpeedMode()
             default:
                 break
             }
@@ -144,6 +174,8 @@ class GameView : NSView, GBEngineImageDestination, GBEngineObserver {
                 engine.setKeyUp(.A)
             case 0x07:
                 engine.setKeyUp(.B)
+            case 0x31:
+                break
             default:
                 break
             }

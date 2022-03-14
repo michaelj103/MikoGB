@@ -117,7 +117,9 @@ class AudioController : NSObject, GBEngineAudioDestination {
             leftAudioSampleBuffer.write(leftFloat)
             rightAudioSampleBuffer.write(rightFloat)
             if leftAudioSampleBuffer.isFull {
-                print("Audio skip")
+                // ensure that the audio doesn't get too far behind. If the emulation is producing samples
+                // too quickly, drop them. This shouldn't happen much at normal speed. If running at high speeds, this
+                // will be quite common and allows the audio to seem "sped up" without pulling frequencies higher
                 leftAudioSampleBuffer.drop(AudioController.bufferDrop)
                 rightAudioSampleBuffer.drop(AudioController.bufferDrop)
             }
