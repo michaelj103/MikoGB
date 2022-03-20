@@ -6,6 +6,7 @@
 //
 
 #import "GBImageUtilities.h"
+#import <UniformTypeIdentifiers/UTCoreTypes.h>
 
 static CGImageRef createImageWithPixelBuffer(const MikoGB::PixelBuffer &pixelBuffer) {
     size_t width = pixelBuffer.width;
@@ -52,7 +53,8 @@ void writePNG(const MikoGB::PixelBuffer &pixelBuffer, NSURL * _Nullable director
     } else {
         NSString *destPath = [dirPath stringByAppendingPathComponent:filename];
         NSURL *destURL = [NSURL fileURLWithPath:destPath];
-        CGImageDestinationRef imageDest = CGImageDestinationCreateWithURL((__bridge CFURLRef)destURL, kUTTypePNG, 1, NULL);
+        NSString *pngIdentifier = UTTypePNG.identifier;
+        CGImageDestinationRef imageDest = CGImageDestinationCreateWithURL((__bridge CFURLRef)destURL, (__bridge CFStringRef)pngIdentifier, 1, NULL);
         if (imageDest) {
             CGImageDestinationAddImage(imageDest, image, NULL);
             if (!CGImageDestinationFinalize(imageDest)) {

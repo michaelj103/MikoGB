@@ -1,11 +1,12 @@
 //
 //  GameView.swift
-//  MikoGB
+//  MikoGB-iOS
 //
-//  Created on 5/8/21.
+//  Created by Michael Brandt on 3/19/22.
+//  Copyright © 2022 Michael Brandt. All rights reserved.
 //
 
-import Cocoa
+import UIKit
 
 enum GameViewState {
     case Initial
@@ -14,8 +15,7 @@ enum GameViewState {
     case Error
 }
 
-class GameView : NSView, GBEngineImageDestination, GBEngineObserver {
-    
+class GameView : UIView, GBEngineImageDestination, GBEngineObserver {
     private var dispatchTimer: DispatchSourceTimer?
     let engine: GBEngine
     private(set) var state: GameViewState
@@ -23,12 +23,10 @@ class GameView : NSView, GBEngineImageDestination, GBEngineObserver {
     init(engine: GBEngine) {
         self.engine = engine
         self.state = .Initial
-        super.init(frame: NSZeroRect)
-        self.wantsLayer = true
+        super.init(frame: CGRect.zero)
         self.engine.imageDestination = self
         self.engine.register(self)
-        
-        self.layer?.backgroundColor = NSColor.blue.cgColor
+        self.layer.backgroundColor = UIColor.blue.cgColor
     }
     
     required init?(coder: NSCoder) {
@@ -109,7 +107,7 @@ class GameView : NSView, GBEngineImageDestination, GBEngineObserver {
     }
         
     func engine(_ engine: GBEngine, receivedFrame frame: CGImage) {
-        self.layer?.contents = frame
+        self.layer.contents = frame
     }
     
     func engine(_ engine: GBEngine, runnableDidChange isRunnable: Bool) {
@@ -122,63 +120,5 @@ class GameView : NSView, GBEngineImageDestination, GBEngineObserver {
     
     func didUpdateSuspendedState(for engine: GBEngine) {
         // means the state moved via something other than the timer. nothing to do
-    }
-    
-    override var acceptsFirstResponder: Bool {
-        return true
-    }
-    
-    override func keyDown(with event: NSEvent) {
-        if !event.isARepeat {
-            switch event.keyCode {
-            case 0x24:
-                engine.setKeyDown(.start)
-            case 0x30:
-                engine.setKeyDown(.select)
-            case 0x7B:
-                engine.setKeyDown(.left)
-            case 0x7C:
-                engine.setKeyDown(.right)
-            case 0x7D:
-                engine.setKeyDown(.down)
-            case 0x7E:
-                engine.setKeyDown(.up)
-            case 0x06:
-                engine.setKeyDown(.A)
-            case 0x07:
-                engine.setKeyDown(.B)
-            case 0x31:
-                _toggleSpeedMode()
-            default:
-                break
-            }
-        }
-    }
-    
-    override func keyUp(with event: NSEvent) {
-        if !event.isARepeat {
-            switch event.keyCode {
-            case 0x24:
-                engine.setKeyUp(.start)
-            case 0x30:
-                engine.setKeyUp(.select)
-            case 0x7B:
-                engine.setKeyUp(.left)
-            case 0x7C:
-                engine.setKeyUp(.right)
-            case 0x7D:
-                engine.setKeyUp(.down)
-            case 0x7E:
-                engine.setKeyUp(.up)
-            case 0x06:
-                engine.setKeyUp(.A)
-            case 0x07:
-                engine.setKeyUp(.B)
-            case 0x31:
-                break
-            default:
-                break
-            }
-        }
     }
 }

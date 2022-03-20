@@ -57,6 +57,15 @@
 		291987F42683FBBF009D7C45 /* DebuggerConsoleController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 291987F32683FBBF009D7C45 /* DebuggerConsoleController.swift */; };
 		295BCB772693CF1900E80FCC /* SimpleError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295BCB762693CF1900E80FCC /* SimpleError.swift */; };
 		297E60062456426400EE150F /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297E60052456426400EE150F /* main.cpp */; };
+		2987F3A927E69F8C00EC00A7 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2987F3A827E69F8C00EC00A7 /* GameView.swift */; };
+		2987F3AA27E6A05A00EC00A7 /* GBEngine.mm in Sources */ = {isa = PBXBuildFile; fileRef = 29F0829B2647BA0D00FA5F67 /* GBEngine.mm */; };
+		2987F3B727E6D84C00EC00A7 /* libMikoGBCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 299281E626424123004691E5 /* libMikoGBCore.a */; };
+		2987F3B927E6D8C400EC00A7 /* GBRateLimitTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = 299BD30027D5450800940D12 /* GBRateLimitTimer.m */; };
+		2987F3BA27E6D8CB00EC00A7 /* GBImageUtilities.mm in Sources */ = {isa = PBXBuildFile; fileRef = 29C3DB8C2655B0ED00DCFA33 /* GBImageUtilities.mm */; };
+		2987F3BB27E6D8CD00EC00A7 /* GBAudioWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 2902EABC27C961E200186976 /* GBAudioWriter.m */; };
+		2987F3BC27E6D8D500EC00A7 /* WavFile.c in Sources */ = {isa = PBXBuildFile; fileRef = 2902EABB27C961E200186976 /* WavFile.c */; };
+		2987F3BE27E6D9BA00EC00A7 /* UniformTypeIdentifiers.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2987F3BD27E6D9BA00EC00A7 /* UniformTypeIdentifiers.framework */; };
+		2987F3C027E6D9EB00EC00A7 /* UniformTypeIdentifiers.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2987F3BF27E6D9EB00EC00A7 /* UniformTypeIdentifiers.framework */; };
 		29928195263DE721004691E5 /* Test16BitArithmeticInstructions.mm in Sources */ = {isa = PBXBuildFile; fileRef = 29928194263DE721004691E5 /* Test16BitArithmeticInstructions.mm */; };
 		2992819C263DE86C004691E5 /* ArithmeticInstructions16.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2992818B263DDEC8004691E5 /* ArithmeticInstructions16.cpp */; };
 		299281A6263F885E004691E5 /* CallAndReturnInstructions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 299281A3263F885E004691E5 /* CallAndReturnInstructions.cpp */; };
@@ -136,6 +145,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		2987F3B527E6D84300EC00A7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 297E5FED2456421B00EE150F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 299281E526424123004691E5;
+			remoteInfo = MikoGBCore;
+		};
 		2992829E2642441B004691E5 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 297E5FED2456421B00EE150F /* Project object */;
@@ -248,6 +264,10 @@
 		297E6138245FEA5D00EE150F /* CPUCore.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = CPUCore.hpp; sourceTree = "<group>"; };
 		297E613C245FECDF00EE150F /* CPUInstruction.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = CPUInstruction.cpp; sourceTree = "<group>"; };
 		297E613D245FECDF00EE150F /* CPUInstruction.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = CPUInstruction.hpp; sourceTree = "<group>"; };
+		2987F3A827E69F8C00EC00A7 /* GameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameView.swift; sourceTree = "<group>"; };
+		2987F3AE27E6C94A00EC00A7 /* MikoGB-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MikoGB-Bridging-Header.h"; sourceTree = "<group>"; };
+		2987F3BD27E6D9BA00EC00A7 /* UniformTypeIdentifiers.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UniformTypeIdentifiers.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS15.4.sdk/System/Library/Frameworks/UniformTypeIdentifiers.framework; sourceTree = DEVELOPER_DIR; };
+		2987F3BF27E6D9EB00EC00A7 /* UniformTypeIdentifiers.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UniformTypeIdentifiers.framework; path = System/Library/Frameworks/UniformTypeIdentifiers.framework; sourceTree = SDKROOT; };
 		2992818B263DDEC8004691E5 /* ArithmeticInstructions16.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ArithmeticInstructions16.cpp; sourceTree = "<group>"; };
 		2992818C263DDEC8004691E5 /* ArithmeticInstructions16.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ArithmeticInstructions16.hpp; sourceTree = "<group>"; };
 		29928194263DE721004691E5 /* Test16BitArithmeticInstructions.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = Test16BitArithmeticInstructions.mm; sourceTree = "<group>"; };
@@ -363,6 +383,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2987F3C027E6D9EB00EC00A7 /* UniformTypeIdentifiers.framework in Frameworks */,
 				2902EAB627C8BDBA00186976 /* AVFoundation.framework in Frameworks */,
 				29F082B32647BC3B00FA5F67 /* libMikoGBCore.a in Frameworks */,
 			);
@@ -379,6 +400,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2987F3BE27E6D9BA00EC00A7 /* UniformTypeIdentifiers.framework in Frameworks */,
+				2987F3B727E6D84C00EC00A7 /* libMikoGBCore.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -458,6 +481,7 @@
 				299281E726424123004691E5 /* MikoGBCore */,
 				29D3C937247DFBFE0096D21B /* MikoGBCoreTests */,
 				29928293264243F4004691E5 /* MikoGBCoreTestTool */,
+				2987F3B827E6D8AD00EC00A7 /* Shared */,
 				299282B32642449D004691E5 /* MikoGB */,
 				29DBB67627E2BA8700C77519 /* MikoGB-iOS */,
 				29DBB68D27E2BA8800C77519 /* MikoGB-iOSTests */,
@@ -506,6 +530,23 @@
 			path = CPU;
 			sourceTree = "<group>";
 		};
+		2987F3B827E6D8AD00EC00A7 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				29F0829A2647BA0D00FA5F67 /* GBEngine.h */,
+				29F0829B2647BA0D00FA5F67 /* GBEngine.mm */,
+				299BD2FF27D5450800940D12 /* GBRateLimitTimer.h */,
+				299BD30027D5450800940D12 /* GBRateLimitTimer.m */,
+				29C3DB8B2655B0ED00DCFA33 /* GBImageUtilities.h */,
+				29C3DB8C2655B0ED00DCFA33 /* GBImageUtilities.mm */,
+				2902EABE27C961E200186976 /* GBAudioWriter.h */,
+				2902EABC27C961E200186976 /* GBAudioWriter.m */,
+				2902EABD27C961E200186976 /* WavFile.h */,
+				2902EABB27C961E200186976 /* WavFile.c */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
 		299281D726423469004691E5 /* GPU */ = {
 			isa = PBXGroup;
 			children = (
@@ -542,6 +583,8 @@
 		29928280264242D9004691E5 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2987F3BD27E6D9BA00EC00A7 /* UniformTypeIdentifiers.framework */,
+				2987F3BF27E6D9EB00EC00A7 /* UniformTypeIdentifiers.framework */,
 				2902EAB527C8BDBA00186976 /* AVFoundation.framework */,
 				29928342264528F9004691E5 /* CoreServices.framework */,
 				2992833B264528F1004691E5 /* ImageIO.framework */,
@@ -572,16 +615,6 @@
 				295BCB762693CF1900E80FCC /* SimpleError.swift */,
 				299BD30227D56D8F00940D12 /* PersistenceManager.swift */,
 				299BD30427D92FAD00940D12 /* SaveEntry.swift */,
-				29F0829A2647BA0D00FA5F67 /* GBEngine.h */,
-				29F0829B2647BA0D00FA5F67 /* GBEngine.mm */,
-				299BD2FF27D5450800940D12 /* GBRateLimitTimer.h */,
-				299BD30027D5450800940D12 /* GBRateLimitTimer.m */,
-				29C3DB8B2655B0ED00DCFA33 /* GBImageUtilities.h */,
-				29C3DB8C2655B0ED00DCFA33 /* GBImageUtilities.mm */,
-				2902EABE27C961E200186976 /* GBAudioWriter.h */,
-				2902EABC27C961E200186976 /* GBAudioWriter.m */,
-				2902EABB27C961E200186976 /* WavFile.c */,
-				2902EABD27C961E200186976 /* WavFile.h */,
 				291987D1268300E1009D7C45 /* DebugUI */,
 				299282B82642449F004691E5 /* Assets.xcassets */,
 				299282BA2642449F004691E5 /* Main.storyboard */,
@@ -675,9 +708,11 @@
 				29DBB67727E2BA8700C77519 /* AppDelegate.swift */,
 				29DBB67927E2BA8700C77519 /* SceneDelegate.swift */,
 				29DBB67B27E2BA8700C77519 /* ViewController.swift */,
+				2987F3A827E69F8C00EC00A7 /* GameView.swift */,
 				29DBB67D27E2BA8700C77519 /* Main.storyboard */,
 				29DBB68027E2BA8800C77519 /* Assets.xcassets */,
 				29DBB68227E2BA8800C77519 /* LaunchScreen.storyboard */,
+				2987F3AE27E6C94A00EC00A7 /* MikoGB-Bridging-Header.h */,
 				29DBB68527E2BA8800C77519 /* Info.plist */,
 			);
 			path = "MikoGB-iOS";
@@ -833,6 +868,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				2987F3B627E6D84300EC00A7 /* PBXTargetDependency */,
 			);
 			name = "MikoGB-iOS";
 			productName = "MikoGB-iOS";
@@ -1109,8 +1145,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2987F3BC27E6D8D500EC00A7 /* WavFile.c in Sources */,
 				29DBB67C27E2BA8700C77519 /* ViewController.swift in Sources */,
 				29DBB67827E2BA8700C77519 /* AppDelegate.swift in Sources */,
+				2987F3BB27E6D8CD00EC00A7 /* GBAudioWriter.m in Sources */,
+				2987F3BA27E6D8CB00EC00A7 /* GBImageUtilities.mm in Sources */,
+				2987F3B927E6D8C400EC00A7 /* GBRateLimitTimer.m in Sources */,
+				2987F3A927E69F8C00EC00A7 /* GameView.swift in Sources */,
+				2987F3AA27E6A05A00EC00A7 /* GBEngine.mm in Sources */,
 				29DBB67A27E2BA8700C77519 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1135,6 +1177,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		2987F3B627E6D84300EC00A7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 299281E526424123004691E5 /* MikoGBCore */;
+			targetProxy = 2987F3B527E6D84300EC00A7 /* PBXContainerItemProxy */;
+		};
 		2992829F2642441B004691E5 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 299281E526424123004691E5 /* MikoGBCore */;
@@ -1327,6 +1374,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 11.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "macosx iphoneos";
 			};
 			name = Debug;
 		};
@@ -1341,6 +1389,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 11.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "macosx iphoneos";
 			};
 			name = Release;
 		};
@@ -1506,6 +1555,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 11.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "macosx iphoneos";
 			};
 			name = Testing;
 		};
@@ -1602,6 +1652,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "MikoGB-iOS/MikoGB-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1634,6 +1685,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "MikoGB-iOS/MikoGB-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1667,6 +1719,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "MikoGB-iOS/MikoGB-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
