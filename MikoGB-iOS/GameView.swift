@@ -33,6 +33,15 @@ class GameView : UIView, GBEngineImageDestination, GBEngineObserver {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func sizeThatFits(_ size: CGSize) -> CGSize {
+        let widthScale = size.width / 160.0
+        let heightScale = size.height / 144.0
+        
+        let scale = min(widthScale, heightScale)
+        let size = CGSize(width: 160.0 * scale, height: 144.0 * scale)
+        return size
+    }
+    
     private func _handleTimer(_ timestamp: CFTimeInterval) {
         self.engine.emulateFrame()
         // toggle speed mode if requested

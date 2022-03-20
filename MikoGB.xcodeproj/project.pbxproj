@@ -66,6 +66,11 @@
 		2987F3BC27E6D8D500EC00A7 /* WavFile.c in Sources */ = {isa = PBXBuildFile; fileRef = 2902EABB27C961E200186976 /* WavFile.c */; };
 		2987F3BE27E6D9BA00EC00A7 /* UniformTypeIdentifiers.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2987F3BD27E6D9BA00EC00A7 /* UniformTypeIdentifiers.framework */; };
 		2987F3C027E6D9EB00EC00A7 /* UniformTypeIdentifiers.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2987F3BF27E6D9EB00EC00A7 /* UniformTypeIdentifiers.framework */; };
+		2987F3C127E6DF0200EC00A7 /* PersistenceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 299BD30227D56D8F00940D12 /* PersistenceManager.swift */; };
+		2987F3C227E6DF3000EC00A7 /* SaveEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 299BD30427D92FAD00940D12 /* SaveEntry.swift */; };
+		2987F3C327E6DF4600EC00A7 /* SimpleError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295BCB762693CF1900E80FCC /* SimpleError.swift */; };
+		2987F3C527E6E26800EC00A7 /* ROMTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2987F3C427E6E26800EC00A7 /* ROMTableViewController.swift */; };
+		2987F3C727E6E5F800EC00A7 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2987F3C627E6E5F800EC00A7 /* GameViewController.swift */; };
 		29928195263DE721004691E5 /* Test16BitArithmeticInstructions.mm in Sources */ = {isa = PBXBuildFile; fileRef = 29928194263DE721004691E5 /* Test16BitArithmeticInstructions.mm */; };
 		2992819C263DE86C004691E5 /* ArithmeticInstructions16.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2992818B263DDEC8004691E5 /* ArithmeticInstructions16.cpp */; };
 		299281A6263F885E004691E5 /* CallAndReturnInstructions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 299281A3263F885E004691E5 /* CallAndReturnInstructions.cpp */; };
@@ -128,7 +133,6 @@
 		29D674912747276A00BF9F2E /* Joypad.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 290FF355265F671C006812F4 /* Joypad.cpp */; };
 		29DBB67827E2BA8700C77519 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29DBB67727E2BA8700C77519 /* AppDelegate.swift */; };
 		29DBB67A27E2BA8700C77519 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29DBB67927E2BA8700C77519 /* SceneDelegate.swift */; };
-		29DBB67C27E2BA8700C77519 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29DBB67B27E2BA8700C77519 /* ViewController.swift */; };
 		29DBB67F27E2BA8700C77519 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 29DBB67D27E2BA8700C77519 /* Main.storyboard */; };
 		29DBB68127E2BA8800C77519 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 29DBB68027E2BA8800C77519 /* Assets.xcassets */; };
 		29DBB68427E2BA8800C77519 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 29DBB68227E2BA8800C77519 /* LaunchScreen.storyboard */; };
@@ -268,6 +272,8 @@
 		2987F3AE27E6C94A00EC00A7 /* MikoGB-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MikoGB-Bridging-Header.h"; sourceTree = "<group>"; };
 		2987F3BD27E6D9BA00EC00A7 /* UniformTypeIdentifiers.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UniformTypeIdentifiers.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS15.4.sdk/System/Library/Frameworks/UniformTypeIdentifiers.framework; sourceTree = DEVELOPER_DIR; };
 		2987F3BF27E6D9EB00EC00A7 /* UniformTypeIdentifiers.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UniformTypeIdentifiers.framework; path = System/Library/Frameworks/UniformTypeIdentifiers.framework; sourceTree = SDKROOT; };
+		2987F3C427E6E26800EC00A7 /* ROMTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ROMTableViewController.swift; sourceTree = "<group>"; };
+		2987F3C627E6E5F800EC00A7 /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
 		2992818B263DDEC8004691E5 /* ArithmeticInstructions16.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ArithmeticInstructions16.cpp; sourceTree = "<group>"; };
 		2992818C263DDEC8004691E5 /* ArithmeticInstructions16.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ArithmeticInstructions16.hpp; sourceTree = "<group>"; };
 		29928194263DE721004691E5 /* Test16BitArithmeticInstructions.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = Test16BitArithmeticInstructions.mm; sourceTree = "<group>"; };
@@ -332,7 +338,6 @@
 		29DBB67527E2BA8700C77519 /* MikoGB-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "MikoGB-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		29DBB67727E2BA8700C77519 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		29DBB67927E2BA8700C77519 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		29DBB67B27E2BA8700C77519 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		29DBB67E27E2BA8700C77519 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		29DBB68027E2BA8800C77519 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		29DBB68327E2BA8800C77519 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -533,6 +538,9 @@
 		2987F3B827E6D8AD00EC00A7 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				295BCB762693CF1900E80FCC /* SimpleError.swift */,
+				299BD30227D56D8F00940D12 /* PersistenceManager.swift */,
+				299BD30427D92FAD00940D12 /* SaveEntry.swift */,
 				29F0829A2647BA0D00FA5F67 /* GBEngine.h */,
 				29F0829B2647BA0D00FA5F67 /* GBEngine.mm */,
 				299BD2FF27D5450800940D12 /* GBRateLimitTimer.h */,
@@ -612,9 +620,6 @@
 				29F082A22647BA3800FA5F67 /* GameView.swift */,
 				2902EAB227C8BD2900186976 /* AudioController.swift */,
 				2902EAB127C8BD2900186976 /* RingBuffer.swift */,
-				295BCB762693CF1900E80FCC /* SimpleError.swift */,
-				299BD30227D56D8F00940D12 /* PersistenceManager.swift */,
-				299BD30427D92FAD00940D12 /* SaveEntry.swift */,
 				291987D1268300E1009D7C45 /* DebugUI */,
 				299282B82642449F004691E5 /* Assets.xcassets */,
 				299282BA2642449F004691E5 /* Main.storyboard */,
@@ -707,7 +712,8 @@
 			children = (
 				29DBB67727E2BA8700C77519 /* AppDelegate.swift */,
 				29DBB67927E2BA8700C77519 /* SceneDelegate.swift */,
-				29DBB67B27E2BA8700C77519 /* ViewController.swift */,
+				2987F3C427E6E26800EC00A7 /* ROMTableViewController.swift */,
+				2987F3C627E6E5F800EC00A7 /* GameViewController.swift */,
 				2987F3A827E69F8C00EC00A7 /* GameView.swift */,
 				29DBB67D27E2BA8700C77519 /* Main.storyboard */,
 				29DBB68027E2BA8800C77519 /* Assets.xcassets */,
@@ -1145,12 +1151,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2987F3C727E6E5F800EC00A7 /* GameViewController.swift in Sources */,
 				2987F3BC27E6D8D500EC00A7 /* WavFile.c in Sources */,
-				29DBB67C27E2BA8700C77519 /* ViewController.swift in Sources */,
+				2987F3C127E6DF0200EC00A7 /* PersistenceManager.swift in Sources */,
 				29DBB67827E2BA8700C77519 /* AppDelegate.swift in Sources */,
 				2987F3BB27E6D8CD00EC00A7 /* GBAudioWriter.m in Sources */,
+				2987F3C527E6E26800EC00A7 /* ROMTableViewController.swift in Sources */,
 				2987F3BA27E6D8CB00EC00A7 /* GBImageUtilities.mm in Sources */,
 				2987F3B927E6D8C400EC00A7 /* GBRateLimitTimer.m in Sources */,
+				2987F3C227E6DF3000EC00A7 /* SaveEntry.swift in Sources */,
+				2987F3C327E6DF4600EC00A7 /* SimpleError.swift in Sources */,
 				2987F3A927E69F8C00EC00A7 /* GameView.swift in Sources */,
 				2987F3AA27E6A05A00EC00A7 /* GBEngine.mm in Sources */,
 				29DBB67A27E2BA8700C77519 /* SceneDelegate.swift in Sources */,

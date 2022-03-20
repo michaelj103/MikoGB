@@ -12,9 +12,10 @@ import CryptoKit
 class PersistenceManager {
     
     // Directory names
-    private static let baseDirectory = "MikoGBSaves"
+    private static let baseDirectory = "Saves"
     private static let activeSavesDirectory = "Active"
     private static let backupSavesDirectory = "Backup"
+    private static let romsDirectory = "ROMs"
     
     private static var documentsPath: String = getDocumentsPath()
     private static func getDocumentsPath() -> String {
@@ -36,8 +37,14 @@ class PersistenceManager {
     
     private static var backupPath: String = getBackupPath()
     private static func getBackupPath() -> String {
-        let activeSavesPath = NSString(string: savesPath).appendingPathComponent(backupSavesDirectory)
-        return activeSavesPath
+        let backupSavesPath = NSString(string: savesPath).appendingPathComponent(backupSavesDirectory)
+        return backupSavesPath
+    }
+    
+    private static var romsPath: String = getROMsPath()
+    private static func getROMsPath() -> String {
+        let romsPath = NSString(string: documentsPath).appendingPathComponent(romsDirectory)
+        return romsPath
     }
     
     private static func _createDirectoryIfNeeded(_ path: String) throws {
@@ -57,11 +64,25 @@ class PersistenceManager {
         try _createDirectoryIfNeeded(savesPath)
         try _createDirectoryIfNeeded(activeSavesPath)
         try _createDirectoryIfNeeded(backupPath)
+        try _createDirectoryIfNeeded(romsPath)
     }
     
     static func prepare() throws {
         try _prepareDirectoryTree()
         _prepareUserDefaults()
+    }
+    
+    static func installROMs() throws {
+        let fm = FileManager.default
+        let contents = try fm.contentsOfDirectory(atPath: documentsPath)
+        for file in contents {
+            let pathExtension = NSString(string: file).pathExtension
+            if pathExtension == "gb" || pathExtension == "gbc" {
+                let currentPath = NSString(string: documentsPath).appendingPathComponent(file)
+                let targetPath = NSString(string: romsPath).appendingPathComponent(file)
+                try fm.moveItem(atPath: currentPath, toPath: targetPath)
+            }
+        }
     }
     
     private static func getHash(_ url: URL) throws -> String {
@@ -146,6 +167,21 @@ class PersistenceManager {
         let url = URL(fileURLWithPath: saveFilePath)
         try data.write(to: url)
         print("Wrote save data to \"\(saveFilePath)\"")
+    }
+    
+    // returns list of names, path
+    func getROMs() throws -> [(String, String)] {
+        let fm = FileManager.default
+        let contents = try fm.contentsOfDirectory(atPath: PersistenceManager.romsPath)
+        let basePath = NSString(string: PersistenceManager.romsPath)
+        
+        var romsInfo = [(String, String)]()
+        for filename in contents {
+            let baseName = NSString(string: filename).deletingPathExtension
+            let fullPath = basePath.appendingPathComponent(filename)
+            romsInfo.append((baseName, fullPath))
+        }
+        return romsInfo
     }
 }
 
