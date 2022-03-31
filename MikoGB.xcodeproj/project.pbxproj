@@ -71,7 +71,8 @@
 		2987F3C327E6DF4600EC00A7 /* SimpleError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295BCB762693CF1900E80FCC /* SimpleError.swift */; };
 		2987F3C527E6E26800EC00A7 /* ROMTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2987F3C427E6E26800EC00A7 /* ROMTableViewController.swift */; };
 		2987F3C727E6E5F800EC00A7 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2987F3C627E6E5F800EC00A7 /* GameViewController.swift */; };
-		2987F3C927EA426A00EC00A7 /* SizeExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2987F3C827EA426A00EC00A7 /* SizeExtension.swift */; };
+		2987F3C927EA426A00EC00A7 /* GeometryExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2987F3C827EA426A00EC00A7 /* GeometryExtensions.swift */; };
+		2987F3CB27F3B41C00EC00A7 /* DPadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2987F3CA27F3B41C00EC00A7 /* DPadView.swift */; };
 		29928195263DE721004691E5 /* Test16BitArithmeticInstructions.mm in Sources */ = {isa = PBXBuildFile; fileRef = 29928194263DE721004691E5 /* Test16BitArithmeticInstructions.mm */; };
 		2992819C263DE86C004691E5 /* ArithmeticInstructions16.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2992818B263DDEC8004691E5 /* ArithmeticInstructions16.cpp */; };
 		299281A6263F885E004691E5 /* CallAndReturnInstructions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 299281A3263F885E004691E5 /* CallAndReturnInstructions.cpp */; };
@@ -275,7 +276,8 @@
 		2987F3BF27E6D9EB00EC00A7 /* UniformTypeIdentifiers.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UniformTypeIdentifiers.framework; path = System/Library/Frameworks/UniformTypeIdentifiers.framework; sourceTree = SDKROOT; };
 		2987F3C427E6E26800EC00A7 /* ROMTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ROMTableViewController.swift; sourceTree = "<group>"; };
 		2987F3C627E6E5F800EC00A7 /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
-		2987F3C827EA426A00EC00A7 /* SizeExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SizeExtension.swift; sourceTree = "<group>"; };
+		2987F3C827EA426A00EC00A7 /* GeometryExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeometryExtensions.swift; sourceTree = "<group>"; };
+		2987F3CA27F3B41C00EC00A7 /* DPadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DPadView.swift; sourceTree = "<group>"; };
 		2992818B263DDEC8004691E5 /* ArithmeticInstructions16.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ArithmeticInstructions16.cpp; sourceTree = "<group>"; };
 		2992818C263DDEC8004691E5 /* ArithmeticInstructions16.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ArithmeticInstructions16.hpp; sourceTree = "<group>"; };
 		29928194263DE721004691E5 /* Test16BitArithmeticInstructions.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = Test16BitArithmeticInstructions.mm; sourceTree = "<group>"; };
@@ -716,8 +718,9 @@
 				29DBB67927E2BA8700C77519 /* SceneDelegate.swift */,
 				2987F3C427E6E26800EC00A7 /* ROMTableViewController.swift */,
 				2987F3C627E6E5F800EC00A7 /* GameViewController.swift */,
+				2987F3CA27F3B41C00EC00A7 /* DPadView.swift */,
 				2987F3A827E69F8C00EC00A7 /* GameView.swift */,
-				2987F3C827EA426A00EC00A7 /* SizeExtension.swift */,
+				2987F3C827EA426A00EC00A7 /* GeometryExtensions.swift */,
 				29DBB67D27E2BA8700C77519 /* Main.storyboard */,
 				29DBB68027E2BA8800C77519 /* Assets.xcassets */,
 				29DBB68227E2BA8800C77519 /* LaunchScreen.storyboard */,
@@ -1160,13 +1163,14 @@
 				29DBB67827E2BA8700C77519 /* AppDelegate.swift in Sources */,
 				2987F3BB27E6D8CD00EC00A7 /* GBAudioWriter.m in Sources */,
 				2987F3C527E6E26800EC00A7 /* ROMTableViewController.swift in Sources */,
+				2987F3CB27F3B41C00EC00A7 /* DPadView.swift in Sources */,
 				2987F3BA27E6D8CB00EC00A7 /* GBImageUtilities.mm in Sources */,
 				2987F3B927E6D8C400EC00A7 /* GBRateLimitTimer.m in Sources */,
 				2987F3C227E6DF3000EC00A7 /* SaveEntry.swift in Sources */,
 				2987F3C327E6DF4600EC00A7 /* SimpleError.swift in Sources */,
 				2987F3A927E69F8C00EC00A7 /* GameView.swift in Sources */,
 				2987F3AA27E6A05A00EC00A7 /* GBEngine.mm in Sources */,
-				2987F3C927EA426A00EC00A7 /* SizeExtension.swift in Sources */,
+				2987F3C927EA426A00EC00A7 /* GeometryExtensions.swift in Sources */,
 				29DBB67A27E2BA8700C77519 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

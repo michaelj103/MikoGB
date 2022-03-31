@@ -26,7 +26,6 @@ class GameView : UIView, GBEngineImageDestination, GBEngineObserver {
         super.init(frame: CGRect.zero)
         self.engine.imageDestination = self
         self.engine.register(self)
-//        self.layer.backgroundColor = UIColor.blue.cgColor
     }
     
     required init?(coder: NSCoder) {

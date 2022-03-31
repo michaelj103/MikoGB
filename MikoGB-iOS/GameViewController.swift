@@ -8,17 +8,18 @@
 
 import UIKit
 
-class GameViewController: UIViewController {
+class GameViewController: UIViewController, DPadDelegate {
 
     private var gameView: GameView!
     private let engine = GBEngine()
     private let romURL: URL
     private let persistenceManager: PersistenceManager
     
-    private var dPadView: UIView!
-    private var startSelectView: UIView!
+    private var dPadView: DPadView!
     private var aButton: UIButton!
     private var bButton: UIButton!
+    private var startButton: UIButton!
+    private var selectButton: UIButton!
     
     init(_ rom: URL, persistenceManager: PersistenceManager) {
         self.romURL = rom
@@ -35,12 +36,46 @@ class GameViewController: UIViewController {
         gameView = GameView(engine: engine)
         self.view.addSubview(gameView)
         
-        dPadView = UIView(frame: .zero)
-        dPadView.backgroundColor = UIColor.blue
+        dPadView = DPadView(frame: .zero)
+        dPadView.delegate = self
         self.view.addSubview(dPadView)
-        startSelectView = UIView(frame: .zero)
-        startSelectView.backgroundColor = UIColor.yellow
-        self.view.addSubview(startSelectView)
+        
+        // for reference captures
+        let localEngine = self.engine
+        
+        let startButtonUpImage = UIImage(named: "Start_up", in: nil, with: nil)
+        let startButtonDownImage = UIImage(named: "Start_down", in: nil, with: nil)
+        startButton = UIButton(frame: .zero)
+        startButton.setImage(startButtonUpImage, for: .normal)
+        startButton.setImage(startButtonDownImage, for: .highlighted)
+        self.view.addSubview(startButton)
+        let startButtonPushAction = UIAction { _ in
+            localEngine.setKeyDown(.start)
+        }
+        let startButtonCancelAction = UIAction { _ in
+            localEngine.setKeyUp(.start)
+        }
+        startButton.addAction(startButtonPushAction, for: .touchDown)
+        startButton.addAction(startButtonCancelAction, for: .touchUpInside)
+        startButton.addAction(startButtonCancelAction, for: .touchUpOutside)
+        startButton.addAction(startButtonCancelAction, for: .touchDragExit)
+        
+        let selectButtonUpImage = UIImage(named: "Select_up", in: nil, with: nil)
+        let selectButtonDownImage = UIImage(named: "Select_down", in: nil, with: nil)
+        selectButton = UIButton(frame: .zero)
+        selectButton.setImage(selectButtonUpImage, for: .normal)
+        selectButton.setImage(selectButtonDownImage, for: .highlighted)
+        self.view.addSubview(selectButton)
+        let selectButtonPushAction = UIAction { _ in
+            localEngine.setKeyDown(.select)
+        }
+        let selectButtonCancelAction = UIAction { _ in
+            localEngine.setKeyUp(.select)
+        }
+        selectButton.addAction(selectButtonPushAction, for: .touchDown)
+        selectButton.addAction(selectButtonCancelAction, for: .touchUpInside)
+        selectButton.addAction(selectButtonCancelAction, for: .touchUpOutside)
+        selectButton.addAction(selectButtonCancelAction, for: .touchDragExit)
         
         let aButtonUpImage = UIImage(named: "A_button_up", in: nil, with: nil)
         let aButtonDownImage = UIImage(named: "A_button_down", in: nil, with: nil)
@@ -48,7 +83,6 @@ class GameViewController: UIViewController {
         aButton.setImage(aButtonUpImage, for: .normal)
         aButton.setImage(aButtonDownImage, for: .highlighted)
         self.view.addSubview(aButton)
-        let localEngine = self.engine
         let aButtonPushAction = UIAction { _ in
             localEngine.setKeyDown(.A)
         }
@@ -117,8 +151,7 @@ class GameViewController: UIViewController {
         let dPadFrame = CGRect(x: topSection.minX, y: topSection.minY, width: topSection.width * 0.5, height: topSection.height)
         let buttonsFrame = CGRect(x: dPadFrame.maxX, y: topSection.minY, width: topSection.width * 0.5, height: topSection.height)
         
-        startSelectView.frame = startSelectFrame
-        dPadView.frame = dPadFrame
+        dPadView.frame = dPadFrame.fitRect(1.0)
         
         let buttonsTopHalf = CGRect(x: buttonsFrame.minX, y: buttonsFrame.minY, width: buttonsFrame.width, height: buttonsFrame.height / 2.0)
         let aButtonAspect = aButton.intrinsicContentSize.width / aButton.intrinsicContentSize.height
@@ -129,6 +162,16 @@ class GameViewController: UIViewController {
         let bButtonAspect = bButton.intrinsicContentSize.width / bButton.intrinsicContentSize.height
         let bButtonFrame = buttonsBottomHalf.fitRect(bButtonAspect)
         bButton.frame = bButtonFrame
+        
+        let selectRegion = CGRect(x: startSelectFrame.minX, y: startSelectFrame.minY, width: startSelectFrame.width / 2.0, height: startSelectFrame.height)
+        let selectAspect = selectButton.intrinsicContentSize.width / selectButton.intrinsicContentSize.height
+        let selectButtonFrame = selectRegion.fitRect(selectAspect)
+        selectButton.frame = selectButtonFrame
+        
+        let startRegion = CGRect(x: selectRegion.maxX, y: startSelectFrame.minY, width: startSelectFrame.width / 2.0, height: startSelectFrame.height)
+        let startAspect = startButton.intrinsicContentSize.width / startButton.intrinsicContentSize.height
+        let startButtonFrame = startRegion.fitRect(startAspect)
+        startButton.frame = startButtonFrame
     }
     
     private func _loadSaveData(_ url: URL, completion: (Bool)->()) {
@@ -173,6 +216,30 @@ class GameViewController: UIViewController {
     private func _startEmulation() {
         gameView.start()
 //        audioController.startAudioEngine()
+    }
+    
+    private func _mapDPadToKey(_ direction: DPadDirection) -> GBEngineKeyCode? {
+        switch direction {
+        case .Neutral:
+            return nil
+        case .Up:
+            return .up
+        case .Down:
+            return .down
+        case .Left:
+            return .left
+        case .Right:
+            return .right
+        }
+    }
+    
+    func directionChanged(_ newDirection: DPadDirection, oldDirection: DPadDirection) {
+        if let oldKey = _mapDPadToKey(oldDirection) {
+            engine.setKeyUp(oldKey)
+        }
+        if let newKey = _mapDPadToKey(newDirection) {
+            engine.setKeyDown(newKey)
+        }
     }
 
 }

@@ -1,5 +1,5 @@
 //
-//  SizeExtension.swift
+//  GeometryExtensions.swift
 //  MikoGB-iOS
 //
 //  Created by Michael Brandt on 3/22/22.
@@ -28,5 +28,29 @@ extension CGRect {
         let y = minY + (height - fitSize.height) / 2.0
         let finalRect = CGRect(x: x, y: y, width: fitSize.width, height: fitSize.height)
         return finalRect
+    }
+    
+    func scaleRect(_ scale: CGFloat) -> CGRect {
+        if scale == 0.0 {
+            return .zero
+        }
+        
+        let newWidth = width * scale
+        let newHeight = height * scale
+        let newX = minX + ((width - newWidth) / 2.0)
+        let newY = minY + ((height - newHeight) / 2.0)
+        let rect = CGRect(x: newX, y: newY, width: newWidth, height: newHeight)
+        return rect
+    }
+    
+    var center: CGPoint {
+        CGPoint(x: midX, y: midY)
+    }
+}
+
+extension CGPoint {
+    static func -(lhs: CGPoint, rhs: CGPoint) -> CGPoint {
+        let pt = CGPoint(x: lhs.x - rhs.x, y: lhs.y - rhs.y)
+        return pt
     }
 }
