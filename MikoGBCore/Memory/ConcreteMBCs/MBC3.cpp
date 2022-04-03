@@ -89,9 +89,12 @@ void MBC3::_updateBankNumbers() {
     
     // determine RAM bank
     _ramBank = (int)_ramBankCode;
-#if DEBUG
-    assert(_ramBank <= 3 || (_ramBank >= 0x08 && _ramBank <= 0x0C));
-#endif
+    
+    // it's ok for this to be invalid. Pokemon red/blue may write invalid ram bank codes when
+    // viewing the town map for some reason. They don't read from RAM with invalid values. Assertions there hold
+//#if DEBUG
+//    assert(_ramBank <= 3 || (_ramBank >= 0x08 && _ramBank <= 0x0C));
+//#endif
 }
 
 void MBC3::_latchClockRegisters() {

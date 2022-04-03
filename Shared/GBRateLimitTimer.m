@@ -37,6 +37,9 @@
     os_unfair_lock_unlock(&_stateLock);
     
     if (isCancelled) {
+        os_unfair_lock_lock(&_stateLock);
+        _isWaiting = NO;
+        os_unfair_lock_unlock(&_stateLock);
         return;
     }
     
@@ -61,19 +64,14 @@
 
 - (void)input {
     BOOL isWaiting = NO;
-    BOOL isCancelled = NO;
     CFAbsoluteTime eventTime = CFAbsoluteTimeGetCurrent();
     os_unfair_lock_lock(&_stateLock);
     isWaiting = _isWaiting;
     _lastEventTime = eventTime;
     // either already waiting or we will be momentarily. Need to toggle now to avoid race conditions
     _isWaiting = YES;
-    isCancelled = _isCancelled;
+    _isCancelled = NO; // no longer cancelled now that there's been input
     os_unfair_lock_unlock(&_stateLock);
-    
-    if (isCancelled) {
-        return;
-    }
     
     NSTimeInterval delaySeconds = [self delay];
     dispatch_queue_t targetQueue = [self targetQueue];
@@ -94,9 +92,7 @@
 - (BOOL)isPending {
     BOOL isPending = NO;
     os_unfair_lock_lock(&_stateLock);
-    if (!_isCancelled) {
-        isPending = _isWaiting;
-    }
+    isPending = !_isCancelled && _isWaiting;
     os_unfair_lock_unlock(&_stateLock);
     
     return isPending;

@@ -121,6 +121,7 @@ class ViewController: NSViewController, NoROMViewDelegate, NSMenuItemValidation,
             print("Writing stale save data on quit")
             let data = engine.synchronousGetSaveData()
             _persistSaveData(data)
+            engine.staleSaveDataHandled()
         }
     }
     

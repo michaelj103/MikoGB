@@ -191,6 +191,11 @@ static MikoGB::JoypadButton _ButtonForCode(GBEngineKeyCode code) {
     return _persistenceTimer.isPending;
 }
 
+- (void)staleSaveDataHandled {
+    // no need to signal until it's made stale again
+    [_persistenceTimer cancel];
+}
+
 - (nullable NSData *)synchronousGetSaveData {
     __block NSData *data = nil;
     // Consider timeout for this

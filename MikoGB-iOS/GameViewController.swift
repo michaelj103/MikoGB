@@ -8,7 +8,7 @@
 
 import UIKit
 
-class GameViewController: UIViewController, DPadDelegate {
+class GameViewController: UIViewController, DPadDelegate, GBEngineSaveDestination {
 
     private var gameView: GameView!
     private let engine = GBEngine()
@@ -25,6 +25,9 @@ class GameViewController: UIViewController, DPadDelegate {
         self.romURL = rom
         self.persistenceManager = persistenceManager
         super.init(nibName: nil, bundle: nil)
+        engine.saveDestination = self
+        
+        self.navigationItem.hidesBackButton = true
     }
     
     required init?(coder: NSCoder) {
@@ -114,11 +117,34 @@ class GameViewController: UIViewController, DPadDelegate {
         // TODO: themes
         // Teal GB
         self.view.backgroundColor = UIColor(red: 2.0/255.0, green: 183.0/255.0, blue: 212.0/255.0, alpha: 1.0)
+
+        
+        NotificationCenter.default.addObserver(forName: UIApplication.willTerminateNotification, object: nil, queue: nil) { [weak self] _ in
+            self?._persistSaveDataImmediatelyIfNeeded()
+        }
+        
+        NotificationCenter.default.addObserver(forName: UIApplication.didEnterBackgroundNotification, object: nil, queue: nil) { [weak self] _ in
+            self?._persistSaveDataImmediatelyIfNeeded()
+        }
         
         let url = romURL
         engine.loadROM(url) { [weak self] success, supportsSaves in
             self?._romDidLoad(url, success: success, supportsSaveData: supportsSaves)
         }
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        let action = UIAction { [weak self] _ in
+            self?._persistSaveDataImmediatelyIfNeeded()
+            self?.navigationController?.popViewController(animated: true)
+        }
+        
+        let powerImage = UIImage(systemName: "power")
+        let powerButton = UIBarButtonItem(title: nil, image: powerImage, primaryAction: action, menu: nil)
+        powerButton.tintColor = .white
+        self.navigationItem.leftBarButtonItem = powerButton
     }
     
     override func viewWillLayoutSubviews() {
@@ -216,6 +242,31 @@ class GameViewController: UIViewController, DPadDelegate {
     private func _startEmulation() {
         gameView.start()
 //        audioController.startAudioEngine()
+    }
+    
+    func engineIsReady(toPersistSaveData engine: GBEngine) {
+        engine.getSaveData { (data) in
+            // capture strong reference
+            self._persistSaveData(data)
+        }
+    }
+    
+    private func _persistSaveData(_ data: Data?) {
+        guard let data = data, let entry = loadedSaveDataEntry else {
+            return
+        }
+        
+        // TODO: catch errors and handle gracefully
+        try! persistenceManager.writeSaveData(data, for: entry)
+    }
+    
+    private func _persistSaveDataImmediatelyIfNeeded() {
+        if engine.isSaveDataStale {
+            print("Writing stale save data immediately")
+            let data = engine.synchronousGetSaveData()
+            _persistSaveData(data)
+            engine.staleSaveDataHandled()
+        }
     }
     
     private func _mapDPadToKey(_ direction: DPadDirection) -> GBEngineKeyCode? {
