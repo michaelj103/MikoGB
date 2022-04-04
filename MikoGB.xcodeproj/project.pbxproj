@@ -106,7 +106,6 @@
 		299283192643AF00004691E5 /* PixelBuffer.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 299283172643AF00004691E5 /* PixelBuffer.hpp */; settings = {ATTRIBUTES = (Public, ); }; };
 		2992833526452868004691E5 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2992833426452868004691E5 /* CoreGraphics.framework */; };
 		2992833C264528F1004691E5 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2992833B264528F1004691E5 /* ImageIO.framework */; };
-		29928343264528F9004691E5 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 29928342264528F9004691E5 /* CoreServices.framework */; };
 		2992837E264733B3004691E5 /* WindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2992837D264733B3004691E5 /* WindowController.swift */; };
 		299BD2FE27CEEF4000940D12 /* DebuggerRollbackCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 299BD2FD27CEEF4000940D12 /* DebuggerRollbackCommand.swift */; };
 		299BD30127D5450800940D12 /* GBRateLimitTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = 299BD30027D5450800940D12 /* GBRateLimitTimer.m */; };
@@ -308,7 +307,6 @@
 		299283172643AF00004691E5 /* PixelBuffer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = PixelBuffer.hpp; sourceTree = "<group>"; };
 		2992833426452868004691E5 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		2992833B264528F1004691E5 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
-		29928342264528F9004691E5 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
 		2992837D264733B3004691E5 /* WindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowController.swift; sourceTree = "<group>"; };
 		299BD2FD27CEEF4000940D12 /* DebuggerRollbackCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebuggerRollbackCommand.swift; sourceTree = "<group>"; };
 		299BD2FF27D5450800940D12 /* GBRateLimitTimer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GBRateLimitTimer.h; sourceTree = "<group>"; };
@@ -381,7 +379,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				29928343264528F9004691E5 /* CoreServices.framework in Frameworks */,
 				2992833C264528F1004691E5 /* ImageIO.framework in Frameworks */,
 				2992833526452868004691E5 /* CoreGraphics.framework in Frameworks */,
 				299282A02642441F004691E5 /* libMikoGBCore.a in Frameworks */,
@@ -598,7 +595,6 @@
 				2987F3BD27E6D9BA00EC00A7 /* UniformTypeIdentifiers.framework */,
 				2987F3BF27E6D9EB00EC00A7 /* UniformTypeIdentifiers.framework */,
 				2902EAB527C8BDBA00186976 /* AVFoundation.framework */,
-				29928342264528F9004691E5 /* CoreServices.framework */,
 				2992833B264528F1004691E5 /* ImageIO.framework */,
 				2992833426452868004691E5 /* CoreGraphics.framework */,
 			);

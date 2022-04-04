@@ -169,6 +169,12 @@ class PersistenceManager {
         print("Wrote save data to \"\(saveFilePath)\"")
     }
     
+    func saveURLForEntry(_ entry: SaveEntry) -> URL {
+        let saveFilePath = _activeSavePath(for: entry)
+        let url = URL(fileURLWithPath: saveFilePath)
+        return url
+    }
+    
     // returns list of names, path
     func getROMs() throws -> [(String, String)] {
         let fm = FileManager.default

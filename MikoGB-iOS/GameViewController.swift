@@ -7,11 +7,12 @@
 //
 
 import UIKit
+import UniformTypeIdentifiers
 
-class GameViewController: UIViewController, DPadDelegate, GBEngineSaveDestination {
+class GameViewController: UIViewController, DPadDelegate, GBEngineSaveDestination, UIDocumentPickerDelegate {
 
     private var gameView: GameView!
-    private let engine = GBEngine()
+    private var engine = GBEngine()
     private let romURL: URL
     private let persistenceManager: PersistenceManager
     
@@ -25,7 +26,6 @@ class GameViewController: UIViewController, DPadDelegate, GBEngineSaveDestinatio
         self.romURL = rom
         self.persistenceManager = persistenceManager
         super.init(nibName: nil, bundle: nil)
-        engine.saveDestination = self
         
         self.navigationItem.hidesBackButton = true
     }
@@ -118,6 +118,7 @@ class GameViewController: UIViewController, DPadDelegate, GBEngineSaveDestinatio
         // Teal GB
         self.view.backgroundColor = UIColor(red: 2.0/255.0, green: 183.0/255.0, blue: 212.0/255.0, alpha: 1.0)
 
+        _configureMenuButton()
         
         NotificationCenter.default.addObserver(forName: UIApplication.willTerminateNotification, object: nil, queue: nil) { [weak self] _ in
             self?._persistSaveDataImmediatelyIfNeeded()
@@ -127,10 +128,21 @@ class GameViewController: UIViewController, DPadDelegate, GBEngineSaveDestinatio
             self?._persistSaveDataImmediatelyIfNeeded()
         }
         
+        _loadROM()
+    }
+    
+    private func _loadROM() {
         let url = romURL
+        engine.saveDestination = self
         engine.loadROM(url) { [weak self] success, supportsSaves in
             self?._romDidLoad(url, success: success, supportsSaveData: supportsSaves)
         }
+    }
+    
+    private func _restart() {
+        engine = GBEngine()
+        gameView.engine = engine
+        _loadROM()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -145,6 +157,23 @@ class GameViewController: UIViewController, DPadDelegate, GBEngineSaveDestinatio
         let powerButton = UIBarButtonItem(title: nil, image: powerImage, primaryAction: action, menu: nil)
         powerButton.tintColor = .white
         self.navigationItem.leftBarButtonItem = powerButton
+    }
+    
+    private func _configureMenuButton() {
+        //TODO: only include save actions if there's a save entry
+        let exportSaveItem = UIAction(title: "Export Save", image: nil, identifier: nil, discoverabilityTitle: nil, attributes: [], state: .off) { [weak self] _ in
+            self?._exportSave()
+        }
+        let importSaveItem = UIAction(title: "Import Save", image: nil, identifier: nil, discoverabilityTitle: nil, attributes: [], state: .off) { [weak self] _ in
+            self?._importSave()
+        }
+        let menu = UIMenu(title: "", image: nil, identifier: nil, options: .displayInline, children: [
+        exportSaveItem, importSaveItem])
+        
+        let buttonImage = UIImage(systemName: "ellipsis.circle")
+        let menuButton = UIBarButtonItem(title: nil, image: buttonImage, primaryAction: nil, menu: menu)
+        menuButton.tintColor = .white
+        navigationItem.rightBarButtonItems = [menuButton]
     }
     
     override func viewWillLayoutSubviews() {
@@ -291,6 +320,121 @@ class GameViewController: UIViewController, DPadDelegate, GBEngineSaveDestinatio
         if let newKey = _mapDPadToKey(newDirection) {
             engine.setKeyDown(newKey)
         }
+    }
+    
+    // MARK: - Actions
+    
+    private func _exportSave() {
+        guard let loadedSaveDataEntry = loadedSaveDataEntry else {
+            return
+        }
+
+        let url = persistenceManager.saveURLForEntry(loadedSaveDataEntry)
+        let fm = FileManager.default
+        if !fm.fileExists(atPath: url.path) {
+            let alert = UIAlertController(title: "No Save File", message: "There's currently no save file for this ROM", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default))
+            self.present(alert, animated: true)
+            return
+        }
+        
+        var shouldResume = false
+        let gameView = gameView!
+        if gameView.state == .Playing {
+            shouldResume = true
+            gameView.pause()
+        }
+        let activityVC = UIActivityViewController(activityItems: [url], applicationActivities: nil)
+        activityVC.completionWithItemsHandler = { _, _, _, _ in
+            if shouldResume {
+                gameView.start()
+            }
+        }
+        self.present(activityVC, animated: true)
+    }
+    
+    private var isImporting = false
+    private var shouldResumePostImport = false
+    private func _importSave() {
+        if loadedSaveDataEntry == nil {
+            return
+        }
+        
+        shouldResumePostImport = false
+        let gameView = gameView!
+        if gameView.state == .Playing {
+            shouldResumePostImport = true
+            gameView.pause()
+        }
+        
+        let alert = UIAlertController(title: "Warning", message: "Importing a save will overwrite any existing save", preferredStyle: .alert)
+        let continueAction = UIAlertAction(title: "Continue", style: .default) { [weak self] _ in
+            self?._actuallyImportSave()
+        }
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { [weak self] _ in
+            self?._cancelImportSave()
+        }
+        alert.addAction(continueAction)
+        alert.addAction(cancelAction)
+        self.present(alert, animated: true)
+    }
+    
+    private func _actuallyImportSave() {
+//        let documentPicker: UIDocumentPickerViewController
+//        if #available(iOS 14, *) {
+//            documentPicker = UIDocumentPickerViewController(forOpeningContentTypes: [])
+//        } else {
+//            documentPicker = UIDocumentPickerViewController(documentTypes: [], in: .import)
+//        }
+        // TODO: the one we're supposed to use now doesn't compile. This API may not get much love
+        let documentPicker = UIDocumentPickerViewController(documentTypes: [UTType.data.identifier], in: .import)
+        documentPicker.delegate = self
+        documentPicker.shouldShowFileExtensions = true
+        documentPicker.allowsMultipleSelection = false
+        self.present(documentPicker, animated: true)
+    }
+    
+    private func _cancelImportSave() {
+        if shouldResumePostImport {
+            gameView.start()
+        }
+    }
+    
+    func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
+        _cancelImportSave()
+    }
+    
+    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentAt url: URL) {
+        guard let loadedSaveDataEntry = loadedSaveDataEntry else {
+            preconditionFailure("no loaded save entry on picking a save to import - this should be unreachable")
+        }
+        let isSecureURL = url.startAccessingSecurityScopedResource()
+        let coordinator = NSFileCoordinator()
+        var error: NSError? = nil
+        //TODO: handle these failable calls gracefully
+        var data: Data?
+        coordinator.coordinate(readingItemAt: url, error: &error) { accessedURL in
+            data = try! Data(contentsOf: accessedURL)
+        }
+        
+        if isSecureURL {
+            url.stopAccessingSecurityScopedResource()
+        }
+        try! persistenceManager.writeSaveData(data!, for: loadedSaveDataEntry)
+        _restart()
+        
+//        if url.startAccessingSecurityScopedResource() {
+//            //TODO: handle these failable calls gracefully
+//            let data = try! Data(contentsOf: url)
+//            try! persistenceManager.writeSaveData(data, for: loadedSaveDataEntry)
+//            url.stopAccessingSecurityScopedResource()
+//            _restart()
+//        } else {
+//            let alert = UIAlertController(title: "Failed to Load", message: "Accessing secure document failed", preferredStyle: .alert)
+//            alert.addAction(UIAlertAction(title: "OK", style: .default))
+//            self.present(alert, animated: true)
+//            _cancelImportSave()
+//        }
     }
 
 }

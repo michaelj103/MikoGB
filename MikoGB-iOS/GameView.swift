@@ -17,19 +17,30 @@ enum GameViewState {
 
 class GameView : UIView, GBEngineImageDestination, GBEngineObserver {
     private var dispatchTimer: DispatchSourceTimer?
-    let engine: GBEngine
+    var engine: GBEngine {
+        didSet {
+            _setupWithEngine(engine, oldEngine: oldValue)
+        }
+    }
     private(set) var state: GameViewState
     
     init(engine: GBEngine) {
         self.engine = engine
         self.state = .Initial
         super.init(frame: CGRect.zero)
-        self.engine.imageDestination = self
-        self.engine.register(self)
+        _setupWithEngine(self.engine, oldEngine: nil)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func _setupWithEngine(_ engine: GBEngine, oldEngine: GBEngine?) {
+        self.state = .Initial
+        oldEngine?.imageDestination = nil
+        oldEngine?.unregisterObserver(self)
+        engine.imageDestination = self
+        engine.register(self)
     }
     
     override func sizeThatFits(_ size: CGSize) -> CGSize {
