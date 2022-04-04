@@ -151,7 +151,7 @@ uint8_t MBC3::readROM(uint16_t addr) const {
 }
 
 static inline size_t _RAMDataIndex(uint16_t addr, int bankNum) {
-    const size_t baseIdx = bankNum * ROMBankSize;
+    const size_t baseIdx = bankNum * RAMBankSize;
     const size_t ramIdx = baseIdx + (addr - SwitchableRAMBaseAddr);
     return ramIdx;
 }
