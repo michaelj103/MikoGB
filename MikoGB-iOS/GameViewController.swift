@@ -21,6 +21,7 @@ class GameViewController: UIViewController, DPadDelegate, GBEngineSaveDestinatio
     private var bButton: UIButton!
     private var startButton: UIButton!
     private var selectButton: UIButton!
+    private var fastForwardButton: UIBarButtonItem!
     
     init(_ rom: URL, persistenceManager: PersistenceManager) {
         self.romURL = rom
@@ -118,7 +119,14 @@ class GameViewController: UIViewController, DPadDelegate, GBEngineSaveDestinatio
         // Teal GB
         self.view.backgroundColor = UIColor(red: 2.0/255.0, green: 183.0/255.0, blue: 212.0/255.0, alpha: 1.0)
 
-        _configureMenuButton()
+        let menuButton = _createMenuButton()
+        let fastForwardImage = UIImage(systemName: "forward")
+        let ffAction = UIAction { [weak self] _ in
+            self?._toggleSpeedMode()
+        }
+        fastForwardButton = UIBarButtonItem(title: nil, image: fastForwardImage, primaryAction: ffAction, menu: nil)
+        fastForwardButton.tintColor = .white
+        navigationItem.rightBarButtonItems = [menuButton, fastForwardButton]
         
         NotificationCenter.default.addObserver(forName: UIApplication.willTerminateNotification, object: nil, queue: nil) { [weak self] _ in
             self?._persistSaveDataImmediatelyIfNeeded()
@@ -159,7 +167,7 @@ class GameViewController: UIViewController, DPadDelegate, GBEngineSaveDestinatio
         self.navigationItem.leftBarButtonItem = powerButton
     }
     
-    private func _configureMenuButton() {
+    private func _createMenuButton() -> UIBarButtonItem {
         //TODO: only include save actions if there's a save entry
         let exportSaveItem = UIAction(title: "Export Save", image: nil, identifier: nil, discoverabilityTitle: nil, attributes: [], state: .off) { [weak self] _ in
             self?._exportSave()
@@ -173,7 +181,7 @@ class GameViewController: UIViewController, DPadDelegate, GBEngineSaveDestinatio
         let buttonImage = UIImage(systemName: "ellipsis.circle")
         let menuButton = UIBarButtonItem(title: nil, image: buttonImage, primaryAction: nil, menu: menu)
         menuButton.tintColor = .white
-        navigationItem.rightBarButtonItems = [menuButton]
+        return menuButton
     }
     
     override func viewWillLayoutSubviews() {
@@ -323,6 +331,17 @@ class GameViewController: UIViewController, DPadDelegate, GBEngineSaveDestinatio
     }
     
     // MARK: - Actions
+    
+    private func _toggleSpeedMode() {
+        gameView.toggleSpeedMode()
+        let image: UIImage?
+        if gameView.isInSpeedMode {
+            image = UIImage(systemName: "forward.fill")
+        } else {
+            image = UIImage(systemName: "forward")
+        }
+        fastForwardButton.image = image
+    }
     
     private func _exportSave() {
         guard let loadedSaveDataEntry = loadedSaveDataEntry else {

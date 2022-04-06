@@ -108,14 +108,14 @@ class GameView : UIView, GBEngineImageDestination, GBEngineObserver {
     }
     
     private var _switchModes = false
-    private var _isInSpeedMode = false
+    private(set) var isInSpeedMode = false
     private var desiredFramerate = 1.0 / 60.0
-    private func _toggleSpeedMode() {
+    func toggleSpeedMode() {
         // ignore multiple toggles during the same frame (fast fingers!)
         if !_switchModes {
             _switchModes = true
-            _isInSpeedMode = !_isInSpeedMode
-            if _isInSpeedMode {
+            isInSpeedMode = !isInSpeedMode
+            if isInSpeedMode {
                 // 90fps (1.5x speed)
                 desiredFramerate = 1.0 / 90.0
             } else {
