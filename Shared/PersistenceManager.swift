@@ -85,6 +85,14 @@ class PersistenceManager {
         }
     }
     
+    static func installROM(_ url: URL) throws {
+        let fm = FileManager.default
+        let sourcePath = url.path
+        let filename = url.lastPathComponent
+        let targetPath = NSString(string: romsPath).appendingPathComponent(filename)
+        try fm.moveItem(atPath: sourcePath, toPath: targetPath)
+    }
+    
     private static func getHash(_ url: URL) throws -> String {
         let data = try Data(contentsOf: url, options: .mappedIfSafe)
         let digest = SHA256.hash(data: data)

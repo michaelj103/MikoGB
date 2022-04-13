@@ -48,6 +48,31 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // to restore the scene back to its current state.
     }
 
-
+    private func _presentErrorAlert(onScene scene: UIScene, title: String, message: String) {
+        if let windowScene = scene as? UIWindowScene, let vc = windowScene.keyWindow?.rootViewController {
+            let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default))
+            vc.present(alert, animated: true)
+        } else {
+            preconditionFailure("We expect to always be using window scenes")
+        }
+    }
+    
+    func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
+        print("Opening URL contexts \(URLContexts)")
+        for context in URLContexts {
+            let url = context.url
+            let pathExtension = url.pathExtension
+            if pathExtension == "gb" || pathExtension == "gbc" {
+                do {
+                    try PersistenceManager.installROM(url)
+                } catch {
+                    _presentErrorAlert(onScene: scene, title: "Unable to install", message: error.localizedDescription)
+                }
+            } else {
+                _presentErrorAlert(onScene: scene, title: "Unrecognized file type", message: "How did you get here??")
+            }
+        }
+    }
 }
 

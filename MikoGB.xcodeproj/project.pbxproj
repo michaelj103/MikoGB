@@ -81,7 +81,7 @@
 		299281C32640A17D004691E5 /* TestRotateShiftInstructions.mm in Sources */ = {isa = PBXBuildFile; fileRef = 299281C22640A17D004691E5 /* TestRotateShiftInstructions.mm */; };
 		299281CD2641ECC9004691E5 /* SpecialInstructions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 299281CA2641ECC9004691E5 /* SpecialInstructions.cpp */; };
 		299281F526424164004691E5 /* GameBoyCore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 299281D8264234F5004691E5 /* GameBoyCore.cpp */; };
-		299281FE2642416A004691E5 /* GameBoyCore.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 299281D9264234F5004691E5 /* GameBoyCore.hpp */; settings = {ATTRIBUTES = (Public, ); }; };
+		299281FE2642416A004691E5 /* GameBoyCore.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 299281D9264234F5004691E5 /* GameBoyCore.hpp */; };
 		2992821726424240004691E5 /* CPUCore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297E6137245FEA5D00EE150F /* CPUCore.cpp */; };
 		299282202642424C004691E5 /* CPUInstruction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297E613C245FECDF00EE150F /* CPUInstruction.cpp */; };
 		2992822D26424252004691E5 /* LoadInstructions8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8C0BA2462685F0082C52B /* LoadInstructions8.cpp */; };
@@ -103,7 +103,7 @@
 		299282FD264266A9004691E5 /* GameBoyCoreImp.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 299282FB264266A9004691E5 /* GameBoyCoreImp.hpp */; };
 		2992830A26426A32004691E5 /* GPUCore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2992830826426A32004691E5 /* GPUCore.cpp */; };
 		2992830B26426A32004691E5 /* GPUCore.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 2992830926426A32004691E5 /* GPUCore.hpp */; };
-		299283192643AF00004691E5 /* PixelBuffer.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 299283172643AF00004691E5 /* PixelBuffer.hpp */; settings = {ATTRIBUTES = (Public, ); }; };
+		299283192643AF00004691E5 /* PixelBuffer.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 299283172643AF00004691E5 /* PixelBuffer.hpp */; };
 		2992833526452868004691E5 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2992833426452868004691E5 /* CoreGraphics.framework */; };
 		2992833C264528F1004691E5 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2992833B264528F1004691E5 /* ImageIO.framework */; };
 		2992837E264733B3004691E5 /* WindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2992837D264733B3004691E5 /* WindowController.swift */; };
@@ -117,7 +117,7 @@
 		29A8FF76265211B8007A26C9 /* MemoryController.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 29A8FF73265211B8007A26C9 /* MemoryController.hpp */; };
 		29A8FF86265211E4007A26C9 /* GPUCore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2992830826426A32004691E5 /* GPUCore.cpp */; };
 		29A8FF8C26521A6E007A26C9 /* CartridgeHeader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297E600A2456532700EE150F /* CartridgeHeader.cpp */; };
-		29A8FF9226521A71007A26C9 /* CartridgeHeader.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 297E600B2456532700EE150F /* CartridgeHeader.hpp */; settings = {ATTRIBUTES = (Public, ); }; };
+		29A8FF9226521A71007A26C9 /* CartridgeHeader.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 297E600B2456532700EE150F /* CartridgeHeader.hpp */; };
 		29A8FF9D26521AA3007A26C9 /* libMikoGBCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 299281E626424123004691E5 /* libMikoGBCore.a */; };
 		29A8FFD426535994007A26C9 /* MemoryBankController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8FFD226535994007A26C9 /* MemoryBankController.cpp */; };
 		29A8FFD526535994007A26C9 /* MemoryBankController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8FFD226535994007A26C9 /* MemoryBankController.cpp */; };

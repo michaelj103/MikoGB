@@ -347,7 +347,8 @@ class GameViewController: UIViewController, DPadDelegate, GBEngineSaveDestinatio
         guard let loadedSaveDataEntry = loadedSaveDataEntry else {
             return
         }
-
+        
+        _persistSaveDataImmediatelyIfNeeded()
         let url = persistenceManager.saveURLForEntry(loadedSaveDataEntry)
         let fm = FileManager.default
         if !fm.fileExists(atPath: url.path) {
