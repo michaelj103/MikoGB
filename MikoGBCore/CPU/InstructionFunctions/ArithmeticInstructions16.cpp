@@ -63,7 +63,9 @@ int CPUInstructions::addHLWithRegisterPair(const uint8_t *opcode, CPUCore &core)
 int CPUInstructions::addSPWithImmediate8Signed(const uint8_t *opcode, CPUCore &core) {
     const int8_t e = (int8_t)(opcode[1]); //treat as signed
     const uint16_t sp = core.stackPointer;
-    core.stackPointer = _Add16BitOperands(sp, e, core);
+//    core.stackPointer = _Add16BitOperands(sp, e, core);
+    uint16_t newSP = _Add16BitOperands(sp, e, core);
+    core.setStackPointer(newSP);
     core.setFlag(FlagBit::Zero, false);
     return 4;
 }

@@ -57,6 +57,6 @@ using AudioSampleCallback = std::function<void(const int16_t, const int16_t)>;
 // These include:
 // - breakpoints
 // - instruction location cache for disassembly
-#define ENABLE_DEBUGGER 0
+#define ENABLE_DEBUGGER 1
 
 #endif /* GameBoyCoreTypes_h */

@@ -58,6 +58,11 @@ public:
     uint8_t registers[REGISTER_COUNT];
     uint16_t programCounter;
     uint16_t stackPointer;
+    uint16_t stackBase;
+    void setStackPointer(uint16_t val) {
+        stackPointer = val;
+        stackBase = val;
+    }
     
     MemoryController::Ptr &memoryController;
 #if BUILD_FOR_TESTING

@@ -39,6 +39,11 @@ bool Joypad::getButtonPressed(JoypadButton button) const {
     return isMaskSet(_setButtons, mask);
 }
 
+static bool _wantsStop = false;
+bool Joypad::wantsStop() const {
+    return _wantsStop;
+}
+
 uint8_t Joypad::readJoypadRegister() const {
     // Button input is inverted. 1 means *not* pressed
     const uint8_t inverted = ~_setButtons;
@@ -53,6 +58,10 @@ uint8_t Joypad::readJoypadRegister() const {
     if (!isMaskSet(inputMask, MemoryController::InputMask::Directional)) {
         joypadReg |= directional;
     } else if (!isMaskSet(inputMask, MemoryController::InputMask::Button)) {
+        if (getButtonPressed(JoypadButton::B)) {
+//            printf("B pressed on read\n");
+            _wantsStop = true;
+        }
         joypadReg |= button;
     } else {
         // Figuring this out was a long process but this caused a weird graphical glitch at the beginning of lots of games
@@ -63,3 +72,4 @@ uint8_t Joypad::readJoypadRegister() const {
     
     return joypadReg;
 }
+

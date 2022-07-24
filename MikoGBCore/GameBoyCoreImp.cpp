@@ -159,6 +159,24 @@ uint8_t GameBoyCoreImp::readMem(uint16_t addr) const {
     return _memoryController->readByte(addr);
 }
 
+uint16_t GameBoyCoreImp::getStackPointer() const {
+    return _cpu->stackPointer;
+}
+
+std::vector<uint8_t> GameBoyCoreImp::getStack(int count) const {
+    uint16_t currentPtr = _cpu->stackPointer;
+    vector<uint8_t> stack;
+    while (stack.size() < count) {
+        uint8_t byte = _memoryController->readByte(currentPtr);
+        stack.push_back(byte);
+        if (currentPtr == 0xFFFF) {
+            break;
+        }
+        currentPtr++;
+    }
+    return stack;
+}
+
 void GameBoyCoreImp::setLineBreakpoint(int romBank, uint16_t addr) {
     _cpu->_breakpointManager.addLineBreakpoint(romBank, addr);
 }

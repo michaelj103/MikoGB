@@ -73,6 +73,7 @@
 		2987F3C727E6E5F800EC00A7 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2987F3C627E6E5F800EC00A7 /* GameViewController.swift */; };
 		2987F3C927EA426A00EC00A7 /* GeometryExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2987F3C827EA426A00EC00A7 /* GeometryExtensions.swift */; };
 		2987F3CB27F3B41C00EC00A7 /* DPadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2987F3CA27F3B41C00EC00A7 /* DPadView.swift */; };
+		2987F3F82807D3A400EC00A7 /* DebuggerStackCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2987F3F72807D3A400EC00A7 /* DebuggerStackCommand.swift */; };
 		29928195263DE721004691E5 /* Test16BitArithmeticInstructions.mm in Sources */ = {isa = PBXBuildFile; fileRef = 29928194263DE721004691E5 /* Test16BitArithmeticInstructions.mm */; };
 		2992819C263DE86C004691E5 /* ArithmeticInstructions16.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2992818B263DDEC8004691E5 /* ArithmeticInstructions16.cpp */; };
 		299281A6263F885E004691E5 /* CallAndReturnInstructions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 299281A3263F885E004691E5 /* CallAndReturnInstructions.cpp */; };
@@ -277,6 +278,7 @@
 		2987F3C627E6E5F800EC00A7 /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
 		2987F3C827EA426A00EC00A7 /* GeometryExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeometryExtensions.swift; sourceTree = "<group>"; };
 		2987F3CA27F3B41C00EC00A7 /* DPadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DPadView.swift; sourceTree = "<group>"; };
+		2987F3F72807D3A400EC00A7 /* DebuggerStackCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebuggerStackCommand.swift; sourceTree = "<group>"; };
 		2992818B263DDEC8004691E5 /* ArithmeticInstructions16.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ArithmeticInstructions16.cpp; sourceTree = "<group>"; };
 		2992818C263DDEC8004691E5 /* ArithmeticInstructions16.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ArithmeticInstructions16.hpp; sourceTree = "<group>"; };
 		29928194263DE721004691E5 /* Test16BitArithmeticInstructions.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = Test16BitArithmeticInstructions.mm; sourceTree = "<group>"; };
@@ -467,6 +469,7 @@
 				2902EAA027C5520500186976 /* DebuggerMemCommand.swift */,
 				2902EAA627C6C27600186976 /* DebuggerBreakpointCommand.swift */,
 				299BD2FD27CEEF4000940D12 /* DebuggerRollbackCommand.swift */,
+				2987F3F72807D3A400EC00A7 /* DebuggerStackCommand.swift */,
 			);
 			path = DebugUI;
 			sourceTree = "<group>";
@@ -1087,6 +1090,7 @@
 				29F082862647B9C400FA5F67 /* NoROMView.swift in Sources */,
 				2902EAB327C8BD2900186976 /* RingBuffer.swift in Sources */,
 				2902EA9B27C355C100186976 /* DebuggerInstructionController.swift in Sources */,
+				2987F3F82807D3A400EC00A7 /* DebuggerStackCommand.swift in Sources */,
 				2902EA9927C3542000186976 /* InstructionTableCell.swift in Sources */,
 				29F0829C2647BA0D00FA5F67 /* GBEngine.mm in Sources */,
 				299BD30327D56D8F00940D12 /* PersistenceManager.swift in Sources */,

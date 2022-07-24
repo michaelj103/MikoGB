@@ -52,6 +52,7 @@ class DebuggerWindowController: NSWindowController, NSTableViewDataSource, GBEng
         let memCommand = DebuggerMemCommand(engine)
         let breakpointCommand = DebuggerBreakpointCommand(engine)
         let rollbackCommand = DebuggerRollbackCommand(engine)
+        let stackCommand = DebuggerStackCommand(engine)
         commands = [
             pauseCommand,
             continueCommand,
@@ -59,6 +60,7 @@ class DebuggerWindowController: NSWindowController, NSTableViewDataSource, GBEng
             memCommand,
             breakpointCommand,
             rollbackCommand,
+            stackCommand,
         ]
         
         _instructionController.engine = engine

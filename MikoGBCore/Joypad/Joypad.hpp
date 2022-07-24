@@ -22,6 +22,7 @@ public:
     bool getButtonPressed(JoypadButton) const;
     
     uint8_t readJoypadRegister() const;
+    bool wantsStop() const;
     
 private:
     MemoryController::Ptr &_memoryController;

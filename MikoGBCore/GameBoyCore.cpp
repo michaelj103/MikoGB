@@ -107,6 +107,14 @@ uint8_t GameBoyCore::readMem(uint16_t addr) const {
     return _imp->readMem(addr);
 }
 
+uint16_t GameBoyCore::getStackPointer() const {
+    return _imp->getStackPointer();
+}
+
+std::vector<uint8_t> GameBoyCore::getStack(int count) const {
+    return _imp->getStack(count);
+}
+
 bool GameBoyCore::setLineBreakpoint(int romBank, uint16_t addr) {
 #if ENABLE_DEBUGGER
     _imp->setLineBreakpoint(romBank, addr);

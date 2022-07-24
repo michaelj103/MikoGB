@@ -37,7 +37,8 @@ int CPUInstructions::loadRegisterPairFromImmediate16(const uint8_t *opcode, CPUC
             break;
         case 3:
             //destination is SP
-            core.stackPointer = word16(lo, hi);
+            core.setStackPointer(word16(lo, hi));
+//            core.stackPointer = word16(lo, hi);
             break;
     }
     
@@ -46,7 +47,8 @@ int CPUInstructions::loadRegisterPairFromImmediate16(const uint8_t *opcode, CPUC
 
 int CPUInstructions::loadStackPtrFromHL(const uint8_t *opcode, CPUCore &core) {
     //bits must be 11111001
-    core.stackPointer = core.getHLptr();
+    core.setStackPointer(core.getHLptr());
+//    core.stackPointer = core.getHLptr();
     return 2;
 }
 
@@ -78,29 +80,26 @@ int CPUInstructions::pushQQ(const uint8_t *opcode, CPUCore &core) {
 int CPUInstructions::popQQ(const uint8_t *opcode, CPUCore &core) {
     uint8_t qq = (opcode[0] & 0x30) >> 4;
     uint8_t hi = 0, lo = 0;
+    core.stackPop(hi, lo);
     //TODO: Debug assert that qq <= 3?
     switch (qq) {
         case 0:
             // POP BC
-            core.stackPop(hi, lo);
             core.registers[REGISTER_B] = hi;
             core.registers[REGISTER_C] = lo;
             break;
         case 1:
             // POP DE
-            core.stackPop(hi, lo);
             core.registers[REGISTER_D] = hi;
             core.registers[REGISTER_E] = lo;
             break;
         case 2:
             // POP HL
-            core.stackPop(hi, lo);
             core.registers[REGISTER_H] = hi;
             core.registers[REGISTER_L] = lo;
             break;
         case 3:
             // POP AF
-            core.stackPop(hi, lo);
             core.registers[REGISTER_A] = hi;
             core.registers[REGISTER_F] = lo & 0xF0;
             // The F register has a special format on intel 8080 derived processors

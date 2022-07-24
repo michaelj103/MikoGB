@@ -103,6 +103,7 @@ void CPUCore::reset() {
     }
     programCounter = 0;
     stackPointer = 0;
+    stackBase = 0;
     _isHalted = false;
     _stoppedAtBreakpoint = false;
 }

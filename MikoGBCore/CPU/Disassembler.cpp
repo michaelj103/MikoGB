@@ -105,6 +105,11 @@ static string lookupInstruction(uint16_t pc, const MemoryController::Ptr &mem, u
 
 std::vector<DisassembledInstruction> Disassembler::disassembleInstructions(uint16_t pc, int maxCount, const MemoryController::Ptr &mem) const {
     vector<DisassembledInstruction> instructions;
+    // uncomment to allow reads outside of valid range
+//    bool validRange = pc < 0x8000 || (pc >= 0xFF80 && pc < 0xFFFF);
+//    if (!validRange) {
+//        return instructions;
+//    }
     assert(pc < 0x8000 || (pc >= 0xFF80 && pc < 0xFFFF));
     
     // end if we exceed the boundary of the initial ROM bank
@@ -144,6 +149,11 @@ std::vector<DisassembledInstruction> Disassembler::disassembleInstructions(uint1
 
 std::vector<DisassembledInstruction> Disassembler::precedingDisassembledInstructions(uint16_t pc, int maxCount, const MemoryController::Ptr &mem, const CPUCore::Ptr &cpu) const {
     vector<DisassembledInstruction> instructions;
+    // uncomment to allow reads outside of valid range
+//    bool validRange = pc < 0x8000 || (pc >= 0xFF80 && pc < 0xFFFF);
+//    if (!validRange) {
+//        return instructions;
+//    }
     assert(pc < 0x8000 || (pc >= 0xFF80 && pc < 0xFFFF));
     
     // end if we exceed the boundary of the initial ROM bank

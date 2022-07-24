@@ -35,6 +35,8 @@ static const uint16_t HighRangeMemoryBaseAddr = 0xC000;
 static const size_t HighRangeMemorySize = 1024 * 16;     // 16 KiB of internal memory for various uses from 0xC000 - 0xFFFF
 //TODO: In CGB mode, there is additional bank switchable RAM in the high range
 
+static const uint16_t EchoMemoryBaseAddr = 0xE000;
+
 // Relevant registers
 static const uint16_t OAMBase = 0xFE00;
 
@@ -137,6 +139,11 @@ uint8_t MemoryController::readByte(uint16_t addr) const {
             return _audioController.readAudioRegister(addr);
         }
         
+        if (addr >= 0xE000 && addr <= 0xFDFF) {
+            // ECHO RAM read. Shift into legal high range memory
+            addr -= 0x1000;
+        }
+        
         // Read from the high range memory
         return _highRangeMemory[addr - HighRangeMemoryBaseAddr];
     }
@@ -174,6 +181,17 @@ void MemoryController::setByte(uint16_t addr, uint8_t val) {
             // write to audio controller
             _audioController.writeAudioRegister(addr, val);
         }
+        
+        if (addr >= 0xE000 && addr <= 0xFDFF) {
+            addr -= 0x1000;
+        }
+        
+//        if (addr == 0xDFEC && val == 0xE4) {
+//            printf("Set bad value pt1?\n");
+//            if (_highRangeMemory[0xDFEB - HighRangeMemoryBaseAddr] == 0x59) {
+//                printf("Set both bad values?\n");
+//            }
+//        }
         
         // Write to high range memory
         _highRangeMemory[addr - HighRangeMemoryBaseAddr] = val;

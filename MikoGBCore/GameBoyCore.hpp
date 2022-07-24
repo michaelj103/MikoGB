@@ -70,6 +70,10 @@ public:
     
     uint8_t readMem(uint16_t) const;
     
+    uint16_t getStackPointer() const;
+    
+    std::vector<uint8_t> getStack(int count) const;
+    
     bool setLineBreakpoint(int romBank, uint16_t addr);
     
 private:

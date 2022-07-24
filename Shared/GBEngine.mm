@@ -396,7 +396,7 @@ static void _AddInstruction(const MikoGB::DisassembledInstruction &instruction, 
 - (NSArray<NSString *> *)lastExecutedInstructions {
     NSMutableArray<NSString *> *disassembledInstructions = [NSMutableArray array];
     dispatch_sync(_emulationQueue, ^{
-        std::vector<MikoGB::DisassembledInstruction> instructions = _core->getDisassembledPreviousInstructions(10);
+        std::vector<MikoGB::DisassembledInstruction> instructions = _core->getDisassembledPreviousInstructions(100);
         for (const MikoGB::DisassembledInstruction &instruction : instructions) {
             _AddInstruction(instruction, disassembledInstructions);
         }
@@ -429,6 +429,19 @@ static void _AddInstruction(const MikoGB::DisassembledInstruction &instruction, 
         byte = _core->readMem(addr);
     });
     return byte;
+}
+
+- (NSString *)stackDescription {
+    NSMutableString *desc = [NSMutableString string];
+    dispatch_sync(_emulationQueue, ^{
+        uint16_t stackPointer = _core->getStackPointer();
+        [desc appendFormat:@"SP: 0x%04X", stackPointer];
+        const std::vector<uint8_t> stack = _core->getStack(10);
+        for (uint8_t byte : stack) {
+            [desc appendFormat:@"\n0x%02X", byte];
+        }
+    });
+    return desc;
 }
 
 - (BOOL)addLineBreakpointForBank:(int)romBank address:(uint16_t)address {

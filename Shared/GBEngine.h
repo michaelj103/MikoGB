@@ -79,6 +79,7 @@ typedef void (^SaveDataCompletion)( NSData * _Nullable data);
 - (NSArray<NSString *> *)lastExecutedInstructions;
 - (GBRegisterState)registerState;
 - (uint8_t)readByte:(uint16_t)addr;
+- (NSString *)stackDescription;
 - (BOOL)addLineBreakpointForBank:(int)romBank address:(uint16_t)address;
 
 @end
