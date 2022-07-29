@@ -30,6 +30,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func sceneDidBecomeActive(_ scene: UIScene) {
         // Called when the scene has moved from an inactive state to an active state.
         // Use this method to restart any tasks that were paused (or not yet started) when the scene was inactive.
+        UpdateManager.checkForUpdate { [weak self] hasUpdate, targetVersion in
+            if hasUpdate {
+                self?._presentUpdateAlert(onScene: scene, title: "Update Available", message: "An update is available to \(targetVersion)")
+            }
+        }
     }
 
     func sceneWillResignActive(_ scene: UIScene) {
@@ -47,7 +52,22 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Use this method to save data, release shared resources, and store enough scene-specific state information
         // to restore the scene back to its current state.
     }
-
+    
+    private func _presentUpdateAlert(onScene scene: UIScene, title: String, message: String) {
+        if let windowScene = scene as? UIWindowScene, let vc = windowScene.keyWindow?.rootViewController {
+            let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Not Now", style: .cancel))
+            alert.addAction(UIAlertAction(title: "Install", style: .default, handler: { _ in
+                if let url = UpdateManager.updateURL() {
+                    windowScene.open(url, options: nil)
+                }
+            }))
+            vc.present(alert, animated: true)
+        } else {
+            preconditionFailure("We expect to always be using window scenes")
+        }
+    }
+    
     private func _presentErrorAlert(onScene scene: UIScene, title: String, message: String) {
         if let windowScene = scene as? UIWindowScene, let vc = windowScene.keyWindow?.rootViewController {
             let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
@@ -75,4 +95,3 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
     }
 }
-

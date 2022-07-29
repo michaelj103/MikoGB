@@ -13,6 +13,7 @@ class GameViewController: UIViewController, DPadDelegate, GBEngineSaveDestinatio
 
     private var gameView: GameView!
     private var engine = GBEngine()
+    private var audioController: AudioController!
     private let romURL: URL
     private let persistenceManager: PersistenceManager
     
@@ -38,6 +39,7 @@ class GameViewController: UIViewController, DPadDelegate, GBEngineSaveDestinatio
     override func viewDidLoad() {
         super.viewDidLoad()
         gameView = GameView(engine: engine)
+        audioController = AudioController(engine: engine)
         self.view.addSubview(gameView)
         
         dPadView = DPadView(frame: .zero)
@@ -150,6 +152,8 @@ class GameViewController: UIViewController, DPadDelegate, GBEngineSaveDestinatio
     private func _restart() {
         engine = GBEngine()
         gameView.engine = engine
+        audioController.stopAudioEngine()
+        audioController = AudioController(engine: engine)
         _loadROM()
     }
     
@@ -278,7 +282,7 @@ class GameViewController: UIViewController, DPadDelegate, GBEngineSaveDestinatio
     
     private func _startEmulation() {
         gameView.start()
-//        audioController.startAudioEngine()
+        audioController.startAudioEngine()
     }
     
     func engineIsReady(toPersistSaveData engine: GBEngine) {

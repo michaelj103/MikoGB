@@ -33,9 +33,15 @@ class AudioController : NSObject, GBEngineAudioDestination {
         super.init()
         self.engine.audioDestination = self
         
+        #if os(macOS)
         NotificationCenter.default.addObserver(forName: TerminationNotification, object: nil, queue: nil) { [weak self] _ in
             self?.stopAudioEngine()
         }
+        #endif
+    }
+    
+    deinit {
+        self.stopAudioEngine()
     }
     
     private func _initializeAudioEngine() {
@@ -63,7 +69,7 @@ class AudioController : NSObject, GBEngineAudioDestination {
         self.audioEngine = engine
     }
     
-    func _audioCallback(frameCount: AVAudioFrameCount, audioBufferList: UnsafeMutablePointer<AudioBufferList>) {
+    private func _audioCallback(frameCount: AVAudioFrameCount, audioBufferList: UnsafeMutablePointer<AudioBufferList>) {
         let ablPointer = UnsafeMutableAudioBufferListPointer(audioBufferList)
         var leftBuf: UnsafeMutableBufferPointer<Float32> = UnsafeMutableBufferPointer(ablPointer[0])
         var rightBuf: UnsafeMutableBufferPointer<Float32> = UnsafeMutableBufferPointer(ablPointer[1])

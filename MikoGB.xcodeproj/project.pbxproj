@@ -55,6 +55,11 @@
 		291987E02683087A009D7C45 /* DebuggerWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 291987DE2683087A009D7C45 /* DebuggerWindowController.swift */; };
 		291987ED26830A6E009D7C45 /* AppStateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 291987EC26830A6E009D7C45 /* AppStateManager.swift */; };
 		291987F42683FBBF009D7C45 /* DebuggerConsoleController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 291987F32683FBBF009D7C45 /* DebuggerConsoleController.swift */; };
+		2923CDF42893A8E100262C49 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2923CDF22893A8E100262C49 /* Model.xcdatamodeld */; };
+		2923CDF82893B08300262C49 /* AudioController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2902EAB227C8BD2900186976 /* AudioController.swift */; };
+		2923CDF92893B09100262C49 /* RingBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2902EAB127C8BD2900186976 /* RingBuffer.swift */; };
+		2923CDFB2894779500262C49 /* UpdateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2923CDFA2894779500262C49 /* UpdateManager.swift */; };
+		2923CDFD28947BE900262C49 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2923CDFC28947BE900262C49 /* NetworkManager.swift */; };
 		295BCB772693CF1900E80FCC /* SimpleError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295BCB762693CF1900E80FCC /* SimpleError.swift */; };
 		297E60062456426400EE150F /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297E60052456426400EE150F /* main.cpp */; };
 		2987F3A927E69F8C00EC00A7 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2987F3A827E69F8C00EC00A7 /* GameView.swift */; };
@@ -260,6 +265,9 @@
 		291987DE2683087A009D7C45 /* DebuggerWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebuggerWindowController.swift; sourceTree = "<group>"; };
 		291987EC26830A6E009D7C45 /* AppStateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStateManager.swift; sourceTree = "<group>"; };
 		291987F32683FBBF009D7C45 /* DebuggerConsoleController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebuggerConsoleController.swift; sourceTree = "<group>"; };
+		2923CDF32893A8E100262C49 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
+		2923CDFA2894779500262C49 /* UpdateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateManager.swift; sourceTree = "<group>"; };
+		2923CDFC28947BE900262C49 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		295BCB762693CF1900E80FCC /* SimpleError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleError.swift; sourceTree = "<group>"; };
 		297E60032456426400EE150F /* RomAnalyzer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = RomAnalyzer; sourceTree = BUILT_PRODUCTS_DIR; };
 		297E60052456426400EE150F /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
@@ -542,6 +550,8 @@
 				295BCB762693CF1900E80FCC /* SimpleError.swift */,
 				299BD30227D56D8F00940D12 /* PersistenceManager.swift */,
 				299BD30427D92FAD00940D12 /* SaveEntry.swift */,
+				2902EAB227C8BD2900186976 /* AudioController.swift */,
+				2902EAB127C8BD2900186976 /* RingBuffer.swift */,
 				29F0829A2647BA0D00FA5F67 /* GBEngine.h */,
 				29F0829B2647BA0D00FA5F67 /* GBEngine.mm */,
 				299BD2FF27D5450800940D12 /* GBRateLimitTimer.h */,
@@ -618,8 +628,6 @@
 				2992837D264733B3004691E5 /* WindowController.swift */,
 				29F082852647B9C400FA5F67 /* NoROMView.swift */,
 				29F082A22647BA3800FA5F67 /* GameView.swift */,
-				2902EAB227C8BD2900186976 /* AudioController.swift */,
-				2902EAB127C8BD2900186976 /* RingBuffer.swift */,
 				291987D1268300E1009D7C45 /* DebugUI */,
 				299282B82642449F004691E5 /* Assets.xcassets */,
 				299282BA2642449F004691E5 /* Main.storyboard */,
@@ -717,8 +725,11 @@
 				2987F3CA27F3B41C00EC00A7 /* DPadView.swift */,
 				2987F3A827E69F8C00EC00A7 /* GameView.swift */,
 				2987F3C827EA426A00EC00A7 /* GeometryExtensions.swift */,
+				2923CDFA2894779500262C49 /* UpdateManager.swift */,
+				2923CDFC28947BE900262C49 /* NetworkManager.swift */,
 				29DBB67D27E2BA8700C77519 /* Main.storyboard */,
 				29DBB68027E2BA8800C77519 /* Assets.xcassets */,
+				2923CDF22893A8E100262C49 /* Model.xcdatamodeld */,
 				29DBB68227E2BA8800C77519 /* LaunchScreen.storyboard */,
 				2987F3AE27E6C94A00EC00A7 /* MikoGB-Bridging-Header.h */,
 				29DBB68527E2BA8800C77519 /* Info.plist */,
@@ -926,7 +937,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1330;
-				LastUpgradeCheck = 1320;
+				LastUpgradeCheck = 1340;
 				ORGANIZATIONNAME = "Michael Brandt";
 				TargetAttributes = {
 					297E60022456426400EE150F = {
@@ -1164,6 +1175,11 @@
 				2987F3B927E6D8C400EC00A7 /* GBRateLimitTimer.m in Sources */,
 				2987F3C227E6DF3000EC00A7 /* SaveEntry.swift in Sources */,
 				2987F3C327E6DF4600EC00A7 /* SimpleError.swift in Sources */,
+				2923CDFB2894779500262C49 /* UpdateManager.swift in Sources */,
+				2923CDFD28947BE900262C49 /* NetworkManager.swift in Sources */,
+				2923CDF92893B09100262C49 /* RingBuffer.swift in Sources */,
+				2923CDF82893B08300262C49 /* AudioController.swift in Sources */,
+				2923CDF42893A8E100262C49 /* Model.xcdatamodeld in Sources */,
 				2987F3A927E69F8C00EC00A7 /* GameView.swift in Sources */,
 				2987F3AA27E6A05A00EC00A7 /* GBEngine.mm in Sources */,
 				2987F3C927EA426A00EC00A7 /* GeometryExtensions.swift in Sources */,
@@ -1647,6 +1663,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 6REEN5Y59Z;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "MikoGB-iOS/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = MikoGB;
@@ -1681,6 +1698,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 6REEN5Y59Z;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "MikoGB-iOS/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = MikoGB;
@@ -1715,6 +1733,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 6REEN5Y59Z;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "MikoGB-iOS/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = MikoGB;
@@ -1970,6 +1989,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		2923CDF22893A8E100262C49 /* Model.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				2923CDF32893A8E100262C49 /* Model.xcdatamodel */,
+			);
+			currentVersion = 2923CDF32893A8E100262C49 /* Model.xcdatamodel */;
+			path = Model.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 297E5FED2456421B00EE150F /* Project object */;
 }
