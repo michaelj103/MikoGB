@@ -44,12 +44,25 @@ class ROMTableViewController: UITableViewController {
 
         return cell
     }
+    
+    // MARK: - Table view delegate
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let (_, romPath) = romsList[indexPath.row]
         let url = URL(fileURLWithPath: romPath)
         let gameVC = GameViewController(url, persistenceManager: persistenceManager)
         self.navigationController?.pushViewController(gameVC, animated: true)
+    }
+    
+    override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        
+        let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { _, _, completionHandler in
+            print("Delete running!")
+            completionHandler(true)
+        }
+        
+        let deleteConfig = UISwipeActionsConfiguration(actions: [deleteAction])
+        return deleteConfig
     }
 
 }

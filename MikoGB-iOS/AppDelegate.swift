@@ -11,10 +11,9 @@ import UIKit
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         //TODO: better error handling
+        UpdateManager.migrateIfNecessary()
         try! PersistenceManager.prepare()
         try! PersistenceManager.installROMs()
         return true
