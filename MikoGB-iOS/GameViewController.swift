@@ -202,7 +202,39 @@ class GameViewController: UIViewController, DPadDelegate, GBEngineSaveDestinatio
     }
     
     private func _layoutLandscape(_ availableBounds: CGRect) {
+        let screenSize = gameView.sizeThatFits(availableBounds.size)
+        let midX = availableBounds.origin.x + ((availableBounds.size.width - screenSize.width) / 2.0)
+        let screenFrame = CGRect(x: midX, y: availableBounds.origin.y, width: screenSize.width, height: screenSize.height)
+        gameView.frame = screenFrame
         
+        let leftArea = CGRect(x: availableBounds.minX, y: availableBounds.minY, width: screenFrame.minX - availableBounds.minX, height: availableBounds.height)
+        let leftTopArea = CGRect(x: leftArea.minX, y: leftArea.minY, width: leftArea.width, height: leftArea.height * 0.75)
+        let leftBottomArea = CGRect(x: leftArea.minX, y: leftTopArea.maxY, width: leftArea.width, height: leftArea.height - leftTopArea.height)
+        
+        let dPadFrame = leftTopArea.fitRect(1.0)
+        dPadView.frame = dPadFrame
+        
+        let selectAspect = selectButton.intrinsicContentSize.width / selectButton.intrinsicContentSize.height
+        let selectButtonFrame = leftBottomArea.fitRect(selectAspect)
+        selectButton.frame = selectButtonFrame
+        
+        let rightArea = CGRect(x: screenFrame.maxX, y: availableBounds.minY, width: availableBounds.maxX - screenFrame.maxX, height: availableBounds.height)
+        let rightTopArea = CGRect(x: rightArea.minX, y: rightArea.minY, width: rightArea.width, height: rightArea.height * 0.75)
+        let rightBottomArea = CGRect(x: rightArea.minX, y: rightTopArea.maxY, width: rightArea.width, height: rightArea.height - rightTopArea.height)
+        
+        let buttonsTopHalf = CGRect(x: rightTopArea.minX, y: rightTopArea.minY, width: rightTopArea.width, height: rightTopArea.height * 0.5)
+        let aButtonAspect = aButton.intrinsicContentSize.width / aButton.intrinsicContentSize.height
+        let aButtonFrame = buttonsTopHalf.fitRect(aButtonAspect)
+        aButton.frame = aButtonFrame
+        
+        let buttonsBottomHalf = CGRect(x: rightTopArea.minX, y: buttonsTopHalf.maxY, width: rightTopArea.width, height: rightTopArea.height * 0.5)
+        let bButtonAspect = bButton.intrinsicContentSize.width / bButton.intrinsicContentSize.height
+        let bButtonFrame = buttonsBottomHalf.fitRect(bButtonAspect)
+        bButton.frame = bButtonFrame
+        
+        let startAspect = startButton.intrinsicContentSize.width / startButton.intrinsicContentSize.height
+        let startButtonFrame = rightBottomArea.fitRect(startAspect)
+        startButton.frame = startButtonFrame
     }
     
     private func _layoutPortrait(_ availableBounds: CGRect) {

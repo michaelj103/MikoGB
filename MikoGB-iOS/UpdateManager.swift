@@ -9,7 +9,7 @@
 import Foundation
 
 class UpdateManager {
-    private static let BuildVersion = 2
+    private static let BuildVersion = 3
     private static let BuildVersionKey = "BuildVersion"
     
     static func migrateIfNecessary() {
