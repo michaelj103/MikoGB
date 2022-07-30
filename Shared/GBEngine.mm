@@ -268,10 +268,13 @@ static MikoGB::JoypadButton _ButtonForCode(GBEngineKeyCode code) {
         dispatch_async(_emulationQueue, ^{
             [self _emulationQueue_emulateFrame];
         });
-    } else if (dropped) {
+    }
+#if DEBUG
+    else if (dropped) {
         // Dropped a frame if the previous frame has not finished processing when the next one starts
         NSLog(@"Dropped a frame");
     }
+#endif
 }
 
 - (void)_emulationQueue_emulateFrame {
