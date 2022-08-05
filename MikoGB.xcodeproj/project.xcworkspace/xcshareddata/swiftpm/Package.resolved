@@ -1,0 +1,14 @@
+{
+  "pins" : [
+    {
+      "identity" : "gbserver",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/michaelj103/gbserver.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "ccf6bd7b9fd1158f1e73573ba0bbe5de59f6b7da"
+      }
+    }
+  ],
+  "version" : 2
+}

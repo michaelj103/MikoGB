@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -978,6 +978,9 @@
 				Base,
 			);
 			mainGroup = 297E5FEC2456421B00EE150F;
+			packageReferences = (
+				2923CDFE289CC17600262C49 /* XCRemoteSwiftPackageReference "gbserver" */,
+			);
 			productRefGroup = 297E5FF62456421B00EE150F /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -1989,6 +1992,17 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		2923CDFE289CC17600262C49 /* XCRemoteSwiftPackageReference "gbserver" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/michaelj103/gbserver.git";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCVersionGroup section */
 		2923CDF22893A8E100262C49 /* Model.xcdatamodeld */ = {
