@@ -60,6 +60,7 @@
 		2923CDF92893B09100262C49 /* RingBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2902EAB127C8BD2900186976 /* RingBuffer.swift */; };
 		2923CDFB2894779500262C49 /* UpdateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2923CDFA2894779500262C49 /* UpdateManager.swift */; };
 		2923CDFD28947BE900262C49 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2923CDFC28947BE900262C49 /* NetworkManager.swift */; };
+		2923CE02289CE5F100262C49 /* GBServerPayloads in Frameworks */ = {isa = PBXBuildFile; productRef = 2923CE01289CE5F100262C49 /* GBServerPayloads */; };
 		295BCB772693CF1900E80FCC /* SimpleError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295BCB762693CF1900E80FCC /* SimpleError.swift */; };
 		297E60062456426400EE150F /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297E60052456426400EE150F /* main.cpp */; };
 		2987F3A927E69F8C00EC00A7 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2987F3A827E69F8C00EC00A7 /* GameView.swift */; };
@@ -415,6 +416,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2987F3BE27E6D9BA00EC00A7 /* UniformTypeIdentifiers.framework in Frameworks */,
+				2923CE02289CE5F100262C49 /* GBServerPayloads in Frameworks */,
 				2987F3B727E6D84C00EC00A7 /* libMikoGBCore.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -887,9 +889,13 @@
 			buildRules = (
 			);
 			dependencies = (
+				2923CE00289CE0FE00262C49 /* PBXTargetDependency */,
 				2987F3B627E6D84300EC00A7 /* PBXTargetDependency */,
 			);
 			name = "MikoGB-iOS";
+			packageProductDependencies = (
+				2923CE01289CE5F100262C49 /* GBServerPayloads */,
+			);
 			productName = "MikoGB-iOS";
 			productReference = 29DBB67527E2BA8700C77519 /* MikoGB-iOS.app */;
 			productType = "com.apple.product-type.application";
@@ -1210,6 +1216,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		2923CE00289CE0FE00262C49 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = 2923CDFF289CE0FE00262C49 /* GBServerPayloads */;
+		};
 		2987F3B627E6D84300EC00A7 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 299281E526424123004691E5 /* MikoGBCore */;
@@ -1404,7 +1414,6 @@
 				EXECUTABLE_PREFIX = lib;
 				GCC_ENABLE_CPP_EXCEPTIONS = YES;
 				GCC_ENABLE_CPP_RTTI = YES;
-				MACOSX_DEPLOYMENT_TARGET = 11.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "macosx iphoneos";
@@ -1419,7 +1428,6 @@
 				EXECUTABLE_PREFIX = lib;
 				GCC_ENABLE_CPP_EXCEPTIONS = YES;
 				GCC_ENABLE_CPP_RTTI = YES;
-				MACOSX_DEPLOYMENT_TARGET = 11.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "macosx iphoneos";
@@ -1585,7 +1593,6 @@
 				EXECUTABLE_PREFIX = lib;
 				GCC_ENABLE_CPP_EXCEPTIONS = YES;
 				GCC_ENABLE_CPP_RTTI = YES;
-				MACOSX_DEPLOYMENT_TARGET = 11.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "macosx iphoneos";
@@ -1675,7 +1682,6 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1710,7 +1716,6 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1745,7 +1750,6 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2003,6 +2007,19 @@
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		2923CDFF289CE0FE00262C49 /* GBServerPayloads */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2923CDFE289CC17600262C49 /* XCRemoteSwiftPackageReference "gbserver" */;
+			productName = GBServerPayloads;
+		};
+		2923CE01289CE5F100262C49 /* GBServerPayloads */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2923CDFE289CC17600262C49 /* XCRemoteSwiftPackageReference "gbserver" */;
+			productName = GBServerPayloads;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		2923CDF22893A8E100262C49 /* Model.xcdatamodeld */ = {

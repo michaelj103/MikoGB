@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import GBServerPayloads
 
 class UpdateManager {
     private static let BuildVersion = 3
@@ -51,7 +52,7 @@ class UpdateManager {
             switch result {
             case .success(let data):
                 do {
-                    let updateInfos = try JSONDecoder().decode([UpdateInfo].self, from: data)
+                    let updateInfos = try JSONDecoder().decode([CurrentVersionHTTPResponsePayload].self, from: data)
                     print("Fetched update info \(updateInfos)")
                     let hasUpdate: Bool
                     let latestVersion: String
@@ -85,13 +86,10 @@ class UpdateManager {
 
 // MARK: - Network Packet Structures
 
-// TODO: get these from the gbserver package
-
-fileprivate struct UpdateInfo: Decodable, CustomStringConvertible {
-    let build: Int
-    let versionName: String
-    
-    var description: String {
+extension CurrentVersionHTTPResponsePayload: CustomStringConvertible {
+    public var description: String {
         return "Build: \(build) Version: \(versionName)"
     }
 }
+
+
