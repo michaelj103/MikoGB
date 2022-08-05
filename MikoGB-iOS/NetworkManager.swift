@@ -22,6 +22,10 @@ class NetworkManager {
     
     func makeDataRequest(_ url: URL, completion: @escaping (Result<Data, Swift.Error>)->()) {
         let request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 60.0)
+        submitRequest(request, completion: completion)
+    }
+    
+    func submitRequest(_ request: URLRequest, completion: @escaping (Result<Data, Swift.Error>)->()) {
         let dataTask = urlSession.dataTask(with: request) { data, response, error in
             let result: Result<Data, Swift.Error>
             if let data = data {
