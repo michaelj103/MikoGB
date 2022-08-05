@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="20086" systemVersion="21G72" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="ROM" representedClassName="ROM" syncable="YES" codeGenerationType="class">
+        <attribute name="fileHash" optional="YES" attributeType="String"/>
+        <attribute name="filename" optional="YES" attributeType="String"/>
+        <attribute name="identifier" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <relationship name="activeSave" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Save" inverseName="activeForRom" inverseEntity="Save"/>
+        <relationship name="saves" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Save" inverseName="rom" inverseEntity="Save"/>
+    </entity>
+    <entity name="Save" representedClassName="Save" syncable="YES" codeGenerationType="class">
+        <attribute name="identifier" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <relationship name="activeForRom" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ROM" inverseName="activeSave" inverseEntity="ROM"/>
+        <relationship name="rom" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ROM" inverseName="saves" inverseEntity="ROM"/>
+    </entity>
+    <elements>
+        <element name="ROM" positionX="-115.4921875" positionY="-158.90234375" width="128" height="118"/>
+        <element name="Save" positionX="231.62890625" positionY="-129.08984375" width="128" height="88"/>
+    </elements>
+</model>

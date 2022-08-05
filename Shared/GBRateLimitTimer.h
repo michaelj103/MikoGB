@@ -22,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// call when the rate limited event occurs
 - (void)input;
 
-/// no longer emit events. Once cancelled a timer can't be reused
+/// If the timer is pending, it won't call event block at the pending time. Inputs that occur after cancellation will be emitted after \a delay
 - (void)cancel;
 
 - (instancetype)init NS_UNAVAILABLE;

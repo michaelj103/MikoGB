@@ -17,22 +17,33 @@ enum GameViewState {
 class GameView : NSView, GBEngineImageDestination, GBEngineObserver {
     
     private var dispatchTimer: DispatchSourceTimer?
-    let engine: GBEngine
-    var state: GameViewState
+    var engine: GBEngine {
+        didSet {
+            _setupWithEngine(engine, oldEngine: oldValue)
+        }
+    }
+    private(set) var state: GameViewState
     
     init(engine: GBEngine) {
         self.engine = engine
         self.state = .Initial
         super.init(frame: NSZeroRect)
+        _setupWithEngine(self.engine, oldEngine: nil)
         self.wantsLayer = true
-        self.engine.imageDestination = self
-        self.engine.register(self)
         
         self.layer?.backgroundColor = NSColor.blue.cgColor
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func _setupWithEngine(_ engine: GBEngine, oldEngine: GBEngine?) {
+        self.state = .Initial
+        oldEngine?.imageDestination = nil
+        oldEngine?.unregisterObserver(self)
+        engine.imageDestination = self
+        engine.register(self)
     }
     
     private func _handleTimer(_ timestamp: CFTimeInterval) {

@@ -191,6 +191,11 @@ static MikoGB::JoypadButton _ButtonForCode(GBEngineKeyCode code) {
     return _persistenceTimer.isPending;
 }
 
+- (void)staleSaveDataHandled {
+    // no need to signal until it's made stale again
+    [_persistenceTimer cancel];
+}
+
 - (nullable NSData *)synchronousGetSaveData {
     __block NSData *data = nil;
     // Consider timeout for this
@@ -263,10 +268,13 @@ static MikoGB::JoypadButton _ButtonForCode(GBEngineKeyCode code) {
         dispatch_async(_emulationQueue, ^{
             [self _emulationQueue_emulateFrame];
         });
-    } else if (dropped) {
+    }
+#if DEBUG
+    else if (dropped) {
         // Dropped a frame if the previous frame has not finished processing when the next one starts
         NSLog(@"Dropped a frame");
     }
+#endif
 }
 
 - (void)_emulationQueue_emulateFrame {

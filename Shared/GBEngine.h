@@ -60,6 +60,7 @@ typedef void (^SaveDataCompletion)( NSData * _Nullable data);
 - (void)loadSaveData:(NSData *)data completion:(nullable RAMLoadCompletion)completion;
 - (void)getSaveData:(SaveDataCompletion)completion;
 @property (readonly, nonatomic) BOOL isSaveDataStale;
+- (void)staleSaveDataHandled;
 - (nullable NSData *)synchronousGetSaveData;
 - (void)writeDisplayStateToDirectory:(NSURL *)directoryURL completion:(void (^_Nullable)(BOOL))completion;
 
