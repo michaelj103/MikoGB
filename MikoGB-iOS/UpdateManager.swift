@@ -29,7 +29,7 @@ class UpdateManager {
     private static var LastUpdateCheckTime: Date?
     
     static func checkForUpdate(_ completion: @escaping (Bool, String)->()) {
-        guard let url = URL(string: "https://gb.turtletenders.com/currentVersionInfo") else {
+        guard let url = URL(string: "https://gb.turtletenders.com/api/currentVersionInfo") else {
             print("Failed to construct update check URL")
             return
         }
@@ -45,16 +45,25 @@ class UpdateManager {
         
         LastUpdateCheckTime = currentTime
         
+        let request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData)
         let networkManager = NetworkManager.sharedNetworkManager
-        networkManager.makeDataRequest(url) { result in
+        networkManager.submitRequest(request) { result in
             switch result {
             case .success(let data):
                 do {
-                    let updateInfo = try _parseUpdateData(data)
-                    print("Fetched update info \(updateInfo)")
-                    let hasUpdate = updateInfo.build > BuildVersion
+                    let updateInfos = try JSONDecoder().decode([UpdateInfo].self, from: data)
+                    print("Fetched update info \(updateInfos)")
+                    let hasUpdate: Bool
+                    let latestVersion: String
+                    if let latestUpdateInfo = updateInfos.sorted(by: { $0.build > $1.build }).first {
+                        hasUpdate = latestUpdateInfo.build > BuildVersion
+                        latestVersion = latestUpdateInfo.versionName
+                    } else {
+                        hasUpdate = false
+                        latestVersion = ""
+                    }
                     DispatchQueue.main.async {
-                        completion(hasUpdate, updateInfo.version)
+                        completion(hasUpdate, latestVersion)
                     }
                 } catch {
                     print("Failed to parse update data with error: \(error)")
@@ -63,16 +72,6 @@ class UpdateManager {
                 print("Failed to get update data with error: \(error)")
             }
         }
-    }
-    
-    private static func _parseUpdateData(_ data: Data) throws -> UpdateInfo {
-        guard let updateDictionary = try JSONSerialization.jsonObject(with: data) as? [String:Any] else {
-            throw SimpleError("Failed to serialize JSON data")
-        }
-        guard let info = UpdateInfo(updateDictionary) else {
-            throw SimpleError("Failed to parse update JSON data")
-        }
-        return info
     }
     
     static func updateURL() -> URL? {
@@ -84,27 +83,15 @@ class UpdateManager {
     }
 }
 
-fileprivate struct UpdateInfo: CustomStringConvertible {
-    private static let BuildNumberKey = "CurrentBuild"
-    private static let VersionStringKey = "CurrentVersionString"
-    
+// MARK: - Network Packet Structures
+
+// TODO: get these from the gbserver package
+
+fileprivate struct UpdateInfo: Decodable, CustomStringConvertible {
     let build: Int
-    let version: String
-    
-    init?(_ dictionary: [String: Any]) {
-        guard let buildNum = dictionary[Self.BuildNumberKey] as? Int else {
-            print("No build number found in update data")
-            return nil
-        }
-        guard let versionString = dictionary[Self.VersionStringKey] as? String else {
-            print("No version string found in update data")
-            return nil
-        }
-        build = buildNum
-        version = versionString
-    }
+    let versionName: String
     
     var description: String {
-        return "Build: \(build) Version: \(version)"
+        return "Build: \(build) Version: \(versionName)"
     }
 }
