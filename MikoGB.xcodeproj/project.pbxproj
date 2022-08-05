@@ -61,6 +61,7 @@
 		2923CDFB2894779500262C49 /* UpdateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2923CDFA2894779500262C49 /* UpdateManager.swift */; };
 		2923CDFD28947BE900262C49 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2923CDFC28947BE900262C49 /* NetworkManager.swift */; };
 		2923CE02289CE5F100262C49 /* GBServerPayloads in Frameworks */ = {isa = PBXBuildFile; productRef = 2923CE01289CE5F100262C49 /* GBServerPayloads */; };
+		2923CE0B289DA7AA00262C49 /* ServerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2923CE0A289DA7AA00262C49 /* ServerConfiguration.swift */; };
 		295BCB772693CF1900E80FCC /* SimpleError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295BCB762693CF1900E80FCC /* SimpleError.swift */; };
 		297E60062456426400EE150F /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297E60052456426400EE150F /* main.cpp */; };
 		2987F3A927E69F8C00EC00A7 /* GameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2987F3A827E69F8C00EC00A7 /* GameView.swift */; };
@@ -269,6 +270,8 @@
 		2923CDF32893A8E100262C49 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 		2923CDFA2894779500262C49 /* UpdateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateManager.swift; sourceTree = "<group>"; };
 		2923CDFC28947BE900262C49 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
+		2923CE08289DA79A00262C49 /* ServerConfiguration-template.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ServerConfiguration-template.swift"; sourceTree = "<group>"; };
+		2923CE0A289DA7AA00262C49 /* ServerConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerConfiguration.swift; sourceTree = "<group>"; };
 		295BCB762693CF1900E80FCC /* SimpleError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleError.swift; sourceTree = "<group>"; };
 		297E60032456426400EE150F /* RomAnalyzer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = RomAnalyzer; sourceTree = BUILT_PRODUCTS_DIR; };
 		297E60052456426400EE150F /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
@@ -488,6 +491,15 @@
 				2902EA9027C0712A00186976 /* Breakpoint.cpp */,
 			);
 			path = Debugging;
+			sourceTree = "<group>";
+		};
+		2923CE03289DA67300262C49 /* Configuration */ = {
+			isa = PBXGroup;
+			children = (
+				2923CE08289DA79A00262C49 /* ServerConfiguration-template.swift */,
+				2923CE0A289DA7AA00262C49 /* ServerConfiguration.swift */,
+			);
+			path = Configuration;
 			sourceTree = "<group>";
 		};
 		297E5FEC2456421B00EE150F = {
@@ -735,6 +747,7 @@
 				29DBB68227E2BA8800C77519 /* LaunchScreen.storyboard */,
 				2987F3AE27E6C94A00EC00A7 /* MikoGB-Bridging-Header.h */,
 				29DBB68527E2BA8800C77519 /* Info.plist */,
+				2923CE03289DA67300262C49 /* Configuration */,
 			);
 			path = "MikoGB-iOS";
 			sourceTree = "<group>";
@@ -1182,6 +1195,7 @@
 				2987F3CB27F3B41C00EC00A7 /* DPadView.swift in Sources */,
 				2987F3BA27E6D8CB00EC00A7 /* GBImageUtilities.mm in Sources */,
 				2987F3B927E6D8C400EC00A7 /* GBRateLimitTimer.m in Sources */,
+				2923CE0B289DA7AA00262C49 /* ServerConfiguration.swift in Sources */,
 				2987F3C227E6DF3000EC00A7 /* SaveEntry.swift in Sources */,
 				2987F3C327E6DF4600EC00A7 /* SimpleError.swift in Sources */,
 				2923CDFB2894779500262C49 /* UpdateManager.swift in Sources */,

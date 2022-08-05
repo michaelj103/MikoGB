@@ -30,7 +30,7 @@ class UpdateManager {
     private static var LastUpdateCheckTime: Date?
     
     static func checkForUpdate(_ completion: @escaping (Bool, String)->()) {
-        guard let url = URL(string: "https://***REMOVED***/api/currentVersionInfo") else {
+        guard let url = ServerConfiguration.createURL(resourcePath: "/api/currentVersionInfo") else {
             print("Failed to construct update check URL")
             return
         }
@@ -76,7 +76,7 @@ class UpdateManager {
     }
     
     static func updateURL() -> URL? {
-        guard let url = URL(string: "https://***REMOVED***") else {
+        guard let url = ServerConfiguration.createURL(resourcePath: "/") else {
             print("Failed to construct update URL")
             return nil
         }
