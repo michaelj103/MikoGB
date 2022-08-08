@@ -10,7 +10,7 @@ import Foundation
 import GBServerPayloads
 
 class UpdateManager {
-    private static let BuildVersion = 3
+    private static let BuildVersion = 4
     private static let BuildVersionKey = "BuildVersion"
     
     static func migrateIfNecessary() {
@@ -24,7 +24,9 @@ class UpdateManager {
     }
     
     private static func _runMigration(from fromVersion: Int, to toVersion: Int) {
-        
+        if fromVersion < 4 {
+            
+        }
     }
     
     private static var LastUpdateCheckTime: Date?

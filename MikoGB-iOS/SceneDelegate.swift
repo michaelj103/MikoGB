@@ -35,6 +35,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 self?._presentUpdateAlert(onScene: scene, title: "Update Available", message: "An update is available to \(targetVersion)")
             }
         }
+        
+        UserIdentityController.sharedIdentityController.ensureRegistration()
     }
 
     func sceneWillResignActive(_ scene: UIScene) {

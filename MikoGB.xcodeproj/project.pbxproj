@@ -139,6 +139,7 @@
 		29D6748F2747273A00BF9F2E /* MBC3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 291987C326829212009D7C45 /* MBC3.cpp */; };
 		29D674902747275C00BF9F2E /* Timer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 290FF3782662110A006812F4 /* Timer.cpp */; };
 		29D674912747276A00BF9F2E /* Joypad.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 290FF355265F671C006812F4 /* Joypad.cpp */; };
+		29D6D0F028A19EE900C98B03 /* UserIdentityController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29D6D0EF28A19EE900C98B03 /* UserIdentityController.swift */; };
 		29DBB67827E2BA8700C77519 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29DBB67727E2BA8700C77519 /* AppDelegate.swift */; };
 		29DBB67A27E2BA8700C77519 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29DBB67927E2BA8700C77519 /* SceneDelegate.swift */; };
 		29DBB67F27E2BA8700C77519 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 29DBB67D27E2BA8700C77519 /* Main.storyboard */; };
@@ -349,6 +350,7 @@
 		29D3C93E247DFC6A0096D21B /* TestCPUCoreBasics.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = TestCPUCoreBasics.mm; sourceTree = "<group>"; };
 		29D3C940247DFDE80096D21B /* TestCPUCoreUtilities.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = TestCPUCoreUtilities.cpp; sourceTree = "<group>"; };
 		29D3C941247DFDE80096D21B /* TestCPUCoreUtilities.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = TestCPUCoreUtilities.hpp; sourceTree = "<group>"; };
+		29D6D0EF28A19EE900C98B03 /* UserIdentityController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserIdentityController.swift; sourceTree = "<group>"; };
 		29DBB67527E2BA8700C77519 /* MikoGB-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "MikoGB-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		29DBB67727E2BA8700C77519 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		29DBB67927E2BA8700C77519 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -740,6 +742,7 @@
 				2987F3A827E69F8C00EC00A7 /* GameView.swift */,
 				2987F3C827EA426A00EC00A7 /* GeometryExtensions.swift */,
 				2923CDFA2894779500262C49 /* UpdateManager.swift */,
+				29D6D0EF28A19EE900C98B03 /* UserIdentityController.swift */,
 				2923CDFC28947BE900262C49 /* NetworkManager.swift */,
 				29DBB67D27E2BA8700C77519 /* Main.storyboard */,
 				29DBB68027E2BA8800C77519 /* Assets.xcassets */,
@@ -1186,6 +1189,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				29D6D0F028A19EE900C98B03 /* UserIdentityController.swift in Sources */,
 				2987F3C727E6E5F800EC00A7 /* GameViewController.swift in Sources */,
 				2987F3BC27E6D8D500EC00A7 /* WavFile.c in Sources */,
 				2987F3C127E6DF0200EC00A7 /* PersistenceManager.swift in Sources */,
