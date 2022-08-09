@@ -23,6 +23,23 @@ class ROMTableViewController: UITableViewController {
         }
         
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
+        
+        let infoImage = UIImage(systemName: "info.circle")
+        let infoAction = UIAction { [weak self] _ in
+            self?._handleInfoAction()
+        }
+        let infoButton = UIBarButtonItem(title: nil, image: infoImage, primaryAction: infoAction, menu: nil)
+        self.navigationItem.leftBarButtonItem = infoButton
+    }
+    
+    // MARK: - Actions
+    
+    private func _handleInfoAction() {
+        let infoVC = InfoViewController()
+        if let sheetPresentationController = infoVC.sheetPresentationController {
+            sheetPresentationController.detents = [.medium()]
+        }
+        self.present(infoVC, animated: true)
     }
 
     // MARK: - Table view data source

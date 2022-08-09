@@ -12,6 +12,11 @@ import GBServerPayloads
 class UpdateManager {
     private static let BuildVersion = 5
     private static let BuildVersionKey = "BuildVersion"
+    private static let CurrentVersion = "v0.8.3"
+    
+    static func getCurrentVersionAndBuild() -> (String, Int) {
+        return (CurrentVersion, BuildVersion)
+    }
     
     static func migrateIfNecessary() {
         let currentVersion = UserDefaults.standard.integer(forKey: BuildVersionKey)
@@ -24,14 +29,16 @@ class UpdateManager {
     }
     
     private static func _runMigration(from fromVersion: Int, to toVersion: Int) {
-        if fromVersion < 4 {
-            
-        }
+        
     }
     
     private static var LastUpdateCheckTime: Date?
     
-    static func checkForUpdate(_ completion: @escaping (Bool, String)->()) {
+    static func checkForUpdate(_ completion: @escaping (Result<(Bool, String), Error>) -> Void) {
+        checkForUpdate(force: false, completion)
+    }
+    
+    static func checkForUpdate(force: Bool, _ completion: @escaping (Result<(Bool, String), Error>) -> Void) {
         guard let url = ServerConfiguration.createURL(resourcePath: "/api/currentVersionInfo") else {
             print("Failed to construct update check URL")
             return
@@ -39,7 +46,7 @@ class UpdateManager {
         let currentTime = Date()
         if let lastCheckTime = LastUpdateCheckTime {
             let timeSinceLast = currentTime.timeIntervalSince(lastCheckTime)
-            if timeSinceLast < 3600.0 {
+            if !force && timeSinceLast < 3600.0 {
                 // Don't check all the time, just once per hour
                 print("Skipping update check, it's only been \(timeSinceLast) seconds")
                 return
@@ -51,6 +58,7 @@ class UpdateManager {
         let request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData)
         let networkManager = NetworkManager.sharedNetworkManager
         networkManager.submitRequest(request) { result in
+            let finalResult: Result<(Bool, String), Error>
             switch result {
             case .success(let data):
                 do {
@@ -65,14 +73,18 @@ class UpdateManager {
                         hasUpdate = false
                         latestVersion = ""
                     }
-                    DispatchQueue.main.async {
-                        completion(hasUpdate, latestVersion)
-                    }
+                    finalResult = .success((hasUpdate, latestVersion))
                 } catch {
                     print("Failed to parse update data with error: \(error)")
+                    finalResult = .failure(error)
                 }
             case .failure(let error):
                 print("Failed to get update data with error: \(error)")
+                finalResult = .failure(error)
+            }
+            
+            DispatchQueue.main.async {
+                completion(finalResult)
             }
         }
     }

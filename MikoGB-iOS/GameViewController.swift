@@ -8,6 +8,7 @@
 
 import UIKit
 import UniformTypeIdentifiers
+import AVFoundation
 
 class GameViewController: UIViewController, DPadDelegate, GBEngineSaveDestination, UIDocumentPickerDelegate {
 
@@ -38,10 +39,18 @@ class GameViewController: UIViewController, DPadDelegate, GBEngineSaveDestinatio
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Set audio category to play when in silent mode
+        do {
+            try AVAudioSession.sharedInstance().setCategory(.playback)
+        } catch {
+            print("Failed to set audio category with error \(error)")
+        }
+        
         gameView = GameView(engine: engine)
         audioController = AudioController(engine: engine)
         self.view.addSubview(gameView)
-        
+            
         dPadView = DPadView(frame: .zero)
         dPadView.delegate = self
         self.view.addSubview(dPadView)
