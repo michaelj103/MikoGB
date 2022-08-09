@@ -445,14 +445,7 @@ class GameViewController: UIViewController, DPadDelegate, GBEngineSaveDestinatio
     }
     
     private func _actuallyImportSave() {
-//        let documentPicker: UIDocumentPickerViewController
-//        if #available(iOS 14, *) {
-//            documentPicker = UIDocumentPickerViewController(forOpeningContentTypes: [])
-//        } else {
-//            documentPicker = UIDocumentPickerViewController(documentTypes: [], in: .import)
-//        }
-        // TODO: the one we're supposed to use now doesn't compile. This API may not get much love
-        let documentPicker = UIDocumentPickerViewController(documentTypes: [UTType.data.identifier], in: .import)
+        let documentPicker = UIDocumentPickerViewController(forOpeningContentTypes: [])
         documentPicker.delegate = self
         documentPicker.shouldShowFileExtensions = true
         documentPicker.allowsMultipleSelection = false

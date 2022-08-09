@@ -141,6 +141,7 @@
 		29D674912747276A00BF9F2E /* Joypad.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 290FF355265F671C006812F4 /* Joypad.cpp */; };
 		29D6D0F028A19EE900C98B03 /* UserIdentityController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29D6D0EF28A19EE900C98B03 /* UserIdentityController.swift */; };
 		29D6D0F228A2E2AE00C98B03 /* InfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29D6D0F128A2E2AE00C98B03 /* InfoViewController.swift */; };
+		29D6D0F628A30E0900C98B03 /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29D6D0F528A30E0900C98B03 /* SettingsTableViewController.swift */; };
 		29DBB67827E2BA8700C77519 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29DBB67727E2BA8700C77519 /* AppDelegate.swift */; };
 		29DBB67A27E2BA8700C77519 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29DBB67927E2BA8700C77519 /* SceneDelegate.swift */; };
 		29DBB67F27E2BA8700C77519 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 29DBB67D27E2BA8700C77519 /* Main.storyboard */; };
@@ -353,6 +354,7 @@
 		29D3C941247DFDE80096D21B /* TestCPUCoreUtilities.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = TestCPUCoreUtilities.hpp; sourceTree = "<group>"; };
 		29D6D0EF28A19EE900C98B03 /* UserIdentityController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserIdentityController.swift; sourceTree = "<group>"; };
 		29D6D0F128A2E2AE00C98B03 /* InfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoViewController.swift; sourceTree = "<group>"; };
+		29D6D0F528A30E0900C98B03 /* SettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
 		29DBB67527E2BA8700C77519 /* MikoGB-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "MikoGB-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		29DBB67727E2BA8700C77519 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		29DBB67927E2BA8700C77519 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -747,6 +749,7 @@
 				29D6D0EF28A19EE900C98B03 /* UserIdentityController.swift */,
 				2923CDFC28947BE900262C49 /* NetworkManager.swift */,
 				29D6D0F128A2E2AE00C98B03 /* InfoViewController.swift */,
+				29D6D0F528A30E0900C98B03 /* SettingsTableViewController.swift */,
 				29DBB67D27E2BA8700C77519 /* Main.storyboard */,
 				29DBB68027E2BA8800C77519 /* Assets.xcassets */,
 				2923CDF22893A8E100262C49 /* Model.xcdatamodeld */,
@@ -1212,6 +1215,7 @@
 				2923CDF42893A8E100262C49 /* Model.xcdatamodeld in Sources */,
 				2987F3A927E69F8C00EC00A7 /* GameView.swift in Sources */,
 				2987F3AA27E6A05A00EC00A7 /* GBEngine.mm in Sources */,
+				29D6D0F628A30E0900C98B03 /* SettingsTableViewController.swift in Sources */,
 				2987F3C927EA426A00EC00A7 /* GeometryExtensions.swift in Sources */,
 				29DBB67A27E2BA8700C77519 /* SceneDelegate.swift in Sources */,
 				29D6D0F228A2E2AE00C98B03 /* InfoViewController.swift in Sources */,
