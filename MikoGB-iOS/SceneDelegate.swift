@@ -37,6 +37,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
         
         UserIdentityController.sharedIdentityController.ensureRegistration()
+        UserIdentityController.sharedIdentityController.checkIn()
     }
 
     func sceneWillResignActive(_ scene: UIScene) {

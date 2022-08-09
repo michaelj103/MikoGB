@@ -40,6 +40,8 @@ class UserIdentityController {
         }
     }
     
+    // MARK: - Register Users
+    
     private var isRunning = false
     private var lastRegistrationAttemptTime: Date?
     func ensureRegistration() {
@@ -118,8 +120,12 @@ class UserIdentityController {
             return
         }
         guard let finalDeviceID = self.deviceID else {
-            print("Failed to construct registration URL")
+            // Should be unreachable
+            print("No user id generated??")
             DispatchQueue.main.async {
+                // Make sure we set state back to initial and start over next time
+                self.registrationState = .initial
+                UserDefaults.standard.set(UserIDRegistrationState.initial.rawValue, forKey: UserIdentityController.RegistrationStateKey)
                 completion(false)
             }
             return
@@ -188,6 +194,57 @@ class UserIdentityController {
         } else {
             print("Problem generating random bytes")
             return nil
+        }
+    }
+    
+    // MARK: - Check In
+    
+    private var lastCheckInAttemptTime: Date?
+    func checkIn() {
+        guard let url = ServerConfiguration.createURL(resourcePath: "/api/checkIn") else {
+            print("Failed to construct check in URL")
+            return
+        }
+        guard case .successfullyRegistered = registrationState, let finalDeviceID = deviceID else {
+            print("Skipping checkin before registering")
+            return
+        }
+        
+        let currentTime = Date()
+        if let lastAttemptTime = lastCheckInAttemptTime {
+            let timeSinceLast = currentTime.timeIntervalSince(lastAttemptTime)
+            if timeSinceLast < (60.0 * 30.0) {
+                print("Skipping user checkin attempt, it's only been \(timeSinceLast) seconds")
+                return
+            }
+        }
+        lastCheckInAttemptTime = currentTime
+        
+        let requestPayload = CheckInUserHTTPRequestPayload(deviceID: finalDeviceID)
+        let payloadData: Data
+        do {
+            payloadData = try JSONEncoder().encode(requestPayload)
+        } catch {
+            print("Failed to encode user checkin payload data with error \(error)")
+            return
+        }
+        
+        var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData)
+        request.httpMethod = "POST"
+        request.setValue("application/json; charset=UTF-8", forHTTPHeaderField: "Content-Type")
+        request.httpBody = payloadData
+        
+        NetworkManager.sharedNetworkManager.submitRequest(request) { result in
+            switch result {
+            case .success(let data):
+                if let response = try? JSONDecoder().decode(GenericMessageResponse.self, from: data) {
+                    print("Check in response from server: \(response.getMessage())")
+                } else {
+                    print("Unable to decode check in response from server")
+                }
+            case .failure(let error):
+                print("Check in attempt failed with error \(error)")
+            }
         }
     }
 }

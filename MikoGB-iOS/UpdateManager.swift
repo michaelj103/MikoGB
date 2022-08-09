@@ -10,7 +10,7 @@ import Foundation
 import GBServerPayloads
 
 class UpdateManager {
-    private static let BuildVersion = 4
+    private static let BuildVersion = 5
     private static let BuildVersionKey = "BuildVersion"
     
     static func migrateIfNecessary() {
