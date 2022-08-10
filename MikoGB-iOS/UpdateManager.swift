@@ -35,11 +35,12 @@ class UpdateManager {
     private static var LastUpdateCheckTime: Date?
     
     static func checkForUpdate(_ completion: @escaping (Result<(Bool, String), Error>) -> Void) {
-        checkForUpdate(force: false, completion)
+        checkForUpdate(type: .release, force: false, completion)
     }
     
-    static func checkForUpdate(force: Bool, _ completion: @escaping (Result<(Bool, String), Error>) -> Void) {
-        guard let url = ServerConfiguration.createURL(resourcePath: "/api/currentVersionInfo") else {
+    static func checkForUpdate(type: UpdateType, force: Bool, _ completion: @escaping (Result<(Bool, String), Error>) -> Void) {
+        let queryItems = [URLQueryItem(name: "requestedType", value: "\(type.numberValue)")]
+        guard let url = ServerConfiguration.createURL(resourcePath: "/api/currentVersionInfo", queryItems: queryItems) else {
             print("Failed to construct update check URL")
             return
         }
@@ -95,6 +96,20 @@ class UpdateManager {
             return nil
         }
         return url
+    }
+    
+    enum UpdateType {
+        case release, staging
+        var numberValue: Int64 {
+            get {
+                switch self {
+                case .release:
+                    return VersionType.current.rawValue
+                case .staging:
+                    return VersionType.staging.rawValue
+                }
+            }
+        }
     }
 }
 

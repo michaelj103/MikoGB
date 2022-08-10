@@ -25,6 +25,16 @@ class GameViewController: UIViewController, DPadDelegate, GBEngineSaveDestinatio
     private var selectButton: UIButton!
     private var fastForwardButton: UIBarButtonItem!
     
+    private var desiredAudioState: DesiredAudioState = .stopped {
+        didSet {
+            _updateAudioEngine()
+        }
+    }
+    private enum DesiredAudioState {
+        case stopped
+        case playing
+    }
+    
     init(_ rom: URL, persistenceManager: PersistenceManager) {
         self.romURL = rom
         self.persistenceManager = persistenceManager
@@ -40,12 +50,7 @@ class GameViewController: UIViewController, DPadDelegate, GBEngineSaveDestinatio
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Set audio category to play when in silent mode
-        do {
-            try AVAudioSession.sharedInstance().setCategory(.playback)
-        } catch {
-            print("Failed to set audio category with error \(error)")
-        }
+        _updateAudioSession()
         
         gameView = GameView(engine: engine)
         audioController = AudioController(engine: engine)
@@ -147,6 +152,10 @@ class GameViewController: UIViewController, DPadDelegate, GBEngineSaveDestinatio
             self?._persistSaveDataImmediatelyIfNeeded()
         }
         
+        NotificationCenter.default.addObserver(forName: SettingsManager.SettingsChangedNotification, object: nil, queue: nil) { [weak self] _ in
+            self?._settingsChanged()
+        }
+        
         _loadROM()
     }
     
@@ -161,7 +170,7 @@ class GameViewController: UIViewController, DPadDelegate, GBEngineSaveDestinatio
     private func _restart() {
         engine = GBEngine()
         gameView.engine = engine
-        audioController.stopAudioEngine()
+        desiredAudioState = .stopped
         audioController = AudioController(engine: engine)
         _loadROM()
     }
@@ -188,8 +197,12 @@ class GameViewController: UIViewController, DPadDelegate, GBEngineSaveDestinatio
         let importSaveItem = UIAction(title: "Import Save", image: nil, identifier: nil, discoverabilityTitle: nil, attributes: [], state: .off) { [weak self] _ in
             self?._importSave()
         }
+        let settingsImage = UIImage(systemName: "gearshape")
+        let showSettingsItem = UIAction(title: "Settings", image: settingsImage, identifier: nil, discoverabilityTitle: nil, attributes: [], state: .off) { [weak self] _ in
+            self?._showSettings()
+        }
         let menu = UIMenu(title: "", image: nil, identifier: nil, options: .displayInline, children: [
-        exportSaveItem, importSaveItem])
+        showSettingsItem, exportSaveItem, importSaveItem])
         
         let buttonImage = UIImage(systemName: "ellipsis.circle")
         let menuButton = UIBarButtonItem(title: nil, image: buttonImage, primaryAction: nil, menu: menu)
@@ -282,6 +295,34 @@ class GameViewController: UIViewController, DPadDelegate, GBEngineSaveDestinatio
         startButton.frame = startButtonFrame
     }
     
+    private func _updateAudioEngine() {
+        let shouldPlay: Bool
+        let allowAudio = SettingsManager.sharedInstance.shouldGenerateAudio
+        switch desiredAudioState {
+        case .stopped:
+            shouldPlay = false
+        case .playing:
+            shouldPlay = allowAudio
+        }
+        
+        if shouldPlay && !audioController.isPlaying {
+            audioController.startAudioEngine()
+        } else if !shouldPlay && audioController.isPlaying {
+            audioController.stopAudioEngine()
+        }
+    }
+    
+    private func _updateAudioSession() {
+        // Set audio category to play when in silent mode
+        let shouldRespectMute = SettingsManager.sharedInstance.shouldRespectMuteSwitch
+        let category = shouldRespectMute ? AVAudioSession.Category.ambient : AVAudioSession.Category.playback
+        do {
+            try AVAudioSession.sharedInstance().setCategory(category)
+        } catch {
+            print("Failed to set audio category with error \(error)")
+        }
+    }
+    
     private func _loadSaveData(_ url: URL, completion: (Bool)->()) {
         // TODO: MJB: appropriate fallbacks instead of crash
         let entry = try! persistenceManager.loadSaveEntry(url)
@@ -323,7 +364,7 @@ class GameViewController: UIViewController, DPadDelegate, GBEngineSaveDestinatio
     
     private func _startEmulation() {
         gameView.start()
-        audioController.startAudioEngine()
+        desiredAudioState = .playing
     }
     
     func engineIsReady(toPersistSaveData engine: GBEngine) {
@@ -373,6 +414,11 @@ class GameViewController: UIViewController, DPadDelegate, GBEngineSaveDestinatio
         if let newKey = _mapDPadToKey(newDirection) {
             engine.setKeyDown(newKey)
         }
+    }
+    
+    private func _settingsChanged() {
+        _updateAudioEngine()
+        _updateAudioSession()
     }
     
     // MARK: - Actions
@@ -457,6 +503,12 @@ class GameViewController: UIViewController, DPadDelegate, GBEngineSaveDestinatio
             gameView.start()
         }
     }
+    
+    private func _showSettings() {
+        SettingsTableViewController.presentModal(on: self)
+    }
+    
+    // MARK: UIDocumentPickerDelegate
     
     func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
         _cancelImportSave()

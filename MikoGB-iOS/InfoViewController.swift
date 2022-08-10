@@ -21,7 +21,6 @@ class InfoViewController : UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "About"
         self.view.backgroundColor = .secondarySystemBackground
         
         titleLabel = UILabel(frame: .zero)
@@ -43,6 +42,13 @@ class InfoViewController : UIViewController {
         }
         updateButton = UIButton(configuration: updateButtonConfig, primaryAction: updateButtonAction)
         self.view.addSubview(updateButton)
+        
+        let xButtonImage = UIImage(systemName: "xmark.circle.fill")?.withConfiguration(UIImage.SymbolConfiguration.init(hierarchicalColor: .lightGray))
+        let xButtonAction = UIAction { [weak self] _ in
+            self?.dismiss(animated: true)
+        }
+        let xButton = UIBarButtonItem(title: nil, image: xButtonImage, primaryAction: xButtonAction, menu: nil)
+        self.navigationItem.rightBarButtonItem = xButton
     }
     
     override func viewWillLayoutSubviews() {
@@ -81,8 +87,9 @@ class InfoViewController : UIViewController {
         }
         self.updateButton.isEnabled = false
         
+        let updateType: UpdateManager.UpdateType = SettingsManager.sharedInstance.checkForStagingUpdates ? .staging : .release
         let checkStartTime = CFAbsoluteTimeGetCurrent()
-        UpdateManager.checkForUpdate(force: true) { [weak self] result in
+        UpdateManager.checkForUpdate(type: updateType, force: true) { [weak self] result in
             let diff: Double = CFAbsoluteTimeGetCurrent() - checkStartTime
             if diff >= 1.0 {
                 DispatchQueue.main.async { [weak self] in
