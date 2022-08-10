@@ -55,15 +55,7 @@ class ROMTableViewController: UITableViewController {
     }
     
     private func _handleSettingsAction() {
-        let settingsVC = SettingsTableViewController()
-        let navigationController = UINavigationController(rootViewController: settingsVC)
-        if let sheet = navigationController.sheetPresentationController {
-            sheet.detents = [.medium(), .large()]
-            sheet.prefersScrollingExpandsWhenScrolledToEdge = false
-            sheet.prefersEdgeAttachedInCompactHeight = true
-            sheet.widthFollowsPreferredContentSizeWhenEdgeAttached = true
-        }
-        self.present(navigationController, animated: true)
+        SettingsTableViewController.presentModal(on: self)
     }
 
     // MARK: - Table view data source

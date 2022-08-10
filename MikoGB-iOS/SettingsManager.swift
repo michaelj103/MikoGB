@@ -14,6 +14,8 @@ class SettingsManager {
         return settingsManager
     }()
     
+    static let SettingsChangedNotification = Notification.Name("MikoGBSettingsChangedNotification")
+    
     // Settings Keys
     private static let GenerateAudioKey = "GenerateAudioKey"
     private static let RespectMuteSwitchKey = "RespectMuteSwitchKey"
@@ -41,6 +43,9 @@ class SettingsManager {
         }
         set {
             defaults.set(newValue, forKey: key)
+            DispatchQueue.main.async {
+                NotificationCenter.default.post(name: SettingsManager.SettingsChangedNotification, object: nil)
+            }
         }
     }
     

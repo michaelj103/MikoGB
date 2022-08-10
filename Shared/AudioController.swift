@@ -16,6 +16,7 @@ class AudioController : NSObject, GBEngineAudioDestination {
     private var rightAudioSampleBuffer: RingBuffer<Float32>
     private let bufferQueue = DispatchQueue(label: "AudioControllerBufferQueue")
     private var audioEngine: AVAudioEngine?
+    private(set) var isPlaying = false
     
     private static let bufferSize = 1 << 13
     private static let bufferDrop = bufferSize / 2
@@ -104,6 +105,7 @@ class AudioController : NSObject, GBEngineAudioDestination {
             // AUDIO_SAMPLE_RATE
 //            lastCFTime = CFAbsoluteTimeGetCurrent()
             try self.audioEngine?.start()
+            isPlaying = true
         } catch {
             print("Failed to start audio engine \(error)")
         }
@@ -112,6 +114,7 @@ class AudioController : NSObject, GBEngineAudioDestination {
     func stopAudioEngine() {
         audioEngine?.stop()
         audioEngine = nil
+        isPlaying = false
     }
     
     func engine(_ engine: GBEngine, receivedAudioSampleLeft left: Int16, right: Int16) {

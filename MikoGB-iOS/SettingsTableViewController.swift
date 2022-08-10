@@ -12,6 +12,18 @@ class SettingsTableViewController : UITableViewController {
     
     private var dataSource: SettingsDiffableDataSource! = nil
     
+    static func presentModal(on viewController: UIViewController) {
+        let settingsVC = SettingsTableViewController()
+        let navigationController = UINavigationController(rootViewController: settingsVC)
+        if let sheet = navigationController.sheetPresentationController {
+            sheet.detents = [.medium(), .large()]
+            sheet.prefersScrollingExpandsWhenScrolledToEdge = false
+            sheet.prefersEdgeAttachedInCompactHeight = true
+            sheet.widthFollowsPreferredContentSizeWhenEdgeAttached = true
+        }
+        viewController.present(navigationController, animated: true)
+    }
+    
     required init() {
         super.init(style: .insetGrouped)
     }
@@ -155,7 +167,7 @@ fileprivate struct SettingsRow: Hashable {
         let cell = tableView.dequeueReusableCell(withIdentifier: type.cellIdentifier(), for: indexPath)
         switch type {
         case .switchRow:
-            _configureSwitchCell(cell, commitBlock: commitBlock)
+            _configureSwitchCell(cell, indexPath: indexPath, commitBlock: commitBlock)
         case .valueRow:
             _configureValueCell(cell)
         }
@@ -163,7 +175,7 @@ fileprivate struct SettingsRow: Hashable {
         return cell
     }
     
-    private func _configureSwitchCell(_ cell: UITableViewCell, commitBlock: @escaping (RowTaggable) -> Void) {
+    private func _configureSwitchCell(_ cell: UITableViewCell, indexPath: IndexPath, commitBlock: @escaping (RowTaggable) -> Void) {
         var configuration = cell.defaultContentConfiguration()
         configuration.text = title
         cell.contentConfiguration = configuration
@@ -179,7 +191,8 @@ fileprivate struct SettingsRow: Hashable {
             switchView = UISwitch(frame: .zero, primaryAction: switchAction)
             cell.accessoryView = switchView
         }
-                
+        
+        switchView.tag = UISwitch.EncodeRowTag(indexPath)
         let value: Bool
         switch identifier {
         case .generateAudioSwitch:
