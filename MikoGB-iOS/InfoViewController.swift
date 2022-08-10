@@ -87,8 +87,9 @@ class InfoViewController : UIViewController {
         }
         self.updateButton.isEnabled = false
         
+        let updateType: UpdateManager.UpdateType = SettingsManager.sharedInstance.checkForStagingUpdates ? .staging : .release
         let checkStartTime = CFAbsoluteTimeGetCurrent()
-        UpdateManager.checkForUpdate(force: true) { [weak self] result in
+        UpdateManager.checkForUpdate(type: updateType, force: true) { [weak self] result in
             let diff: Double = CFAbsoluteTimeGetCurrent() - checkStartTime
             if diff >= 1.0 {
                 DispatchQueue.main.async { [weak self] in
@@ -153,6 +154,4 @@ class InfoViewController : UIViewController {
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         self.present(alert, animated: true)
     }
-    
-    
 }

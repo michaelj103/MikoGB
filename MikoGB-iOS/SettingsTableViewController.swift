@@ -11,6 +11,11 @@ import UIKit
 class SettingsTableViewController : UITableViewController {
     
     private var dataSource: SettingsDiffableDataSource! = nil
+    private var showDebugSection = false {
+        didSet {
+            _updateDataSource()
+        }
+    }
     
     static func presentModal(on viewController: UIViewController) {
         let settingsVC = SettingsTableViewController()
@@ -57,23 +62,42 @@ class SettingsTableViewController : UITableViewController {
             }
         })
         
-        let snapshot = _currentDataSourceSnapshot()
+        let snapshot = _generateDataSourceSnapshot()
         dataSource.apply(snapshot)
+        
+        UserIdentityController.sharedIdentityController.getDebugAuthorization { [weak self] authorized in
+            self?.showDebugSection = authorized
+        }
     }
-    
-    private func _currentDataSourceSnapshot() -> NSDiffableDataSourceSnapshot<SettingsSection, SettingsRow> {
+        
+    private func _generateDataSourceSnapshot() -> NSDiffableDataSourceSnapshot<SettingsSection, SettingsRow> {
         var snapshot = NSDiffableDataSourceSnapshot<SettingsSection,SettingsRow>()
+        
+        // Audio
         var audioSection = SettingsSection("AudioSection")
         audioSection.title = "Audio"
         snapshot.appendSections([audioSection])
-        
         var generateAudio = SettingsRow(.generateAudioSwitch, type: .switchRow)
         generateAudio.title = "Generate Audio"
         var respectMuteSwitch = SettingsRow(.respectsMuteSwitch, type: .switchRow)
         respectMuteSwitch.title = "Respect Mute Switch"
         snapshot.appendItems([generateAudio, respectMuteSwitch], toSection: audioSection)
         
+        if showDebugSection {
+            var debugSection = SettingsSection("DebugSection")
+            debugSection.title = "Debug"
+            snapshot.appendSections([debugSection])
+            var dummySwitch = SettingsRow(.debugCheckForStagingUpdates, type: .switchRow)
+            dummySwitch.title = "Check For Staging Updates"
+            snapshot.appendItems([dummySwitch], toSection: debugSection)
+        }
+        
         return snapshot
+    }
+    
+    private func _updateDataSource() {
+        let snapshot = _generateDataSourceSnapshot()
+        dataSource.apply(snapshot, animatingDifferences: true)
     }
     
     private func _commitValueChange(_ taggable: RowTaggable) {
@@ -95,6 +119,8 @@ class SettingsTableViewController : UITableViewController {
             SettingsManager.sharedInstance.shouldGenerateAudio = sender.isOn
         case .respectsMuteSwitch:
             SettingsManager.sharedInstance.shouldRespectMuteSwitch = sender.isOn
+        case .debugCheckForStagingUpdates:
+            SettingsManager.sharedInstance.checkForStagingUpdates = sender.isOn
         }
     }
 }
@@ -128,6 +154,7 @@ fileprivate struct SettingsSection: Hashable {
 fileprivate enum RowIdentifier: String {
     case generateAudioSwitch
     case respectsMuteSwitch
+    case debugCheckForStagingUpdates
 }
 
 fileprivate struct SettingsRow: Hashable {
@@ -199,6 +226,8 @@ fileprivate struct SettingsRow: Hashable {
             value = SettingsManager.sharedInstance.shouldGenerateAudio
         case .respectsMuteSwitch:
             value = SettingsManager.sharedInstance.shouldRespectMuteSwitch
+        case .debugCheckForStagingUpdates:
+            value = SettingsManager.sharedInstance.checkForStagingUpdates
         }
         switchView.isOn = value
     }

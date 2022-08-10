@@ -31,6 +31,9 @@ class SettingsManager {
     
     @UserDefaultsBacked(key: GenerateAudioKey) var shouldGenerateAudio: Bool
     @UserDefaultsBacked(key: RespectMuteSwitchKey) var shouldRespectMuteSwitch: Bool
+    
+    // in-memory
+    var checkForStagingUpdates: Bool = false
 }
 
 @propertyWrapper struct UserDefaultsBacked<Value> {

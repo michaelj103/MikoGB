@@ -247,6 +247,52 @@ class UserIdentityController {
             }
         }
     }
+    
+    // MARK: - Check for debug authorization
+    private var debugAuth: Bool?
+    func getDebugAuthorization(_ completion: @escaping (Bool) -> Void) {
+        if let knownAuth = debugAuth {
+            DispatchQueue.main.async {
+                completion(knownAuth)
+            }
+            return
+        }
+        guard let deviceID = deviceID else {
+            print("No device ID yet")
+            DispatchQueue.main.async {
+                completion(false)
+            }
+            return
+        }
+        
+        let query = [URLQueryItem(name: "deviceID", value: deviceID)]
+        guard let url = ServerConfiguration.createURL(resourcePath: "/api/debugAuth", queryItems: query) else {
+            print("Failed to construct debug auth URL")
+            return
+        }
+        
+        let request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData)
+        NetworkManager.sharedNetworkManager.submitRequest(request) { result in
+            switch result {
+            case .success(let data):
+                if let response = try? JSONDecoder().decode(UserGetDebugAuthHTTPResponsePayload.self, from: data) {
+                    DispatchQueue.main.async {
+                        completion(response.authorized)
+                    }
+                } else {
+                    print("Unable to decode debug auth response from server")
+                    DispatchQueue.main.async {
+                        completion(false)
+                    }
+                }
+            case .failure(let error):
+                print("Debug auth check failed with error \(error)")
+                DispatchQueue.main.async {
+                    completion(false)
+                }
+            }
+        }
+    }
 }
 
 fileprivate enum UserIDRegistrationState: Int {
