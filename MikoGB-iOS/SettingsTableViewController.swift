@@ -40,7 +40,9 @@ class SettingsTableViewController : UITableViewController {
         self.navigationItem.rightBarButtonItem = doneButton
         
         dataSource = SettingsDiffableDataSource(tableView: self.tableView, cellProvider: { tableView, indexPath, itemIdentifier in
-            itemIdentifier.provideRow(tableView, indexPath: indexPath)
+            itemIdentifier.provideRow(tableView, indexPath: indexPath) { [weak self] taggable in
+                self?._commitValueChange(taggable)
+            }
         })
         
         let snapshot = _currentDataSourceSnapshot()
@@ -53,13 +55,35 @@ class SettingsTableViewController : UITableViewController {
         audioSection.title = "Audio"
         snapshot.appendSections([audioSection])
         
-        var generateAudio = SettingsRow("GenerateAudioSwitchRow", type: .switchRow)
+        var generateAudio = SettingsRow(.generateAudioSwitch, type: .switchRow)
         generateAudio.title = "Generate Audio"
-        var respectMuteSwitch = SettingsRow("RespectsMuteSwitchRow", type: .switchRow)
+        var respectMuteSwitch = SettingsRow(.respectsMuteSwitch, type: .switchRow)
         respectMuteSwitch.title = "Respect Mute Switch"
         snapshot.appendItems([generateAudio, respectMuteSwitch], toSection: audioSection)
         
         return snapshot
+    }
+    
+    private func _commitValueChange(_ taggable: RowTaggable) {
+        let snapshot = dataSource.snapshot()
+        let indexPath = taggable.rowTag
+        let sectionIdentifier = snapshot.sectionIdentifiers[indexPath.section]
+        let rowIdentifier = snapshot.itemIdentifiers(inSection: sectionIdentifier)[indexPath.row]
+        switch rowIdentifier.type {
+        case .switchRow:
+            _commitValueForSwitchRow(rowIdentifier, sender: taggable as! UISwitch)
+        case .valueRow:
+            break
+        }
+    }
+    
+    private func _commitValueForSwitchRow(_ row: SettingsRow, sender: UISwitch) {
+        switch row.identifier {
+        case .generateAudioSwitch:
+            SettingsManager.sharedInstance.shouldGenerateAudio = sender.isOn
+        case .respectsMuteSwitch:
+            SettingsManager.sharedInstance.shouldRespectMuteSwitch = sender.isOn
+        }
     }
 }
 
@@ -75,7 +99,6 @@ fileprivate class SettingsDiffableDataSource : UITableViewDiffableDataSource<Set
     }
 }
 
-
 fileprivate struct SettingsSection: Hashable {
     let identifier: String
     var title: String? = nil
@@ -90,12 +113,17 @@ fileprivate struct SettingsSection: Hashable {
     }
 }
 
+fileprivate enum RowIdentifier: String {
+    case generateAudioSwitch
+    case respectsMuteSwitch
+}
+
 fileprivate struct SettingsRow: Hashable {
-    let identifier: String
+    let identifier: RowIdentifier
     let type: RowType
     var title: String? = nil
     
-    init(_ identifier: String, type: RowType) {
+    init(_ identifier: RowIdentifier, type: RowType) {
         self.identifier = identifier
         self.type = type
     }
@@ -123,8 +151,19 @@ fileprivate struct SettingsRow: Hashable {
         }
     }
     
-    func provideRow(_ tableView: UITableView, indexPath: IndexPath) -> UITableViewCell? {
+    func provideRow(_ tableView: UITableView, indexPath: IndexPath, commitBlock: @escaping (RowTaggable) -> Void) -> UITableViewCell? {
         let cell = tableView.dequeueReusableCell(withIdentifier: type.cellIdentifier(), for: indexPath)
+        switch type {
+        case .switchRow:
+            _configureSwitchCell(cell, commitBlock: commitBlock)
+        case .valueRow:
+            _configureValueCell(cell)
+        }
+        
+        return cell
+    }
+    
+    private func _configureSwitchCell(_ cell: UITableViewCell, commitBlock: @escaping (RowTaggable) -> Void) {
         var configuration = cell.defaultContentConfiguration()
         configuration.text = title
         cell.contentConfiguration = configuration
@@ -132,9 +171,55 @@ fileprivate struct SettingsRow: Hashable {
         if let accessoryView = cell.accessoryView as? UISwitch {
             switchView = accessoryView
         } else {
-            switchView = UISwitch()
+            let switchAction = UIAction { action in
+                if let taggableSender = action.sender as? RowTaggable {
+                    commitBlock(taggableSender)
+                }
+            }
+            switchView = UISwitch(frame: .zero, primaryAction: switchAction)
             cell.accessoryView = switchView
         }
-        return cell
+                
+        let value: Bool
+        switch identifier {
+        case .generateAudioSwitch:
+            value = SettingsManager.sharedInstance.shouldGenerateAudio
+        case .respectsMuteSwitch:
+            value = SettingsManager.sharedInstance.shouldRespectMuteSwitch
+        }
+        switchView.isOn = value
+    }
+    
+    private func _configureValueCell(_ cell: UITableViewCell) {
+        var configuration = cell.defaultContentConfiguration()
+        configuration.text = title
+        cell.contentConfiguration = configuration
+    }
+}
+
+protocol RowTaggable {
+    static func EncodeRowTag(_ indexPath: IndexPath) -> Int
+    static func DecodeRowTag(_ tag: Int) -> IndexPath
+    var rowTag: IndexPath { get set }
+}
+
+extension RowTaggable {
+    static func EncodeRowTag(_ indexPath: IndexPath) -> Int {
+        precondition(indexPath.row < 10000)
+        let val = (indexPath.section * 10000) + indexPath.row
+        return val
+    }
+    
+    static func DecodeRowTag(_ tag: Int) -> IndexPath {
+        let row = tag % 10000
+        let section = tag / 10000
+        return IndexPath(row: row, section: section)
+    }
+}
+
+extension UISwitch: RowTaggable {
+    var rowTag: IndexPath {
+        get { UISwitch.DecodeRowTag(self.tag) }
+        set { self.tag = UISwitch.EncodeRowTag(newValue) }
     }
 }
