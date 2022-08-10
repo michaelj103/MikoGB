@@ -30,16 +30,40 @@ class ROMTableViewController: UITableViewController {
         }
         let infoButton = UIBarButtonItem(title: nil, image: infoImage, primaryAction: infoAction, menu: nil)
         self.navigationItem.leftBarButtonItem = infoButton
+        
+        let settingsImage = UIImage(systemName: "gearshape")
+        let settingsAction = UIAction { [weak self] _ in
+            self?._handleSettingsAction()
+        }
+        let settingsButton = UIBarButtonItem(title: nil, image: settingsImage, primaryAction: settingsAction, menu: nil)
+        self.navigationItem.rightBarButtonItem = settingsButton
     }
     
     // MARK: - Actions
     
     private func _handleInfoAction() {
         let infoVC = InfoViewController()
-        if let sheetPresentationController = infoVC.sheetPresentationController {
-            sheetPresentationController.detents = [.medium()]
+        let navigationController = UINavigationController(rootViewController: infoVC)
+        navigationController.modalPresentationStyle = .formSheet
+        if let sheet = navigationController.sheetPresentationController {
+            sheet.detents = [.medium()]
+            //TODO: This doesn't seem to work with only medium detent. See if it does in iOS 16
+//            sheet.prefersEdgeAttachedInCompactHeight = true
+//            sheet.widthFollowsPreferredContentSizeWhenEdgeAttached = true
         }
-        self.present(infoVC, animated: true)
+        self.present(navigationController, animated: true)
+    }
+    
+    private func _handleSettingsAction() {
+        let settingsVC = SettingsTableViewController()
+        let navigationController = UINavigationController(rootViewController: settingsVC)
+        if let sheet = navigationController.sheetPresentationController {
+            sheet.detents = [.medium(), .large()]
+            sheet.prefersScrollingExpandsWhenScrolledToEdge = false
+            sheet.prefersEdgeAttachedInCompactHeight = true
+            sheet.widthFollowsPreferredContentSizeWhenEdgeAttached = true
+        }
+        self.present(navigationController, animated: true)
     }
 
     // MARK: - Table view data source

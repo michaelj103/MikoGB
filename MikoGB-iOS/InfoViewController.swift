@@ -21,7 +21,6 @@ class InfoViewController : UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "About"
         self.view.backgroundColor = .secondarySystemBackground
         
         titleLabel = UILabel(frame: .zero)
@@ -43,6 +42,13 @@ class InfoViewController : UIViewController {
         }
         updateButton = UIButton(configuration: updateButtonConfig, primaryAction: updateButtonAction)
         self.view.addSubview(updateButton)
+        
+        let xButtonImage = UIImage(systemName: "xmark.circle.fill")?.withConfiguration(UIImage.SymbolConfiguration.init(hierarchicalColor: .lightGray))
+        let xButtonAction = UIAction { [weak self] _ in
+            self?.dismiss(animated: true)
+        }
+        let xButton = UIBarButtonItem(title: nil, image: xButtonImage, primaryAction: xButtonAction, menu: nil)
+        self.navigationItem.rightBarButtonItem = xButton
     }
     
     override func viewWillLayoutSubviews() {
@@ -147,4 +153,6 @@ class InfoViewController : UIViewController {
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         self.present(alert, animated: true)
     }
+    
+    
 }
