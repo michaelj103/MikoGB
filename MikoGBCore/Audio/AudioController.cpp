@@ -137,8 +137,10 @@ uint8_t AudioController::readAudioRegister(uint16_t addr) const {
         baseVal |= (_sound2.isRunning() ? 1 : 0) << 1;
         baseVal |= (_sound3.isRunning() ? 1 : 0) << 2;
         baseVal |= (_sound4.isRunning() ? 1 : 0) << 3;
+        return baseVal;
+    } else {
+        return _audioRegisters[addr - AudioRegisterBase];
     }
-    return _audioRegisters[addr - AudioRegisterBase];
 }
 
 void AudioController::_emitSample() {
