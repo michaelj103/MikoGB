@@ -54,8 +54,14 @@ public:
     void resetPersistence();
     
     /// Serial
+    
+    /// Get the current serial transfer byte value
     uint8_t currentSerialDataByte() const;
+    
+    /// Client should call in response to external events from another emulator
     void handleIncomingSerialRequest(SerialIncoming incoming, uint8_t payload);
+    
+    /// Client can set a handler to receive events emitted from this emulator
     void setSerialEventCallback(SerialEventCallback callback);
     
     /// ------------------------

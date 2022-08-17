@@ -73,12 +73,19 @@ static MikoGB::JoypadButton _ButtonForCode(GBEngineKeyCode code) {
             [weakSelf _handleAudioSampleLeft:l right:r];
         };
         
+        void (^serialBlock)(MikoGB::SerialOutgoing, uint8_t) = ^void(MikoGB::SerialOutgoing event, uint8_t byte) {
+            [weakSelf _handleOutgoingSerialEvent:event byte:byte];
+        };
+        
         _core = new MikoGB::GameBoyCore();
         _core->setScanlineCallback([scanlineBlock](const MikoGB::PixelBuffer &scanline, size_t line) {
             scanlineBlock(scanline, line);
         });
-        _core->setAudioSampleCallback([audioBlock](int16_t l, int16_t r){
+        _core->setAudioSampleCallback([audioBlock](int16_t l, int16_t r) {
             audioBlock(l, r);
+        });
+        _core->setSerialEventCallback([serialBlock](MikoGB::SerialOutgoing event, uint8_t byte) {
+            serialBlock(event, byte);
         });
         
         void (^runnableBlock)(bool) = ^void(bool isRunnable) {
@@ -475,6 +482,17 @@ static void _AddInstruction(const MikoGB::DisassembledInstruction &instruction, 
 
 - (void)_handleAudioSampleLeft:(int16_t)left right:(int16_t)right {
     [self.audioDestination engine:self receivedAudioSampleLeft:left right:right];
+}
+
+- (void)_handleOutgoingSerialEvent:(MikoGB::SerialOutgoing)event byte:(uint8_t)byte {
+    switch (event) {
+        case MikoGB::SerialOutgoing::PushByte:
+            [self.serialDestination engine:self pushByte:byte];
+            break;
+        case MikoGB::SerialOutgoing::PresentByte:
+            [self.serialDestination engine:self presentByte:byte];
+            break;
+    }
 }
 
 // Expected on emulation queue

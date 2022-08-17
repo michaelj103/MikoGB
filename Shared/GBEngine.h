@@ -11,6 +11,7 @@
 @protocol GBEngineImageDestination;
 @protocol GBEngineAudioDestination;
 @protocol GBEngineSaveDestination;
+@protocol GBEngineSerialDestination;
 @protocol GBEngineObserver;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -52,6 +53,7 @@ typedef void (^SaveDataCompletion)( NSData * _Nullable data);
 @property (nonatomic, weak) id<GBEngineImageDestination> imageDestination;
 @property (nonatomic, weak) id<GBEngineAudioDestination> audioDestination;
 @property (nonatomic, weak) id<GBEngineSaveDestination> saveDestination;
+@property (nonatomic, weak) id<GBEngineSerialDestination> serialDestination;
 
 - (void)registerObserver:(id<GBEngineObserver>)observer;
 - (void)unregisterObserver:(id<GBEngineObserver>)observer;
@@ -96,6 +98,12 @@ typedef void (^SaveDataCompletion)( NSData * _Nullable data);
 
 @protocol GBEngineSaveDestination <NSObject>
 - (void)engineIsReadyToPersistSaveData:(GBEngine *)engine;
+@end
+
+/// Protocol for handling events originating from this emulator
+@protocol GBEngineSerialDestination <NSObject>
+- (void)engine:(GBEngine *)engine pushByte:(uint8_t)byte;
+- (void)engine:(GBEngine *)engine presentByte:(uint8_t)byte;
 @end
 
 @protocol GBEngineObserver <NSObject>
