@@ -139,6 +139,8 @@
 		29C2CBCB28AD7F2C00936BD7 /* UpdateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2923CDFA2894779500262C49 /* UpdateManager.swift */; };
 		29C2CBCF28AD849A00936BD7 /* SerialController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29C2CBCD28AD849A00936BD7 /* SerialController.cpp */; };
 		29C2CBD028AD849A00936BD7 /* SerialController.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 29C2CBCE28AD849A00936BD7 /* SerialController.hpp */; };
+		29C2CBD228ADABCA00936BD7 /* LinkSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29C2CBD128ADABCA00936BD7 /* LinkSessionManager.swift */; };
+		29C2CBD328ADABCA00936BD7 /* LinkSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29C2CBD128ADABCA00936BD7 /* LinkSessionManager.swift */; };
 		29C3DB8D2655B0ED00DCFA33 /* GBImageUtilities.mm in Sources */ = {isa = PBXBuildFile; fileRef = 29C3DB8C2655B0ED00DCFA33 /* GBImageUtilities.mm */; };
 		29D3C93F247DFC6A0096D21B /* TestCPUCoreBasics.mm in Sources */ = {isa = PBXBuildFile; fileRef = 29D3C93E247DFC6A0096D21B /* TestCPUCoreBasics.mm */; };
 		29D3C942247DFDE80096D21B /* TestCPUCoreUtilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29D3C940247DFDE80096D21B /* TestCPUCoreUtilities.cpp */; };
@@ -355,6 +357,7 @@
 		29A8FFF726537426007A26C9 /* NoMBC.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = NoMBC.hpp; sourceTree = "<group>"; };
 		29C2CBCD28AD849A00936BD7 /* SerialController.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SerialController.cpp; sourceTree = "<group>"; };
 		29C2CBCE28AD849A00936BD7 /* SerialController.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SerialController.hpp; sourceTree = "<group>"; };
+		29C2CBD128ADABCA00936BD7 /* LinkSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkSessionManager.swift; sourceTree = "<group>"; };
 		29C3DB8B2655B0ED00DCFA33 /* GBImageUtilities.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GBImageUtilities.h; sourceTree = "<group>"; };
 		29C3DB8C2655B0ED00DCFA33 /* GBImageUtilities.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = GBImageUtilities.mm; sourceTree = "<group>"; };
 		29D3C936247DFBFE0096D21B /* MikoGBCoreTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MikoGBCoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -588,6 +591,7 @@
 				29D6D0EF28A19EE900C98B03 /* UserIdentityController.swift */,
 				2923CDFC28947BE900262C49 /* NetworkManager.swift */,
 				2923CDFA2894779500262C49 /* UpdateManager.swift */,
+				29C2CBD128ADABCA00936BD7 /* LinkSessionManager.swift */,
 				29F0829A2647BA0D00FA5F67 /* GBEngine.h */,
 				29F0829B2647BA0D00FA5F67 /* GBEngine.mm */,
 				299BD2FF27D5450800940D12 /* GBRateLimitTimer.h */,
@@ -1154,6 +1158,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				29C2CBD228ADABCA00936BD7 /* LinkSessionManager.swift in Sources */,
 				29F082862647B9C400FA5F67 /* NoROMView.swift in Sources */,
 				2902EAB327C8BD2900186976 /* RingBuffer.swift in Sources */,
 				2902EA9B27C355C100186976 /* DebuggerInstructionController.swift in Sources */,
@@ -1241,6 +1246,7 @@
 				2987F3C227E6DF3000EC00A7 /* SaveEntry.swift in Sources */,
 				2987F3C327E6DF4600EC00A7 /* SimpleError.swift in Sources */,
 				2923CDFB2894779500262C49 /* UpdateManager.swift in Sources */,
+				29C2CBD328ADABCA00936BD7 /* LinkSessionManager.swift in Sources */,
 				2923CDFD28947BE900262C49 /* NetworkManager.swift in Sources */,
 				2923CDF92893B09100262C49 /* RingBuffer.swift in Sources */,
 				2923CDF82893B08300262C49 /* AudioController.swift in Sources */,

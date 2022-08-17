@@ -92,21 +92,21 @@ void SerialController::_setState(SerialState state) {
 }
 
 void SerialController::_presentByte(uint8_t byte) const {
-//    printf("Serial: presenting byte %d\n", (int)byte);
+    printf("Serial: presenting byte %d\n", (int)byte);
     if (_eventCallback) {
         _eventCallback(SerialOutgoing::PresentByte, byte);
     }
 }
 
 void SerialController::_pushByte(uint8_t byte) const {
-//    printf("Serial: pushing byte %d\n", (int)byte);
+    printf("Serial: pushing byte %d\n", (int)byte);
     if (_eventCallback) {
         _eventCallback(SerialOutgoing::PushByte, byte);
     }
 }
 
 static void _completeTransfer(MemoryController::Ptr &memoryController, uint8_t byte) {
-//    printf("Serial: Received byte 0x%02x", byte);
+    printf("Serial: Received byte 0x%02x\n", byte);
     // 1. clear control byte high bit (this will indirectly enter the idle state)
     uint8_t controlByte = memoryController->readByte(SerialControlRegister);
     memoryController->setByte(SerialControlRegister, (controlByte & 0x7F));
@@ -122,7 +122,7 @@ void SerialController::_completeInternalTransferIfNecessary() {
         return;
     }
     
-    if (_transferCounter == 0) {
+    if (_transferCounter > 0) {
         // Finished early. Wait for the counter
         return;
     }

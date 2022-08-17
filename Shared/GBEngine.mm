@@ -50,6 +50,11 @@ static MikoGB::JoypadButton _ButtonForCode(GBEngineKeyCode code) {
     BOOL _keyPressedChanged[NumKeys];
     BOOL _hasKeyChange;
     
+    os_unfair_lock _serialLock;
+    MikoGB::SerialIncoming _incomingSerialEvent;
+    uint8_t _incomingSerialByte;
+    BOOL _hasIncomingSerialEvent;
+    
     dispatch_queue_t _emulationQueue;
     os_unfair_lock _frameLock;
     BOOL _isProcessingFrame;
@@ -116,6 +121,8 @@ static MikoGB::JoypadButton _ButtonForCode(GBEngineKeyCode code) {
             _keyPressedChanged[i] = NO;
         }
         _observers = [NSHashTable weakObjectsHashTable];
+        
+        _serialLock = OS_UNFAIR_LOCK_INIT;
         
         _persistenceTimer = [[GBRateLimitTimer alloc] initWithDelay:15.0 targetQueue:dispatch_get_main_queue() eventBlock:^{
             GBEngine *strongSelf = weakSelf;
@@ -244,6 +251,15 @@ static MikoGB::JoypadButton _ButtonForCode(GBEngineKeyCode code) {
     os_unfair_lock_unlock(&_keyLock);
 }
 
+- (void)_updateSerialStateIfNeeded {
+    os_unfair_lock_lock(&_serialLock);
+    if (_hasIncomingSerialEvent) {
+        _hasIncomingSerialEvent = NO;
+        _core->handleIncomingSerialRequest(_incomingSerialEvent, _incomingSerialByte);
+    }
+    os_unfair_lock_unlock(&_serialLock);
+}
+
 - (void)_writeOutTileMapAndBackground:(NSURL *)dirURL {
     void (^tileMapBlock)(const MikoGB::PixelBuffer &) = ^void(const MikoGB::PixelBuffer &pixelBuffer) {
         writePNG(pixelBuffer, dirURL, @"tileMap.png");
@@ -290,6 +306,7 @@ static MikoGB::JoypadButton _ButtonForCode(GBEngineKeyCode code) {
     os_unfair_lock_unlock(&_frameLock);
     
     [self _updateKeyStatesIfNeeded];
+    [self _updateSerialStateIfNeeded];
     _core->emulateFrame();
     
     os_unfair_lock_lock(&_frameLock);
@@ -369,6 +386,22 @@ static MikoGB::JoypadButton _ButtonForCode(GBEngineKeyCode code) {
 
 - (void)setKeyUp:(GBEngineKeyCode)keyCode {
     [self _setDesiredState:NO forKeyCode:keyCode];
+}
+
+- (void)receivePulledSerialByte:(uint8_t)byte {
+    os_unfair_lock_lock(&_serialLock);
+    _incomingSerialEvent = MikoGB::SerialIncoming::PulledByte;
+    _incomingSerialByte = byte;
+    _hasIncomingSerialEvent = YES;
+    os_unfair_lock_unlock(&_serialLock);
+}
+
+- (void)receivePushedSerialByte:(uint8_t)byte {
+    os_unfair_lock_lock(&_serialLock);
+    _incomingSerialEvent = MikoGB::SerialIncoming::PushedByte;
+    _incomingSerialByte = byte;
+    _hasIncomingSerialEvent = YES;
+    os_unfair_lock_unlock(&_serialLock);
 }
 
 static void _AddInstruction(const MikoGB::DisassembledInstruction &instruction, NSMutableArray<NSString *> *array) {
@@ -485,14 +518,16 @@ static void _AddInstruction(const MikoGB::DisassembledInstruction &instruction, 
 }
 
 - (void)_handleOutgoingSerialEvent:(MikoGB::SerialOutgoing)event byte:(uint8_t)byte {
-    switch (event) {
-        case MikoGB::SerialOutgoing::PushByte:
-            [self.serialDestination engine:self pushByte:byte];
-            break;
-        case MikoGB::SerialOutgoing::PresentByte:
-            [self.serialDestination engine:self presentByte:byte];
-            break;
-    }
+    dispatch_async(dispatch_get_main_queue(), ^{
+        switch (event) {
+            case MikoGB::SerialOutgoing::PushByte:
+                [self.serialDestination engine:self pushByte:byte];
+                break;
+            case MikoGB::SerialOutgoing::PresentByte:
+                [self.serialDestination engine:self presentByte:byte];
+                break;
+        }
+    });
 }
 
 // Expected on emulation queue

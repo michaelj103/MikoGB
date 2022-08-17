@@ -76,6 +76,9 @@ typedef void (^SaveDataCompletion)( NSData * _Nullable data);
 - (void)setKeyDown:(GBEngineKeyCode)keyCode;
 - (void)setKeyUp:(GBEngineKeyCode)keyCode;
 
+- (void)receivePulledSerialByte:(uint8_t)byte;
+- (void)receivePushedSerialByte:(uint8_t)byte;
+
 // Debugger
 - (NSArray<NSString *> *)disassembledInstructions:(size_t *)currentIndex;
 - (NSArray<NSString *> *)lastExecutedInstructions;

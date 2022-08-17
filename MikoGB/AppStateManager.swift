@@ -12,6 +12,7 @@ class AppStateManager {
     
     let engine = GBEngine()
     let persistenceManager = PersistenceManager()
+    let linkSessionManager: LinkSessionManager
     
     private var _debuggerWindowController: DebuggerWindowController?
     var debuggerWindowController: DebuggerWindowController {
@@ -24,5 +25,9 @@ class AppStateManager {
                 return wc
             }
         }
+    }
+    
+    init() {
+        linkSessionManager = LinkSessionManager(engine)
     }
 }
