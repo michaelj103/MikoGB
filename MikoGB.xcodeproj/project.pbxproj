@@ -132,6 +132,11 @@
 		29A8FFF826537426007A26C9 /* NoMBC.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8FFF626537426007A26C9 /* NoMBC.cpp */; };
 		29A8FFF926537426007A26C9 /* NoMBC.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8FFF626537426007A26C9 /* NoMBC.cpp */; };
 		29A8FFFA26537426007A26C9 /* NoMBC.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 29A8FFF726537426007A26C9 /* NoMBC.hpp */; };
+		29C2CBC628AD7E7E00936BD7 /* UserIdentityController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29D6D0EF28A19EE900C98B03 /* UserIdentityController.swift */; };
+		29C2CBC828AD7E9B00936BD7 /* GBServerPayloads in Frameworks */ = {isa = PBXBuildFile; productRef = 29C2CBC728AD7E9B00936BD7 /* GBServerPayloads */; };
+		29C2CBC928AD7EC000936BD7 /* ServerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2923CE0A289DA7AA00262C49 /* ServerConfiguration.swift */; };
+		29C2CBCA28AD7EDF00936BD7 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2923CDFC28947BE900262C49 /* NetworkManager.swift */; };
+		29C2CBCB28AD7F2C00936BD7 /* UpdateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2923CDFA2894779500262C49 /* UpdateManager.swift */; };
 		29C3DB8D2655B0ED00DCFA33 /* GBImageUtilities.mm in Sources */ = {isa = PBXBuildFile; fileRef = 29C3DB8C2655B0ED00DCFA33 /* GBImageUtilities.mm */; };
 		29D3C93F247DFC6A0096D21B /* TestCPUCoreBasics.mm in Sources */ = {isa = PBXBuildFile; fileRef = 29D3C93E247DFC6A0096D21B /* TestCPUCoreBasics.mm */; };
 		29D3C942247DFDE80096D21B /* TestCPUCoreUtilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29D3C940247DFDE80096D21B /* TestCPUCoreUtilities.cpp */; };
@@ -392,6 +397,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				29C2CBC828AD7E9B00936BD7 /* GBServerPayloads in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -569,11 +575,15 @@
 		2987F3B827E6D8AD00EC00A7 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				2923CE03289DA67300262C49 /* Configuration */,
 				295BCB762693CF1900E80FCC /* SimpleError.swift */,
 				299BD30227D56D8F00940D12 /* PersistenceManager.swift */,
 				299BD30427D92FAD00940D12 /* SaveEntry.swift */,
 				2902EAB227C8BD2900186976 /* AudioController.swift */,
 				2902EAB127C8BD2900186976 /* RingBuffer.swift */,
+				29D6D0EF28A19EE900C98B03 /* UserIdentityController.swift */,
+				2923CDFC28947BE900262C49 /* NetworkManager.swift */,
+				2923CDFA2894779500262C49 /* UpdateManager.swift */,
 				29F0829A2647BA0D00FA5F67 /* GBEngine.h */,
 				29F0829B2647BA0D00FA5F67 /* GBEngine.mm */,
 				299BD2FF27D5450800940D12 /* GBRateLimitTimer.h */,
@@ -747,9 +757,6 @@
 				2987F3CA27F3B41C00EC00A7 /* DPadView.swift */,
 				2987F3A827E69F8C00EC00A7 /* GameView.swift */,
 				2987F3C827EA426A00EC00A7 /* GeometryExtensions.swift */,
-				2923CDFA2894779500262C49 /* UpdateManager.swift */,
-				29D6D0EF28A19EE900C98B03 /* UserIdentityController.swift */,
-				2923CDFC28947BE900262C49 /* NetworkManager.swift */,
 				29D6D0F128A2E2AE00C98B03 /* InfoViewController.swift */,
 				29D6D0F528A30E0900C98B03 /* SettingsTableViewController.swift */,
 				29D6D0F728A35C2D00C98B03 /* SettingsManager.swift */,
@@ -759,7 +766,6 @@
 				29DBB68227E2BA8800C77519 /* LaunchScreen.storyboard */,
 				2987F3AE27E6C94A00EC00A7 /* MikoGB-Bridging-Header.h */,
 				29DBB68527E2BA8800C77519 /* Info.plist */,
-				2923CE03289DA67300262C49 /* Configuration */,
 			);
 			path = "MikoGB-iOS";
 			sourceTree = "<group>";
@@ -846,6 +852,9 @@
 			dependencies = (
 			);
 			name = MikoGBCore;
+			packageProductDependencies = (
+				29C2CBC728AD7E9B00936BD7 /* GBServerPayloads */,
+			);
 			productName = MikoGBCore;
 			productReference = 299281E626424123004691E5 /* libMikoGBCore.a */;
 			productType = "com.apple.product-type.library.static";
@@ -1133,13 +1142,16 @@
 				2902EAB327C8BD2900186976 /* RingBuffer.swift in Sources */,
 				2902EA9B27C355C100186976 /* DebuggerInstructionController.swift in Sources */,
 				2902EA9927C3542000186976 /* InstructionTableCell.swift in Sources */,
+				29C2CBCB28AD7F2C00936BD7 /* UpdateManager.swift in Sources */,
 				29F0829C2647BA0D00FA5F67 /* GBEngine.mm in Sources */,
 				299BD30327D56D8F00940D12 /* PersistenceManager.swift in Sources */,
 				291987E02683087A009D7C45 /* DebuggerWindowController.swift in Sources */,
 				299BD2FE27CEEF4000940D12 /* DebuggerRollbackCommand.swift in Sources */,
+				29C2CBC628AD7E7E00936BD7 /* UserIdentityController.swift in Sources */,
 				299282B72642449D004691E5 /* ViewController.swift in Sources */,
 				2902EAB427C8BD2900186976 /* AudioController.swift in Sources */,
 				2992837E264733B3004691E5 /* WindowController.swift in Sources */,
+				29C2CBCA28AD7EDF00936BD7 /* NetworkManager.swift in Sources */,
 				29F082A32647BA3800FA5F67 /* GameView.swift in Sources */,
 				2902EABF27C961E200186976 /* WavFile.c in Sources */,
 				29DD393A26AA5A2700D6EC2E /* DebuggerPauseCommand.swift in Sources */,
@@ -1155,6 +1167,7 @@
 				2902EAC027C961E200186976 /* GBAudioWriter.m in Sources */,
 				29C3DB8D2655B0ED00DCFA33 /* GBImageUtilities.mm in Sources */,
 				2902EAA727C6C27600186976 /* DebuggerBreakpointCommand.swift in Sources */,
+				29C2CBC928AD7EC000936BD7 /* ServerConfiguration.swift in Sources */,
 				2902EAA127C5520500186976 /* DebuggerMemCommand.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2048,6 +2061,11 @@
 			productName = GBServerPayloads;
 		};
 		2923CE01289CE5F100262C49 /* GBServerPayloads */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2923CDFE289CC17600262C49 /* XCRemoteSwiftPackageReference "gbserver" */;
+			productName = GBServerPayloads;
+		};
+		29C2CBC728AD7E9B00936BD7 /* GBServerPayloads */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 2923CDFE289CC17600262C49 /* XCRemoteSwiftPackageReference "gbserver" */;
 			productName = GBServerPayloads;
