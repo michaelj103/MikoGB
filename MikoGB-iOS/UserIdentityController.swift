@@ -11,10 +11,16 @@ import GBServerPayloads
 
 class UserIdentityController {
     private static let DeviceIDKey = "DeviceID"
-    private static let RegistrationStateKey = "UserIDRegistrationState"
+    private static let RegistrationStateKeyLegacy = "UserIDRegistrationState"
     
     private var deviceID: String? = nil
-    private var registrationState: UserIDRegistrationState
+    private var isUserVerified = false {
+        didSet {
+            _runPendingVerificationBlocksIfNecessary()
+        }
+    }
+    
+    private var pendingVerificationBlocks = [ () -> Void ]()
     
     static var sharedIdentityController: UserIdentityController = {
         let userIdentityController = UserIdentityController()
@@ -22,21 +28,21 @@ class UserIdentityController {
     }()
     
     private init() {
-        let stateNum = UserDefaults.standard.integer(forKey: UserIdentityController.RegistrationStateKey)
-        registrationState = UserIDRegistrationState(rawValue: stateNum) ?? .initial
-        switch registrationState {
-        case .initial:
-            break
-        case .generatedID:
-            fallthrough
-        case .successfullyRegistered:
-            deviceID = UserDefaults.standard.string(forKey: UserIdentityController.DeviceIDKey)
-        }
-        
-        if deviceID == nil && registrationState != .initial {
-            print("We don't have a device ID despite registration state of \(registrationState)")
-            // No choice but to restart
-            registrationState = .initial
+        // can remove the key deletion in a future version
+        UserDefaults.standard.removeObject(forKey: UserIdentityController.RegistrationStateKeyLegacy)
+        deviceID = UserDefaults.standard.string(forKey: UserIdentityController.DeviceIDKey)
+    }
+    
+    private func _runPendingVerificationBlocksIfNecessary() {
+        dispatchPrecondition(condition: .onQueue(.main))
+        if isUserVerified {
+            let blocks = pendingVerificationBlocks
+            pendingVerificationBlocks = []
+            for block in blocks {
+                DispatchQueue.main.async {
+                    block()
+                }
+            }
         }
     }
     
@@ -47,6 +53,9 @@ class UserIdentityController {
     func ensureRegistration() {
         DispatchQueue.main.async {
             if self.isRunning {
+                return
+            }
+            if self.isUserVerified {
                 return
             }
             
@@ -69,76 +78,97 @@ class UserIdentityController {
     }
     
     private func _runStateMachine() {
-        // Run the basic registration state machine
-        switch registrationState {
-        case .initial:
-            _generateID { success in
-                if success {
-                    self._runStateMachine()
-                } else {
-                    self.isRunning = false
+        if let deviceID = deviceID {
+            // verify that the ID exists
+            _verifyID(deviceID) { [weak self] result in
+                switch result {
+                case .success(let exists):
+                    self?._userVerified(exists)
+                case .failure(let error):
+                    print("Failed to verify user with error \(error)")
+                    self?.isRunning = false
                 }
-            }
-        case .generatedID:
-            _registerID { success in
-                if success {
-                    self._runStateMachine()
-                } else {
-                    self.isRunning = false
-                }
-            }
-        case .successfullyRegistered:
-            print("User deviceID is registered")
-            self.isRunning = false
-            return
-        }
-    }
-    
-    private func _generateID(_ completion: @escaping (Bool) -> Void) {
-        if let generatedID = UserIdentityController._generateRandomBytes() {
-            // success. Store updated state
-            self.deviceID = generatedID
-            self.registrationState = .generatedID
-            UserDefaults.standard.set(self.deviceID, forKey: UserIdentityController.DeviceIDKey)
-            UserDefaults.standard.set(self.registrationState.rawValue, forKey: UserIdentityController.RegistrationStateKey)
-            DispatchQueue.main.async {
-                completion(true)
             }
             
         } else {
-            print("Failed to generate deviceID. Will retry later")
-            completion(false)
+            // register a new ID
+            _registerID { [weak self] result in
+                switch result {
+                case .success(let newDeviceID):
+                    self?._userRegistered(newDeviceID)
+                case .failure(let error):
+                    print("Failed to register new user with error \(error)")
+                    self?.isRunning = false
+                }
+            }
         }
     }
     
-    private func _registerID(_ completion: @escaping (Bool) -> Void) {
-        guard let url = ServerConfiguration.createURL(resourcePath: "/api/registerUser") else {
-            print("Failed to construct registration URL")
+    private func _userVerified(_ exists: Bool) {
+        if exists {
+            print("Verified user")
+            isUserVerified = true
+            isRunning = false
+        } else {
+            // we received an explicit negative response to verification. Delete the ID we have and try to register a new one
+            deviceID = nil
+            UserDefaults.standard.removeObject(forKey: UserIdentityController.DeviceIDKey)
             DispatchQueue.main.async {
-                completion(false)
+                self._runStateMachine()
             }
-            return
         }
-        guard let finalDeviceID = self.deviceID else {
-            // Should be unreachable
-            print("No user id generated??")
+    }
+    
+    private func _userRegistered(_ deviceID: String) {
+        UserDefaults.standard.setValue(deviceID, forKey: UserIdentityController.DeviceIDKey)
+        self.deviceID = deviceID
+        self.isUserVerified = true
+        self.isRunning = false
+    }
+    
+    private func _verifyID(_ deviceID: String, completion: @escaping (Result<Bool, Error>) -> Void) {
+        let queryItems = [URLQueryItem(name: "deviceID", value: deviceID)]
+        guard let url = ServerConfiguration.createURL(resourcePath: "/api/verifyUser", queryItems: queryItems) else {
             DispatchQueue.main.async {
-                // Make sure we set state back to initial and start over next time
-                self.registrationState = .initial
-                UserDefaults.standard.set(UserIDRegistrationState.initial.rawValue, forKey: UserIdentityController.RegistrationStateKey)
-                completion(false)
+                completion(.failure(SimpleError("Failed to construct registration URL")))
             }
             return
         }
         
-        let requestPayload = RegisterUserHTTPRequestPayload(deviceID: finalDeviceID, displayName: nil)
+        let request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData)
+        let networkManager = NetworkManager.sharedNetworkManager
+        networkManager.submitRequest(request) { result in
+            let finalResult: Result<Bool,Error>
+            switch result {
+            case .success(let data):
+                finalResult = UserIdentityController._decodeVerificationResponse(data)
+            case .failure(let error):
+                finalResult = .failure(error)
+            }
+            
+            DispatchQueue.main.async {
+                completion(finalResult)
+            }
+        }
+    }
+    
+    private func _registerID(_ completion: @escaping (Result<String,Error>) -> Void) {
+        guard let url = ServerConfiguration.createURL(resourcePath: "/api/registerUser2") else {
+            print("Failed to construct registration URL")
+            DispatchQueue.main.async {
+                completion(.failure(SimpleError("Failed to construct registration URL")))
+            }
+            return
+        }
+        
+        let requestPayload = RegisterUserHTTPRequestPayload(key: ServerConfiguration.APIKey, displayName: nil)
         let payloadData: Data
         do {
             payloadData = try JSONEncoder().encode(requestPayload)
         } catch {
             print("Failed to encode user registration payload data with error \(error)")
             DispatchQueue.main.async {
-                completion(false)
+                completion(.failure(error))
             }
             return
         }
@@ -153,60 +183,59 @@ class UserIdentityController {
             switch result {
             case .success(let data):
                 let response = UserIdentityController._decodeRegistrationResponse(data)
-                print("Registered user with server response \(response)")
                 DispatchQueue.main.async {
-                    self.registrationState = .successfullyRegistered
-                    UserDefaults.standard.set(self.registrationState.rawValue, forKey: UserIdentityController.RegistrationStateKey)
-                    completion(true)
+                    completion(response)
                 }
             case .failure(let error):
-                print("Failed to register user with error \(error)")
                 DispatchQueue.main.async {
-                    completion(false)
+                    completion(.failure(error))
                 }
             }
         }
     }
     
-    private static func _decodeRegistrationResponse(_ data: Data) -> String {
-        if let response = try? JSONDecoder().decode(GenericMessageResponse.self, from: data) {
-            return response.getMessage()
-        } else if let string = String(data: data, encoding: .utf8) {
-            return string
-        } else {
-            return "<Unable to decode response data>"
+    private static func _decodeVerificationResponse(_ data: Data) -> Result<Bool, Error> {
+        let response: Result<Bool, Error>
+        do {
+            let payload = try JSONDecoder().decode(VerifyUserHTTPResponsePayload.self, from: data)
+            switch payload {
+            case .userExists:
+                response = .success(true)
+            case .userDoesNotExist:
+                response = .success(false)
+            }
+        } catch {
+            response = .failure(error)
         }
+        return response
     }
     
-    private static func _generateRandomBytes() -> String? {
-        var keyData = Data(count: 16)
-        let success = keyData.withUnsafeMutableBytes { (mutableBytes: UnsafeMutableRawBufferPointer) -> Bool in
-            if let basePointer = mutableBytes.baseAddress {
-                let result = SecRandomCopyBytes(kSecRandomDefault, 16, basePointer)
-                return result == errSecSuccess
-            } else {
-                return false
-            }
+    private static func _decodeRegistrationResponse(_ data: Data) -> Result<String,Error> {
+        let response: Result<String, Error>
+        do {
+            let payload = try JSONDecoder().decode(RegisterUserHTTPResponsePayload.self, from: data)
+            response = .success(payload.deviceID)
+        } catch {
+            response = .failure(error)
         }
-        if success {
-            let encoded = keyData.base64EncodedString().trimmingCharacters(in: CharacterSet(charactersIn: "="))
-            return encoded
-        } else {
-            print("Problem generating random bytes")
-            return nil
-        }
+        
+        return response
     }
     
     // MARK: - Check In
     
     private var lastCheckInAttemptTime: Date?
     func checkIn() {
+        dispatchPrecondition(condition: .onQueue(.main))
         guard let url = ServerConfiguration.createURL(resourcePath: "/api/checkIn") else {
             print("Failed to construct check in URL")
             return
         }
-        guard case .successfullyRegistered = registrationState, let finalDeviceID = deviceID else {
-            print("Skipping checkin before registering")
+        guard let finalDeviceID = deviceID, isUserVerified else {
+            print("Skipping checkin because we don't have a verified user")
+            pendingVerificationBlocks.append { [weak self] in
+                self?.checkIn()
+            }
             return
         }
         
@@ -220,7 +249,9 @@ class UserIdentityController {
         }
         lastCheckInAttemptTime = currentTime
         
-        let requestPayload = CheckInUserHTTPRequestPayload(deviceID: finalDeviceID)
+        let (version, _) = UpdateManager.getCurrentVersionAndBuild()
+        
+        let requestPayload = CheckInUserHTTPRequestPayload(deviceID: finalDeviceID, version: version)
         let payloadData: Data
         do {
             payloadData = try JSONEncoder().encode(requestPayload)
@@ -293,10 +324,4 @@ class UserIdentityController {
             }
         }
     }
-}
-
-fileprivate enum UserIDRegistrationState: Int {
-    case initial
-    case generatedID
-    case successfullyRegistered
 }
