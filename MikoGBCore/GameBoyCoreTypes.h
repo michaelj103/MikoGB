@@ -51,6 +51,20 @@ struct RegisterState {
 /// audio callback is left sample, right sample
 using AudioSampleCallback = std::function<void(const int16_t, const int16_t)>;
 
+enum class SerialIncoming {
+    PulledByte,             ///< Response to outgoing push. Expects payload byte
+    PulledByteStale,        ///< Uncommitted response to outgoing push. Expects payload byte
+    CommitStaleByte,        ///< Commit any uncommitted response. Payload ignored
+    PushedByte,             ///< Incoming byte clocked by connected gameboy. Expects payload byte
+};
+
+enum class SerialOutgoing {
+    PushByte,
+    PresentByte,
+};
+
+using SerialEventCallback = std::function<void(SerialOutgoing, uint8_t)>;
+
 }
 
 // toggle to enable debugger features that have a memory and performan impact on the CPU emulation

@@ -53,9 +53,17 @@ public:
     bool isPersistenceStale() const;
     void resetPersistence();
     
+    /// Serial
+    uint8_t currentSerialDataByte() const;
+    void handleIncomingSerialRequest(SerialIncoming incoming, uint8_t payload);
+    void setSerialEventCallback(SerialEventCallback callback);
+    
+    /// ------------------------
+    /// Debug utilities
+    /// ------------------------
+    
     uint16_t getPC() const;
     
-    /// Debug utilities
     void getTileMap(PixelBufferImageCallback callback);
     
     void getBackground(PixelBufferImageCallback callback);

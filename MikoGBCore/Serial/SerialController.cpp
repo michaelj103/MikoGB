@@ -46,6 +46,30 @@ void SerialController::serialControlWillWrite(uint8_t controlByte) {
     }
 }
 
+uint8_t SerialController::getCurrentDataByte() const {
+    uint8_t dataByte = _memoryController->readByte(SerialDataRegister);
+    return dataByte;
+}
+
+void SerialController::handleIncomingEvent(SerialIncoming incoming, uint8_t payload) {
+    switch (incoming) {
+        case SerialIncoming::PulledByte:
+            // we got a byte in response to an internal transfer. Commit it if ready
+            _incomingByteToCommit = payload;
+            _completeInternalTransferIfNecessary();
+            break;
+        case SerialIncoming::PushedByte:
+            // we got a byte from an external transfer. Commit it if wanted
+            _incomingByteToCommit = payload;
+            _completeExternalTransferIfNecessary();
+            break;
+        case SerialIncoming::PulledByteStale:
+        case SerialIncoming::CommitStaleByte:
+            // ignore for now...
+            break;
+    }
+}
+
 void SerialController::_setState(SerialState state) {
     if (state == _state) {
         return;
@@ -60,6 +84,7 @@ void SerialController::_setState(SerialState state) {
             _presentByte(dataByte);
             break;
         case SerialState::Transferring:
+            // When first entering the transferring state, immediately push and start counting
             _pushByte(dataByte);
             _transferCounter = CyclesPerTransfer;
             break;
@@ -67,11 +92,51 @@ void SerialController::_setState(SerialState state) {
 }
 
 void SerialController::_presentByte(uint8_t byte) const {
-    printf("Serial: presenting byte %d\n", (int)byte);
+//    printf("Serial: presenting byte %d\n", (int)byte);
+    if (_eventCallback) {
+        _eventCallback(SerialOutgoing::PresentByte, byte);
+    }
 }
 
 void SerialController::_pushByte(uint8_t byte) const {
-    printf("Serial: pushing byte %d\n", (int)byte);
+//    printf("Serial: pushing byte %d\n", (int)byte);
+    if (_eventCallback) {
+        _eventCallback(SerialOutgoing::PushByte, byte);
+    }
+}
+
+static void _completeTransfer(MemoryController::Ptr &memoryController, uint8_t byte) {
+//    printf("Serial: Received byte 0x%02x", byte);
+    // 1. clear control byte high bit (this will indirectly enter the idle state)
+    uint8_t controlByte = memoryController->readByte(SerialControlRegister);
+    memoryController->setByte(SerialControlRegister, (controlByte & 0x7F));
+    // 2. set received byte
+    memoryController->setByte(SerialDataRegister, byte);
+    // 3. fire serial interrupt
+    memoryController->requestInterrupt(MemoryController::Serial);
+}
+
+void SerialController::_completeInternalTransferIfNecessary() {
+    if (_state != SerialState::Transferring) {
+        // We've moved on internally, do nothing.
+        return;
+    }
+    
+    if (_transferCounter == 0) {
+        // Finished early. Wait for the counter
+        return;
+    }
+    
+    _completeTransfer(_memoryController, _incomingByteToCommit);
+}
+
+void SerialController::_completeExternalTransferIfNecessary() {
+    if (_state != SerialState::Presenting) {
+        // We've moved on internally, do nothing.
+        return;
+    }
+    
+    _completeTransfer(_memoryController, _incomingByteToCommit);
 }
 
 void SerialController::updateWithCPUCycles(int cycles) {
@@ -81,15 +146,8 @@ void SerialController::updateWithCPUCycles(int cycles) {
             _transferCounter -= cycles;
         } else {
             // transfer complete
-            printf("Serial: push complete\n");
             _transferCounter = 0;
-            // 1. clear control byte high bit (this will indirectly enter the idle state)
-            uint8_t controlByte = _memoryController->readByte(SerialControlRegister);
-            _memoryController->setByte(SerialControlRegister, (controlByte & 0x7F));
-            // 2. set received byte
-            _memoryController->setByte(SerialDataRegister, 0xFF);
-            // 3. fire serial interrupt
-            _memoryController->requestInterrupt(MemoryController::Serial);
+            _completeInternalTransferIfNecessary();
         }
     }
 }

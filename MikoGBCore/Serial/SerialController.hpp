@@ -25,8 +25,17 @@ public:
     void serialDataWillWrite(uint8_t dataByte) const;
     void serialControlWillWrite(uint8_t controlByte);
     
+    uint8_t getCurrentDataByte() const;
+    
+    void handleIncomingEvent(SerialIncoming, uint8_t);
+    
+    void setEventCallback(SerialEventCallback callback) {
+        _eventCallback = callback;
+    }
+    
 private:
     MemoryController::Ptr &_memoryController;
+    SerialEventCallback _eventCallback;
     
     enum class SerialState {
         Idle,
@@ -40,6 +49,10 @@ private:
     
     void _presentByte(uint8_t byte) const;
     void _pushByte(uint8_t byte) const;
+    
+    uint8_t _incomingByteToCommit = 0;
+    void _completeInternalTransferIfNecessary();
+    void _completeExternalTransferIfNecessary();
 };
 
 }

@@ -79,6 +79,18 @@ void GameBoyCore::resetPersistence() {
     _imp->resetPersistence();
 }
 
+uint8_t GameBoyCore::currentSerialDataByte() const {
+    return _imp->currentSerialDataByte();
+}
+
+void GameBoyCore::handleIncomingSerialRequest(SerialIncoming incoming, uint8_t payload) {
+    _imp->handleIncomingSerialRequest(incoming, payload);
+}
+
+void GameBoyCore::setSerialEventCallback(SerialEventCallback callback) {
+    _imp->setSerialEventCallback(callback);
+}
+
 uint16_t GameBoyCore::getPC() const {
     return _imp->_cpu->programCounter;
 }

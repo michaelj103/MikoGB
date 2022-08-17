@@ -98,6 +98,18 @@ void GameBoyCoreImp::resetPersistence() {
     _memoryController->resetPersistence();
 }
 
+uint8_t GameBoyCoreImp::currentSerialDataByte() const {
+    return _serialController->getCurrentDataByte();
+}
+
+void GameBoyCoreImp::handleIncomingSerialRequest(SerialIncoming incoming, uint8_t payload) {
+    _serialController->handleIncomingEvent(incoming, payload);
+}
+
+void GameBoyCoreImp::setSerialEventCallback(SerialEventCallback callback) {
+    _serialController->setEventCallback(callback);
+}
+
 void GameBoyCoreImp::getTileMap(PixelBufferImageCallback callback) {
     _gpu->getTileMap(callback);
 }
