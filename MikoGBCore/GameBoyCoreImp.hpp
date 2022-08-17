@@ -15,6 +15,7 @@
 #include "GPUCore.hpp"
 #include "MemoryController.hpp"
 #include "Joypad.hpp"
+#include "SerialController.hpp"
 #include "Disassembler.hpp"
 
 namespace MikoGB {
@@ -59,6 +60,7 @@ private:
     GPUCore::Ptr _gpu;
     MemoryController::Ptr _memoryController;
     Joypad::Ptr _joypad;
+    SerialController::Ptr _serialController;
     Disassembler::Ptr _disassembler;
     Disassembler::Ptr _accessDisassembler();
     

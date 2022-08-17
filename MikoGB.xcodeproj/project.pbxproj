@@ -137,6 +137,8 @@
 		29C2CBC928AD7EC000936BD7 /* ServerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2923CE0A289DA7AA00262C49 /* ServerConfiguration.swift */; };
 		29C2CBCA28AD7EDF00936BD7 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2923CDFC28947BE900262C49 /* NetworkManager.swift */; };
 		29C2CBCB28AD7F2C00936BD7 /* UpdateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2923CDFA2894779500262C49 /* UpdateManager.swift */; };
+		29C2CBCF28AD849A00936BD7 /* SerialController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29C2CBCD28AD849A00936BD7 /* SerialController.cpp */; };
+		29C2CBD028AD849A00936BD7 /* SerialController.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 29C2CBCE28AD849A00936BD7 /* SerialController.hpp */; };
 		29C3DB8D2655B0ED00DCFA33 /* GBImageUtilities.mm in Sources */ = {isa = PBXBuildFile; fileRef = 29C3DB8C2655B0ED00DCFA33 /* GBImageUtilities.mm */; };
 		29D3C93F247DFC6A0096D21B /* TestCPUCoreBasics.mm in Sources */ = {isa = PBXBuildFile; fileRef = 29D3C93E247DFC6A0096D21B /* TestCPUCoreBasics.mm */; };
 		29D3C942247DFDE80096D21B /* TestCPUCoreUtilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29D3C940247DFDE80096D21B /* TestCPUCoreUtilities.cpp */; };
@@ -351,6 +353,8 @@
 		29A8FFD326535994007A26C9 /* MemoryBankController.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MemoryBankController.hpp; sourceTree = "<group>"; };
 		29A8FFF626537426007A26C9 /* NoMBC.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = NoMBC.cpp; sourceTree = "<group>"; };
 		29A8FFF726537426007A26C9 /* NoMBC.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = NoMBC.hpp; sourceTree = "<group>"; };
+		29C2CBCD28AD849A00936BD7 /* SerialController.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SerialController.cpp; sourceTree = "<group>"; };
+		29C2CBCE28AD849A00936BD7 /* SerialController.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SerialController.hpp; sourceTree = "<group>"; };
 		29C3DB8B2655B0ED00DCFA33 /* GBImageUtilities.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GBImageUtilities.h; sourceTree = "<group>"; };
 		29C3DB8C2655B0ED00DCFA33 /* GBImageUtilities.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = GBImageUtilities.mm; sourceTree = "<group>"; };
 		29D3C936247DFBFE0096D21B /* MikoGBCoreTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MikoGBCoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -626,6 +630,7 @@
 				299281D726423469004691E5 /* GPU */,
 				2902EAA827C85C7A00186976 /* Audio */,
 				290FF354265F66AA006812F4 /* Joypad */,
+				29C2CBCC28AD847900936BD7 /* Serial */,
 				291C563C27C070580049D188 /* Debugging */,
 			);
 			path = MikoGBCore;
@@ -722,6 +727,15 @@
 			path = ConcreteMBCs;
 			sourceTree = "<group>";
 		};
+		29C2CBCC28AD847900936BD7 /* Serial */ = {
+			isa = PBXGroup;
+			children = (
+				29C2CBCE28AD849A00936BD7 /* SerialController.hpp */,
+				29C2CBCD28AD849A00936BD7 /* SerialController.cpp */,
+			);
+			path = Serial;
+			sourceTree = "<group>";
+		};
 		29D3C937247DFBFE0096D21B /* MikoGBCoreTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -804,6 +818,7 @@
 				2902EAA527C5A2F700186976 /* InstructionRingBuffer.hpp in Headers */,
 				29A8FFD626535994007A26C9 /* MemoryBankController.hpp in Headers */,
 				2902EADD27CB54B800186976 /* WaveformSound.hpp in Headers */,
+				29C2CBD028AD849A00936BD7 /* SerialController.hpp in Headers */,
 				290FF37B2662110A006812F4 /* Timer.hpp in Headers */,
 				2902EAB027C889BB00186976 /* SquareSound.hpp in Headers */,
 				299282FD264266A9004691E5 /* GameBoyCoreImp.hpp in Headers */,
@@ -1097,6 +1112,7 @@
 				2992825A26424262004691E5 /* JumpInstructions.cpp in Sources */,
 				2902EAA427C5A2F700186976 /* InstructionRingBuffer.cpp in Sources */,
 				2992826326424265004691E5 /* CallAndReturnInstructions.cpp in Sources */,
+				29C2CBCF28AD849A00936BD7 /* SerialController.cpp in Sources */,
 				29A8FF8C26521A6E007A26C9 /* CartridgeHeader.cpp in Sources */,
 				2902EA9227C0712A00186976 /* Breakpoint.cpp in Sources */,
 				290FF37A2662110A006812F4 /* Timer.cpp in Sources */,

@@ -17,6 +17,7 @@ namespace MikoGB {
 
 class MemoryBankController;
 class Joypad;
+class SerialController;
 
 class MemoryController {
 public:
@@ -53,6 +54,9 @@ public:
     };
     InputMask selectedInputMask() const;
     std::shared_ptr<Joypad> joypad;
+    
+    // Serial
+    std::shared_ptr<SerialController> serialController;
     
     // Audio
     void setAudioSampleCallback(AudioSampleCallback callback);

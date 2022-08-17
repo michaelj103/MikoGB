@@ -18,6 +18,8 @@ GameBoyCoreImp::GameBoyCoreImp() {
     _gpu = make_shared<GPUCore>(_memoryController);
     _joypad = make_shared<Joypad>(_memoryController);
     _memoryController->joypad = _joypad;
+    _serialController = make_shared<SerialController>(_memoryController);
+    _memoryController->serialController = _serialController;
 }
 
 bool GameBoyCoreImp::loadROMData(const void *romData, size_t size) {
