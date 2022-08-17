@@ -1702,7 +1702,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = 6REEN5Y59Z;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "MikoGB-iOS/Info.plist";
@@ -1717,7 +1717,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.8.4;
+				MARKETING_VERSION = 0.8.5;
 				PRODUCT_BUNDLE_IDENTIFIER = mjb.MikoGB;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -1737,7 +1737,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = 6REEN5Y59Z;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "MikoGB-iOS/Info.plist";
@@ -1752,7 +1752,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.8.4;
+				MARKETING_VERSION = 0.8.5;
 				PRODUCT_BUNDLE_IDENTIFIER = mjb.MikoGB;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
@@ -1772,7 +1772,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = 6REEN5Y59Z;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "MikoGB-iOS/Info.plist";
@@ -1787,7 +1787,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.8.4;
+				MARKETING_VERSION = 0.8.5;
 				PRODUCT_BUNDLE_IDENTIFIER = mjb.MikoGB;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
