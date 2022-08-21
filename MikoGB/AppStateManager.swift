@@ -27,6 +27,8 @@ class AppStateManager {
         }
     }
     
+    lazy var linkManagerWindowController: LinkManagerWindowController = LinkManagerWindowController(windowNibName: "LinkManager")
+    
     init() {
         linkSessionManager = LinkSessionManager(engine)
     }

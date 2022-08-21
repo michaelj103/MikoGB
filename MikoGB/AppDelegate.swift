@@ -29,6 +29,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let windowController = AppStateManager.sharedInstance.debuggerWindowController
         windowController.showWindow(self)
     }
+    
+    @objc func a_showLinkManager(_ sender: AnyObject) {
+        let windowController = AppStateManager.sharedInstance.linkManagerWindowController
+        windowController.showWindow(self)
+    }
 
 }
 

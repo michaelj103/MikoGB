@@ -10,17 +10,24 @@ import Foundation
 import GBServerPayloads
 
 class UserIdentityController {
-    private static let DeviceIDKey = "DeviceID"
     private static let RegistrationStateKeyLegacy = "UserIDRegistrationState"
     
-    private var deviceID: String? = nil
-    private var isUserVerified = false {
+    // "default" device ID. May phase out
+    private static let DeviceIDKey = "DeviceID"
+    
+    private enum RegistrationStatus {
+        case notRegistered
+        case unverified(String)
+        case verified(String)
+    }
+    private var registrationStatus: RegistrationStatus {
         didSet {
             _runPendingVerificationBlocksIfNecessary()
         }
     }
     
-    private var pendingVerificationBlocks = [ () -> Void ]()
+    typealias RegistrationCompletion = (Result<String, Error>) -> Void
+    private var pendingVerificationBlocks = [RegistrationCompletion]()
     
     static var sharedIdentityController: UserIdentityController = {
         let userIdentityController = UserIdentityController()
@@ -30,19 +37,84 @@ class UserIdentityController {
     private init() {
         // can remove the key deletion in a future version
         UserDefaults.standard.removeObject(forKey: UserIdentityController.RegistrationStateKeyLegacy)
-        deviceID = UserDefaults.standard.string(forKey: UserIdentityController.DeviceIDKey)
+        
+        // Standard user ID for default config
+        if let deviceID = UserDefaults.standard.string(forKey: UserIdentityController.DeviceIDKey) {
+            registrationStatus = .unverified(deviceID)
+        } else {
+            registrationStatus = .notRegistered
+        }
+    }
+    
+    private func _runPendingVerificationBlocks(with result: Result<String, Error>) {
+        dispatchPrecondition(condition: .onQueue(.main))
+        let blocks = pendingVerificationBlocks
+        pendingVerificationBlocks = []
+        for block in blocks {
+            DispatchQueue.main.async {
+                block(result)
+            }
+        }
     }
     
     private func _runPendingVerificationBlocksIfNecessary() {
-        dispatchPrecondition(condition: .onQueue(.main))
-        if isUserVerified {
-            let blocks = pendingVerificationBlocks
-            pendingVerificationBlocks = []
-            for block in blocks {
-                DispatchQueue.main.async {
-                    block()
-                }
+        if case .verified(let deviceID) = registrationStatus {
+            _runPendingVerificationBlocks(with: .success(deviceID))
+        }
+    }
+    
+    private func _failPendingCompletionBlocks(_ error: Error) {
+        _runPendingVerificationBlocks(with: .failure(error))
+    }
+    
+    private func _saveIDIfNecessary(_ newID: String) {
+        // Don't save if we're in an override mode
+        if temporaryHostOverride == nil {
+            UserDefaults.standard.setValue(newID, forKey: UserIdentityController.DeviceIDKey)
+        }
+    }
+    
+    private func _deleteIDIfNecessary() {
+        // Don't delete if we're in an override mode
+        if temporaryHostOverride == nil {
+            UserDefaults.standard.removeObject(forKey: UserIdentityController.DeviceIDKey)
+        }
+    }
+    
+    // MARK: - Managing temporary accounts for test server instances
+    
+    private var temporaryHostOverride: URL?
+    func setTemporaryHost(_ hostname: String) -> Bool {
+        if let url = URL(string: hostname), url.host != nil {
+            temporaryHostOverride = url
+            registrationStatus = .notRegistered
+            return true
+        } else {
+            // try to prepend https://
+            if let url = URL(string: "https://\(hostname)"), url.host != nil {
+                temporaryHostOverride = url
+                registrationStatus = .notRegistered
+                return true
             }
+        }
+        return false
+    }
+    func stopTemporaryOverride() {
+        temporaryHostOverride = nil
+        
+        // reload standard ID
+        if let deviceID = UserDefaults.standard.string(forKey: UserIdentityController.DeviceIDKey) {
+            registrationStatus = .unverified(deviceID)
+        } else {
+            registrationStatus = .notRegistered
+        }
+    }
+    
+    private func _getHostAndPortAndScheme() -> (String, Int?, String) {
+        if let temporaryHostOverride = temporaryHostOverride {
+            return (temporaryHostOverride.host!, temporaryHostOverride.port, "http")
+        } else {
+            return (ServerConfiguration.Hostname, nil, "https")
         }
     }
     
@@ -50,69 +122,81 @@ class UserIdentityController {
     
     private var isRunning = false
     private var lastRegistrationAttemptTime: Date?
-    func ensureRegistration() {
+    func ensureRegistration(force: Bool = false, completion: RegistrationCompletion? = nil) {
         DispatchQueue.main.async {
             if self.isRunning {
+                completion?(.failure(SimpleError("Registration already running")))
                 return
             }
-            if self.isUserVerified {
+            if case .verified(let deviceID) = self.registrationStatus {
+                completion?(.success(deviceID))
                 return
             }
             
             var canAttempt = true
             let currentTime = Date()
-            if let lastAttemptTime = self.lastRegistrationAttemptTime {
-                let timeSinceLast = currentTime.timeIntervalSince(lastAttemptTime)
-                if timeSinceLast < 3600.0 {
-                    print("Skipping user registration attempt, it's only been \(timeSinceLast) seconds")
-                    canAttempt = false
+            if !force {
+                // Only check once an hour automatically
+                if let lastAttemptTime = self.lastRegistrationAttemptTime {
+                    let timeSinceLast = currentTime.timeIntervalSince(lastAttemptTime)
+                    if timeSinceLast < 3600.0 {
+                        print("Skipping user registration attempt, it's only been \(timeSinceLast) seconds")
+                        canAttempt = false
+                    }
                 }
             }
             
             if canAttempt {
+                if let completion = completion {
+                    self.pendingVerificationBlocks.append(completion)
+                }
                 self.lastRegistrationAttemptTime = currentTime
                 self.isRunning = true
                 self._runStateMachine()
+            } else {
+                completion?(.failure(SimpleError("Automatic login attempted too recently")))
             }
         }
     }
     
     private func _runStateMachine() {
-        if let deviceID = deviceID {
-            // verify that the ID exists
-            _verifyID(deviceID) { [weak self] result in
-                switch result {
-                case .success(let exists):
-                    self?._userVerified(exists)
-                case .failure(let error):
-                    print("Failed to verify user with error \(error)")
-                    self?.isRunning = false
-                }
-            }
-            
-        } else {
+        switch registrationStatus {
+        case .notRegistered:
             // register a new ID
             _registerID { [weak self] result in
                 switch result {
                 case .success(let newDeviceID):
                     self?._userRegistered(newDeviceID)
                 case .failure(let error):
-                    print("Failed to register new user with error \(error)")
+                    self?._failPendingCompletionBlocks(SimpleError("Failed to verify user with error \(error)"))
                     self?.isRunning = false
                 }
             }
+        case .unverified(let unverifiedID):
+            // verify that the ID exists
+            _verifyID(unverifiedID) { [weak self] result in
+                switch result {
+                case .success(let exists):
+                    self?._userVerified(exists, id: unverifiedID)
+                case .failure(let error):
+                    self?._failPendingCompletionBlocks(SimpleError("Failed to verify user with error \(error)"))
+                    self?.isRunning = false
+                }
+            }
+        case .verified(_):
+            preconditionFailure("This shouldn't be reachable")
         }
     }
     
-    private func _userVerified(_ exists: Bool) {
+    private func _userVerified(_ exists: Bool, id: String) {
         if exists {
             print("Verified user")
-            isUserVerified = true
+            registrationStatus = .verified(id) // call completion indirectly
             isRunning = false
         } else {
             // we received an explicit negative response to verification. Delete the ID we have and try to register a new one
-            deviceID = nil
-            UserDefaults.standard.removeObject(forKey: UserIdentityController.DeviceIDKey)
+            registrationStatus = .notRegistered
+            _deleteIDIfNecessary()
             DispatchQueue.main.async {
                 self._runStateMachine()
             }
@@ -120,15 +204,15 @@ class UserIdentityController {
     }
     
     private func _userRegistered(_ deviceID: String) {
-        UserDefaults.standard.setValue(deviceID, forKey: UserIdentityController.DeviceIDKey)
-        self.deviceID = deviceID
-        self.isUserVerified = true
+        _saveIDIfNecessary(deviceID)
+        registrationStatus = .verified(deviceID) // call completion indirectly
         self.isRunning = false
     }
     
     private func _verifyID(_ deviceID: String, completion: @escaping (Result<Bool, Error>) -> Void) {
         let queryItems = [URLQueryItem(name: "deviceID", value: deviceID)]
-        guard let url = ServerConfiguration.createURL(resourcePath: "/api/verifyUser", queryItems: queryItems) else {
+        let (host, port, scheme) = _getHostAndPortAndScheme()
+        guard let url = ServerConfiguration.createURL(hostname: host, port: port, scheme: scheme, resourcePath: "/api/verifyUser", queryItems: queryItems) else {
             DispatchQueue.main.async {
                 completion(.failure(SimpleError("Failed to construct registration URL")))
             }
@@ -153,7 +237,8 @@ class UserIdentityController {
     }
     
     private func _registerID(_ completion: @escaping (Result<String,Error>) -> Void) {
-        guard let url = ServerConfiguration.createURL(resourcePath: "/api/registerUser2") else {
+        let (host, port, scheme) = _getHostAndPortAndScheme()
+        guard let url = ServerConfiguration.createURL(hostname: host, port: port, scheme: scheme, resourcePath: "/api/registerUser2") else {
             print("Failed to construct registration URL")
             DispatchQueue.main.async {
                 completion(.failure(SimpleError("Failed to construct registration URL")))
@@ -161,7 +246,8 @@ class UserIdentityController {
             return
         }
         
-        let requestPayload = RegisterUserHTTPRequestPayload(key: ServerConfiguration.APIKey, displayName: nil)
+        let key = temporaryHostOverride == nil ? ServerConfiguration.APIKey : "foo"
+        let requestPayload = RegisterUserHTTPRequestPayload(key: key, displayName: nil)
         let payloadData: Data
         do {
             payloadData = try JSONEncoder().encode(requestPayload)
@@ -227,13 +313,14 @@ class UserIdentityController {
     private var lastCheckInAttemptTime: Date?
     func checkIn() {
         dispatchPrecondition(condition: .onQueue(.main))
-        guard let url = ServerConfiguration.createURL(resourcePath: "/api/checkIn") else {
+        let (host, port, scheme) = _getHostAndPortAndScheme()
+        guard let url = ServerConfiguration.createURL(hostname: host, port: port, scheme: scheme, resourcePath: "/api/checkIn") else {
             print("Failed to construct check in URL")
             return
         }
-        guard let finalDeviceID = deviceID, isUserVerified else {
+        guard case .verified(let deviceID) = registrationStatus else {
             print("Skipping checkin because we don't have a verified user")
-            pendingVerificationBlocks.append { [weak self] in
+            pendingVerificationBlocks.append { [weak self] _ in
                 self?.checkIn()
             }
             return
@@ -251,7 +338,7 @@ class UserIdentityController {
         
         let (version, _) = UpdateManager.getCurrentVersionAndBuild()
         
-        let requestPayload = CheckInUserHTTPRequestPayload(deviceID: finalDeviceID, version: version)
+        let requestPayload = CheckInUserHTTPRequestPayload(deviceID: deviceID, version: version)
         let payloadData: Data
         do {
             payloadData = try JSONEncoder().encode(requestPayload)
@@ -288,7 +375,7 @@ class UserIdentityController {
             }
             return
         }
-        guard let deviceID = deviceID else {
+        guard case .verified(let deviceID) = registrationStatus else {
             print("No device ID yet")
             DispatchQueue.main.async {
                 completion(false)
@@ -297,7 +384,8 @@ class UserIdentityController {
         }
         
         let query = [URLQueryItem(name: "deviceID", value: deviceID)]
-        guard let url = ServerConfiguration.createURL(resourcePath: "/api/debugAuth", queryItems: query) else {
+        let (host, port, scheme) = _getHostAndPortAndScheme()
+        guard let url = ServerConfiguration.createURL(hostname: host, port: port, scheme: scheme, resourcePath: "/api/debugAuth", queryItems: query) else {
             print("Failed to construct debug auth URL")
             return
         }

@@ -141,6 +141,8 @@
 		29C2CBD028AD849A00936BD7 /* SerialController.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 29C2CBCE28AD849A00936BD7 /* SerialController.hpp */; };
 		29C2CBD228ADABCA00936BD7 /* LinkSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29C2CBD128ADABCA00936BD7 /* LinkSessionManager.swift */; };
 		29C2CBD328ADABCA00936BD7 /* LinkSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29C2CBD128ADABCA00936BD7 /* LinkSessionManager.swift */; };
+		29C2CBD628ADE83200936BD7 /* LinkManager.xib in Resources */ = {isa = PBXBuildFile; fileRef = 29C2CBD528ADE83200936BD7 /* LinkManager.xib */; };
+		29C2CBDC28ADF3BC00936BD7 /* LinkManagerWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29C2CBDB28ADF3BC00936BD7 /* LinkManagerWindowController.swift */; };
 		29C3DB8D2655B0ED00DCFA33 /* GBImageUtilities.mm in Sources */ = {isa = PBXBuildFile; fileRef = 29C3DB8C2655B0ED00DCFA33 /* GBImageUtilities.mm */; };
 		29D3C93F247DFC6A0096D21B /* TestCPUCoreBasics.mm in Sources */ = {isa = PBXBuildFile; fileRef = 29D3C93E247DFC6A0096D21B /* TestCPUCoreBasics.mm */; };
 		29D3C942247DFDE80096D21B /* TestCPUCoreUtilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29D3C940247DFDE80096D21B /* TestCPUCoreUtilities.cpp */; };
@@ -358,6 +360,8 @@
 		29C2CBCD28AD849A00936BD7 /* SerialController.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SerialController.cpp; sourceTree = "<group>"; };
 		29C2CBCE28AD849A00936BD7 /* SerialController.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SerialController.hpp; sourceTree = "<group>"; };
 		29C2CBD128ADABCA00936BD7 /* LinkSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkSessionManager.swift; sourceTree = "<group>"; };
+		29C2CBD528ADE83200936BD7 /* LinkManager.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LinkManager.xib; sourceTree = "<group>"; };
+		29C2CBDB28ADF3BC00936BD7 /* LinkManagerWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkManagerWindowController.swift; sourceTree = "<group>"; };
 		29C3DB8B2655B0ED00DCFA33 /* GBImageUtilities.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GBImageUtilities.h; sourceTree = "<group>"; };
 		29C3DB8C2655B0ED00DCFA33 /* GBImageUtilities.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = GBImageUtilities.mm; sourceTree = "<group>"; };
 		29D3C936247DFBFE0096D21B /* MikoGBCoreTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MikoGBCoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -669,6 +673,7 @@
 				2992837D264733B3004691E5 /* WindowController.swift */,
 				29F082852647B9C400FA5F67 /* NoROMView.swift */,
 				29F082A22647BA3800FA5F67 /* GameView.swift */,
+				29C2CBD428ADE7ED00936BD7 /* LinkUI */,
 				291987D1268300E1009D7C45 /* DebugUI */,
 				299282B82642449F004691E5 /* Assets.xcassets */,
 				299282BA2642449F004691E5 /* Main.storyboard */,
@@ -738,6 +743,15 @@
 				29C2CBCD28AD849A00936BD7 /* SerialController.cpp */,
 			);
 			path = Serial;
+			sourceTree = "<group>";
+		};
+		29C2CBD428ADE7ED00936BD7 /* LinkUI */ = {
+			isa = PBXGroup;
+			children = (
+				29C2CBD528ADE83200936BD7 /* LinkManager.xib */,
+				29C2CBDB28ADF3BC00936BD7 /* LinkManagerWindowController.swift */,
+			);
+			path = LinkUI;
 			sourceTree = "<group>";
 		};
 		29D3C937247DFBFE0096D21B /* MikoGBCoreTests */ = {
@@ -1062,6 +1076,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				299282B92642449F004691E5 /* Assets.xcassets in Resources */,
+				29C2CBD628ADE83200936BD7 /* LinkManager.xib in Resources */,
 				299282BC2642449F004691E5 /* Main.storyboard in Resources */,
 				291987D3268300FA009D7C45 /* Debugger.xib in Resources */,
 			);
@@ -1180,6 +1195,7 @@
 				2902EA9F27C4CA9C00186976 /* DebuggerContinueCommand.swift in Sources */,
 				295BCB772693CF1900E80FCC /* SimpleError.swift in Sources */,
 				291987ED26830A6E009D7C45 /* AppStateManager.swift in Sources */,
+				29C2CBDC28ADF3BC00936BD7 /* LinkManagerWindowController.swift in Sources */,
 				29DD393826AA596800D6EC2E /* DebuggerCommand.swift in Sources */,
 				291987F42683FBBF009D7C45 /* DebuggerConsoleController.swift in Sources */,
 				2902EA9D27C4C87C00186976 /* DebuggerStepCommand.swift in Sources */,
@@ -1532,7 +1548,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 11.1;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mjb.MikoGB;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
@@ -1557,7 +1573,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 11.1;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mjb.MikoGB;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_COMPILATION_MODE = wholemodule;
@@ -1688,7 +1704,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 11.1;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mjb.MikoGB;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
