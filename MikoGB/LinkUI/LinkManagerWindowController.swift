@@ -36,6 +36,7 @@ class LinkManagerWindowController: NSWindowController, NSTextFieldDelegate {
     override func windowDidLoad() {
         super.windowDidLoad()
         serverLabel.stringValue = ServerConfiguration.Hostname
+        roomCodeLabel.isSelectable = true
         _updateLoginButton()
         _updateLoadingStatus()
         _updateRoomStatusUI()
@@ -206,7 +207,9 @@ class LinkManagerWindowController: NSWindowController, NSTextFieldDelegate {
             _updateRoomStatusUI()
             break
         case .noRooms:
-            // TODO: Create/Join
+            // TODO: Join?
+            linkSessionManager.createRoom()
+            _updateRoomStatusUI()
             break
         case .roomAvailable(_):
             // TODO: Connect
