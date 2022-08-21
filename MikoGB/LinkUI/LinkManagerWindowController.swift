@@ -8,7 +8,7 @@
 
 import Cocoa
 
-class LinkManagerWindowController: NSWindowController {
+class LinkManagerWindowController: NSWindowController, NSTextFieldDelegate {
     @IBOutlet var serverLabel: NSTextField!
     @IBOutlet var loginButton: NSButton!
     @IBOutlet var loadingIndicator: NSProgressIndicator!
@@ -159,20 +159,33 @@ class LinkManagerWindowController: NSWindowController {
             preconditionFailure("No window? No sense.")
         }
         let textField = NSTextField(frame: NSMakeRect(0, 0, 200, 24))
-        textField.stringValue = "www.example.com"
+        textField.placeholderString = "www.example.com"
         textField.sizeToFit()
         let alert = NSAlert()
-        alert.messageText = "Message text"
-        alert.informativeText = "Informative text"
+        alert.messageText = "Enter a Server"
+        alert.informativeText = "Enter a valid server URL for interacting with the link room system"
         alert.accessoryView = textField
-        alert.addButton(withTitle: "OK")
+        let okButton = alert.addButton(withTitle: "OK")
+        okButton.isEnabled = false
         alert.addButton(withTitle: "Clear")
         alert.addButton(withTitle: "Cancel")
+        
+        textField.delegate = self
+        activeTextField = textField
+        activeTextFieldButton = okButton
         alert.beginSheetModal(for: window) { response in
             DispatchQueue.main.async {
+                self.activeTextField = nil
+                self.activeTextFieldButton = nil
                 self._handleUpdatedServer(response, textField: textField)
             }
         }
+    }
+    
+    private var activeTextFieldButton: NSButton?
+    private var activeTextField: NSTextField?
+    func controlTextDidChange(_ obj: Notification) {
+        activeTextFieldButton?.isEnabled = (activeTextField?.stringValue.count ?? 0) > 0
     }
     
     @objc @IBAction
