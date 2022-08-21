@@ -30,12 +30,51 @@ class LinkSessionManager: NSObject, GBEngineSerialDestination {
         }
     }
     
+    private var presentedBytePendingConnection: UInt8?
+    func _handleInitialConnection(_ connection: LinkClientConnection) {
+        if let byte = presentedBytePendingConnection {
+            connection.write([LinkServerCommand.presentByte.rawValue] + [byte])
+        }
+        presentedBytePendingConnection = nil
+    }
+    
     func engine(_ engine: GBEngine, presentByte byte: UInt8) {
-        // nothing for now
+        // on main
+        if let connection = linkConnection {
+            connection.write([LinkServerCommand.presentByte.rawValue] + [byte])
+            presentedBytePendingConnection = nil
+        } else {
+            presentedBytePendingConnection = byte
+        }
     }
     
     func engine(_ engine: GBEngine, pushByte byte: UInt8) {
-        engine.receivePulledSerialByte(0xFF)
+        // on main
+        presentedBytePendingConnection = nil
+        if let connection = linkConnection {
+            connection.write([LinkServerCommand.pushByte.rawValue] + [byte])
+        } else {
+            engine.receivePulledSerialByte(0xFF)
+        }
+    }
+    
+    // incoming mesage from server
+    private func _handleLinkMessage(_ message: LinkClientMessage) {
+        presentedBytePendingConnection = nil
+        switch message {
+        case .didConnect:
+            _handleDidConnect()
+        case .pullByte(let byte):
+            engine.receivePulledSerialByte(byte)
+        case .pullByteStale(_):
+            // ignore for now
+            break
+        case .commitStaleByte:
+            // ignore for now
+            break
+        case .bytePushed(let byte):
+            engine.receivePulledSerialByte(byte)
+        }
     }
     
     // MARK: - Room state management
@@ -46,6 +85,7 @@ class LinkSessionManager: NSObject, GBEngineSerialDestination {
         case notChecked
         case noRooms
         case roomAvailable(LinkRoomClientInfo)
+        case connectingToRoom(LinkRoomClientInfo)
         case connectedToRoom(LinkRoomClientInfo)
         case error
         case disconnected
@@ -68,7 +108,7 @@ class LinkSessionManager: NSObject, GBEngineSerialDestination {
         switch roomStatus {
         case .notChecked, .error, .disconnected:
             return true
-        case .noRooms, .roomAvailable, .connectedToRoom:
+        case .noRooms, .roomAvailable, .connectingToRoom, .connectedToRoom:
             return false
         }
     }
@@ -158,7 +198,7 @@ class LinkSessionManager: NSObject, GBEngineSerialDestination {
     
     private func _canRunRoomCreationOrJoin() -> Bool {
         switch roomStatus {
-        case .notChecked, .error, .disconnected, .roomAvailable, .connectedToRoom:
+        case .notChecked, .error, .disconnected, .roomAvailable, .connectingToRoom, .connectedToRoom:
             return false
         case .noRooms:
             // TODO: Maybe allow error/disconnected states for more automatic stepping through these phases
@@ -348,7 +388,7 @@ class LinkSessionManager: NSObject, GBEngineSerialDestination {
         let connection: LinkClientConnection?
         do {
             connection = try linkClientSession?.makeConnection()
-            roomStatus = .connectedToRoom(clientInfo)
+            roomStatus = .connectingToRoom(clientInfo)
         } catch {
             print("Failed to connect with error \(error)")
             roomStatus = .error
@@ -356,14 +396,48 @@ class LinkSessionManager: NSObject, GBEngineSerialDestination {
         }
         
         linkConnection = connection
-        linkConnection?.setCloseCallback({ [weak self] result in
-            self?._handleDisconnect(result)
+        guard let realizedConnection = connection else {
+            print("Failed to make connection without error")
+            return
+        }
+        
+        realizedConnection.setCloseCallback({ [weak self] result in
+            self?._handleDidDisconnect(result)
         })
+        
+        realizedConnection.setMessageCallback({ [weak self] message in
+            DispatchQueue.main.async {
+                self?._handleLinkMessage(message)
+            }
+        })
+        
+        let keyBytes = clientInfo.roomKey.stringValue().map{ $0.asciiValue! }
+        realizedConnection.write([LinkServerCommand.connect.rawValue] + keyBytes)
     }
     
-    private func _handleDisconnect(_ result: Result<Void,Error>) {
+    private func _handleDidConnect() {
+        guard case .connectingToRoom(let clientInfo) = roomStatus else {
+            return
+        }
+        roomStatus = .connectedToRoom(clientInfo)
+    }
+    
+    private func _handleDidDisconnect(_ result: Result<Void,Error>) {
         linkClientSession = nil
         linkConnection = nil
         roomStatus = .disconnected
     }
 }
+
+// TODO: move to payloads module
+extension LinkRoomKey {
+    func stringValue() -> String {
+        switch self {
+        case .owner(let string):
+            return string
+        case .participant(let string):
+            return string
+        }
+    }
+}
+

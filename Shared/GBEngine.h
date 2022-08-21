@@ -103,7 +103,7 @@ typedef void (^SaveDataCompletion)( NSData * _Nullable data);
 - (void)engineIsReadyToPersistSaveData:(GBEngine *)engine;
 @end
 
-/// Protocol for handling events originating from this emulator
+/// Protocol for handling events originating from this emulator. Events are emitted on main queue
 @protocol GBEngineSerialDestination <NSObject>
 - (void)engine:(GBEngine *)engine pushByte:(uint8_t)byte;
 - (void)engine:(GBEngine *)engine presentByte:(uint8_t)byte;

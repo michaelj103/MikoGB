@@ -117,6 +117,11 @@ class LinkManagerWindowController: NSWindowController, NSTextFieldDelegate {
             roomActionButton.isEnabled = !isWorking
             roomCodeLabel.stringValue = "\(linkRoomClientInfo.roomCode)"
             roomJoinButton.isEnabled = false
+        case .connectingToRoom(let linkRoomClientInfo):
+            roomActionButton.title = "Connect"
+            roomActionButton.isEnabled = false
+            roomCodeLabel.stringValue = "\(linkRoomClientInfo.roomCode)"
+            roomJoinButton.isEnabled = false
         case .connectedToRoom(let linkRoomClientInfo):
             roomActionButton.title = "Close"
             roomActionButton.isEnabled = !isWorking
@@ -207,16 +212,16 @@ class LinkManagerWindowController: NSWindowController, NSTextFieldDelegate {
         case .notChecked, .error, .disconnected:
             linkSessionManager.checkForRooms()
             _updateRoomStatusUI()
-            break
         case .noRooms:
             linkSessionManager.createRoom()
             _updateRoomStatusUI()
-            break
-        case .roomAvailable(_):
+        case .roomAvailable:
             linkSessionManager.connectToRoom()
             _updateRoomStatusUI()
+        case .connectingToRoom:
+            // Nothing to do
             break
-        case .connectedToRoom(_):
+        case .connectedToRoom:
             // TODO: Close
             break
         }
