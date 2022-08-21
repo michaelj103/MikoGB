@@ -60,7 +60,6 @@
 		2923CDF92893B09100262C49 /* RingBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2902EAB127C8BD2900186976 /* RingBuffer.swift */; };
 		2923CDFB2894779500262C49 /* UpdateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2923CDFA2894779500262C49 /* UpdateManager.swift */; };
 		2923CDFD28947BE900262C49 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2923CDFC28947BE900262C49 /* NetworkManager.swift */; };
-		2923CE02289CE5F100262C49 /* GBServerPayloads in Frameworks */ = {isa = PBXBuildFile; productRef = 2923CE01289CE5F100262C49 /* GBServerPayloads */; };
 		2923CE0B289DA7AA00262C49 /* ServerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2923CE0A289DA7AA00262C49 /* ServerConfiguration.swift */; };
 		295BCB772693CF1900E80FCC /* SimpleError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295BCB762693CF1900E80FCC /* SimpleError.swift */; };
 		2968206B28B1DDE2004C2261 /* ServerConfiguration-available.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2923CE08289DA79A00262C49 /* ServerConfiguration-available.swift */; };
@@ -120,6 +119,9 @@
 		299BD30127D5450800940D12 /* GBRateLimitTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = 299BD30027D5450800940D12 /* GBRateLimitTimer.m */; };
 		299BD30327D56D8F00940D12 /* PersistenceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 299BD30227D56D8F00940D12 /* PersistenceManager.swift */; };
 		299BD30527D92FAD00940D12 /* SaveEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 299BD30427D92FAD00940D12 /* SaveEntry.swift */; };
+		299D599428B2036000A82C0A /* GBServerPayloads in Frameworks */ = {isa = PBXBuildFile; productRef = 299D599328B2036000A82C0A /* GBServerPayloads */; };
+		299D599628B2036800A82C0A /* GBServerPayloads in Frameworks */ = {isa = PBXBuildFile; productRef = 299D599528B2036800A82C0A /* GBServerPayloads */; };
+		299D59A128B2044C00A82C0A /* GBLinkServerProtocol in Frameworks */ = {isa = PBXBuildFile; productRef = 299D59A028B2044C00A82C0A /* GBLinkServerProtocol */; };
 		29A8000A265387BB007A26C9 /* CartridgeHeader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297E600A2456532700EE150F /* CartridgeHeader.cpp */; };
 		29A8FF74265211B8007A26C9 /* MemoryController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8FF72265211B8007A26C9 /* MemoryController.cpp */; };
 		29A8FF75265211B8007A26C9 /* MemoryController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8FF72265211B8007A26C9 /* MemoryController.cpp */; };
@@ -135,7 +137,6 @@
 		29A8FFF926537426007A26C9 /* NoMBC.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8FFF626537426007A26C9 /* NoMBC.cpp */; };
 		29A8FFFA26537426007A26C9 /* NoMBC.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 29A8FFF726537426007A26C9 /* NoMBC.hpp */; };
 		29C2CBC628AD7E7E00936BD7 /* UserIdentityController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29D6D0EF28A19EE900C98B03 /* UserIdentityController.swift */; };
-		29C2CBC828AD7E9B00936BD7 /* GBServerPayloads in Frameworks */ = {isa = PBXBuildFile; productRef = 29C2CBC728AD7E9B00936BD7 /* GBServerPayloads */; };
 		29C2CBC928AD7EC000936BD7 /* ServerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2923CE0A289DA7AA00262C49 /* ServerConfiguration.swift */; };
 		29C2CBCA28AD7EDF00936BD7 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2923CDFC28947BE900262C49 /* NetworkManager.swift */; };
 		29C2CBCB28AD7F2C00936BD7 /* UpdateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2923CDFA2894779500262C49 /* UpdateManager.swift */; };
@@ -410,7 +411,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				29C2CBC828AD7E9B00936BD7 /* GBServerPayloads in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -429,6 +429,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				2987F3C027E6D9EB00EC00A7 /* UniformTypeIdentifiers.framework in Frameworks */,
+				299D59A128B2044C00A82C0A /* GBLinkServerProtocol in Frameworks */,
+				299D599628B2036800A82C0A /* GBServerPayloads in Frameworks */,
 				2902EAB627C8BDBA00186976 /* AVFoundation.framework in Frameworks */,
 				29F082B32647BC3B00FA5F67 /* libMikoGBCore.a in Frameworks */,
 			);
@@ -446,7 +448,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2987F3BE27E6D9BA00EC00A7 /* UniformTypeIdentifiers.framework in Frameworks */,
-				2923CE02289CE5F100262C49 /* GBServerPayloads in Frameworks */,
+				299D599428B2036000A82C0A /* GBServerPayloads in Frameworks */,
 				2987F3B727E6D84C00EC00A7 /* libMikoGBCore.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -870,6 +872,8 @@
 				29A8FF9F26521AA9007A26C9 /* PBXTargetDependency */,
 			);
 			name = RomAnalyzer;
+			packageProductDependencies = (
+			);
 			productName = RomAnalyzer;
 			productReference = 297E60032456426400EE150F /* RomAnalyzer */;
 			productType = "com.apple.product-type.tool";
@@ -888,7 +892,6 @@
 			);
 			name = MikoGBCore;
 			packageProductDependencies = (
-				29C2CBC728AD7E9B00936BD7 /* GBServerPayloads */,
 			);
 			productName = MikoGBCore;
 			productReference = 299281E626424123004691E5 /* libMikoGBCore.a */;
@@ -926,6 +929,10 @@
 				29F082B52647BC4000FA5F67 /* PBXTargetDependency */,
 			);
 			name = MikoGB;
+			packageProductDependencies = (
+				299D599528B2036800A82C0A /* GBServerPayloads */,
+				299D59A028B2044C00A82C0A /* GBLinkServerProtocol */,
+			);
 			productName = MikoGB;
 			productReference = 299282B22642449D004691E5 /* MikoGB.app */;
 			productType = "com.apple.product-type.application";
@@ -963,7 +970,7 @@
 			);
 			name = "MikoGB-iOS";
 			packageProductDependencies = (
-				2923CE01289CE5F100262C49 /* GBServerPayloads */,
+				299D599328B2036000A82C0A /* GBServerPayloads */,
 			);
 			productName = "MikoGB-iOS";
 			productReference = 29DBB67527E2BA8700C77519 /* MikoGB-iOS.app */;
@@ -1054,7 +1061,7 @@
 			);
 			mainGroup = 297E5FEC2456421B00EE150F;
 			packageReferences = (
-				2923CDFE289CC17600262C49 /* XCRemoteSwiftPackageReference "gbserver" */,
+				299D599228B2036000A82C0A /* XCRemoteSwiftPackageReference "gbserver" */,
 			);
 			productRefGroup = 297E5FF62456421B00EE150F /* Products */;
 			projectDirPath = "";
@@ -2094,6 +2101,14 @@
 				kind = branch;
 			};
 		};
+		299D599228B2036000A82C0A /* XCRemoteSwiftPackageReference "gbserver" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/michaelj103/gbserver.git";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -2102,15 +2117,20 @@
 			package = 2923CDFE289CC17600262C49 /* XCRemoteSwiftPackageReference "gbserver" */;
 			productName = GBServerPayloads;
 		};
-		2923CE01289CE5F100262C49 /* GBServerPayloads */ = {
+		299D599328B2036000A82C0A /* GBServerPayloads */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 2923CDFE289CC17600262C49 /* XCRemoteSwiftPackageReference "gbserver" */;
+			package = 299D599228B2036000A82C0A /* XCRemoteSwiftPackageReference "gbserver" */;
 			productName = GBServerPayloads;
 		};
-		29C2CBC728AD7E9B00936BD7 /* GBServerPayloads */ = {
+		299D599528B2036800A82C0A /* GBServerPayloads */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 2923CDFE289CC17600262C49 /* XCRemoteSwiftPackageReference "gbserver" */;
+			package = 299D599228B2036000A82C0A /* XCRemoteSwiftPackageReference "gbserver" */;
 			productName = GBServerPayloads;
+		};
+		299D59A028B2044C00A82C0A /* GBLinkServerProtocol */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 299D599228B2036000A82C0A /* XCRemoteSwiftPackageReference "gbserver" */;
+			productName = GBLinkServerProtocol;
 		};
 /* End XCSwiftPackageProductDependency section */
 

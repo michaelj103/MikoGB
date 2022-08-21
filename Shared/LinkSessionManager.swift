@@ -8,6 +8,7 @@
 
 import Foundation
 import GBServerPayloads
+import GBLinkServerProtocol
 
 class LinkSessionManager: NSObject, GBEngineSerialDestination {
     private let engine: GBEngine
@@ -265,7 +266,7 @@ class LinkSessionManager: NSObject, GBEngineSerialDestination {
         }
         
         guard _canRunRoomCreationOrJoin() else {
-            print("Shouldn't create rooms before checking if any exist")
+            print("Shouldn't join rooms before checking if any exist")
             return
         }
         
@@ -324,5 +325,45 @@ class LinkSessionManager: NSObject, GBEngineSerialDestination {
                 }
             }
         }
+    }
+    
+    // MARK: - Connecting to rooms
+    
+    private var linkClientSession: LinkClientSession?
+    private var linkConnection: LinkClientConnection?
+    func connectToRoom() {
+        guard !isWorking else {
+            print("Already running")
+            return
+        }
+        
+        guard case .roomAvailable(let clientInfo) = roomStatus else {
+            print("No available room to connect to")
+            return
+        }
+        
+        let (host, _, _) = ServerConfiguration.getHostAndPortAndScheme()
+        linkClientSession = LinkClientSession(host: host, port: clientInfo.linkPort)
+        
+        let connection: LinkClientConnection?
+        do {
+            connection = try linkClientSession?.makeConnection()
+            roomStatus = .connectedToRoom(clientInfo)
+        } catch {
+            print("Failed to connect with error \(error)")
+            roomStatus = .error
+            connection = nil
+        }
+        
+        linkConnection = connection
+        linkConnection?.setCloseCallback({ [weak self] result in
+            self?._handleDisconnect(result)
+        })
+    }
+    
+    private func _handleDisconnect(_ result: Result<Void,Error>) {
+        linkClientSession = nil
+        linkConnection = nil
+        roomStatus = .disconnected
     }
 }

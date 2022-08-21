@@ -18,7 +18,7 @@ extension ServerConfiguration {
     static let ServerConfigurationChangedNotification = NSNotification.Name(rawValue: "ServerConfigurationChangedNotification")
     
     static func createURL(resourcePath: String, queryItems: [URLQueryItem]? = nil) -> URL? {
-        let (host, port, scheme) = _getHostAndPortAndScheme()
+        let (host, port, scheme) = getHostAndPortAndScheme()
         return createURL(hostname: host, port: port, scheme: scheme, resourcePath: resourcePath, queryItems: queryItems)
     }
     
@@ -60,7 +60,7 @@ extension ServerConfiguration {
         return temporaryHostOverride != nil
     }
     
-    private static func _getHostAndPortAndScheme() -> (String, Int?, String) {
+    static func getHostAndPortAndScheme() -> (String, Int?, String) {
         if let temporaryHostOverride = temporaryHostOverride {
             return (temporaryHostOverride.host!, temporaryHostOverride.port, temporaryHostOverride.scheme ?? "http")
         } else {

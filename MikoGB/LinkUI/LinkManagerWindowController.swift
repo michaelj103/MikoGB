@@ -213,7 +213,8 @@ class LinkManagerWindowController: NSWindowController, NSTextFieldDelegate {
             _updateRoomStatusUI()
             break
         case .roomAvailable(_):
-            // TODO: Connect
+            linkSessionManager.connectToRoom()
+            _updateRoomStatusUI()
             break
         case .connectedToRoom(_):
             // TODO: Close
