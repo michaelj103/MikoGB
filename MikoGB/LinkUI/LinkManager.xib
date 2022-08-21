@@ -12,6 +12,7 @@
                 <outlet property="loginButton" destination="Dbv-dV-CMt" id="Ttl-2A-tbB"/>
                 <outlet property="roomActionButton" destination="ScD-wB-Hhm" id="GgX-bd-Ib7"/>
                 <outlet property="roomCodeLabel" destination="12z-vR-WHU" id="uyd-8g-U2e"/>
+                <outlet property="roomJoinButton" destination="kcm-U4-kD3" id="ozY-QH-GRh"/>
                 <outlet property="serverLabel" destination="B1f-HU-YxN" id="UNa-ta-Bvk"/>
                 <outlet property="statusIcon" destination="eGO-0i-q02" id="PQi-0z-LUf"/>
                 <outlet property="window" destination="QvC-M9-y7g" id="8VO-lM-qvQ"/>
@@ -131,6 +132,17 @@
                         </buttonCell>
                         <connections>
                             <action selector="_handleRoomActionButton:" target="-2" id="oMz-K9-Oh7"/>
+                        </connections>
+                    </button>
+                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kcm-U4-kD3">
+                        <rect key="frame" x="154" y="78" width="107" height="32"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="push" title="Join" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="5Ka-Fw-YT9">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="_handleRoomJoinButton:" target="-2" id="YhQ-Gb-G2L"/>
                         </connections>
                     </button>
                 </subviews>

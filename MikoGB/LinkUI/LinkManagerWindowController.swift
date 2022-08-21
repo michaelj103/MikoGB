@@ -16,6 +16,7 @@ class LinkManagerWindowController: NSWindowController, NSTextFieldDelegate {
     
     @IBOutlet var roomActionButton: NSButton!
     @IBOutlet var roomCodeLabel: NSTextField!
+    @IBOutlet var roomJoinButton: NSButton!
     
     private var linkSessionObserver: NSObjectProtocol?
     
@@ -92,6 +93,7 @@ class LinkManagerWindowController: NSWindowController, NSTextFieldDelegate {
             roomActionButton.title = "Check"
             roomActionButton.isEnabled = false
             roomCodeLabel.stringValue = "-none-"
+            roomJoinButton.isEnabled = false
             return
         }
         
@@ -104,26 +106,32 @@ class LinkManagerWindowController: NSWindowController, NSTextFieldDelegate {
             roomActionButton.title = "Check"
             roomActionButton.isEnabled = !isWorking
             roomCodeLabel.stringValue = "Unknown"
+            roomJoinButton.isEnabled = false
         case .noRooms:
             roomActionButton.title = "Create"
             roomActionButton.isEnabled = !isWorking
             roomCodeLabel.stringValue = "No Rooms"
+            roomJoinButton.isEnabled = !isWorking
         case .roomAvailable(let linkRoomClientInfo):
             roomActionButton.title = "Connect"
             roomActionButton.isEnabled = !isWorking
             roomCodeLabel.stringValue = "\(linkRoomClientInfo.roomCode)"
+            roomJoinButton.isEnabled = false
         case .connectedToRoom(let linkRoomClientInfo):
             roomActionButton.title = "Close"
             roomActionButton.isEnabled = !isWorking
             roomCodeLabel.stringValue = "\(linkRoomClientInfo.roomCode)"
+            roomJoinButton.isEnabled = false
         case .error:
             roomActionButton.title = "Check"
             roomActionButton.isEnabled = !isWorking
             roomCodeLabel.stringValue = "error"
+            roomJoinButton.isEnabled = false
         case .disconnected:
             roomActionButton.title = "Check"
             roomActionButton.isEnabled = !isWorking
             roomCodeLabel.stringValue = "disconnected"
+            roomJoinButton.isEnabled = false
         }
     }
     
@@ -183,12 +191,6 @@ class LinkManagerWindowController: NSWindowController, NSTextFieldDelegate {
         }
     }
     
-    private var activeTextFieldButton: NSButton?
-    private var activeTextField: NSTextField?
-    func controlTextDidChange(_ obj: Notification) {
-        activeTextFieldButton?.isEnabled = (activeTextField?.stringValue.count ?? 0) > 0
-    }
-    
     @objc @IBAction
     private func _logIn(_ sender: AnyObject) {
         loginStatus = .loggingIn
@@ -207,7 +209,6 @@ class LinkManagerWindowController: NSWindowController, NSTextFieldDelegate {
             _updateRoomStatusUI()
             break
         case .noRooms:
-            // TODO: Join?
             linkSessionManager.createRoom()
             _updateRoomStatusUI()
             break
@@ -218,6 +219,51 @@ class LinkManagerWindowController: NSWindowController, NSTextFieldDelegate {
             // TODO: Close
             break
         }
+    }
+    
+    private func _handleJoinCode(_ response: NSApplication.ModalResponse, textField: NSTextField) {
+        if response == .alertFirstButtonReturn {
+            let joinCode = textField.stringValue
+            let linkSessionManager = AppStateManager.sharedInstance.linkSessionManager
+            linkSessionManager.joinRoom(joinCode)
+            _updateRoomStatusUI()
+        }
+    }
+    
+    @objc @IBAction
+    private func _handleRoomJoinButton(_ sender: AnyObject) {
+        guard let window = self.window else {
+            preconditionFailure("No window? No sense.")
+        }
+        let textField = NSTextField(frame: NSMakeRect(0, 0, 200, 24))
+        textField.placeholderString = "AAAAAA"
+        textField.sizeToFit()
+        let alert = NSAlert()
+        alert.messageText = "Enter a Room Code"
+        alert.informativeText = "Get the 6-character alphanumeric code for joining a room from the room's creator"
+        alert.accessoryView = textField
+        let okButton = alert.addButton(withTitle: "OK")
+        okButton.isEnabled = false
+        alert.addButton(withTitle: "Cancel")
+        
+        textField.delegate = self
+        activeTextField = textField
+        activeTextFieldButton = okButton
+        alert.beginSheetModal(for: window) { response in
+            DispatchQueue.main.async {
+                self.activeTextField = nil
+                self.activeTextFieldButton = nil
+                self._handleJoinCode(response, textField: textField)
+            }
+        }
+    }
+    
+    // MARK: - NSTextFieldDelegate
+    
+    private var activeTextFieldButton: NSButton?
+    private var activeTextField: NSTextField?
+    func controlTextDidChange(_ obj: Notification) {
+        activeTextFieldButton?.isEnabled = (activeTextField?.stringValue.count ?? 0) > 0
     }
 }
 
