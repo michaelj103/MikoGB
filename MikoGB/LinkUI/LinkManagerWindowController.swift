@@ -14,6 +14,11 @@ class LinkManagerWindowController: NSWindowController {
     @IBOutlet var loadingIndicator: NSProgressIndicator!
     @IBOutlet var statusIcon: NSImageView!
     
+    @IBOutlet var roomActionButton: NSButton!
+    @IBOutlet var roomCodeLabel: NSTextField!
+    
+    private var linkSessionObserver: NSObjectProtocol?
+    
     private enum LoginStatus {
         case notLoggedIn
         case loggingIn
@@ -24,13 +29,22 @@ class LinkManagerWindowController: NSWindowController {
         didSet {
             _updateLoginButton()
             _updateLoadingStatus()
+            _updateRoomStatusUI()
         }
     }
     
     override func windowDidLoad() {
         super.windowDidLoad()
         serverLabel.stringValue = ServerConfiguration.Hostname
+        _updateLoginButton()
         _updateLoadingStatus()
+        _updateRoomStatusUI()
+        
+        linkSessionObserver = NotificationCenter.default.addObserver(forName: LinkSessionManager.RoomStatusChangedNotification, object: nil, queue: nil, using: { [weak self] _ in
+            DispatchQueue.main.async {
+                self?._updateRoomStatusUI()
+            }
+        })
     }
     
     private func _updateLoginButton() {
@@ -72,15 +86,56 @@ class LinkManagerWindowController: NSWindowController {
         }
     }
     
+    private func _updateRoomStatusUI() {
+        guard case .loggedIn = loginStatus else {
+            roomActionButton.title = "Check"
+            roomActionButton.isEnabled = false
+            roomCodeLabel.stringValue = "-none-"
+            return
+        }
+        
+        // we're logged in, so reflect the link session manager's status
+        let linkSessionManager = AppStateManager.sharedInstance.linkSessionManager
+        let roomStatus = linkSessionManager.roomStatus
+        let isWorking = linkSessionManager.isWorking
+        switch roomStatus {
+        case .notChecked:
+            roomActionButton.title = "Check"
+            roomActionButton.isEnabled = !isWorking
+            roomCodeLabel.stringValue = "Unknown"
+        case .noRooms:
+            roomActionButton.title = "Create"
+            roomActionButton.isEnabled = !isWorking
+            roomCodeLabel.stringValue = "No Rooms"
+        case .roomAvailable(let linkRoomClientInfo):
+            roomActionButton.title = "Connect"
+            roomActionButton.isEnabled = !isWorking
+            roomCodeLabel.stringValue = "\(linkRoomClientInfo.roomCode)"
+        case .connectedToRoom(let linkRoomClientInfo):
+            roomActionButton.title = "Close"
+            roomActionButton.isEnabled = !isWorking
+            roomCodeLabel.stringValue = "\(linkRoomClientInfo.roomCode)"
+        case .error:
+            roomActionButton.title = "Check"
+            roomActionButton.isEnabled = !isWorking
+            roomCodeLabel.stringValue = "error"
+        case .disconnected:
+            roomActionButton.title = "Check"
+            roomActionButton.isEnabled = !isWorking
+            roomCodeLabel.stringValue = "disconnected"
+        }
+    }
+    
     private func _handleUpdatedServer(_ response: NSApplication.ModalResponse, textField: NSTextField) {
         let oldValue = serverLabel.stringValue
         if response == .alertFirstButtonReturn {
             let newServer = textField.stringValue
-            UserIdentityController.sharedIdentityController.setTemporaryHost(newServer)
-            serverLabel.stringValue = newServer
+            if ServerConfiguration.setTemporaryHost(newServer) {
+                serverLabel.stringValue = newServer
+            }
         } else if response == .alertSecondButtonReturn {
             let newServer = ServerConfiguration.Hostname
-            UserIdentityController.sharedIdentityController.stopTemporaryOverride()
+            ServerConfiguration.stopTemporaryOverride()
             serverLabel.stringValue = newServer
         }
         if serverLabel.stringValue != oldValue {
@@ -125,6 +180,27 @@ class LinkManagerWindowController: NSWindowController {
         loginStatus = .loggingIn
         UserIdentityController.sharedIdentityController.ensureRegistration(force: true) { [weak self] result in
             self?._handleLoginResult(result)
+        }
+    }
+    
+    @objc @IBAction
+    private func _handleRoomActionButton(_ sender: AnyObject) {
+        let linkSessionManager = AppStateManager.sharedInstance.linkSessionManager
+        let roomStatus = linkSessionManager.roomStatus
+        switch roomStatus {
+        case .notChecked, .error, .disconnected:
+            linkSessionManager.checkForRooms()
+            _updateRoomStatusUI()
+            break
+        case .noRooms:
+            // TODO: Create/Join
+            break
+        case .roomAvailable(_):
+            // TODO: Connect
+            break
+        case .connectedToRoom(_):
+            // TODO: Close
+            break
         }
     }
 }

@@ -14,20 +14,23 @@ class UserIdentityController {
     
     // "default" device ID. May phase out
     private static let DeviceIDKey = "DeviceID"
+    static let UserIDChangedNotification = Notification.Name(rawValue: "UserIDChangedNotification")
     
-    private enum RegistrationStatus {
+    enum RegistrationStatus {
         case notRegistered
         case unverified(String)
         case verified(String)
     }
-    private var registrationStatus: RegistrationStatus {
+    private(set) var registrationStatus: RegistrationStatus {
         didSet {
             _runPendingVerificationBlocksIfNecessary()
+            NotificationCenter.default.post(name: UserIdentityController.UserIDChangedNotification, object: nil)
         }
     }
     
     typealias RegistrationCompletion = (Result<String, Error>) -> Void
     private var pendingVerificationBlocks = [RegistrationCompletion]()
+    private var serverConfigurationObservation: NSObjectProtocol? = nil
     
     static var sharedIdentityController: UserIdentityController = {
         let userIdentityController = UserIdentityController()
@@ -43,6 +46,18 @@ class UserIdentityController {
             registrationStatus = .unverified(deviceID)
         } else {
             registrationStatus = .notRegistered
+        }
+        
+        serverConfigurationObservation = NotificationCenter.default.addObserver(forName: ServerConfiguration.ServerConfigurationChangedNotification, object: nil, queue: nil) { [weak self] _ in
+            DispatchQueue.main.async {
+                self?._hostOverrideDidChange()
+            }
+        }
+    }
+    
+    deinit {
+        if let serverConfigurationObservation = serverConfigurationObservation {
+            NotificationCenter.default.removeObserver(serverConfigurationObservation)
         }
     }
     
@@ -69,52 +84,30 @@ class UserIdentityController {
     
     private func _saveIDIfNecessary(_ newID: String) {
         // Don't save if we're in an override mode
-        if temporaryHostOverride == nil {
+        if !ServerConfiguration.hasHostOverride() {
             UserDefaults.standard.setValue(newID, forKey: UserIdentityController.DeviceIDKey)
         }
     }
     
     private func _deleteIDIfNecessary() {
         // Don't delete if we're in an override mode
-        if temporaryHostOverride == nil {
+        if !ServerConfiguration.hasHostOverride() {
             UserDefaults.standard.removeObject(forKey: UserIdentityController.DeviceIDKey)
         }
     }
     
     // MARK: - Managing temporary accounts for test server instances
     
-    private var temporaryHostOverride: URL?
-    func setTemporaryHost(_ hostname: String) -> Bool {
-        if let url = URL(string: hostname), url.host != nil {
-            temporaryHostOverride = url
-            registrationStatus = .notRegistered
-            return true
-        } else {
-            // try to prepend https://
-            if let url = URL(string: "https://\(hostname)"), url.host != nil {
-                temporaryHostOverride = url
+    private func _hostOverrideDidChange() {
+        if !ServerConfiguration.hasHostOverride() {
+            // reload standard ID
+            if let deviceID = UserDefaults.standard.string(forKey: UserIdentityController.DeviceIDKey) {
+                registrationStatus = .unverified(deviceID)
+            } else {
                 registrationStatus = .notRegistered
-                return true
             }
-        }
-        return false
-    }
-    func stopTemporaryOverride() {
-        temporaryHostOverride = nil
-        
-        // reload standard ID
-        if let deviceID = UserDefaults.standard.string(forKey: UserIdentityController.DeviceIDKey) {
-            registrationStatus = .unverified(deviceID)
         } else {
             registrationStatus = .notRegistered
-        }
-    }
-    
-    private func _getHostAndPortAndScheme() -> (String, Int?, String) {
-        if let temporaryHostOverride = temporaryHostOverride {
-            return (temporaryHostOverride.host!, temporaryHostOverride.port, "http")
-        } else {
-            return (ServerConfiguration.Hostname, nil, "https")
         }
     }
     
@@ -211,8 +204,7 @@ class UserIdentityController {
     
     private func _verifyID(_ deviceID: String, completion: @escaping (Result<Bool, Error>) -> Void) {
         let queryItems = [URLQueryItem(name: "deviceID", value: deviceID)]
-        let (host, port, scheme) = _getHostAndPortAndScheme()
-        guard let url = ServerConfiguration.createURL(hostname: host, port: port, scheme: scheme, resourcePath: "/api/verifyUser", queryItems: queryItems) else {
+        guard let url = ServerConfiguration.createURL(resourcePath: "/api/verifyUser", queryItems: queryItems) else {
             DispatchQueue.main.async {
                 completion(.failure(SimpleError("Failed to construct registration URL")))
             }
@@ -237,8 +229,7 @@ class UserIdentityController {
     }
     
     private func _registerID(_ completion: @escaping (Result<String,Error>) -> Void) {
-        let (host, port, scheme) = _getHostAndPortAndScheme()
-        guard let url = ServerConfiguration.createURL(hostname: host, port: port, scheme: scheme, resourcePath: "/api/registerUser2") else {
+        guard let url = ServerConfiguration.createURL(resourcePath: "/api/registerUser2") else {
             print("Failed to construct registration URL")
             DispatchQueue.main.async {
                 completion(.failure(SimpleError("Failed to construct registration URL")))
@@ -246,7 +237,7 @@ class UserIdentityController {
             return
         }
         
-        let key = temporaryHostOverride == nil ? ServerConfiguration.APIKey : "foo"
+        let key = ServerConfiguration.hasHostOverride() ? "foo" : ServerConfiguration.APIKey
         let requestPayload = RegisterUserHTTPRequestPayload(key: key, displayName: nil)
         let payloadData: Data
         do {
@@ -313,8 +304,7 @@ class UserIdentityController {
     private var lastCheckInAttemptTime: Date?
     func checkIn() {
         dispatchPrecondition(condition: .onQueue(.main))
-        let (host, port, scheme) = _getHostAndPortAndScheme()
-        guard let url = ServerConfiguration.createURL(hostname: host, port: port, scheme: scheme, resourcePath: "/api/checkIn") else {
+        guard let url = ServerConfiguration.createURL(resourcePath: "/api/checkIn") else {
             print("Failed to construct check in URL")
             return
         }
@@ -384,8 +374,7 @@ class UserIdentityController {
         }
         
         let query = [URLQueryItem(name: "deviceID", value: deviceID)]
-        let (host, port, scheme) = _getHostAndPortAndScheme()
-        guard let url = ServerConfiguration.createURL(hostname: host, port: port, scheme: scheme, resourcePath: "/api/debugAuth", queryItems: query) else {
+        guard let url = ServerConfiguration.createURL(resourcePath: "/api/debugAuth", queryItems: query) else {
             print("Failed to construct debug auth URL")
             return
         }

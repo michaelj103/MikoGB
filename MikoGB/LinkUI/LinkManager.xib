@@ -10,6 +10,8 @@
             <connections>
                 <outlet property="loadingIndicator" destination="sAg-MO-SKU" id="SNg-tu-6ks"/>
                 <outlet property="loginButton" destination="Dbv-dV-CMt" id="Ttl-2A-tbB"/>
+                <outlet property="roomActionButton" destination="ScD-wB-Hhm" id="GgX-bd-Ib7"/>
+                <outlet property="roomCodeLabel" destination="12z-vR-WHU" id="uyd-8g-U2e"/>
                 <outlet property="serverLabel" destination="B1f-HU-YxN" id="UNa-ta-Bvk"/>
                 <outlet property="statusIcon" destination="eGO-0i-q02" id="PQi-0z-LUf"/>
                 <outlet property="window" destination="QvC-M9-y7g" id="8VO-lM-qvQ"/>
@@ -80,7 +82,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     </box>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="lAd-dR-TLN">
-                        <rect key="frame" x="54" y="161" width="43" height="16"/>
+                        <rect key="frame" x="52" y="161" width="43" height="16"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" lineBreakMode="clipping" title="Room:" id="Qg0-Hs-qsN">
                             <font key="font" metaFont="system"/>
@@ -88,6 +90,49 @@
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vKx-G5-ax3">
+                        <rect key="frame" x="86" y="137" width="69" height="16"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" lineBreakMode="clipping" title="Join Code:" id="Ri6-Ol-UFq">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="12z-vR-WHU">
+                        <rect key="frame" x="159" y="137" width="65" height="16"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" lineBreakMode="clipping" title="AAAAAAA" id="bZR-fX-7Hv">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nol-TA-XtM">
+                        <rect key="frame" x="80" y="113" width="75" height="16"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" lineBreakMode="clipping" title="Connected:" id="TZG-Zc-aLP">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="h1s-jd-5Eb">
+                        <rect key="frame" x="161" y="113" width="16" height="18"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="EE6-yA-TyE"/>
+                    </imageView>
+                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ScD-wB-Hhm">
+                        <rect key="frame" x="53" y="78" width="107" height="32"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="push" title="Create" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="eCX-H7-aX8">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="_handleRoomActionButton:" target="-2" id="oMz-K9-Oh7"/>
+                        </connections>
+                    </button>
                 </subviews>
             </view>
             <connections>
