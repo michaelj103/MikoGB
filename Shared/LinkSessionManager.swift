@@ -73,7 +73,7 @@ class LinkSessionManager: NSObject, GBEngineSerialDestination {
             // ignore for now
             break
         case .bytePushed(let byte):
-            engine.receivePulledSerialByte(byte)
+            engine.receivePushedSerialByte(byte)
         }
     }
     
@@ -411,7 +411,7 @@ class LinkSessionManager: NSObject, GBEngineSerialDestination {
             }
         })
         
-        let keyBytes = clientInfo.roomKey.stringValue().map{ $0.asciiValue! }
+        let keyBytes = clientInfo.roomKey.stringValue.map{ $0.asciiValue! }
         realizedConnection.write([LinkServerCommand.connect.rawValue] + keyBytes)
     }
     
@@ -426,18 +426,6 @@ class LinkSessionManager: NSObject, GBEngineSerialDestination {
         linkClientSession = nil
         linkConnection = nil
         roomStatus = .disconnected
-    }
-}
-
-// TODO: move to payloads module
-extension LinkRoomKey {
-    func stringValue() -> String {
-        switch self {
-        case .owner(let string):
-            return string
-        case .participant(let string):
-            return string
-        }
     }
 }
 

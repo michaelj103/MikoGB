@@ -51,8 +51,10 @@ private:
     void _pushByte(uint8_t byte) const;
     
     uint8_t _incomingByteToCommit = 0;
+    bool _hasIncomingByte = false;
     void _completeInternalTransferIfNecessary();
     void _completeExternalTransferIfNecessary();
+    void _completeTransfer();
 };
 
 }

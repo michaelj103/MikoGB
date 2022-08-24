@@ -56,11 +56,13 @@ void SerialController::handleIncomingEvent(SerialIncoming incoming, uint8_t payl
         case SerialIncoming::PulledByte:
             // we got a byte in response to an internal transfer. Commit it if ready
             _incomingByteToCommit = payload;
+            _hasIncomingByte = true;
             _completeInternalTransferIfNecessary();
             break;
         case SerialIncoming::PushedByte:
             // we got a byte from an external transfer. Commit it if wanted
             _incomingByteToCommit = payload;
+            _hasIncomingByte = true;
             _completeExternalTransferIfNecessary();
             break;
         case SerialIncoming::PulledByteStale:
@@ -92,28 +94,27 @@ void SerialController::_setState(SerialState state) {
 }
 
 void SerialController::_presentByte(uint8_t byte) const {
-    printf("Serial: presenting byte %d\n", (int)byte);
     if (_eventCallback) {
         _eventCallback(SerialOutgoing::PresentByte, byte);
     }
 }
 
 void SerialController::_pushByte(uint8_t byte) const {
-    printf("Serial: pushing byte %d\n", (int)byte);
     if (_eventCallback) {
         _eventCallback(SerialOutgoing::PushByte, byte);
     }
 }
 
-static void _completeTransfer(MemoryController::Ptr &memoryController, uint8_t byte) {
-    printf("Serial: Received byte 0x%02x\n", byte);
+void SerialController::_completeTransfer() {
+    uint8_t byte = _incomingByteToCommit;
+    _hasIncomingByte = false;
     // 1. clear control byte high bit (this will indirectly enter the idle state)
-    uint8_t controlByte = memoryController->readByte(SerialControlRegister);
-    memoryController->setByte(SerialControlRegister, (controlByte & 0x7F));
+    uint8_t controlByte = _memoryController->readByte(SerialControlRegister);
+    _memoryController->setByte(SerialControlRegister, (controlByte & 0x7F));
     // 2. set received byte
-    memoryController->setByte(SerialDataRegister, byte);
+    _memoryController->setByte(SerialDataRegister, byte);
     // 3. fire serial interrupt
-    memoryController->requestInterrupt(MemoryController::Serial);
+    _memoryController->requestInterrupt(MemoryController::Serial);
 }
 
 void SerialController::_completeInternalTransferIfNecessary() {
@@ -123,11 +124,16 @@ void SerialController::_completeInternalTransferIfNecessary() {
     }
     
     if (_transferCounter > 0) {
-        // Finished early. Wait for the counter
+        // Transfer completed early. Wait for the counter
         return;
     }
     
-    _completeTransfer(_memoryController, _incomingByteToCommit);
+    if (!_hasIncomingByte) {
+        // The expected number of cycles have elapsed but the byte isn't here. Wait for it
+        return;
+    }
+    
+    _completeTransfer();
 }
 
 void SerialController::_completeExternalTransferIfNecessary() {
@@ -136,7 +142,7 @@ void SerialController::_completeExternalTransferIfNecessary() {
         return;
     }
     
-    _completeTransfer(_memoryController, _incomingByteToCommit);
+    _completeTransfer();
 }
 
 void SerialController::updateWithCPUCycles(int cycles) {
