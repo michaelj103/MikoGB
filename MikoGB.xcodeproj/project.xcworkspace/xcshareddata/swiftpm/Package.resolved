@@ -6,7 +6,25 @@
       "location" : "https://github.com/michaelj103/gbserver.git",
       "state" : {
         "branch" : "main",
-        "revision" : "ef82a7ed8ae877ade3ca53e4640870cea8bffe10"
+        "revision" : "e89ea16dfe9372040b9d74b95660ec6c035a5c33"
+      }
+    },
+    {
+      "identity" : "swift-atomics",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-atomics.git",
+      "state" : {
+        "revision" : "919eb1d83e02121cdb434c7bfc1f0c66ef17febe",
+        "version" : "1.0.2"
+      }
+    },
+    {
+      "identity" : "swift-nio",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-nio.git",
+      "state" : {
+        "revision" : "b4e0a274f7f34210e97e2f2c50ab02a10b549250",
+        "version" : "2.41.1"
       }
     }
   ],

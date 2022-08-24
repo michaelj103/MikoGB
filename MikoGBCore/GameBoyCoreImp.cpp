@@ -18,6 +18,8 @@ GameBoyCoreImp::GameBoyCoreImp() {
     _gpu = make_shared<GPUCore>(_memoryController);
     _joypad = make_shared<Joypad>(_memoryController);
     _memoryController->joypad = _joypad;
+    _serialController = make_shared<SerialController>(_memoryController);
+    _memoryController->serialController = _serialController;
 }
 
 bool GameBoyCoreImp::loadROMData(const void *romData, size_t size) {
@@ -94,6 +96,18 @@ bool GameBoyCoreImp::isPersistenceStale() const {
 
 void GameBoyCoreImp::resetPersistence() {
     _memoryController->resetPersistence();
+}
+
+uint8_t GameBoyCoreImp::currentSerialDataByte() const {
+    return _serialController->getCurrentDataByte();
+}
+
+void GameBoyCoreImp::handleIncomingSerialRequest(SerialIncoming incoming, uint8_t payload) {
+    _serialController->handleIncomingEvent(incoming, payload);
+}
+
+void GameBoyCoreImp::setSerialEventCallback(SerialEventCallback callback) {
+    _serialController->setEventCallback(callback);
 }
 
 void GameBoyCoreImp::getTileMap(PixelBufferImageCallback callback) {

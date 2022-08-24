@@ -25,6 +25,10 @@ class GameViewController: UIViewController, DPadDelegate, GBEngineSaveDestinatio
     private var selectButton: UIButton!
     private var fastForwardButton: UIBarButtonItem!
     
+    private var terminationObserver: NSObjectProtocol?
+    private var backgroundObserver: NSObjectProtocol?
+    private var settingsObserver: NSObjectProtocol?
+    
     private var desiredAudioState: DesiredAudioState = .stopped {
         didSet {
             _updateAudioEngine()
@@ -144,19 +148,31 @@ class GameViewController: UIViewController, DPadDelegate, GBEngineSaveDestinatio
         fastForwardButton.tintColor = .white
         navigationItem.rightBarButtonItems = [menuButton, fastForwardButton]
         
-        NotificationCenter.default.addObserver(forName: UIApplication.willTerminateNotification, object: nil, queue: nil) { [weak self] _ in
+        terminationObserver = NotificationCenter.default.addObserver(forName: UIApplication.willTerminateNotification, object: nil, queue: nil) { [weak self] _ in
             self?._persistSaveDataImmediatelyIfNeeded()
         }
         
-        NotificationCenter.default.addObserver(forName: UIApplication.didEnterBackgroundNotification, object: nil, queue: nil) { [weak self] _ in
+        backgroundObserver = NotificationCenter.default.addObserver(forName: UIApplication.didEnterBackgroundNotification, object: nil, queue: nil) { [weak self] _ in
             self?._persistSaveDataImmediatelyIfNeeded()
         }
         
-        NotificationCenter.default.addObserver(forName: SettingsManager.SettingsChangedNotification, object: nil, queue: nil) { [weak self] _ in
+        settingsObserver = NotificationCenter.default.addObserver(forName: SettingsManager.SettingsChangedNotification, object: nil, queue: nil) { [weak self] _ in
             self?._settingsChanged()
         }
         
         _loadROM()
+    }
+    
+    deinit {
+        if let terminationObserver = terminationObserver {
+            NotificationCenter.default.removeObserver(terminationObserver)
+        }
+        if let backgroundObserver = backgroundObserver {
+            NotificationCenter.default.removeObserver(backgroundObserver)
+        }
+        if let settingsObserver = settingsObserver {
+            NotificationCenter.default.removeObserver(settingsObserver)
+        }
     }
     
     private func _loadROM() {

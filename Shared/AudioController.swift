@@ -36,7 +36,9 @@ class AudioController : NSObject, GBEngineAudioDestination {
         
         #if os(macOS)
         NotificationCenter.default.addObserver(forName: TerminationNotification, object: nil, queue: nil) { [weak self] _ in
-            self?.stopAudioEngine()
+            DispatchQueue.main.async {
+                self?.stopAudioEngine()
+            }
         }
         #endif
     }

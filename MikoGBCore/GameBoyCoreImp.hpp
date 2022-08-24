@@ -15,6 +15,7 @@
 #include "GPUCore.hpp"
 #include "MemoryController.hpp"
 #include "Joypad.hpp"
+#include "SerialController.hpp"
 #include "Disassembler.hpp"
 
 namespace MikoGB {
@@ -45,6 +46,11 @@ public:
     
     void setButtonPressed(JoypadButton, bool);
     
+    /// Serial
+    uint8_t currentSerialDataByte() const;
+    void handleIncomingSerialRequest(SerialIncoming incoming, uint8_t payload);
+    void setSerialEventCallback(SerialEventCallback callback);
+    
     /// Debug utilities
     void getTileMap(PixelBufferImageCallback callback);
     void getBackground(PixelBufferImageCallback callback);
@@ -59,6 +65,7 @@ private:
     GPUCore::Ptr _gpu;
     MemoryController::Ptr _memoryController;
     Joypad::Ptr _joypad;
+    SerialController::Ptr _serialController;
     Disassembler::Ptr _disassembler;
     Disassembler::Ptr _accessDisassembler();
     

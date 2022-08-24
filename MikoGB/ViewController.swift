@@ -23,6 +23,7 @@ class ViewController: NSViewController, NoROMViewDelegate, NSMenuItemValidation,
     private var engine: GBEngine!
     private var audioController: AudioController!
     private var persistenceManager: PersistenceManager!
+    private var linkManager: LinkSessionManager!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,7 +36,9 @@ class ViewController: NSViewController, NoROMViewDelegate, NSMenuItemValidation,
         engine = AppStateManager.sharedInstance.engine
         audioController = AudioController(engine: engine)
         persistenceManager = AppStateManager.sharedInstance.persistenceManager
+        linkManager = AppStateManager.sharedInstance.linkSessionManager
         engine.saveDestination = self
+        engine.serialDestination = linkManager
         
         NotificationCenter.default.addObserver(forName: TerminationNotification, object: nil, queue: nil) { [weak self] _ in
             self?._prepareForTermination()

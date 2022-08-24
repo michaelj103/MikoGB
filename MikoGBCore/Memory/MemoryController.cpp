@@ -9,6 +9,7 @@
 #include "CartridgeHeader.hpp"
 #include "MemoryBankController.hpp"
 #include "Joypad.hpp"
+#include "SerialController.hpp"
 #include <iostream>
 
 using namespace std;
@@ -48,6 +49,9 @@ static const uint16_t TMARegister = 0xFF06; // Timer modulo replaces TIMA when i
 static const uint16_t TACRegister = 0xFF07; // Timer control register
 static const uint16_t AudioRegisterBegin = 0xFF10; // NR10, lowest audio control register
 static const uint16_t AudioRegisterEnd = 0xFF3F; // end of wave pattern RAM. Highest audio control register
+static const uint16_t SerialDataRegister = 0xFF01; // Byte queued for serial data Rx/Tx
+static const uint16_t SerialControlRegister = 0xFF02; // Control bits for serial transfer
+
 
 static void _LogMemoryControllerErr(const string &msg) {
     cerr << "MemoryController Err: " << msg << "\n";
@@ -173,6 +177,10 @@ void MemoryController::setByte(uint16_t addr, uint8_t val) {
         } else if (addr >= AudioRegisterBegin && addr <= AudioRegisterEnd) {
             // write to audio controller
             _audioController.writeAudioRegister(addr, val);
+        } else if (addr == SerialDataRegister) {
+            serialController->serialDataWillWrite(val);
+        } else if (addr == SerialControlRegister) {
+            serialController->serialControlWillWrite(val);
         }
         
         // Write to high range memory
@@ -187,6 +195,7 @@ void MemoryController::updateWithCPUCycles(size_t cpuCycles) {
     }
     _mbc->updateClock(cpuCycles);
     _audioController.updateWithCPUCycles((int)cpuCycles);
+    serialController->updateWithCPUCycles((int)cpuCycles);
 }
 
 void MemoryController::requestInterrupt(InterruptFlag flag) {
