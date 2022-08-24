@@ -25,9 +25,9 @@ class GameViewController: UIViewController, DPadDelegate, GBEngineSaveDestinatio
     private var selectButton: UIButton!
     private var fastForwardButton: UIBarButtonItem!
     
-    private let terminationObserver: NSObjectProtocol
-    private let backgroundObserver: NSObjectProtocol
-    private let settingsObserver: NSObjectProtocol
+    private var terminationObserver: NSObjectProtocol?
+    private var backgroundObserver: NSObjectProtocol?
+    private var settingsObserver: NSObjectProtocol?
     
     private var desiredAudioState: DesiredAudioState = .stopped {
         didSet {
@@ -164,9 +164,15 @@ class GameViewController: UIViewController, DPadDelegate, GBEngineSaveDestinatio
     }
     
     deinit {
-        NotificationCenter.default.removeObserver(terminationObserver)
-        NotificationCenter.default.removeObserver(backgroundObserver)
-        NotificationCenter.default.removeObserver(settingsObserver)
+        if let terminationObserver = terminationObserver {
+            NotificationCenter.default.removeObserver(terminationObserver)
+        }
+        if let backgroundObserver = backgroundObserver {
+            NotificationCenter.default.removeObserver(backgroundObserver)
+        }
+        if let settingsObserver = settingsObserver {
+            NotificationCenter.default.removeObserver(settingsObserver)
+        }
     }
     
     private func _loadROM() {

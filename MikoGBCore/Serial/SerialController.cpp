@@ -65,10 +65,6 @@ void SerialController::handleIncomingEvent(SerialIncoming incoming, uint8_t payl
             _hasIncomingByte = true;
             _completeExternalTransferIfNecessary();
             break;
-        case SerialIncoming::PulledByteStale:
-        case SerialIncoming::CommitStaleByte:
-            // ignore for now...
-            break;
     }
 }
 

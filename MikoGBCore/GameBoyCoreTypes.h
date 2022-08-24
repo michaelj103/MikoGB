@@ -53,8 +53,6 @@ using AudioSampleCallback = std::function<void(const int16_t, const int16_t)>;
 
 enum class SerialIncoming {
     PulledByte,             ///< Response to outgoing push. Expects payload byte
-    PulledByteStale,        ///< Uncommitted response to outgoing push. Expects payload byte
-    CommitStaleByte,        ///< Commit any uncommitted response. Payload ignored
     PushedByte,             ///< Incoming byte clocked by connected gameboy. Expects payload byte
 };
 

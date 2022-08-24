@@ -66,11 +66,8 @@ class LinkSessionManager: NSObject, GBEngineSerialDestination {
             _handleDidConnect()
         case .pullByte(let byte):
             engine.receivePulledSerialByte(byte)
-        case .pullByteStale(_):
-            // ignore for now
-            break
-        case .commitStaleByte:
-            // ignore for now
+        case .pullByteStale, .commitStaleByte:
+            // ignore for now (ever needed?)
             break
         case .bytePushed(let byte):
             engine.receivePushedSerialByte(byte)
