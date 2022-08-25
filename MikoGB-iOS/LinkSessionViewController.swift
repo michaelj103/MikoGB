@@ -249,9 +249,9 @@ class LinkSessionViewController: UIViewController {
         case .connectingToRoom:
             break
         case .connectedToRoom:
-            //TODO: Close room
-            break
+            linkSessionManager.closeRoom()
         }
+        _updateUI()
     }
     
     private func _handleSecondaryAction() {

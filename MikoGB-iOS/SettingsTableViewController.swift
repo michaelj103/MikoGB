@@ -181,7 +181,7 @@ class SettingsTableViewController : UITableViewController {
     }
     
     private func _getCustomServerValue() {
-        let alert = UIAlertController(title: "Enter Server", message: "Include port, if necessary", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Enter Server", message: "Include port if necessary", preferredStyle: .alert)
         alert.addTextField { textField in
             textField.placeholder = "hostname:port"
         }
@@ -216,7 +216,9 @@ class SettingsTableViewController : UITableViewController {
             let success = ServerConfiguration.setTemporaryHost(customServer!)
             ensureRegistration = success
             if !success {
-                // TODO: Present failure alert
+                let alert = UIAlertController(title: "Failed to Parse Server", message: "Try again", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .default))
+                self.present(alert, animated: true)
             }
         } else if !wantsOverride && hasOverride {
             ServerConfiguration.stopTemporaryOverride()

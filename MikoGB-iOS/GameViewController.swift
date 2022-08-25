@@ -374,8 +374,11 @@ class GameViewController: UIViewController, DPadDelegate, GBEngineSaveDestinatio
                 _startEmulation()
             }
         } else {
-            //TODO: present an alert
-            preconditionFailure("failure to load ROM data is unhandled")
+            let alert = UIAlertController(title: "Failed to Load ROM", message: "Unable to load ROM data from the file. Was it deleted?", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { [weak self] _ in
+                self?.navigationController?.popViewController(animated: true)
+            }))
+            self.present(alert, animated: true)
         }
     }
     
@@ -383,8 +386,11 @@ class GameViewController: UIViewController, DPadDelegate, GBEngineSaveDestinatio
         if success {
             _startEmulation()
         } else {
-            //TODO: present an alert
-            preconditionFailure("failure to load save data is unhandled")
+            let alert = UIAlertController(title: "Failed to Load Save Data", message: "Unable to load save data from the file. It may not be valid for this ROM", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { [weak self] _ in
+                self?.navigationController?.popViewController(animated: true)
+            }))
+            self.present(alert, animated: true)
         }
     }
     

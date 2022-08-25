@@ -108,6 +108,40 @@ class LinkSessionManager: NSObject, GBEngineSerialDestination {
         }
     }
     
+    private static func _serverPost<T: Decodable>(_ url: URL, payload: Data, completion: @escaping (Result<T,Error>) -> Void) {
+        var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData)
+        request.httpMethod = "POST"
+        request.setValue("application/json; charset=UTF-8", forHTTPHeaderField: "Content-Type")
+        request.httpBody = payload
+        
+        let networkManager = NetworkManager.sharedNetworkManager
+        networkManager.submitRequest(request) { result in
+            switch result {
+            case .success(let data):
+                let response: Result<T,Error> = LinkSessionManager._decodeServerResponse(data)
+                DispatchQueue.main.async {
+                    completion(response)
+                }
+            case .failure(let error):
+                DispatchQueue.main.async {
+                    completion(.failure(error))
+                }
+            }
+        }
+    }
+    
+    private static func _decodeServerResponse<T: Decodable>(_ data: Data) -> Result<T, Error> {
+        let response: Result<T, Error>
+        do {
+            let payload = try JSONDecoder().decode(T.self, from: data)
+            response = .success(payload)
+        } catch {
+            response = .failure(error)
+        }
+        
+        return response
+    }
+    
     // MARK: - Checking for rooms
     
     private func _canRunRoomCheck() -> Bool {
@@ -176,7 +210,7 @@ class LinkSessionManager: NSObject, GBEngineSerialDestination {
         networkManager.submitRequest(request) { result in
             switch result {
             case .success(let data):
-                let response = LinkSessionManager._decodeRoomInfoResponse(data)
+                let response: Result<PossibleLinkRoomClientInfo,Error> = LinkSessionManager._decodeServerResponse(data)
                 DispatchQueue.main.async {
                     completion(response)
                 }
@@ -186,18 +220,6 @@ class LinkSessionManager: NSObject, GBEngineSerialDestination {
                 }
             }
         }
-    }
-    
-    private static func _decodeRoomInfoResponse(_ data: Data) -> Result<PossibleLinkRoomClientInfo, Error> {
-        let response: Result<PossibleLinkRoomClientInfo, Error>
-        do {
-            let payload = try JSONDecoder().decode(PossibleLinkRoomClientInfo.self, from: data)
-            response = .success(payload)
-        } catch {
-            response = .failure(error)
-        }
-        
-        return response
     }
     
     // MARK: - Creating rooms
@@ -235,7 +257,7 @@ class LinkSessionManager: NSObject, GBEngineSerialDestination {
         case .success(let clientInfo):
             roomStatus = .roomAvailable(clientInfo)
         case .failure(let error):
-            print("Room check failed with error: \(error)")
+            print("Room creation/join failed with error: \(error)")
             roomStatus = .error
         }
     }
@@ -270,37 +292,7 @@ class LinkSessionManager: NSObject, GBEngineSerialDestination {
             return
         }
         
-        var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData)
-        request.httpMethod = "POST"
-        request.setValue("application/json; charset=UTF-8", forHTTPHeaderField: "Content-Type")
-        request.httpBody = payloadData
-        
-        let networkManager = NetworkManager.sharedNetworkManager
-        networkManager.submitRequest(request) { result in
-            switch result {
-            case .success(let data):
-                let response = LinkSessionManager._decodeRoomCreationOrJoinResponse(data)
-                DispatchQueue.main.async {
-                    completion(response)
-                }
-            case .failure(let error):
-                DispatchQueue.main.async {
-                    completion(.failure(error))
-                }
-            }
-        }
-    }
-    
-    private static func _decodeRoomCreationOrJoinResponse(_ data: Data) -> Result<LinkRoomClientInfo,Error> {
-        let response: Result<LinkRoomClientInfo, Error>
-        do {
-            let payload = try JSONDecoder().decode(LinkRoomClientInfo.self, from: data)
-            response = .success(payload)
-        } catch {
-            response = .failure(error)
-        }
-        
-        return response
+        LinkSessionManager._serverPost(url, payload: payloadData, completion: completion)
     }
     
     // MARK: - Joining rooms
@@ -352,25 +344,85 @@ class LinkSessionManager: NSObject, GBEngineSerialDestination {
             return
         }
         
-        var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData)
-        request.httpMethod = "POST"
-        request.setValue("application/json; charset=UTF-8", forHTTPHeaderField: "Content-Type")
-        request.httpBody = payloadData
-        
-        let networkManager = NetworkManager.sharedNetworkManager
-        networkManager.submitRequest(request) { result in
-            switch result {
-            case .success(let data):
-                let response = LinkSessionManager._decodeRoomCreationOrJoinResponse(data)
-                DispatchQueue.main.async {
-                    completion(response)
-                }
-            case .failure(let error):
-                DispatchQueue.main.async {
-                    completion(.failure(error))
-                }
-            }
+        LinkSessionManager._serverPost(url, payload: payloadData, completion: completion)
+    }
+    
+    // MARK: - Closing rooms
+    
+    private func _canRunCloseRoom() -> Bool {
+        switch roomStatus {
+        case .notChecked, .noRooms, .error, .disconnected, .connectingToRoom:
+            return false
+        case .roomAvailable, .connectedToRoom:
+            return true
         }
+    }
+    
+    func closeRoom() {
+        guard !isWorking else {
+            print("Already running")
+            return
+        }
+        
+        guard _canRunCloseRoom() else {
+            print("Can't close rooms if the user doesn't have any")
+            return
+        }
+        
+        isWorking = true
+        _closeRoom { [weak self] result in
+            self?._handleRoomCloseResult(result)
+        }
+    }
+    
+    private func _handleRoomCloseResult(_ result: Result<GenericMessageResponse,Error>) {
+        isWorking = false
+        switch result {
+        case .success(let response):
+            if case .success = response {
+                roomStatus = .disconnected
+            } else {
+                let message = response.getMessage()
+                print("Failed to close room with message: \(message)")
+                roomStatus = .error
+            }
+        case .failure(let error):
+            print("Room close failed with error: \(error)")
+            roomStatus = .error
+        }
+    }
+    
+    private func _closeRoom(_ completion: @escaping (Result<GenericMessageResponse,Error>) -> Void) {
+        let registrationStatus = UserIdentityController.sharedIdentityController.registrationStatus
+        guard case .verified(let deviceID) = registrationStatus else {
+            print("No verified user ID")
+            DispatchQueue.main.async {
+                completion(.failure(SimpleError("No verified user ID for room close")))
+            }
+            return
+        }
+        
+        guard let url = ServerConfiguration.createURL(resourcePath: "/api/closeRoom") else {
+            print("Failed to construct room close URL")
+            DispatchQueue.main.async {
+                completion(.failure(SimpleError("Failed to construct room close URL")))
+            }
+            return
+        }
+        
+        let requestPayload = CloseRoomHTTPRequestPayload(deviceID: deviceID)
+        let payloadData: Data
+        do {
+            payloadData = try JSONEncoder().encode(requestPayload)
+        } catch {
+            print("Failed to encode room close payload data with error \(error)")
+            DispatchQueue.main.async {
+                completion(.failure(error))
+            }
+            return
+        }
+        
+        LinkSessionManager._serverPost(url, payload: payloadData, completion: completion)
     }
     
     // MARK: - Connecting to rooms
