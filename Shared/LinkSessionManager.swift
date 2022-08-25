@@ -479,6 +479,11 @@ class LinkSessionManager: NSObject, GBEngineSerialDestination {
             return
         }
         roomStatus = .connectedToRoom(clientInfo)
+        
+        guard let linkConnection = linkConnection else {
+            return
+        }
+        _handleInitialConnection(linkConnection)
     }
     
     private var finishWorkOnDisconnect = false

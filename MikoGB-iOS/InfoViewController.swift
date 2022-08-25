@@ -63,7 +63,6 @@ class InfoViewController : UIViewController {
         
         availableBounds.size.height -= (titleFrame.maxY - availableBounds.minY)
         availableBounds.origin.y = titleFrame.maxY
-        availableBounds.size.height -= titleFrame.maxY
         let versionSize = versionLabel.sizeThatFits(availableBounds.size)
         let versionX = availableBounds.minX + ((availableBounds.size.width - versionSize.width) / 2.0)
         let versionY = availableBounds.minY + 10.0

@@ -13,11 +13,11 @@ import AVFoundation
 class GameViewController: UIViewController, DPadDelegate, GBEngineSaveDestination, UIDocumentPickerDelegate {
 
     private var gameView: GameView!
-    private var engine = GBEngine()
+    private var engine: GBEngine
     private var audioController: AudioController!
     private let romURL: URL
     private let persistenceManager: PersistenceManager
-    private var linkSessionManager: LinkSessionManager?
+    private var linkSessionManager: LinkSessionManager
     
     private var dPadView: DPadView!
     private var aButton: UIButton!
@@ -43,6 +43,9 @@ class GameViewController: UIViewController, DPadDelegate, GBEngineSaveDestinatio
     init(_ rom: URL, persistenceManager: PersistenceManager) {
         self.romURL = rom
         self.persistenceManager = persistenceManager
+        let engine = GBEngine()
+        self.engine = engine
+        self.linkSessionManager = LinkSessionManager(engine)
         super.init(nibName: nil, bundle: nil)
         
         self.navigationItem.hidesBackButton = true
@@ -189,8 +192,8 @@ class GameViewController: UIViewController, DPadDelegate, GBEngineSaveDestinatio
             // in case we have a link session VC up
             self.dismiss(animated: true)
         }
-        linkSessionManager = nil
         engine = GBEngine()
+        linkSessionManager = LinkSessionManager(engine)
         gameView.engine = engine
         desiredAudioState = .stopped
         audioController = AudioController(engine: engine)
@@ -547,15 +550,7 @@ class GameViewController: UIViewController, DPadDelegate, GBEngineSaveDestinatio
     }
     
     private func _showLinkSessionManager() {
-        let lsm: LinkSessionManager
-        if let linkSessionManager = linkSessionManager {
-            lsm = linkSessionManager
-        } else {
-            lsm = LinkSessionManager(self.engine)
-            linkSessionManager = lsm
-        }
-        
-        LinkSessionViewController.presentModal(with: lsm, on: self)
+        LinkSessionViewController.presentModal(with: self.linkSessionManager, on: self)
     }
     
     // MARK: UIDocumentPickerDelegate
