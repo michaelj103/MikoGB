@@ -17,6 +17,7 @@ class GameViewController: UIViewController, DPadDelegate, GBEngineSaveDestinatio
     private var audioController: AudioController!
     private let romURL: URL
     private let persistenceManager: PersistenceManager
+    private var linkSessionManager: LinkSessionManager?
     
     private var dPadView: DPadView!
     private var aButton: UIButton!
@@ -184,6 +185,11 @@ class GameViewController: UIViewController, DPadDelegate, GBEngineSaveDestinatio
     }
     
     private func _restart() {
+        if self.presentedViewController != nil {
+            // in case we have a link session VC up
+            self.dismiss(animated: true)
+        }
+        linkSessionManager = nil
         engine = GBEngine()
         gameView.engine = engine
         desiredAudioState = .stopped
@@ -217,8 +223,12 @@ class GameViewController: UIViewController, DPadDelegate, GBEngineSaveDestinatio
         let showSettingsItem = UIAction(title: "Settings", image: settingsImage, identifier: nil, discoverabilityTitle: nil, attributes: [], state: .off) { [weak self] _ in
             self?._showSettings()
         }
+        let linkSessionImage = UIImage(systemName: "cable.connector.horizontal")
+        let linkSessionItem = UIAction(title: "Link Session", image: linkSessionImage, identifier: nil, discoverabilityTitle: nil, attributes: [], state: .off) { [weak self] _ in
+            self?._showLinkSessionManager()
+        }
         let menu = UIMenu(title: "", image: nil, identifier: nil, options: .displayInline, children: [
-        showSettingsItem, exportSaveItem, importSaveItem])
+        showSettingsItem, linkSessionItem, exportSaveItem, importSaveItem])
         
         let buttonImage = UIImage(systemName: "ellipsis.circle")
         let menuButton = UIBarButtonItem(title: nil, image: buttonImage, primaryAction: nil, menu: menu)
@@ -522,6 +532,18 @@ class GameViewController: UIViewController, DPadDelegate, GBEngineSaveDestinatio
     
     private func _showSettings() {
         SettingsTableViewController.presentModal(on: self)
+    }
+    
+    private func _showLinkSessionManager() {
+        let lsm: LinkSessionManager
+        if let linkSessionManager = linkSessionManager {
+            lsm = linkSessionManager
+        } else {
+            lsm = LinkSessionManager(self.engine)
+            linkSessionManager = lsm
+        }
+        
+        LinkSessionViewController.presentModal(with: lsm, on: self)
     }
     
     // MARK: UIDocumentPickerDelegate

@@ -61,6 +61,7 @@ class InfoViewController : UIViewController {
         let titleFrame = CGRect(x: titleX, y: titleY, width: titleSize.width, height: titleSize.height)
         titleLabel.frame = titleFrame
         
+        availableBounds.size.height -= (titleFrame.maxY - availableBounds.minY)
         availableBounds.origin.y = titleFrame.maxY
         availableBounds.size.height -= titleFrame.maxY
         let versionSize = versionLabel.sizeThatFits(availableBounds.size)
@@ -69,7 +70,7 @@ class InfoViewController : UIViewController {
         let versionFrame = CGRect(x: versionX, y: versionY, width: versionSize.width, height: versionSize.height)
         versionLabel.frame = versionFrame
         
-        availableBounds.size.height -= (versionFrame.maxY - (availableBounds.minY))
+        availableBounds.size.height -= (versionFrame.maxY - availableBounds.minY)
         availableBounds.origin.y = versionFrame.maxY
         let minButtonSize = updateButton.sizeThatFits(availableBounds.size)
         let buttonSize = CGSize(width: max(minButtonSize.width, availableBounds.width), height: minButtonSize.height)

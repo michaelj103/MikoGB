@@ -16,15 +16,17 @@ class UserIdentityController {
     private static let DeviceIDKey = "DeviceID"
     static let UserIDChangedNotification = Notification.Name(rawValue: "UserIDChangedNotification")
     
-    enum RegistrationStatus {
+    enum RegistrationStatus: Equatable {
         case notRegistered
         case unverified(String)
         case verified(String)
     }
     private(set) var registrationStatus: RegistrationStatus {
         didSet {
-            _runPendingVerificationBlocksIfNecessary()
-            NotificationCenter.default.post(name: UserIdentityController.UserIDChangedNotification, object: nil)
+            if oldValue != registrationStatus {
+                _runPendingVerificationBlocksIfNecessary()
+                NotificationCenter.default.post(name: UserIdentityController.UserIDChangedNotification, object: nil)
+            }
         }
     }
     

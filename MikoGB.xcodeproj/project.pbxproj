@@ -33,6 +33,7 @@
 		2902EADC27CB54B800186976 /* WaveformSound.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2902EADA27CB54B800186976 /* WaveformSound.cpp */; };
 		2902EADD27CB54B800186976 /* WaveformSound.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 2902EADB27CB54B800186976 /* WaveformSound.hpp */; };
 		2907003328B6D584000D8A5B /* GBLinkServerProtocol in Frameworks */ = {isa = PBXBuildFile; productRef = 2907003228B6D584000D8A5B /* GBLinkServerProtocol */; };
+		2907003528B6D8B7000D8A5B /* LinkSessionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2907003428B6D8B7000D8A5B /* LinkSessionViewController.swift */; };
 		290B3BC8247E00B400937D71 /* CPUCore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297E6137245FEA5D00EE150F /* CPUCore.cpp */; };
 		290B3BC9247E00C000937D71 /* CPUInstruction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297E613C245FECDF00EE150F /* CPUInstruction.cpp */; };
 		290B3BCA247E00CB00937D71 /* LoadInstructions8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8C0BA2462685F0082C52B /* LoadInstructions8.cpp */; };
@@ -269,6 +270,7 @@
 		2902EAD727CAD5D300186976 /* NoiseSound.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = NoiseSound.hpp; sourceTree = "<group>"; };
 		2902EADA27CB54B800186976 /* WaveformSound.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = WaveformSound.cpp; sourceTree = "<group>"; };
 		2902EADB27CB54B800186976 /* WaveformSound.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = WaveformSound.hpp; sourceTree = "<group>"; };
+		2907003428B6D8B7000D8A5B /* LinkSessionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkSessionViewController.swift; sourceTree = "<group>"; };
 		290B3BCF247E048100937D71 /* Test8BitLoadInstructions.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = Test8BitLoadInstructions.mm; sourceTree = "<group>"; };
 		290B3BD1247F51D100937D71 /* Test16BitLoadInstructions.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = Test16BitLoadInstructions.mm; sourceTree = "<group>"; };
 		290FF33D265F066D006812F4 /* MonochromePalette.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MonochromePalette.hpp; sourceTree = "<group>"; };
@@ -798,6 +800,7 @@
 				29D6D0F128A2E2AE00C98B03 /* InfoViewController.swift */,
 				29D6D0F528A30E0900C98B03 /* SettingsTableViewController.swift */,
 				29D6D0F728A35C2D00C98B03 /* SettingsManager.swift */,
+				2907003428B6D8B7000D8A5B /* LinkSessionViewController.swift */,
 				29DBB67D27E2BA8700C77519 /* Main.storyboard */,
 				29DBB68027E2BA8800C77519 /* Assets.xcassets */,
 				2923CDF22893A8E100262C49 /* Model.xcdatamodeld */,
@@ -1265,6 +1268,7 @@
 				29D6D0F028A19EE900C98B03 /* UserIdentityController.swift in Sources */,
 				2987F3C727E6E5F800EC00A7 /* GameViewController.swift in Sources */,
 				2987F3BC27E6D8D500EC00A7 /* WavFile.c in Sources */,
+				2907003528B6D8B7000D8A5B /* LinkSessionViewController.swift in Sources */,
 				2987F3C127E6DF0200EC00A7 /* PersistenceManager.swift in Sources */,
 				29DBB67827E2BA8700C77519 /* AppDelegate.swift in Sources */,
 				2987F3BB27E6D8CD00EC00A7 /* GBAudioWriter.m in Sources */,

@@ -28,6 +28,8 @@ class LinkSessionManager: NSObject, GBEngineSerialDestination {
         if let userIdentityObserver = userIdentityObserver {
             NotificationCenter.default.removeObserver(userIdentityObserver)
         }
+        
+        linkConnection?.close()
     }
     
     private var presentedBytePendingConnection: UInt8?
@@ -96,7 +98,13 @@ class LinkSessionManager: NSObject, GBEngineSerialDestination {
     private(set) var isWorking: Bool = false
     
     private func _userIDStateDidChange() {
-        roomStatus = .notChecked
+        if let linkConnection = linkConnection {
+            // if user account changes during a connection, close it. Otherwise reset the check pipeline
+            linkConnection.close()
+            roomStatus = .disconnected
+        } else {
+            roomStatus = .notChecked
+        }
     }
     
     // MARK: - Checking for rooms
