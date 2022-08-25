@@ -80,6 +80,7 @@ class LinkSessionManager: NSObject, GBEngineSerialDestination {
     // MARK: - Room state management
     
     static let RoomStatusChangedNotification = NSNotification.Name(rawValue: "RoomStatusChangedNotification")
+    static let HasConnectionNotification = NSNotification.Name(rawValue: "RoomConnectionChangedNotification")
     
     enum RoomStatus {
         case notChecked
@@ -93,6 +94,13 @@ class LinkSessionManager: NSObject, GBEngineSerialDestination {
     private(set) var roomStatus: RoomStatus = .notChecked {
         didSet {
             NotificationCenter.default.post(name: LinkSessionManager.RoomStatusChangedNotification, object: nil)
+        }
+    }
+    private(set) var hasConnection: Bool = false {
+        didSet {
+            if oldValue != hasConnection {
+                NotificationCenter.default.post(name: LinkSessionManager.HasConnectionNotification, object: nil)
+            }
         }
     }
     
@@ -375,6 +383,7 @@ class LinkSessionManager: NSObject, GBEngineSerialDestination {
     }
     
     private func _handleRoomCloseResult(_ result: Result<GenericMessageResponse,Error>) {
+        // TODO: These errors should probably enter a different errorConnected state
         isWorking = false
         switch result {
         case .success(let response):
@@ -479,6 +488,7 @@ class LinkSessionManager: NSObject, GBEngineSerialDestination {
             return
         }
         roomStatus = .connectedToRoom(clientInfo)
+        hasConnection = true
         
         guard let linkConnection = linkConnection else {
             return
@@ -492,6 +502,7 @@ class LinkSessionManager: NSObject, GBEngineSerialDestination {
         linkClientSession = nil
         linkConnection = nil
         roomStatus = .disconnected
+        hasConnection = false
         if finishWorkOnDisconnect {
             finishWorkOnDisconnect = false
             isWorking = false

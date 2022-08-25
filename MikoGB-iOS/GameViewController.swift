@@ -29,6 +29,7 @@ class GameViewController: UIViewController, DPadDelegate, GBEngineSaveDestinatio
     private var terminationObserver: NSObjectProtocol?
     private var backgroundObserver: NSObjectProtocol?
     private var settingsObserver: NSObjectProtocol?
+    private var connectionObserver: NSObjectProtocol?
     
     private var desiredAudioState: DesiredAudioState = .stopped {
         didSet {
@@ -164,6 +165,10 @@ class GameViewController: UIViewController, DPadDelegate, GBEngineSaveDestinatio
             self?._settingsChanged()
         }
         
+        connectionObserver = NotificationCenter.default.addObserver(forName: LinkSessionManager.HasConnectionNotification, object: nil, queue: OperationQueue.main, using: { [weak self] _ in
+            self?._updateSpeedModeForConnection()
+        })
+        
         _loadROM()
     }
     
@@ -176,6 +181,9 @@ class GameViewController: UIViewController, DPadDelegate, GBEngineSaveDestinatio
         }
         if let settingsObserver = settingsObserver {
             NotificationCenter.default.removeObserver(settingsObserver)
+        }
+        if let connectionObserver = connectionObserver {
+            NotificationCenter.default.removeObserver(connectionObserver)
         }
     }
     
@@ -459,7 +467,15 @@ class GameViewController: UIViewController, DPadDelegate, GBEngineSaveDestinatio
     // MARK: - Actions
     
     private func _toggleSpeedMode() {
+        if linkSessionManager.hasConnection {
+            print("Can't toggle speed mode with an active connection")
+            return
+        }
         gameView.toggleSpeedMode()
+        _updateSpeedModeButton()
+    }
+    
+    private func _updateSpeedModeButton() {
         let image: UIImage?
         if gameView.isInSpeedMode {
             image = UIImage(systemName: "forward.fill")
@@ -467,6 +483,22 @@ class GameViewController: UIViewController, DPadDelegate, GBEngineSaveDestinatio
             image = UIImage(systemName: "forward")
         }
         fastForwardButton.image = image
+    }
+    
+    private func _updateSpeedModeForConnection() {
+        if linkSessionManager.hasConnection {
+            if gameView.isInSpeedMode {
+                gameView.toggleSpeedMode()
+                let alert = UIAlertController(title: "Speed Mode Disabled", message: "Speed mode isn't available while a link session is active", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .default))
+                self.presentOverPresentedViewController(alert, animated: true)
+            }
+            
+            fastForwardButton.isEnabled = false
+        } else {
+            fastForwardButton.isEnabled = true
+        }
+        _updateSpeedModeButton()
     }
     
     private func _exportSave() {
@@ -592,4 +624,14 @@ class GameViewController: UIViewController, DPadDelegate, GBEngineSaveDestinatio
 //        }
     }
 
+}
+
+extension UIViewController {
+    func presentOverPresentedViewController(_ viewController: UIViewController, animated: Bool) {
+        if let presented = self.presentedViewController {
+            presented.presentOverPresentedViewController(viewController, animated: animated)
+        } else {
+            self.present(viewController, animated: animated)
+        }
+    }
 }
