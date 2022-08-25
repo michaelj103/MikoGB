@@ -460,7 +460,9 @@ class LinkSessionManager: NSObject, GBEngineSerialDestination {
         }
         
         realizedConnection.setCloseCallback({ [weak self] result in
-            self?._handleDidDisconnect(result)
+            DispatchQueue.main.async {
+                self?._handleDidDisconnect(result)
+            }
         })
         
         realizedConnection.setMessageCallback({ [weak self] message in
@@ -480,10 +482,35 @@ class LinkSessionManager: NSObject, GBEngineSerialDestination {
         roomStatus = .connectedToRoom(clientInfo)
     }
     
+    private var finishWorkOnDisconnect = false
     private func _handleDidDisconnect(_ result: Result<Void,Error>) {
+        print("Did disconnect")
         linkClientSession = nil
         linkConnection = nil
         roomStatus = .disconnected
+        if finishWorkOnDisconnect {
+            finishWorkOnDisconnect = false
+            isWorking = false
+        }
+    }
+    
+    // MARK: - Disconnecting from rooms
+    
+    func disconnect() {
+        guard !isWorking else {
+            print("Already running")
+            return
+        }
+        
+        guard let linkConnection = linkConnection else {
+            print("No active connection to disconnect")
+            return
+        }
+        
+        print("Disconnect called")
+        isWorking = true
+        finishWorkOnDisconnect = true
+        linkConnection.close()
     }
 }
 

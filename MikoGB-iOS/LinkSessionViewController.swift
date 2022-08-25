@@ -178,6 +178,7 @@ class LinkSessionViewController: UIViewController {
         if case .connectingToRoom = roomStatus {
             isWorking = true
         }
+        print("Updating with status \(roomStatus), isWorking \(isWorking)")
         let primaryTitle: String
         let secondaryTitle: String
         let statusText: String
@@ -196,7 +197,7 @@ class LinkSessionViewController: UIViewController {
             statusText = "No active link sessions"
         case .roomAvailable(let linkRoomClientInfo), .connectingToRoom(let linkRoomClientInfo):
             primaryTitle = LinkSessionViewController.ConnectToSessionString
-            secondaryTitle = LinkSessionViewController.LeaveSessionString
+            secondaryTitle = LinkSessionViewController.EndSessionString
             secondaryColor = .systemRed
             statusText = "Available session with code \n\(linkRoomClientInfo.roomCode)"
         case .connectedToRoom(let linkRoomClientInfo):
@@ -255,6 +256,19 @@ class LinkSessionViewController: UIViewController {
     }
     
     private func _handleSecondaryAction() {
-        
+        let roomStatus = linkSessionManager.roomStatus
+        switch roomStatus {
+        case .notChecked, .noRooms, .error, .disconnected:
+            // TODO: Join
+            break
+        case .roomAvailable:
+            linkSessionManager.closeRoom()
+        case .connectingToRoom:
+            break
+        case .connectedToRoom:
+            linkSessionManager.disconnect()
+            break
+        }
+        _updateUI()
     }
 }
