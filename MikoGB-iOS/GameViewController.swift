@@ -517,7 +517,13 @@ class GameViewController: UIViewController, DPadDelegate, GBEngineSaveDestinatio
     }
     
     private func _actuallyImportSave() {
-        let documentPicker = UIDocumentPickerViewController(forOpeningContentTypes: [])
+        let types: [UTType]
+        if let type = UTType(filenameExtension: "sav") {
+            types = [type]
+        } else {
+            types = []
+        }
+        let documentPicker = UIDocumentPickerViewController(forOpeningContentTypes: types)
         documentPicker.delegate = self
         documentPicker.shouldShowFileExtensions = true
         documentPicker.allowsMultipleSelection = false

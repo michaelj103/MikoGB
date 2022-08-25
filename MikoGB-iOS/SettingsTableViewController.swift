@@ -48,7 +48,6 @@ class SettingsTableViewController : UITableViewController {
             tableView.register(cellClass, forCellReuseIdentifier: identifier)
         }
         
-        
         let doneAction = UIAction { [weak self] _ in
             self?.dismiss(animated: true)
         }
@@ -87,17 +86,24 @@ class SettingsTableViewController : UITableViewController {
             var debugSection = SettingsSection("DebugSection")
             debugSection.title = "Debug"
             snapshot.appendSections([debugSection])
-            var dummySwitch = SettingsRow(.debugCheckForStagingUpdates, type: .switchRow)
-            dummySwitch.title = "Check For Staging Updates"
-            snapshot.appendItems([dummySwitch], toSection: debugSection)
+            var stagingSwitch = SettingsRow(.debugCheckForStagingUpdates, type: .switchRow)
+            stagingSwitch.title = "Check For Staging Updates"
+            var serverSwitch = SettingsRow(.debugUseCustomServer, type: .switchRow)
+            serverSwitch.title = "Use Custom Server"
+            snapshot.appendItems([stagingSwitch, serverSwitch], toSection: debugSection)
+            
+            var customServerRow = SettingsRow(.debugCustomServerString, type: .valueRow)
+            customServerRow.title = "Custom Server"
+            customServerRow.version = serverVersion
+            snapshot.appendItems([customServerRow], toSection: debugSection)
         }
         
         return snapshot
     }
     
-    private func _updateDataSource() {
+    private func _updateDataSource(animated: Bool = true) {
         let snapshot = _generateDataSourceSnapshot()
-        dataSource.apply(snapshot, animatingDifferences: true)
+        dataSource.apply(snapshot, animatingDifferences: animated)
     }
     
     private func _commitValueChange(_ taggable: RowTaggable) {
@@ -105,15 +111,24 @@ class SettingsTableViewController : UITableViewController {
         let indexPath = taggable.rowTag
         let sectionIdentifier = snapshot.sectionIdentifiers[indexPath.section]
         let rowIdentifier = snapshot.itemIdentifiers(inSection: sectionIdentifier)[indexPath.row]
+        let requiresReload: Bool
         switch rowIdentifier.type {
         case .switchRow:
-            _commitValueForSwitchRow(rowIdentifier, sender: taggable as! UISwitch)
+            requiresReload = _commitValueForSwitchRow(rowIdentifier, sender: taggable as! UISwitch)
         case .valueRow:
+            requiresReload = false
             break
+        }
+        
+        if requiresReload {
+            DispatchQueue.main.async {
+                self._updateDataSource()
+            }
         }
     }
     
-    private func _commitValueForSwitchRow(_ row: SettingsRow, sender: UISwitch) {
+    private func _commitValueForSwitchRow(_ row: SettingsRow, sender: UISwitch) -> Bool {
+        var requiresReload = false
         switch row.identifier {
         case .generateAudioSwitch:
             SettingsManager.sharedInstance.shouldGenerateAudio = sender.isOn
@@ -121,6 +136,95 @@ class SettingsTableViewController : UITableViewController {
             SettingsManager.sharedInstance.shouldRespectMuteSwitch = sender.isOn
         case .debugCheckForStagingUpdates:
             SettingsManager.sharedInstance.checkForStagingUpdates = sender.isOn
+        case .debugUseCustomServer:
+            SettingsManager.sharedInstance.useServerOverride = sender.isOn
+            _ensureRegistrationIfNecessary()
+            requiresReload = true
+        case .debugCustomServerString:
+            preconditionFailure()
+        }
+        return requiresReload
+    }
+    
+    override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+        if let identifier = dataSource.itemIdentifier(for: indexPath) {
+            switch identifier.type {
+            case .switchRow:
+                return nil
+            case .valueRow:
+                return indexPath
+            }
+        } else {
+            return nil
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if let identifier = dataSource.itemIdentifier(for: indexPath) {
+            switch identifier.type {
+            case .switchRow:
+                break
+            case .valueRow:
+                _performValueCellAction(identifier)
+            }
+        }
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    private func _performValueCellAction(_ identifier: SettingsRow) {
+        switch identifier.identifier {
+        case .generateAudioSwitch, .respectsMuteSwitch, .debugCheckForStagingUpdates, .debugUseCustomServer:
+            break
+        case .debugCustomServerString:
+            _getCustomServerValue()
+        }
+    }
+    
+    private func _getCustomServerValue() {
+        let alert = UIAlertController(title: "Enter Server", message: "Include port, if necessary", preferredStyle: .alert)
+        alert.addTextField { textField in
+            textField.placeholder = "hostname:port"
+        }
+        
+        let okAction = UIAlertAction(title: "OK", style: .default) { [weak self] _ in
+            let server = alert.textFields?.first?.text
+            let resolvedServer = (server?.count ?? 0) > 0 ? server : nil
+            self?._setCustomServer(resolvedServer)
+        }
+        alert.addAction(okAction)
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+        alert.addAction(cancelAction)
+        self.present(alert, animated: true)
+    }
+    
+    private var serverVersion = 1
+    private func _setCustomServer(_ value: String?) {
+        SettingsManager.sharedInstance.customServer = value
+        serverVersion += 1
+        _updateDataSource(animated: false)
+        _ensureRegistrationIfNecessary()
+    }
+    
+    private func _ensureRegistrationIfNecessary() {
+        let customServer = SettingsManager.sharedInstance.customServer
+        let wantsOverride = SettingsManager.sharedInstance.useServerOverride && customServer != nil
+        let hasOverride = ServerConfiguration.hasHostOverride()
+        
+        var ensureRegistration = false
+        if wantsOverride && !hasOverride {
+            let success = ServerConfiguration.setTemporaryHost(customServer!)
+            ensureRegistration = success
+            if !success {
+                // TODO: Present failure alert
+            }
+        } else if !wantsOverride && hasOverride {
+            ServerConfiguration.stopTemporaryOverride()
+            ensureRegistration = true
+        }
+        
+        if ensureRegistration {
+            UserIdentityController.sharedIdentityController.ensureRegistration(force: true, completion: nil)
         }
     }
 }
@@ -135,6 +239,8 @@ fileprivate class SettingsDiffableDataSource : UITableViewDiffableDataSource<Set
         let sectionIdentifier = self.sectionIdentifier(for: section)
         return sectionIdentifier?.footer
     }
+    
+    
 }
 
 fileprivate struct SettingsSection: Hashable {
@@ -155,12 +261,15 @@ fileprivate enum RowIdentifier: String {
     case generateAudioSwitch
     case respectsMuteSwitch
     case debugCheckForStagingUpdates
+    case debugUseCustomServer
+    case debugCustomServerString
 }
 
 fileprivate struct SettingsRow: Hashable {
     let identifier: RowIdentifier
     let type: RowType
     var title: String? = nil
+    var version: Int = 1
     
     init(_ identifier: RowIdentifier, type: RowType) {
         self.identifier = identifier
@@ -228,13 +337,26 @@ fileprivate struct SettingsRow: Hashable {
             value = SettingsManager.sharedInstance.shouldRespectMuteSwitch
         case .debugCheckForStagingUpdates:
             value = SettingsManager.sharedInstance.checkForStagingUpdates
+        case .debugUseCustomServer:
+            value = SettingsManager.sharedInstance.useServerOverride
+        case .debugCustomServerString:
+            // not a switch cell
+            preconditionFailure()
         }
         switchView.isOn = value
     }
     
     private func _configureValueCell(_ cell: UITableViewCell) {
-        var configuration = cell.defaultContentConfiguration()
+        var configuration = UIListContentConfiguration.valueCell()
         configuration.text = title
+        let secondaryText: String
+        switch identifier {
+        case .generateAudioSwitch, .respectsMuteSwitch, .debugCheckForStagingUpdates, .debugUseCustomServer:
+            preconditionFailure()
+        case .debugCustomServerString:
+            secondaryText = SettingsManager.sharedInstance.customServer ?? "None"
+        }
+        configuration.secondaryText = secondaryText
         cell.contentConfiguration = configuration
     }
 }

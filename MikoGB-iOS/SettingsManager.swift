@@ -19,6 +19,7 @@ class SettingsManager {
     // Settings Keys
     private static let GenerateAudioKey = "GenerateAudioKey"
     private static let RespectMuteSwitchKey = "RespectMuteSwitchKey"
+    private static let CustomServerKey = "CustomServerKey"
     
     private let defaults = UserDefaults.standard
     
@@ -31,9 +32,11 @@ class SettingsManager {
     
     @UserDefaultsBacked(key: GenerateAudioKey) var shouldGenerateAudio: Bool
     @UserDefaultsBacked(key: RespectMuteSwitchKey) var shouldRespectMuteSwitch: Bool
+    @UserDefaultsBacked(key: CustomServerKey) var customServer: String?
     
     // in-memory
     var checkForStagingUpdates: Bool = false
+    var useServerOverride: Bool = false
 }
 
 @propertyWrapper struct UserDefaultsBacked<Value> {
@@ -45,7 +48,11 @@ class SettingsManager {
             defaults.value(forKey: key) as! Value
         }
         set {
-            defaults.set(newValue, forKey: key)
+            if isNil(newValue) {
+                defaults.removeObject(forKey: key)
+            } else {
+                defaults.set(newValue, forKey: key)
+            }
             DispatchQueue.main.async {
                 NotificationCenter.default.post(name: SettingsManager.SettingsChangedNotification, object: nil)
             }
@@ -55,4 +62,16 @@ class SettingsManager {
     init(key: String) {
         self.key = key
     }
+}
+
+protocol _Optional {
+    var isNil: Bool { get }
+}
+
+extension Optional: _Optional {
+    var isNil: Bool { return self == nil }
+}
+
+func isNil(_ input: Any) -> Bool {
+    return (input as? _Optional)?.isNil ?? false
 }

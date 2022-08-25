@@ -17,6 +17,7 @@ class LinkSessionManager: NSObject, GBEngineSerialDestination {
     init(_ engine: GBEngine) {
         self.engine = engine
         super.init()
+        engine.serialDestination = self
         userIdentityObserver = NotificationCenter.default.addObserver(forName: UserIdentityController.UserIDChangedNotification, object: nil, queue: nil) { [weak self] _ in
             DispatchQueue.main.async {
                 self?._userIDStateDidChange()

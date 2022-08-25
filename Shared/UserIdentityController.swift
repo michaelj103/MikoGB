@@ -14,6 +14,7 @@ class UserIdentityController {
     
     // "default" device ID. May phase out
     private static let DeviceIDKey = "DeviceID"
+    private static let OverrideDeviceIDKey = "OverrideDeviceIDKey"
     static let UserIDChangedNotification = Notification.Name(rawValue: "UserIDChangedNotification")
     
     enum RegistrationStatus: Equatable {
@@ -85,16 +86,18 @@ class UserIdentityController {
     }
     
     private func _saveIDIfNecessary(_ newID: String) {
-        // Don't save if we're in an override mode
         if !ServerConfiguration.hasHostOverride() {
             UserDefaults.standard.setValue(newID, forKey: UserIdentityController.DeviceIDKey)
+        } else {
+            UserDefaults.standard.setValue(newID, forKey: UserIdentityController.OverrideDeviceIDKey)
         }
     }
     
     private func _deleteIDIfNecessary() {
-        // Don't delete if we're in an override mode
         if !ServerConfiguration.hasHostOverride() {
             UserDefaults.standard.removeObject(forKey: UserIdentityController.DeviceIDKey)
+        } else {
+            UserDefaults.standard.removeObject(forKey: UserIdentityController.OverrideDeviceIDKey)
         }
     }
     
@@ -109,7 +112,12 @@ class UserIdentityController {
                 registrationStatus = .notRegistered
             }
         } else {
-            registrationStatus = .notRegistered
+            // load override ID
+            if let deviceID = UserDefaults.standard.string(forKey: UserIdentityController.OverrideDeviceIDKey) {
+                registrationStatus = .unverified(deviceID)
+            } else {
+                registrationStatus = .notRegistered
+            }
         }
     }
     
