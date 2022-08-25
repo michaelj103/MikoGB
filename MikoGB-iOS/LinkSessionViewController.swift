@@ -25,6 +25,8 @@ class LinkSessionViewController: UIViewController {
     private static let CreateSessionString = "Create"
     private static let JoinSessionString = "Join"
     private static let CheckForSessionsString = "Check"
+    private static let RefreshSessionsString = "Refresh"
+    private static let RetrySessionsString = "Retry"
     private static let ConnectToSessionString = "Connect"
     private static let LeaveSessionString = "Disconnect"
     private static let EndSessionString = "Close"
@@ -207,13 +209,13 @@ class LinkSessionViewController: UIViewController {
             secondaryColor = .systemRed
             statusText = "Connected to session with code \n\(linkRoomClientInfo.roomCode)"
         case .error:
-            primaryTitle = LinkSessionViewController.CheckForSessionsString
+            primaryTitle = LinkSessionViewController.RetrySessionsString
             secondaryTitle = LinkSessionViewController.JoinSessionString
             secondaryColor = .systemGreen
             // TODO: Better error messages
             statusText = "An error occurred"
         case .disconnected:
-            primaryTitle = LinkSessionViewController.CheckForSessionsString
+            primaryTitle = LinkSessionViewController.RefreshSessionsString
             secondaryTitle = LinkSessionViewController.JoinSessionString
             secondaryColor = .systemGreen
             statusText = "Disconnected"
