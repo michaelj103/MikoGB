@@ -17,6 +17,7 @@ class LinkSessionManager: NSObject, GBEngineSerialDestination {
     init(_ engine: GBEngine) {
         self.engine = engine
         super.init()
+        engine.serialDestination = self
         userIdentityObserver = NotificationCenter.default.addObserver(forName: UserIdentityController.UserIDChangedNotification, object: nil, queue: nil) { [weak self] _ in
             DispatchQueue.main.async {
                 self?._userIDStateDidChange()
@@ -28,6 +29,8 @@ class LinkSessionManager: NSObject, GBEngineSerialDestination {
         if let userIdentityObserver = userIdentityObserver {
             NotificationCenter.default.removeObserver(userIdentityObserver)
         }
+        
+        linkConnection?.close()
     }
     
     private var presentedBytePendingConnection: UInt8?
@@ -96,7 +99,47 @@ class LinkSessionManager: NSObject, GBEngineSerialDestination {
     private(set) var isWorking: Bool = false
     
     private func _userIDStateDidChange() {
-        roomStatus = .notChecked
+        if let linkConnection = linkConnection {
+            // if user account changes during a connection, close it. Otherwise reset the check pipeline
+            linkConnection.close()
+            roomStatus = .disconnected
+        } else {
+            roomStatus = .notChecked
+        }
+    }
+    
+    private static func _serverPost<T: Decodable>(_ url: URL, payload: Data, completion: @escaping (Result<T,Error>) -> Void) {
+        var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData)
+        request.httpMethod = "POST"
+        request.setValue("application/json; charset=UTF-8", forHTTPHeaderField: "Content-Type")
+        request.httpBody = payload
+        
+        let networkManager = NetworkManager.sharedNetworkManager
+        networkManager.submitRequest(request) { result in
+            switch result {
+            case .success(let data):
+                let response: Result<T,Error> = LinkSessionManager._decodeServerResponse(data)
+                DispatchQueue.main.async {
+                    completion(response)
+                }
+            case .failure(let error):
+                DispatchQueue.main.async {
+                    completion(.failure(error))
+                }
+            }
+        }
+    }
+    
+    private static func _decodeServerResponse<T: Decodable>(_ data: Data) -> Result<T, Error> {
+        let response: Result<T, Error>
+        do {
+            let payload = try JSONDecoder().decode(T.self, from: data)
+            response = .success(payload)
+        } catch {
+            response = .failure(error)
+        }
+        
+        return response
     }
     
     // MARK: - Checking for rooms
@@ -167,7 +210,7 @@ class LinkSessionManager: NSObject, GBEngineSerialDestination {
         networkManager.submitRequest(request) { result in
             switch result {
             case .success(let data):
-                let response = LinkSessionManager._decodeRoomInfoResponse(data)
+                let response: Result<PossibleLinkRoomClientInfo,Error> = LinkSessionManager._decodeServerResponse(data)
                 DispatchQueue.main.async {
                     completion(response)
                 }
@@ -179,26 +222,13 @@ class LinkSessionManager: NSObject, GBEngineSerialDestination {
         }
     }
     
-    private static func _decodeRoomInfoResponse(_ data: Data) -> Result<PossibleLinkRoomClientInfo, Error> {
-        let response: Result<PossibleLinkRoomClientInfo, Error>
-        do {
-            let payload = try JSONDecoder().decode(PossibleLinkRoomClientInfo.self, from: data)
-            response = .success(payload)
-        } catch {
-            response = .failure(error)
-        }
-        
-        return response
-    }
-    
     // MARK: - Creating rooms
     
     private func _canRunRoomCreationOrJoin() -> Bool {
         switch roomStatus {
-        case .notChecked, .error, .disconnected, .roomAvailable, .connectingToRoom, .connectedToRoom:
+        case .notChecked, .roomAvailable, .connectingToRoom, .connectedToRoom:
             return false
-        case .noRooms:
-            // TODO: Maybe allow error/disconnected states for more automatic stepping through these phases
+        case .noRooms, .disconnected, .error:
             return true
         }
     }
@@ -226,7 +256,7 @@ class LinkSessionManager: NSObject, GBEngineSerialDestination {
         case .success(let clientInfo):
             roomStatus = .roomAvailable(clientInfo)
         case .failure(let error):
-            print("Room check failed with error: \(error)")
+            print("Room creation/join failed with error: \(error)")
             roomStatus = .error
         }
     }
@@ -261,37 +291,7 @@ class LinkSessionManager: NSObject, GBEngineSerialDestination {
             return
         }
         
-        var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData)
-        request.httpMethod = "POST"
-        request.setValue("application/json; charset=UTF-8", forHTTPHeaderField: "Content-Type")
-        request.httpBody = payloadData
-        
-        let networkManager = NetworkManager.sharedNetworkManager
-        networkManager.submitRequest(request) { result in
-            switch result {
-            case .success(let data):
-                let response = LinkSessionManager._decodeRoomCreationOrJoinResponse(data)
-                DispatchQueue.main.async {
-                    completion(response)
-                }
-            case .failure(let error):
-                DispatchQueue.main.async {
-                    completion(.failure(error))
-                }
-            }
-        }
-    }
-    
-    private static func _decodeRoomCreationOrJoinResponse(_ data: Data) -> Result<LinkRoomClientInfo,Error> {
-        let response: Result<LinkRoomClientInfo, Error>
-        do {
-            let payload = try JSONDecoder().decode(LinkRoomClientInfo.self, from: data)
-            response = .success(payload)
-        } catch {
-            response = .failure(error)
-        }
-        
-        return response
+        LinkSessionManager._serverPost(url, payload: payloadData, completion: completion)
     }
     
     // MARK: - Joining rooms
@@ -343,25 +343,85 @@ class LinkSessionManager: NSObject, GBEngineSerialDestination {
             return
         }
         
-        var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData)
-        request.httpMethod = "POST"
-        request.setValue("application/json; charset=UTF-8", forHTTPHeaderField: "Content-Type")
-        request.httpBody = payloadData
-        
-        let networkManager = NetworkManager.sharedNetworkManager
-        networkManager.submitRequest(request) { result in
-            switch result {
-            case .success(let data):
-                let response = LinkSessionManager._decodeRoomCreationOrJoinResponse(data)
-                DispatchQueue.main.async {
-                    completion(response)
-                }
-            case .failure(let error):
-                DispatchQueue.main.async {
-                    completion(.failure(error))
-                }
-            }
+        LinkSessionManager._serverPost(url, payload: payloadData, completion: completion)
+    }
+    
+    // MARK: - Closing rooms
+    
+    private func _canRunCloseRoom() -> Bool {
+        switch roomStatus {
+        case .notChecked, .noRooms, .error, .disconnected, .connectingToRoom:
+            return false
+        case .roomAvailable, .connectedToRoom:
+            return true
         }
+    }
+    
+    func closeRoom() {
+        guard !isWorking else {
+            print("Already running")
+            return
+        }
+        
+        guard _canRunCloseRoom() else {
+            print("Can't close rooms if the user doesn't have any")
+            return
+        }
+        
+        isWorking = true
+        _closeRoom { [weak self] result in
+            self?._handleRoomCloseResult(result)
+        }
+    }
+    
+    private func _handleRoomCloseResult(_ result: Result<GenericMessageResponse,Error>) {
+        isWorking = false
+        switch result {
+        case .success(let response):
+            if case .success = response {
+                roomStatus = .disconnected
+            } else {
+                let message = response.getMessage()
+                print("Failed to close room with message: \(message)")
+                roomStatus = .error
+            }
+        case .failure(let error):
+            print("Room close failed with error: \(error)")
+            roomStatus = .error
+        }
+    }
+    
+    private func _closeRoom(_ completion: @escaping (Result<GenericMessageResponse,Error>) -> Void) {
+        let registrationStatus = UserIdentityController.sharedIdentityController.registrationStatus
+        guard case .verified(let deviceID) = registrationStatus else {
+            print("No verified user ID")
+            DispatchQueue.main.async {
+                completion(.failure(SimpleError("No verified user ID for room close")))
+            }
+            return
+        }
+        
+        guard let url = ServerConfiguration.createURL(resourcePath: "/api/closeRoom") else {
+            print("Failed to construct room close URL")
+            DispatchQueue.main.async {
+                completion(.failure(SimpleError("Failed to construct room close URL")))
+            }
+            return
+        }
+        
+        let requestPayload = CloseRoomHTTPRequestPayload(deviceID: deviceID)
+        let payloadData: Data
+        do {
+            payloadData = try JSONEncoder().encode(requestPayload)
+        } catch {
+            print("Failed to encode room close payload data with error \(error)")
+            DispatchQueue.main.async {
+                completion(.failure(error))
+            }
+            return
+        }
+        
+        LinkSessionManager._serverPost(url, payload: payloadData, completion: completion)
     }
     
     // MARK: - Connecting to rooms
@@ -399,7 +459,9 @@ class LinkSessionManager: NSObject, GBEngineSerialDestination {
         }
         
         realizedConnection.setCloseCallback({ [weak self] result in
-            self?._handleDidDisconnect(result)
+            DispatchQueue.main.async {
+                self?._handleDidDisconnect(result)
+            }
         })
         
         realizedConnection.setMessageCallback({ [weak self] message in
@@ -419,10 +481,35 @@ class LinkSessionManager: NSObject, GBEngineSerialDestination {
         roomStatus = .connectedToRoom(clientInfo)
     }
     
+    private var finishWorkOnDisconnect = false
     private func _handleDidDisconnect(_ result: Result<Void,Error>) {
+        print("Did disconnect")
         linkClientSession = nil
         linkConnection = nil
         roomStatus = .disconnected
+        if finishWorkOnDisconnect {
+            finishWorkOnDisconnect = false
+            isWorking = false
+        }
+    }
+    
+    // MARK: - Disconnecting from rooms
+    
+    func disconnect() {
+        guard !isWorking else {
+            print("Already running")
+            return
+        }
+        
+        guard let linkConnection = linkConnection else {
+            print("No active connection to disconnect")
+            return
+        }
+        
+        print("Disconnect called")
+        isWorking = true
+        finishWorkOnDisconnect = true
+        linkConnection.close()
     }
 }
 

@@ -38,7 +38,6 @@ class ViewController: NSViewController, NoROMViewDelegate, NSMenuItemValidation,
         persistenceManager = AppStateManager.sharedInstance.persistenceManager
         linkManager = AppStateManager.sharedInstance.linkSessionManager
         engine.saveDestination = self
-        engine.serialDestination = linkManager
         
         NotificationCenter.default.addObserver(forName: TerminationNotification, object: nil, queue: nil) { [weak self] _ in
             self?._prepareForTermination()
