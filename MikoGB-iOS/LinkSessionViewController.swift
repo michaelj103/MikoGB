@@ -210,6 +210,7 @@ class LinkSessionViewController: UIViewController {
             primaryTitle = LinkSessionViewController.CheckForSessionsString
             secondaryTitle = LinkSessionViewController.JoinSessionString
             secondaryColor = .systemGreen
+            // TODO: Better error messages
             statusText = "An error occurred"
         case .disconnected:
             primaryTitle = LinkSessionViewController.CheckForSessionsString
@@ -259,8 +260,7 @@ class LinkSessionViewController: UIViewController {
         let roomStatus = linkSessionManager.roomStatus
         switch roomStatus {
         case .notChecked, .noRooms, .error, .disconnected:
-            // TODO: Join
-            break
+            _showJoinRoomAlert()
         case .roomAvailable:
             linkSessionManager.closeRoom()
         case .connectingToRoom:
@@ -269,6 +269,27 @@ class LinkSessionViewController: UIViewController {
             linkSessionManager.disconnect()
             break
         }
+        _updateUI()
+    }
+    
+    private func _showJoinRoomAlert() {
+        let alert = UIAlertController(title: "Join Link Session", message: "Enter join code", preferredStyle: .alert)
+        alert.addTextField { textField in
+            textField.placeholder = "ABC123"
+        }
+        let okAction = UIAlertAction(title: "OK", style: .default) { [weak self] _ in
+            if let text = alert.textFields?.first?.text {
+                self?._joinRoom(text)
+            }
+        }
+        alert.addAction(okAction)
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        self.present(alert, animated: true)
+    }
+    
+    private func _joinRoom(_ roomCode: String) {
+        autorunThroughConnect = true
+        linkSessionManager.joinRoom(roomCode)
         _updateUI()
     }
 }

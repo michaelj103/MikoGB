@@ -226,10 +226,9 @@ class LinkSessionManager: NSObject, GBEngineSerialDestination {
     
     private func _canRunRoomCreationOrJoin() -> Bool {
         switch roomStatus {
-        case .notChecked, .error, .disconnected, .roomAvailable, .connectingToRoom, .connectedToRoom:
+        case .notChecked, .roomAvailable, .connectingToRoom, .connectedToRoom:
             return false
-        case .noRooms:
-            // TODO: Maybe allow error/disconnected states for more automatic stepping through these phases
+        case .noRooms, .disconnected, .error:
             return true
         }
     }
