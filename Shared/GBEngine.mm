@@ -14,6 +14,13 @@
 #import "GBAudioWriter.h"
 #import "GBRateLimitTimer.h"
 
+#if DEBUG
+// flip to 1 if you want them on debug builds
+#define PRINT_FRAME_DROPS 0
+#else
+#define PRINT_FRAME_DROPS 0
+#endif
+
 static const size_t GBBytesPerLine = 160 * 4;
 static const size_t GBBytesPerImage = GBBytesPerLine * 144;
 
@@ -292,7 +299,7 @@ static MikoGB::JoypadButton _ButtonForCode(GBEngineKeyCode code) {
             [self _emulationQueue_emulateFrame];
         });
     }
-#if DEBUG
+#if PRINT_FRAME_DROPS
     else if (dropped) {
         // Dropped a frame if the previous frame has not finished processing when the next one starts
         NSLog(@"Dropped a frame");

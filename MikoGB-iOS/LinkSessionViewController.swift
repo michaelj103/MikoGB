@@ -180,7 +180,6 @@ class LinkSessionViewController: UIViewController {
         if case .connectingToRoom = roomStatus {
             isWorking = true
         }
-        print("Updating with status \(roomStatus), isWorking \(isWorking)")
         let primaryTitle: String
         let secondaryTitle: String
         let statusText: String
