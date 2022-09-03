@@ -73,6 +73,8 @@ public:
     size_t copySaveData(void *buffer, size_t size) const;
     bool loadSaveData(const void *saveData, size_t size);
     
+    void hBlankDMATransferStep();
+    
 private:
     uint8_t *_permanentROM = nullptr;
     uint8_t *_videoRAM = nullptr;
@@ -85,7 +87,13 @@ private:
     Timer _timer;
     AudioController _audioController;
     
+    bool _isHBlankTransferActive = false;
+    uint16_t _hBlankTransferSource = 0;
+    uint16_t _hBlankTransferDst = 0;
     void _dmaTransfer(uint8_t);
+    void _generalPurposeDMATransfer(uint8_t);
+    void _startHBlankDMATransfer();
+    void _directSetHighRange(uint16_t addr, uint8_t val);
 };
 
 }

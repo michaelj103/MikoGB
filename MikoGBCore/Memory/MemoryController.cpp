@@ -40,7 +40,12 @@ static const size_t HighRangeMemorySize = 1024 * 16;     // 16 KiB of internal m
 static const uint16_t OAMBase = 0xFE00;
 
 // Relevant I/O registers. Writing triggers events
-static const uint16_t DMATransferRegister = 0xFF46; //TODO: In CGB, new DMA transfer registers
+static const uint16_t DMATransferRegister = 0xFF46; // DMG DMA control register
+static const uint16_t HDMA1Register = 0xFF51; // HDMA source high-order byte
+static const uint16_t HDMA2Register = 0xFF52; // HDMA source low-order byte, masked by 0xF0
+static const uint16_t HDMA3Register = 0xFF53; // HDMA destination high-order byte, top 3 bits always 0b100
+static const uint16_t HDMA4Register = 0xFF54; // HDMA destination low-order byte, masked by 0xF0
+static const uint16_t HDMATransferRegister = 0xFF55; // CGB DMA control register
 static const uint16_t BootROMDisableRegister = 0xFF50;
 static const uint16_t ControllerDataRegister = 0xFF00;
 static const uint16_t DIVRegister = 0xFF04; // Div is basically the CPU cycle count
@@ -158,9 +163,31 @@ void MemoryController::setByte(uint16_t addr, uint8_t val) {
     } else {
         
         // Several special events are triggered when writing to the I/O registers in high range memory
+        uint8_t toWrite = val;
         
         if (addr == DMATransferRegister) {
             _dmaTransfer(val);
+        } else if (addr == HDMATransferRegister) {
+            // Write to HDMA transfer is either a general purpose or H-blank transfer depending on high bit
+            if ((val & 0x80) == 0x80) {
+                // high bit == 1 starts an H-blank DMA transfer
+                _startHBlankDMATransfer();
+            } else {
+                // high bit == 0 either terminates an in-progress H-Blank DMA transfer or starts a general purpose one
+                if (_isHBlankTransferActive) {
+                    _isHBlankTransferActive = false;
+                } else {
+                    _generalPurposeDMATransfer(val);
+                    // on completion of DMA transfer, the transfer register becomes 0xFF;
+                    toWrite = 0xFF;
+                }
+            }
+        } else if (addr >= HDMA1Register && addr <= HDMA4Register) {
+            if (_isHBlankTransferActive) {
+                //TODO: This is to verify that this doesn't happen. If it does, I'll need to handle it
+                // If it doesn't, the section can be removed
+                printf("Modified DMA transfer destinations while in progress\n");
+            }
         } else if (addr == BootROMDisableRegister) {
             _bootROMEnabled = val == 0;
         } else if (addr == DIVRegister) {
@@ -184,8 +211,12 @@ void MemoryController::setByte(uint16_t addr, uint8_t val) {
         }
         
         // Write to high range memory
-        _highRangeMemory[addr - HighRangeMemoryBaseAddr] = val;
+        _directSetHighRange(addr, toWrite);
     }
+}
+
+void MemoryController::_directSetHighRange(uint16_t addr, uint8_t val) {
+    _highRangeMemory[addr - HighRangeMemoryBaseAddr] = val;
 }
 
 void MemoryController::updateWithCPUCycles(size_t cpuCycles) {
@@ -231,6 +262,7 @@ int MemoryController::currentROMBank() const {
     return _mbc->currentROMBank();
 }
 
+// DMG general-purpose DMA transfer
 void MemoryController::_dmaTransfer(uint8_t byte) {
     // DMA transfer is a special procedure to write chunks of data to OAM
     // Bytes can be specified from 0x00 - 0xDF (e.g. 0xYY) and a transfer will be performed
@@ -243,6 +275,78 @@ void MemoryController::_dmaTransfer(uint8_t byte) {
         const uint16_t src = sourceBase + i;
         const uint16_t dst = OAMBase + i;
         setByte(dst, readByte(src));
+    }
+}
+
+// CGB general-purpose DMA transfer
+void MemoryController::_generalPurposeDMATransfer(uint8_t byte) {
+    // In CGB, there's a new general purpose DMA transfer mechanism supported that allows more precision
+    // and allows transfer from ROM (not sure if anybody uses the previous mechanism to transfer from ROM?)
+    const uint8_t sourceHigh = readByte(HDMA1Register);
+    const uint8_t sourceLow = readByte(HDMA2Register) & 0xF0;
+    
+    // destination bits are masked so they are in the range 0x8000 - 0x9FF0
+    const uint8_t dstHigh = (readByte(HDMA3Register) & 0x1F) | 0x80; // top 3 bits replaced by 0b100
+    const uint8_t dstLow = readByte(HDMA4Register) & 0xF0;
+    
+    const uint16_t sourceBase = (((uint16_t)sourceHigh) << 8) | sourceLow;
+    const uint16_t dstBase = (((uint16_t)dstHigh) << 8) | dstLow;
+    
+    // amount to transfer is low-7 bits in the HDMA control register plus 1 times 16.
+    // Result is in the range of 16 - 2048
+    const uint16_t toTransfer = (((uint16_t)(byte & 0x7F)) + 1) << 4;
+    for (uint16_t i = 0; i < toTransfer; ++i) {
+        const uint16_t src = sourceBase + i;
+        const uint16_t dst = dstBase + i;
+        setByte(dst, readByte(src));
+    }
+}
+
+void MemoryController::_startHBlankDMATransfer() {
+    _isHBlankTransferActive = true;
+    const uint8_t sourceHigh = readByte(HDMA1Register);
+    const uint8_t sourceLow = readByte(HDMA2Register) & 0xF0;
+    
+    // destination bits are masked so they are in the range 0x8000 - 0x9FF0
+    const uint8_t dstHigh = (readByte(HDMA3Register) & 0x1F) | 0x80; // top 3 bits replaced by 0b100
+    const uint8_t dstLow = readByte(HDMA4Register) & 0xF0;
+    
+    const uint16_t sourceBase = (((uint16_t)sourceHigh) << 8) | sourceLow;
+    const uint16_t dstBase = (((uint16_t)dstHigh) << 8) | dstLow;
+    _hBlankTransferSource = sourceBase;
+    _hBlankTransferDst = dstBase;
+}
+
+// CGB H-blank DMA transfer. Executes one step (16-byte transfer)
+void MemoryController::hBlankDMATransferStep() {
+    // In CGB, there's an H-blank DMA transfer mechanism that allows very fast transfers during each HBlank
+    // until a the counter in the control register underflows, or transfer is cancelled
+    if (_isHBlankTransferActive) {
+        return;
+    }
+    
+    const uint16_t sourceBase = _hBlankTransferSource;
+    const uint16_t dstBase = _hBlankTransferDst;
+    for (uint16_t i = 0; i < 16; ++i) {
+        const uint16_t src = sourceBase + i;
+        const uint16_t dst = dstBase + i;
+        setByte(dst, readByte(src));
+    }
+    
+    // Next step will transfer 16 bytes to/from the next 16 byte window
+    // TODO: Is this the correct approach or do programs move the pointers themselves?
+    _hBlankTransferSource += 16;
+    _hBlankTransferDst += 16;
+    
+    const uint8_t remainingCount = readByte(HDMATransferRegister) & 0x7F;
+    if (remainingCount > 0) {
+        // decrement the remaining step count
+        const uint8_t newRemainingCount = remainingCount - 1;
+        _directSetHighRange(HDMATransferRegister, (0x80 | newRemainingCount));
+    } else {
+        // the transfer is complete
+        _isHBlankTransferActive = false;
+        _directSetHighRange(HDMATransferRegister, 0xFF);
     }
 }
 

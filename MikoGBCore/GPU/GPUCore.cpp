@@ -120,6 +120,7 @@ void GPUCore::_setMode(LCDMode mode) {
     switch (mode) {
         case HBlank:
             _renderScanline(_currentScanline);
+            _memoryController->hBlankDMATransferStep();
             if (isMaskSet(updatedStat, 0x08)) {
                 _memoryController->requestInterrupt(MemoryController::LCDStat);
             }
