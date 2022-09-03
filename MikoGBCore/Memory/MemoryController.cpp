@@ -39,6 +39,8 @@ static const size_t HighRangeMemorySize = 1024 * 16;     // 16 KiB of internal m
 // Relevant registers
 static const uint16_t OAMBase = 0xFE00;
 
+static const uint16_t DoubleSpeedRegister = 0xFF4D;
+
 // Relevant I/O registers. Writing triggers events
 static const uint16_t DMATransferRegister = 0xFF46; // DMG DMA control register
 static const uint16_t HDMA1Register = 0xFF51; // HDMA source high-order byte
@@ -184,7 +186,7 @@ void MemoryController::setByte(uint16_t addr, uint8_t val) {
             }
         } else if (addr >= HDMA1Register && addr <= HDMA4Register) {
             if (_isHBlankTransferActive) {
-                //TODO: This is to verify that this doesn't happen. If it does, I'll need to handle it
+                // TODO: This is to verify that this doesn't happen. If it does, I'll need to handle it
                 // If it doesn't, the section can be removed
                 printf("Modified DMA transfer destinations while in progress\n");
             }
@@ -208,6 +210,9 @@ void MemoryController::setByte(uint16_t addr, uint8_t val) {
             serialController->serialDataWillWrite(val);
         } else if (addr == SerialControlRegister) {
             serialController->serialControlWillWrite(val);
+        } else if (addr == DoubleSpeedRegister) {
+            // TODO: Double speed?
+            assert("Double speed not supported");
         }
         
         // Write to high range memory
