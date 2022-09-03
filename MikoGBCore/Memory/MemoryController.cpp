@@ -32,14 +32,18 @@ static const uint16_t VRAMBaseAddr = 0x8000;
 static const size_t VRAMSize = 1024 * 8;                 // 8 KiB from 0x8000 - 0x9FFF
 static const uint16_t SwitchableRAMBaseAddr = 0xA000;
                                                          // 8 KiB of bank switchable external RAM from 0xA000 - 0xBFFF
-static const uint16_t HighRangeMemoryBaseAddr = 0xC000;
-static const size_t HighRangeMemorySize = 1024 * 16;     // 16 KiB of internal memory for various uses from 0xC000 - 0xFFFF
-//TODO: In CGB mode, there is additional bank switchable RAM in the high range
+
+// 32 KiB of bank switchable internal working ram. Only switchable on CGB
+// 0xC000 - 0xCFFF is 4KiB bank 0, always mapped. 0xD000 - 0xDFFF is switchable bank 1-7
+static const uint16_t WorkingRAMBaseAddr = 0xC000;
+static const uint16_t SwitchableWorkingRAMBaseAddr = 0xD000;
+static const uint16_t WorkingRAMSize = 1024 * 32;
+
+static const uint16_t HighRangeMemoryBaseAddr = 0xE000;
+static const size_t HighRangeMemorySize = 1024 * 8;     // 8 KiB of internal memory for various uses from 0xE000 - 0xFFFF
 
 // Relevant registers
 static const uint16_t OAMBase = 0xFE00;
-
-static const uint16_t DoubleSpeedRegister = 0xFF4D;
 
 // Relevant I/O registers. Writing triggers events
 static const uint16_t VRAMBankRegister = 0xFF4F; // VRAM bank switch register (CGB only)
@@ -49,6 +53,8 @@ static const uint16_t HDMA2Register = 0xFF52; // HDMA source low-order byte, mas
 static const uint16_t HDMA3Register = 0xFF53; // HDMA destination high-order byte, top 3 bits always 0b100
 static const uint16_t HDMA4Register = 0xFF54; // HDMA destination low-order byte, masked by 0xF0
 static const uint16_t HDMATransferRegister = 0xFF55; // CGB DMA control register
+static const uint16_t DoubleSpeedRegister = 0xFF4D;
+static const uint16_t WRAMBankRegister = 0xFF70; // WRAM bank switch register (CGB only)
 static const uint16_t BootROMDisableRegister = 0xFF50;
 static const uint16_t ControllerDataRegister = 0xFF00;
 static const uint16_t DIVRegister = 0xFF04; // Div is basically the CPU cycle count
@@ -65,13 +71,22 @@ static void _LogMemoryControllerErr(const string &msg) {
     cerr << "MemoryController Err: " << msg << "\n";
 }
 
+static uint16_t _switchableWorkingRAMAdjustedAddr(uint16_t addr, uint8_t bank) {
+    // input: global address within the switchable working RAM area (0xD000 - 0xDFFF)
+    // output: offset within the _workingRAM buffer
+    // offset by 1024 per bank
+    const uint16_t baseOffset = addr - SwitchableWorkingRAMBaseAddr; // (0x0000 - 0x0FFF)
+    const uint16_t bankOffset = ((uint16_t)(bank) * (4 * 1024));
+    return baseOffset + bankOffset;
+}
+
 bool MemoryController::configureWithROMData(const void *romData, size_t size) {
     if (size < PermanentROMSize) {
         _LogMemoryControllerErr("Data is too small to be a valid ROM");
         return false;
     }
     
-    if (_permanentROM != nullptr || _videoRAMBank0 != nullptr || _videoRAMBank1 != nullptr || _highRangeMemory != nullptr || _mbc != nullptr) {
+    if (_permanentROM != nullptr || _videoRAMBank0 != nullptr || _videoRAMBank1 != nullptr || _workingRAM != nullptr || _highRangeMemory != nullptr || _mbc != nullptr) {
         _LogMemoryControllerErr("Controller should not be reused");
         return false;
     }
@@ -90,6 +105,7 @@ bool MemoryController::configureWithROMData(const void *romData, size_t size) {
     _videoRAMBank0 = new uint8_t[VRAMSize]();
     _videoRAMBank1 = new uint8_t[VRAMSize]();
     _videoRAMCurrentBank = _videoRAMBank0;
+    _workingRAM = new uint8_t[WorkingRAMSize]();
     _highRangeMemory = new uint8_t[HighRangeMemorySize]();
     
     bool success = _mbc->configureWithROMData(romData, size);
@@ -97,11 +113,12 @@ bool MemoryController::configureWithROMData(const void *romData, size_t size) {
 }
 
 bool MemoryController::configureWithEmptyData() {
-    assert(_permanentROM == nullptr && _videoRAMBank0 == nullptr && _videoRAMBank1 == nullptr && _highRangeMemory == nullptr && _mbc == nullptr);
+    assert(_permanentROM == nullptr && _videoRAMBank0 == nullptr && _videoRAMBank1 == nullptr && _workingRAM == nullptr && _highRangeMemory == nullptr && _mbc == nullptr);
     _permanentROM = new uint8_t[PermanentROMSize]();
     _videoRAMBank0 = new uint8_t[VRAMSize]();
     _videoRAMBank1 = new uint8_t[VRAMSize]();
     _videoRAMCurrentBank = _videoRAMBank0;
+    _workingRAM = new uint8_t[WorkingRAMSize]();
     _highRangeMemory = new uint8_t[HighRangeMemorySize]();
     
     const size_t ptr = 0x104;
@@ -116,6 +133,7 @@ MemoryController::~MemoryController() {
     delete [] _permanentROM;
     delete [] _videoRAMBank0;
     delete [] _videoRAMBank1;
+    delete [] _workingRAM;
     delete [] _highRangeMemory;
     delete _mbc;
 }
@@ -133,9 +151,16 @@ uint8_t MemoryController::readByte(uint16_t addr) const {
     } else if (addr < SwitchableRAMBaseAddr) {
         // Read from VRAM
         return _videoRAMCurrentBank[addr - VRAMBaseAddr];
-    } else if (addr < HighRangeMemoryBaseAddr) {
+    } else if (addr < WorkingRAMBaseAddr) {
         // Ask the MBC to read from switchable RAM
         return _mbc->readRAM(addr);
+    } else if (addr < SwitchableWorkingRAMBaseAddr) {
+        // Read from bank 0 of WRAM
+        return _workingRAM[addr - WorkingRAMBaseAddr];
+    } else if (addr < HighRangeMemoryBaseAddr) {
+        // Read from switchable bank of WRAM
+        const uint16_t workingRAMAddr = _switchableWorkingRAMAdjustedAddr(addr, _switchableWRAMBank);
+        return _workingRAM[workingRAMAddr];
     } else {
         
         if (addr == ControllerDataRegister) {
@@ -166,8 +191,16 @@ void MemoryController::setByte(uint16_t addr, uint8_t val) {
     } else if (addr < SwitchableRAMBaseAddr) {
         // Write to VRAM
         _videoRAMCurrentBank[addr - VRAMBaseAddr] = val;
-    } else if (addr < HighRangeMemoryBaseAddr) {
+    } else if (addr < WorkingRAMBaseAddr) {
+        // Write to switchable external RAM
         _mbc->writeRAM(addr, val);
+    } else if (addr < SwitchableWorkingRAMBaseAddr) {
+        // Write to bank 0 of working RAM
+        _workingRAM[addr - WorkingRAMBaseAddr] = val;
+    } else if (addr < HighRangeMemoryBaseAddr) {
+        // Write to switchable bank of working RAM
+        const uint16_t workingRAMAddr = _switchableWorkingRAMAdjustedAddr(addr, _switchableWRAMBank);
+        _workingRAM[workingRAMAddr] = val;
     } else {
         
         // Several special events are triggered when writing to the I/O registers in high range memory
@@ -204,6 +237,13 @@ void MemoryController::setByte(uint16_t addr, uint8_t val) {
                 _videoRAMCurrentBank = _videoRAMBank1;
             }
             toWrite = 0xFE | val; // top 7 bits are 1 when read
+        } else if (addr == WRAMBankRegister) {
+            // switch WRAM banks
+            _switchableWRAMBank = (val & 0x7);
+            if (_switchableWRAMBank == 0) {
+                // writing 0 selects bank 1
+                _switchableWRAMBank = 1;
+            }
         } else if (addr == BootROMDisableRegister) {
             _bootROMEnabled = val == 0;
         } else if (addr == DIVRegister) {

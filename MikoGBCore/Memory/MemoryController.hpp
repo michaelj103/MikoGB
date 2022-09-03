@@ -80,10 +80,12 @@ private:
     uint8_t *_videoRAMBank0 = nullptr;
     uint8_t *_videoRAMBank1 = nullptr;
     uint8_t *_videoRAMCurrentBank = nullptr;
+    uint8_t *_workingRAM = nullptr;
     uint8_t *_highRangeMemory = nullptr;
     CartridgeHeader _header;
     bool _bootROMEnabled = true;
     size_t _saveDataSize = false;
+    uint8_t _switchableWRAMBank = 1;
     
     MemoryBankController *_mbc = nullptr;
     Timer _timer;
