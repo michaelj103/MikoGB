@@ -77,7 +77,9 @@ public:
     
 private:
     uint8_t *_permanentROM = nullptr;
-    uint8_t *_videoRAM = nullptr;
+    uint8_t *_videoRAMBank0 = nullptr;
+    uint8_t *_videoRAMBank1 = nullptr;
+    uint8_t *_videoRAMCurrentBank = nullptr;
     uint8_t *_highRangeMemory = nullptr;
     CartridgeHeader _header;
     bool _bootROMEnabled = true;

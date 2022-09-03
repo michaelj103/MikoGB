@@ -42,6 +42,7 @@ static const uint16_t OAMBase = 0xFE00;
 static const uint16_t DoubleSpeedRegister = 0xFF4D;
 
 // Relevant I/O registers. Writing triggers events
+static const uint16_t VRAMBankRegister = 0xFF4F; // VRAM bank switch register (CGB only)
 static const uint16_t DMATransferRegister = 0xFF46; // DMG DMA control register
 static const uint16_t HDMA1Register = 0xFF51; // HDMA source high-order byte
 static const uint16_t HDMA2Register = 0xFF52; // HDMA source low-order byte, masked by 0xF0
@@ -70,7 +71,7 @@ bool MemoryController::configureWithROMData(const void *romData, size_t size) {
         return false;
     }
     
-    if (_permanentROM != nullptr || _videoRAM != nullptr || _highRangeMemory != nullptr || _mbc != nullptr) {
+    if (_permanentROM != nullptr || _videoRAMBank0 != nullptr || _videoRAMBank1 != nullptr || _highRangeMemory != nullptr || _mbc != nullptr) {
         _LogMemoryControllerErr("Controller should not be reused");
         return false;
     }
@@ -86,7 +87,9 @@ bool MemoryController::configureWithROMData(const void *romData, size_t size) {
         return false;
     }
     
-    _videoRAM = new uint8_t[VRAMSize]();
+    _videoRAMBank0 = new uint8_t[VRAMSize]();
+    _videoRAMBank1 = new uint8_t[VRAMSize]();
+    _videoRAMCurrentBank = _videoRAMBank0;
     _highRangeMemory = new uint8_t[HighRangeMemorySize]();
     
     bool success = _mbc->configureWithROMData(romData, size);
@@ -94,9 +97,11 @@ bool MemoryController::configureWithROMData(const void *romData, size_t size) {
 }
 
 bool MemoryController::configureWithEmptyData() {
-    assert(_permanentROM == nullptr && _videoRAM == nullptr && _highRangeMemory == nullptr && _mbc == nullptr);
+    assert(_permanentROM == nullptr && _videoRAMBank0 == nullptr && _videoRAMBank1 == nullptr && _highRangeMemory == nullptr && _mbc == nullptr);
     _permanentROM = new uint8_t[PermanentROMSize]();
-    _videoRAM = new uint8_t[VRAMSize]();
+    _videoRAMBank0 = new uint8_t[VRAMSize]();
+    _videoRAMBank1 = new uint8_t[VRAMSize]();
+    _videoRAMCurrentBank = _videoRAMBank0;
     _highRangeMemory = new uint8_t[HighRangeMemorySize]();
     
     const size_t ptr = 0x104;
@@ -109,7 +114,8 @@ bool MemoryController::configureWithEmptyData() {
 
 MemoryController::~MemoryController() {
     delete [] _permanentROM;
-    delete [] _videoRAM;
+    delete [] _videoRAMBank0;
+    delete [] _videoRAMBank1;
     delete [] _highRangeMemory;
     delete _mbc;
 }
@@ -126,7 +132,7 @@ uint8_t MemoryController::readByte(uint16_t addr) const {
         return _mbc->readROM(addr);
     } else if (addr < SwitchableRAMBaseAddr) {
         // Read from VRAM
-        return _videoRAM[addr - VRAMBaseAddr];
+        return _videoRAMCurrentBank[addr - VRAMBaseAddr];
     } else if (addr < HighRangeMemoryBaseAddr) {
         // Ask the MBC to read from switchable RAM
         return _mbc->readRAM(addr);
@@ -159,7 +165,7 @@ void MemoryController::setByte(uint16_t addr, uint8_t val) {
         _mbc->writeControlCode(addr, val);
     } else if (addr < SwitchableRAMBaseAddr) {
         // Write to VRAM
-        _videoRAM[addr - VRAMBaseAddr] = val;
+        _videoRAMCurrentBank[addr - VRAMBaseAddr] = val;
     } else if (addr < HighRangeMemoryBaseAddr) {
         _mbc->writeRAM(addr, val);
     } else {
@@ -190,6 +196,14 @@ void MemoryController::setByte(uint16_t addr, uint8_t val) {
                 // If it doesn't, the section can be removed
                 printf("Modified DMA transfer destinations while in progress\n");
             }
+        } else if (addr == VRAMBankRegister) {
+            // switch VRAM banks
+            if ((val & 0x01) == 0) {
+                _videoRAMCurrentBank = _videoRAMBank0;
+            } else {
+                _videoRAMCurrentBank = _videoRAMBank1;
+            }
+            toWrite = 0xFE | val; // top 7 bits are 1 when read
         } else if (addr == BootROMDisableRegister) {
             _bootROMEnabled = val == 0;
         } else if (addr == DIVRegister) {
@@ -326,7 +340,7 @@ void MemoryController::_startHBlankDMATransfer() {
 void MemoryController::hBlankDMATransferStep() {
     // In CGB, there's an H-blank DMA transfer mechanism that allows very fast transfers during each HBlank
     // until a the counter in the control register underflows, or transfer is cancelled
-    if (_isHBlankTransferActive) {
+    if (!_isHBlankTransferActive) {
         return;
     }
     
