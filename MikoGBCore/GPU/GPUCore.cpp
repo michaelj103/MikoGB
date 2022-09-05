@@ -569,7 +569,7 @@ void GPUCore::_renderSpritesToScanline(size_t line, LCDScanline &scanline) {
         const MonochromePalette &palette = isMaskSet(spriteAttr, 0x10) ? palette1 : palette0;
         const uint8_t tileBank = (_useCGBRendering && isMaskSet(spriteAttr, 0x8)) ? 1 : 0;
         const uint8_t colorPaletteIndex = (spriteAttr & 0x7);
-        const Palette &colorPalette = _colorPaletteOBJ[colorPaletteIndex];
+        const Palette &colorPalette = ColorPalette(_colorPaletteOBJ[colorPaletteIndex], true);
         const Palette &finalPalette = _useCGBRendering ? colorPalette : palette;
         _DrawTileRowToScanline(tileBaseAddr, adjustedRow, tileCol, flipX, writeType, scanlinePos, tileBank, scanline, _memoryController, finalPalette);
     }
