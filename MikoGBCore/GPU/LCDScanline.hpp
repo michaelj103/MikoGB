@@ -9,7 +9,7 @@
 #define LCDScanline_hpp
 
 #include "PixelBuffer.hpp"
-#include "MonochromePalette.hpp"
+#include "Palette.hpp"
 #include <vector>
 
 namespace MikoGB {
@@ -26,7 +26,7 @@ struct LCDScanline {
         SpriteHighPriority,
     };
     
-    void writePixel(size_t idx, uint8_t code, const MonochromePalette &palette, WriteType writeType) {
+    void writePixel(size_t idx, uint8_t code, const Palette &palette, WriteType writeType) {
         if (!palette.isTransparent(code)) {
             bool shouldWrite = true;
             switch (writeType) {

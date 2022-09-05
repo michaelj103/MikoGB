@@ -59,6 +59,11 @@ static const uint16_t WXRegister = 0xFF4B; // Window origin X
 static const uint16_t OAMBase = 0xFE00; // base address of the 40 4-byte OAM codes
 static const uint16_t TileMapBase = 0x8000; // Base address of tile map
 
+static const uint16_t BCPSRegister = 0xFF68; // BG palette I/O control register
+static const uint16_t BCPDRegister = 0xFF69; // BG palette data register
+static const uint16_t OCPSRegister = 0xFF6A; // BG palette I/O register
+static const uint16_t OCPDRegister = 0xFF6B; // BG palette data register
+
 static const size_t ScreenWidth = 160; // screen is 160x144
 static const size_t BackgroundCanvasSize = 256; // 256x256;
 static const uint8_t BackgroundTileSize = 8; // BG tiles are always 8x8
@@ -70,7 +75,15 @@ static inline bool _IsLCDOn(const MemoryController::Ptr &mem) {
     return isOn;
 }
 
-GPUCore::GPUCore(MemoryController::Ptr &mem): _memoryController(mem), _scanline(ScreenWidth) {}
+GPUCore::GPUCore(MemoryController::Ptr &mem): _memoryController(mem), _scanline(ScreenWidth) {
+    // ensure color palettes are default initialized
+    for (auto &palette : _colorPaletteBG) {
+        palette = ColorPalette();
+    }
+    for (auto &palette : _colorPaletteOBJ) {
+        palette = ColorPalette();
+    }
+}
 
 // Clear all state as needed when the LCD is disabled
 void GPUCore::_turnOff() {
@@ -244,7 +257,7 @@ static inline uint8_t _GetPaletteCode(uint8_t byte0, uint8_t byte1, int x) {
     return code;
 }
 
-static void _ReadBGTile(uint16_t addr, const MemoryController::Ptr &mem, const MonochromePalette &bgPalette, PixelBuffer &dest) {
+static void _ReadBGTile(uint16_t addr, const MemoryController::Ptr &mem, const Palette &bgPalette, PixelBuffer &dest) {
     assert(dest.width == 8 && dest.height == 8);
     for (uint16_t y = 0; y < 16; y += 2) {
         uint8_t byte0 = mem->readByte(addr + y);
@@ -334,7 +347,7 @@ void GPUCore::getBackground(PixelBufferImageCallback callback) {
     callback(background);
 }
 
-static uint8_t _DrawTileRowToScanline(uint16_t tileAddress, uint8_t tileRow, uint8_t tileCol, bool flipX, LCDScanline::WriteType writeType, uint8_t scanlinePos, LCDScanline &scanline, const MemoryController::Ptr &mem, const MonochromePalette &palette) {
+static uint8_t _DrawTileRowToScanline(uint16_t tileAddress, uint8_t tileRow, uint8_t tileCol, bool flipX, LCDScanline::WriteType writeType, uint8_t scanlinePos, LCDScanline &scanline, const MemoryController::Ptr &mem, const Palette &palette) {
     // the 2 bytes representing the given row in the tile
     const uint16_t tileRowOffset = tileRow * 2; // 2 bytes per row
     const uint8_t byte0 = mem->readByte(tileAddress + tileRowOffset);
@@ -545,5 +558,59 @@ void GPUCore::_renderScanline(size_t lineNum) {
     
     if (_scanlineCallback) {
         _scanlineCallback(_scanline.getPixelData(), lineNum);
+    }
+}
+
+#pragma mark - Color Palette Management
+
+// returns the palette index to read from or write to based on the control value.
+// Updates the control value if it's a write
+static int _paletteControlIndex(const uint8_t controlValue) {
+    const int index = (controlValue & 0x38) >> 3;
+    return index;
+}
+
+static uint8_t _incrementedPaletteControlRegister(const uint8_t controlValue) {
+    uint8_t outValue = controlValue;
+    if (isMaskSet(controlValue, 0x80)) {
+        outValue = (controlValue + 1) & 0xBF; // mask out bit 6. It will "overflow" when the bottom 6 bits wrap
+    }
+    return outValue;
+}
+
+void GPUCore::colorPaletteRegisterWrite(uint16_t addr, uint8_t val) {
+    if (addr == BCPSRegister) {
+        _bgPaletteControl = val & 0xBF; // mask out bit 6 so it's always 0
+    } else if (addr == BCPDRegister) {
+        const int index = _paletteControlIndex(_bgPaletteControl);
+        _colorPaletteBG[index].paletteDataWrite(_bgPaletteControl, val);
+        _bgPaletteControl = _incrementedPaletteControlRegister(_bgPaletteControl);
+    } else if (addr == OCPSRegister) {
+        _objPaletteControl = val; // mask out bit 6 so it's always 0
+    } else if (addr == OCPDRegister) {
+        const int index = _paletteControlIndex(_objPaletteControl);
+        _colorPaletteOBJ[index].paletteDataWrite(_objPaletteControl, val);
+        _objPaletteControl = _incrementedPaletteControlRegister(_objPaletteControl);
+    } else {
+        // Should be unreachable except by client error
+        assert("Bad color palette write");
+    }
+}
+
+uint8_t GPUCore::colorPaletteRegisterRead(uint16_t addr) const {
+    if (addr == BCPSRegister) {
+        return _bgPaletteControl;
+    } else if (addr == BCPDRegister) {
+        const int index = _paletteControlIndex(_bgPaletteControl);
+        return _colorPaletteBG[index].paletteDataRead(_bgPaletteControl);
+    } else if (addr == OCPSRegister) {
+        return _objPaletteControl;
+    } else if (addr == OCPDRegister) {
+        const int index = _paletteControlIndex(_objPaletteControl);
+        return _colorPaletteOBJ[index].paletteDataRead(_objPaletteControl);
+    } else {
+        // Should be unreachable except by client error
+        assert("Bad color palette read");
+        return 0xFF;
     }
 }

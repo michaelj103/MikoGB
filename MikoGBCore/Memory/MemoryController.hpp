@@ -18,6 +18,7 @@ namespace MikoGB {
 class MemoryBankController;
 class Joypad;
 class SerialController;
+class GPUCore;
 
 class MemoryController {
 public:
@@ -46,6 +47,9 @@ public:
     void requestInterrupt(InterruptFlag);
     static const uint16_t IFRegister = 0xFF0F; // Interrupt Request
     static const uint16_t IERegister = 0xFFFF; // Interrupt Enable
+    
+    // GPU
+    std::shared_ptr<GPUCore> gpu;
     
     // Joypad
     enum InputMask : uint8_t {

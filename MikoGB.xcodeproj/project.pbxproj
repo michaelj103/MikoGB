@@ -34,6 +34,8 @@
 		2902EADD27CB54B800186976 /* WaveformSound.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 2902EADB27CB54B800186976 /* WaveformSound.hpp */; };
 		2907003328B6D584000D8A5B /* GBLinkServerProtocol in Frameworks */ = {isa = PBXBuildFile; productRef = 2907003228B6D584000D8A5B /* GBLinkServerProtocol */; };
 		2907003528B6D8B7000D8A5B /* LinkSessionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2907003428B6D8B7000D8A5B /* LinkSessionViewController.swift */; };
+		2907003928C5A07F000D8A5B /* Palette.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 2907003728C5A07F000D8A5B /* Palette.hpp */; };
+		2907003D28C5A2A2000D8A5B /* ColorPalette.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 2907003B28C5A2A2000D8A5B /* ColorPalette.hpp */; };
 		290B3BC8247E00B400937D71 /* CPUCore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297E6137245FEA5D00EE150F /* CPUCore.cpp */; };
 		290B3BC9247E00C000937D71 /* CPUInstruction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297E613C245FECDF00EE150F /* CPUInstruction.cpp */; };
 		290B3BCA247E00CB00937D71 /* LoadInstructions8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8C0BA2462685F0082C52B /* LoadInstructions8.cpp */; };
@@ -271,6 +273,8 @@
 		2902EADA27CB54B800186976 /* WaveformSound.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = WaveformSound.cpp; sourceTree = "<group>"; };
 		2902EADB27CB54B800186976 /* WaveformSound.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = WaveformSound.hpp; sourceTree = "<group>"; };
 		2907003428B6D8B7000D8A5B /* LinkSessionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkSessionViewController.swift; sourceTree = "<group>"; };
+		2907003728C5A07F000D8A5B /* Palette.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Palette.hpp; sourceTree = "<group>"; };
+		2907003B28C5A2A2000D8A5B /* ColorPalette.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ColorPalette.hpp; sourceTree = "<group>"; };
 		290B3BCF247E048100937D71 /* Test8BitLoadInstructions.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = Test8BitLoadInstructions.mm; sourceTree = "<group>"; };
 		290B3BD1247F51D100937D71 /* Test16BitLoadInstructions.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = Test16BitLoadInstructions.mm; sourceTree = "<group>"; };
 		290FF33D265F066D006812F4 /* MonochromePalette.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MonochromePalette.hpp; sourceTree = "<group>"; };
@@ -624,6 +628,8 @@
 				2992830926426A32004691E5 /* GPUCore.hpp */,
 				2992830826426A32004691E5 /* GPUCore.cpp */,
 				290FF33D265F066D006812F4 /* MonochromePalette.hpp */,
+				2907003B28C5A2A2000D8A5B /* ColorPalette.hpp */,
+				2907003728C5A07F000D8A5B /* Palette.hpp */,
 				2919879D267BF936009D7C45 /* LCDScanline.hpp */,
 			);
 			path = GPU;
@@ -846,6 +852,7 @@
 				29A8FFD626535994007A26C9 /* MemoryBankController.hpp in Headers */,
 				2902EADD27CB54B800186976 /* WaveformSound.hpp in Headers */,
 				29C2CBD028AD849A00936BD7 /* SerialController.hpp in Headers */,
+				2907003928C5A07F000D8A5B /* Palette.hpp in Headers */,
 				290FF37B2662110A006812F4 /* Timer.hpp in Headers */,
 				2902EAB027C889BB00186976 /* SquareSound.hpp in Headers */,
 				299282FD264266A9004691E5 /* GameBoyCoreImp.hpp in Headers */,
@@ -854,6 +861,7 @@
 				291987C626829213009D7C45 /* MBC3.hpp in Headers */,
 				29A8FF76265211B8007A26C9 /* MemoryController.hpp in Headers */,
 				290FF33F265F066E006812F4 /* MonochromePalette.hpp in Headers */,
+				2907003D28C5A2A2000D8A5B /* ColorPalette.hpp in Headers */,
 				29A8FFFA26537426007A26C9 /* NoMBC.hpp in Headers */,
 				2992830B26426A32004691E5 /* GPUCore.hpp in Headers */,
 				2902EA9327C0712A00186976 /* Breakpoint.hpp in Headers */,
@@ -1571,7 +1579,6 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mjb.MikoGB;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
@@ -1596,7 +1603,6 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mjb.MikoGB;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_COMPILATION_MODE = wholemodule;
@@ -1727,7 +1733,6 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mjb.MikoGB;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;

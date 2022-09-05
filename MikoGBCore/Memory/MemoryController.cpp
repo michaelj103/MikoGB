@@ -10,6 +10,7 @@
 #include "MemoryBankController.hpp"
 #include "Joypad.hpp"
 #include "SerialController.hpp"
+#include "GPUCore.hpp"
 #include <iostream>
 
 using namespace std;
@@ -64,6 +65,8 @@ static const uint16_t AudioRegisterBegin = 0xFF10; // NR10, lowest audio control
 static const uint16_t AudioRegisterEnd = 0xFF3F; // end of wave pattern RAM. Highest audio control register
 static const uint16_t SerialDataRegister = 0xFF01; // Byte queued for serial data Rx/Tx
 static const uint16_t SerialControlRegister = 0xFF02; // Control bits for serial transfer
+static const uint16_t ColorPaletteRegisterBegin = 0xFF68; // BCPS, lowest color palette I/O register
+static const uint16_t ColorPaletteRegisterEnd = 0xFF6B; // OCPD, highest color palette I/O register
 
 
 static void _LogMemoryControllerErr(const string &msg) {
@@ -176,6 +179,8 @@ uint8_t MemoryController::readByte(uint16_t addr) const {
         } else if (addr >= AudioRegisterBegin && addr <= AudioRegisterEnd) {
             // read from audio controller
             return _audioController.readAudioRegister(addr);
+        } else if (addr >= ColorPaletteRegisterBegin && addr <= ColorPaletteRegisterEnd) {
+            return gpu->colorPaletteRegisterRead(addr);
         }
         
         // Read from the high range memory
@@ -266,6 +271,8 @@ void MemoryController::setByte(uint16_t addr, uint8_t val) {
         } else if (addr == DoubleSpeedRegister) {
             // TODO: Double speed?
             assert("Double speed not supported");
+        } else if (addr >= ColorPaletteRegisterBegin && addr <= ColorPaletteRegisterEnd) {
+            gpu->colorPaletteRegisterWrite(addr, val);
         }
         
         // Write to high range memory

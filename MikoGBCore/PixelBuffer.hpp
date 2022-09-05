@@ -16,9 +16,9 @@ namespace MikoGB {
 
 /// RGB8 Pixels. No colorspace since GB screens were before that. Wing it on the display side
 struct Pixel {
-    uint8_t red;
+    uint8_t red = 0;
     uint8_t green = 255; // Make uninitialized pixels bright green so bugs are visible
-    uint8_t blue;
+    uint8_t blue = 0;
     
     Pixel() = default;
     

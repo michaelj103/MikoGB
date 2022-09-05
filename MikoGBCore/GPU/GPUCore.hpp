@@ -12,6 +12,9 @@
 #include "PixelBuffer.hpp"
 #include "MemoryController.hpp"
 #include "LCDScanline.hpp"
+#include "ColorPalette.hpp"
+
+#define ColorPaletteCount 8
 
 namespace MikoGB {
 
@@ -30,6 +33,9 @@ public:
     uint8_t getCurrentScanline() {
         return _currentScanline;
     }
+    
+    void colorPaletteRegisterWrite(uint16_t addr, uint8_t val);
+    uint8_t colorPaletteRegisterRead(uint16_t addr) const;
     
     /// Debug utilities
     void getTileMap(PixelBufferImageCallback callback);
@@ -60,6 +66,12 @@ private:
     void _renderWindowToScanline(size_t line, LCDScanline &scanline);
     void _renderSpritesToScanline(size_t line, LCDScanline &scanline);
     PixelBufferScanlineCallback _scanlineCallback;
+    
+    // Color palettes
+    uint8_t _bgPaletteControl = 0;
+    uint8_t _objPaletteControl = 0;
+    ColorPalette _colorPaletteBG[ColorPaletteCount];
+    ColorPalette _colorPaletteOBJ[ColorPaletteCount];
 };
 
 }

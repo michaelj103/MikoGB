@@ -16,6 +16,7 @@ GameBoyCoreImp::GameBoyCoreImp() {
     _memoryController = make_shared<MemoryController>();
     _cpu = make_shared<CPUCore>(_memoryController);
     _gpu = make_shared<GPUCore>(_memoryController);
+    _memoryController->gpu = _gpu;
     _joypad = make_shared<Joypad>(_memoryController);
     _memoryController->joypad = _joypad;
     _serialController = make_shared<SerialController>(_memoryController);
