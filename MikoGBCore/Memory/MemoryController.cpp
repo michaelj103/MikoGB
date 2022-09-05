@@ -30,8 +30,7 @@ static const uint16_t SwitchableROMBaseAddr = 0x4000;
                                                          // 16 KiB of bank switchable ROM from 0x4000 - 0x7FFF
 static const uint16_t VRAMBaseAddr = 0x8000;
 static const size_t VRAMSize = 1024 * 8;                 // 8 KiB from 0x8000 - 0x9FFF
-static const uint16_t SwitchableRAMBaseAddr = 0xA000;
-                                                         // 8 KiB of bank switchable external RAM from 0xA000 - 0xBFFF
+static const uint16_t SwitchableRAMBaseAddr = 0xA000;    // 8 KiB of bank switchable external RAM from 0xA000 - 0xBFFF
 
 // 32 KiB of bank switchable internal working ram. Only switchable on CGB
 // 0xC000 - 0xCFFF is 4KiB bank 0, always mapped. 0xD000 - 0xDFFF is switchable bank 1-7

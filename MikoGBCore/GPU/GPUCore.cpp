@@ -483,6 +483,7 @@ void GPUCore::_renderSpritesToScanline(size_t line, LCDScanline &scanline) {
     
     // 2. Z-order priority. In DMG mode it's lowest X-pos with OAM code as the tiebreaker
     // In CGB mode it's just lowest OAM code. Always using CGB Z-order mechanism for simplicity
+    // TODO: DMG compatibility priority based on OPRI register?
     // For both, only 10 sprites are drawn per line
     array<int, 10> oamCodesOnLine;
     const size_t currentSpriteLine = line + 16; // sprite y-coords are offset by 16 so they can be hidden above the screen
