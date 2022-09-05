@@ -159,8 +159,20 @@ static MikoGB::JoypadButton _ButtonForCode(GBEngineKeyCode code) {
         return;
     }
     
+    NSURL *bootURL = [[NSBundle mainBundle] URLForResource:@"cgb_boot" withExtension:@"bin"];
+    NSError *bootReadErr = nil;
+    NSData *bootROMData = nil;
+    if (bootURL) {
+        bootROMData = [NSData dataWithContentsOfURL:bootURL options:NSDataReadingMappedIfSafe error:&bootReadErr];
+        if (!bootROMData) {
+            NSLog(@"Failed to read CGB boot ROM with error %@", bootReadErr);
+        }
+    } else {
+        NSLog(@"Failed to find CGB boot ROM");
+    }
+    
     dispatch_async(_emulationQueue, ^{
-        bool success = self->_core->loadROMData(data.bytes, data.length);
+        bool success = self->_core->loadROMData(data.bytes, data.length, bootROMData.bytes, bootROMData.length);
         BOOL supportsSaveData = self->_core->saveDataSize() > 0 ? YES : NO;
         if (completion) {
             dispatch_async(dispatch_get_main_queue(), ^{

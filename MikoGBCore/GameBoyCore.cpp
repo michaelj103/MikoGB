@@ -19,8 +19,8 @@ GameBoyCore::~GameBoyCore() {
     delete _imp;
 }
 
-bool GameBoyCore::loadROMData(const void *romData, size_t size) {
-    return _imp->loadROMData(romData, size);
+bool GameBoyCore::loadROMData(const void *romData, size_t size, const void *colorBootROMData, size_t bootRomSize) {
+    return _imp->loadROMData(romData, size, colorBootROMData, bootRomSize);
 }
 
 void GameBoyCore::prepTestROM() {

@@ -23,9 +23,17 @@ GameBoyCoreImp::GameBoyCoreImp() {
     _memoryController->serialController = _serialController;
 }
 
-bool GameBoyCoreImp::loadROMData(const void *romData, size_t size) {
+bool GameBoyCoreImp::loadROMData(const void *romData, size_t size, const void *bootRomData, size_t bootRomSize) {
     // TODO: rather than creating everything in the constructor, (re-)create it on load
-    return _memoryController->configureWithROMData(romData, size);
+    if (_cpu->programCounter != 0) {
+        // Must not have already started running
+        return false;
+    }
+    bool success = _memoryController->configureWithROMData(romData, size);
+    if (bootRomData != nullptr) {
+        success = success && _memoryController->configureWithColorBootROM(bootRomData, bootRomSize);
+    }
+    return success;
 }
 
 void GameBoyCoreImp::prepTestROM() {

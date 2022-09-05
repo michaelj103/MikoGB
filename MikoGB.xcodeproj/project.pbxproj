@@ -36,6 +36,7 @@
 		2907003528B6D8B7000D8A5B /* LinkSessionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2907003428B6D8B7000D8A5B /* LinkSessionViewController.swift */; };
 		2907003928C5A07F000D8A5B /* Palette.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 2907003728C5A07F000D8A5B /* Palette.hpp */; };
 		2907003D28C5A2A2000D8A5B /* ColorPalette.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 2907003B28C5A2A2000D8A5B /* ColorPalette.hpp */; };
+		2907003F28C5CBE7000D8A5B /* cgb_boot.bin in Resources */ = {isa = PBXBuildFile; fileRef = 2907003E28C5CBE7000D8A5B /* cgb_boot.bin */; };
 		290B3BC8247E00B400937D71 /* CPUCore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297E6137245FEA5D00EE150F /* CPUCore.cpp */; };
 		290B3BC9247E00C000937D71 /* CPUInstruction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297E613C245FECDF00EE150F /* CPUInstruction.cpp */; };
 		290B3BCA247E00CB00937D71 /* LoadInstructions8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8C0BA2462685F0082C52B /* LoadInstructions8.cpp */; };
@@ -275,6 +276,7 @@
 		2907003428B6D8B7000D8A5B /* LinkSessionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkSessionViewController.swift; sourceTree = "<group>"; };
 		2907003728C5A07F000D8A5B /* Palette.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Palette.hpp; sourceTree = "<group>"; };
 		2907003B28C5A2A2000D8A5B /* ColorPalette.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ColorPalette.hpp; sourceTree = "<group>"; };
+		2907003E28C5CBE7000D8A5B /* cgb_boot.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = cgb_boot.bin; sourceTree = "<group>"; };
 		290B3BCF247E048100937D71 /* Test8BitLoadInstructions.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = Test8BitLoadInstructions.mm; sourceTree = "<group>"; };
 		290B3BD1247F51D100937D71 /* Test16BitLoadInstructions.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = Test16BitLoadInstructions.mm; sourceTree = "<group>"; };
 		290FF33D265F066D006812F4 /* MonochromePalette.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MonochromePalette.hpp; sourceTree = "<group>"; };
@@ -693,6 +695,7 @@
 				299282BA2642449F004691E5 /* Main.storyboard */,
 				299282BD2642449F004691E5 /* Info.plist */,
 				299282BE2642449F004691E5 /* MikoGB.entitlements */,
+				2907003E28C5CBE7000D8A5B /* cgb_boot.bin */,
 				29F0828C2647B9F700FA5F67 /* MikoGB-Bridging-Header.h */,
 			);
 			path = MikoGB;
@@ -1102,6 +1105,7 @@
 				299282B92642449F004691E5 /* Assets.xcassets in Resources */,
 				29C2CBD628ADE83200936BD7 /* LinkManager.xib in Resources */,
 				299282BC2642449F004691E5 /* Main.storyboard in Resources */,
+				2907003F28C5CBE7000D8A5B /* cgb_boot.bin in Resources */,
 				291987D3268300FA009D7C45 /* Debugger.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -24,7 +24,7 @@ class GameBoyCoreImp {
 public:
     GameBoyCoreImp();
     
-    bool loadROMData(const void *romData, size_t size);
+    bool loadROMData(const void *romData, size_t size, const void *bootRomData = nullptr, size_t bootRomSize = 0);
     void prepTestROM();
     size_t saveDataSize() const;
     size_t copySaveData(void *buffer, size_t size) const;

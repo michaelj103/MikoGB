@@ -28,6 +28,7 @@ public:
     
     bool configureWithROMData(const void *romData, size_t size);
     bool configureWithEmptyData();
+    bool configureWithColorBootROM(const void *romData, size_t size);
         
     uint8_t readByte(uint16_t addr) const;
     void setByte(uint16_t addr, uint8_t val);
@@ -88,6 +89,8 @@ private:
     uint8_t *_highRangeMemory = nullptr;
     CartridgeHeader _header;
     bool _bootROMEnabled = true;
+    bool _colorBootROMEnabled = false;
+    uint8_t *_colorBootROM = nullptr;
     size_t _saveDataSize = false;
     uint8_t _switchableWRAMBank = 1;
     
