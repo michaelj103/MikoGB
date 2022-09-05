@@ -72,6 +72,7 @@ private:
     uint8_t _objPaletteControl = 0;
     ColorPalette _colorPaletteBG[ColorPaletteCount];
     ColorPalette _colorPaletteOBJ[ColorPaletteCount];
+    bool _useCGBRendering = true;
 };
 
 }

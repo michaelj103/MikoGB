@@ -31,6 +31,7 @@ public:
     bool configureWithColorBootROM(const void *romData, size_t size);
         
     uint8_t readByte(uint16_t addr) const;
+    uint8_t readVRAMByte(uint16_t addr, int bank) const;
     void setByte(uint16_t addr, uint8_t val);
     
     void updateWithCPUCycles(size_t cpuCycles);

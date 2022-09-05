@@ -8,6 +8,7 @@
 #include "GPUCore.hpp"
 #include "BitTwiddlingUtil.h"
 #include "MonochromePalette.hpp"
+#include "ColorPalette.hpp"
 #include <array>
 
 using namespace MikoGB;
@@ -347,11 +348,11 @@ void GPUCore::getBackground(PixelBufferImageCallback callback) {
     callback(background);
 }
 
-static uint8_t _DrawTileRowToScanline(uint16_t tileAddress, uint8_t tileRow, uint8_t tileCol, bool flipX, LCDScanline::WriteType writeType, uint8_t scanlinePos, LCDScanline &scanline, const MemoryController::Ptr &mem, const Palette &palette) {
+static uint8_t _DrawTileRowToScanline(uint16_t tileAddress, uint8_t tileRow, uint8_t tileCol, bool flipX, LCDScanline::WriteType writeType, uint8_t scanlinePos, uint8_t tileBank, LCDScanline &scanline, const MemoryController::Ptr &mem, const Palette &palette) {
     // the 2 bytes representing the given row in the tile
     const uint16_t tileRowOffset = tileRow * 2; // 2 bytes per row
-    const uint8_t byte0 = mem->readByte(tileAddress + tileRowOffset);
-    const uint8_t byte1 = mem->readByte(tileAddress + tileRowOffset + 1);
+    const uint8_t byte0 = mem->readVRAMByte(tileAddress + tileRowOffset, tileBank);
+    const uint8_t byte1 = mem->readVRAMByte(tileAddress + tileRowOffset + 1, tileBank);
     int x = tileCol;
     uint8_t currentIdx = scanlinePos;
     // Draw until the end of the tile or the end of the scanline
@@ -379,7 +380,7 @@ void GPUCore::_renderBackgroundToScanline(size_t lineNum, LCDScanline &scanline)
     bool signedMode;
     uint16_t bgCodeArea;
     _GetBGTileMapInfo(bgTileMapBase, signedMode, bgCodeArea, _memoryController);
-    MonochromePalette bgPalette = MonochromePalette(_memoryController->readByte(BGPRegister), false);
+    const MonochromePalette bgPalette = MonochromePalette(_memoryController->readByte(BGPRegister), false);
     
     // 2. Figure out what row of tile codes we need to draw and which row of those tiles is relevant
     const uint8_t bgY = (lineNum + scy) & 0xFF; // wrap around
@@ -393,12 +394,22 @@ void GPUCore::_renderBackgroundToScanline(size_t lineNum, LCDScanline &scanline)
         const uint8_t bgX = (pixelsDrawn + scx) & 0xFF;
         const uint8_t bgTileX = bgX / 8;
         const uint16_t tileCodeAddress = bgCodeArea + (bgTileY * BackgroundTilesPerRow) + bgTileX;
-        const uint8_t tileCode = _memoryController->readByte(tileCodeAddress);
+        const uint8_t tileCode = _memoryController->readVRAMByte(tileCodeAddress, 0);
         const uint16_t tileBaseAddress = _GetBGTileBaseAddress(bgTileMapBase, tileCode, signedMode);
+        
+        // TODO: read attributes only if in necessary mode
+        const uint8_t tileAttr = _memoryController->readVRAMByte(tileCodeAddress, 1);
+        const bool flipX = isMaskSet(tileAttr, 0x20);
+        const bool flipY = isMaskSet(tileAttr, 0x40);
+        const uint8_t adjustedRow = flipY ? BackgroundTileSize - tileRow - 1 : tileRow;
+        const uint8_t tileBank = isMaskSet(tileAttr, 0x8) ? 1 : 0;
+        const uint8_t colorPaletteIndex = (tileAttr & 0x7);
+        const Palette &colorPalette = _colorPaletteBG[colorPaletteIndex];
+        const Palette &finalPalette = _useCGBRendering ? colorPalette : bgPalette;
         
         // 3b. Now draw the line from the tile to the scanline using the helper
         const uint8_t tileCol = bgX % 8; // for all but the first tile, this should be 0
-        pixelsDrawn += _DrawTileRowToScanline(tileBaseAddress, tileRow, tileCol, false, LCDScanline::WriteType::Background, pixelsDrawn, scanline, _memoryController, bgPalette);
+        pixelsDrawn += _DrawTileRowToScanline(tileBaseAddress, adjustedRow, tileCol, flipX, LCDScanline::WriteType::Background, pixelsDrawn, tileBank, scanline, _memoryController, finalPalette);
     }
 #if DEBUG
     assert(pixelsDrawn == 160);
@@ -466,7 +477,7 @@ void GPUCore::_renderWindowToScanline(size_t lineNum, LCDScanline &scanline) {
         
         // 3b. Now draw the line from the tile to the scanline using the helper
         const uint8_t tileCol = windowPosition % 8;
-        const uint8_t pixelsDrawn = _DrawTileRowToScanline(tileBaseAddress, tileRow, tileCol, false, LCDScanline::WriteType::Background, screenPosition, scanline, _memoryController, bgPalette);
+        const uint8_t pixelsDrawn = _DrawTileRowToScanline(tileBaseAddress, tileRow, tileCol, false, LCDScanline::WriteType::Background, screenPosition, 0, scanline, _memoryController, bgPalette);
         screenPosition += pixelsDrawn;
         windowPosition += pixelsDrawn;
     }
@@ -546,7 +557,7 @@ void GPUCore::_renderSpritesToScanline(size_t line, LCDScanline &scanline) {
         const uint8_t tileCol = spriteX < spriteWidth ? spriteWidth - spriteX : 0;
         const uint8_t scanlinePos = spriteX >= spriteWidth ? spriteX - spriteWidth : 0;
         const MonochromePalette &palette = isMaskSet(spriteAttr, 0x10) ? palette1 : palette0;
-        _DrawTileRowToScanline(tileBaseAddr, adjustedRow, tileCol, flipX, writeType, scanlinePos, scanline, _memoryController, palette);
+        _DrawTileRowToScanline(tileBaseAddr, adjustedRow, tileCol, flipX, writeType, scanlinePos, 0, scanline, _memoryController, palette);
     }
     
 }
@@ -593,7 +604,7 @@ void GPUCore::colorPaletteRegisterWrite(uint16_t addr, uint8_t val) {
         _objPaletteControl = _incrementedPaletteControlRegister(_objPaletteControl);
     } else {
         // Should be unreachable except by client error
-        assert("Bad color palette write");
+        assert(false);
     }
 }
 
@@ -610,7 +621,7 @@ uint8_t GPUCore::colorPaletteRegisterRead(uint16_t addr) const {
         return _colorPaletteOBJ[index].paletteDataRead(_objPaletteControl);
     } else {
         // Should be unreachable except by client error
-        assert("Bad color palette read");
+        assert(false);
         return 0xFF;
     }
 }

@@ -219,6 +219,20 @@ uint8_t MemoryController::readByte(uint16_t addr) const {
     }
 }
 
+uint8_t MemoryController::readVRAMByte(uint16_t addr, int bank) const {
+    assert(addr >= VRAMBaseAddr && addr < SwitchableRAMBaseAddr);
+    assert(bank == 0 || bank == 1);
+    
+    if (bank == 0) {
+        return _videoRAMBank0[addr - VRAMBaseAddr];
+    } else if (bank == 1) {
+        return _videoRAMBank1[addr - VRAMBaseAddr];
+    }
+    
+    // Unreachable except by client error
+    assert(false);
+}
+
 void MemoryController::setByte(uint16_t addr, uint8_t val) {
     if (addr < VRAMBaseAddr) {
         // Write to ROM area means potentially an MBC control code
@@ -303,7 +317,7 @@ void MemoryController::setByte(uint16_t addr, uint8_t val) {
             serialController->serialControlWillWrite(val);
         } else if (addr == DoubleSpeedRegister) {
             // TODO: Double speed?
-            assert("Double speed not supported");
+            assert(false);
         } else if (addr >= ColorPaletteRegisterBegin && addr <= ColorPaletteRegisterEnd) {
             gpu->colorPaletteRegisterWrite(addr, val);
         }
