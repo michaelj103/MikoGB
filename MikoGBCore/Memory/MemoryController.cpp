@@ -71,6 +71,7 @@ static const uint16_t SerialDataRegister = 0xFF01; // Byte queued for serial dat
 static const uint16_t SerialControlRegister = 0xFF02; // Control bits for serial transfer
 static const uint16_t ColorPaletteRegisterBegin = 0xFF68; // BCPS, lowest color palette I/O register
 static const uint16_t ColorPaletteRegisterEnd = 0xFF6B; // OCPD, highest color palette I/O register
+static const uint16_t ColorCompatibilityRegister = 0xFF4C; // KEY0, color compatibility
 
 
 static void _LogMemoryControllerErr(const string &msg) {
@@ -320,6 +321,8 @@ void MemoryController::setByte(uint16_t addr, uint8_t val) {
             assert(false);
         } else if (addr >= ColorPaletteRegisterBegin && addr <= ColorPaletteRegisterEnd) {
             gpu->colorPaletteRegisterWrite(addr, val);
+        } else if (addr == ColorCompatibilityRegister) {
+            gpu->colorModeRegisterWrite(val);
         }
         
         // Write to high range memory

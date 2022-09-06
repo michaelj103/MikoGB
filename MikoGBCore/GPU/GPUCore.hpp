@@ -34,6 +34,8 @@ public:
         return _currentScanline;
     }
     
+    void enableCGBRendering() { _renderingMode = ColorRenderingMode::CGBMode; }
+    void colorModeRegisterWrite(uint8_t val); /// Writes to the KEY0 register indicating color mode
     void colorPaletteRegisterWrite(uint16_t addr, uint8_t val);
     uint8_t colorPaletteRegisterRead(uint16_t addr) const;
     
@@ -72,7 +74,13 @@ private:
     uint8_t _objPaletteControl = 0;
     ColorPalette _colorPaletteBG[ColorPaletteCount];
     ColorPalette _colorPaletteOBJ[ColorPaletteCount];
-    bool _useCGBRendering = true;
+    
+    enum class ColorRenderingMode {
+        DMGOnly,
+        DMGCompatibility,
+        CGBMode,
+    };
+    ColorRenderingMode _renderingMode = ColorRenderingMode::DMGOnly;
 };
 
 }

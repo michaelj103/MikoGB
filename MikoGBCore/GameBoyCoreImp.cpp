@@ -32,6 +32,7 @@ bool GameBoyCoreImp::loadROMData(const void *romData, size_t size, const void *b
     bool success = _memoryController->configureWithROMData(romData, size);
     if (bootRomData != nullptr) {
         success = success && _memoryController->configureWithColorBootROM(bootRomData, bootRomSize);
+        _gpu->enableCGBRendering();
     }
     return success;
 }

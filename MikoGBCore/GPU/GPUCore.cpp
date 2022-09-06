@@ -388,6 +388,8 @@ void GPUCore::_renderBackgroundToScanline(size_t lineNum, LCDScanline &scanline)
     const uint8_t tileRow = bgY % 8; // the row in the 8x8 tile that is on this line
     
     // 3. Main loop, draw background tiles progressively to the scanline
+    const bool isCGBRendering = _renderingMode == ColorRenderingMode::CGBMode;
+    const bool isDMGCompatibilityRendering = _renderingMode == ColorRenderingMode::DMGCompatibility;
     uint8_t pixelsDrawn = 0;
     while (pixelsDrawn < ScreenWidth) {
         // 3a. Figure out the next tile to draw, determine it's code from the code area, then it's address in the map
@@ -403,9 +405,9 @@ void GPUCore::_renderBackgroundToScanline(size_t lineNum, LCDScanline &scanline)
         const bool flipY = isMaskSet(tileAttr, 0x40);
         const uint8_t adjustedRow = flipY ? BackgroundTileSize - tileRow - 1 : tileRow;
         const uint8_t tileBank = isMaskSet(tileAttr, 0x8) ? 1 : 0;
-        const uint8_t colorPaletteIndex = (tileAttr & 0x7);
+        const uint8_t colorPaletteIndex = isDMGCompatibilityRendering ? 0 : (tileAttr & 0x7);
         const Palette &colorPalette = _colorPaletteBG[colorPaletteIndex];
-        const Palette &finalPalette = _useCGBRendering ? colorPalette : bgPalette;
+        const Palette &finalPalette = (isCGBRendering || isDMGCompatibilityRendering) ? colorPalette : bgPalette;
         
         // 3b. Now draw the line from the tile to the scanline using the helper
         const uint8_t tileCol = bgX % 8; // for all but the first tile, this should be 0
@@ -467,6 +469,8 @@ void GPUCore::_renderWindowToScanline(size_t lineNum, LCDScanline &scanline) {
     uint8_t screenPosition = wx >= 7 ? wx - 7 : 0;
     uint8_t windowPosition = wx < 7 ? 7 - wx : 0;
     
+    const bool isCGBRendering = _renderingMode == ColorRenderingMode::CGBMode;
+    const bool isDMGCompatibilityRendering = _renderingMode == ColorRenderingMode::DMGCompatibility;
     while (screenPosition < ScreenWidth) {
         // 3a. Figure out the next tile to draw, determine its code from the code area, then its address in the map
         const uint8_t winX = windowPosition;
@@ -481,9 +485,9 @@ void GPUCore::_renderWindowToScanline(size_t lineNum, LCDScanline &scanline) {
         const bool flipY = isMaskSet(tileAttr, 0x40);
         const uint8_t adjustedRow = flipY ? BackgroundTileSize - tileRow - 1 : tileRow;
         const uint8_t tileBank = isMaskSet(tileAttr, 0x8) ? 1 : 0;
-        const uint8_t colorPaletteIndex = (tileAttr & 0x7);
+        const uint8_t colorPaletteIndex = isDMGCompatibilityRendering ? 0 : (tileAttr & 0x7);
         const Palette &colorPalette = _colorPaletteBG[colorPaletteIndex];
-        const Palette &finalPalette = _useCGBRendering ? colorPalette : bgPalette;
+        const Palette &finalPalette = (isCGBRendering || isDMGCompatibilityRendering) ? colorPalette : bgPalette;
         
         // 3b. Now draw the line from the tile to the scanline using the helper
         const uint8_t tileCol = windowPosition % 8;
@@ -546,6 +550,8 @@ void GPUCore::_renderSpritesToScanline(size_t line, LCDScanline &scanline) {
     
     // 4. In reverse z-order, draw the sprites
     const uint8_t chrCodeMask = doubleHeightMode ? 0xFE : 0xFF; // in double-height, ignore least significant bit
+    const bool isCGBRendering = _renderingMode == ColorRenderingMode::CGBMode;
+    const bool isDMGCompatibilityRendering = _renderingMode == ColorRenderingMode::DMGCompatibility;
     for (int i = numSpritesOnLine - 1; i >= 0; --i) {
         const int oamCode = oamCodesOnLine[i];
         const uint16_t codeBase = OAMBase + (oamCode * 4);
@@ -566,11 +572,12 @@ void GPUCore::_renderSpritesToScanline(size_t line, LCDScanline &scanline) {
         const uint8_t adjustedRow = flipY ? spriteHeight - tileRow - 1 : tileRow;
         const uint8_t tileCol = spriteX < spriteWidth ? spriteWidth - spriteX : 0;
         const uint8_t scanlinePos = spriteX >= spriteWidth ? spriteX - spriteWidth : 0;
-        const MonochromePalette &palette = isMaskSet(spriteAttr, 0x10) ? palette1 : palette0;
-        const uint8_t tileBank = (_useCGBRendering && isMaskSet(spriteAttr, 0x8)) ? 1 : 0;
-        const uint8_t colorPaletteIndex = (spriteAttr & 0x7);
+        const uint8_t dmgPaletteIndex = isMaskSet(spriteAttr, 0x10) ? 1 : 0;
+        const MonochromePalette &monoPalette = (dmgPaletteIndex == 1) ? palette1 : palette0;
+        const uint8_t tileBank = (isCGBRendering && isMaskSet(spriteAttr, 0x8)) ? 1 : 0;
+        const uint8_t colorPaletteIndex = isDMGCompatibilityRendering ? dmgPaletteIndex : (spriteAttr & 0x7);
         const Palette &colorPalette = ColorPalette(_colorPaletteOBJ[colorPaletteIndex], true);
-        const Palette &finalPalette = _useCGBRendering ? colorPalette : palette;
+        const Palette &finalPalette = (isCGBRendering || isDMGCompatibilityRendering) ? colorPalette : monoPalette;
         _DrawTileRowToScanline(tileBaseAddr, adjustedRow, tileCol, flipX, writeType, scanlinePos, tileBank, scanline, _memoryController, finalPalette);
     }
     
@@ -587,6 +594,13 @@ void GPUCore::_renderScanline(size_t lineNum) {
 }
 
 #pragma mark - Color Palette Management
+
+void GPUCore::colorModeRegisterWrite(uint8_t val) {
+    if (val == 0x04) {
+        _renderingMode = ColorRenderingMode::DMGCompatibility;
+    }
+    // TODO: Handle other values?
+}
 
 // returns the palette index to read from or write to based on the control value.
 // Updates the control value if it's a write
