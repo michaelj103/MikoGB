@@ -308,7 +308,7 @@ static MikoGB::JoypadButton _ButtonForCode(GBEngineKeyCode code) {
     
     if (canRun) {
         dispatch_async(_emulationQueue, ^{
-            [self _emulationQueue_emulateFrame];
+            [self _emulationQueue_emulateFrame:NO];
         });
     }
 #if PRINT_FRAME_DROPS
@@ -319,14 +319,18 @@ static MikoGB::JoypadButton _ButtonForCode(GBEngineKeyCode code) {
 #endif
 }
 
-- (void)_emulationQueue_emulateFrame {
+- (void)_emulationQueue_emulateFrame:(BOOL)step {
     os_unfair_lock_lock(&_frameLock);
     _isProcessingFrame = YES;
     os_unfair_lock_unlock(&_frameLock);
     
     [self _updateKeyStatesIfNeeded];
     [self _updateSerialStateIfNeeded];
-    _core->emulateFrame();
+    if (step) {
+        _core->emulateFrameStep();
+    } else {
+        _core->emulateFrame();
+    }
     
     os_unfair_lock_lock(&_frameLock);
     _isProcessingFrame = NO;
@@ -336,6 +340,21 @@ static MikoGB::JoypadButton _ButtonForCode(GBEngineKeyCode code) {
     if (_core->isPersistenceStale()) {
         _core->resetPersistence();
         [_persistenceTimer input];
+    }
+}
+
+- (void)stepFrame {
+    BOOL canRun = NO;
+    os_unfair_lock_lock(&_frameLock);
+    canRun = !_isRunnable;
+    os_unfair_lock_unlock(&_frameLock);
+    
+    if (canRun) {
+        dispatch_async(_emulationQueue, ^{
+            [self _emulationQueue_emulateFrame:YES];
+        });
+    } else {
+        NSLog(@"Manual frame step requested but emulation is runnable. Must be paused");
     }
 }
 

@@ -17,7 +17,7 @@ enum GameViewState {
 class GameView : NSView, GBEngineImageDestination, GBEngineObserver {
     
     private var dispatchTimer: DispatchSourceTimer?
-    var engine: GBEngine {
+    private(set) var engine: GBEngine {
         didSet {
             _setupWithEngine(engine, oldEngine: oldValue)
         }
@@ -111,7 +111,7 @@ class GameView : NSView, GBEngineImageDestination, GBEngineObserver {
             _isInSpeedMode = !_isInSpeedMode
             if _isInSpeedMode {
                 // 90fps (1.5x speed)
-                desiredFramerate = 1.0 / 90.0
+                desiredFramerate = 1.0 / 30.0
             } else {
                 // 60fps (normal)
                 desiredFramerate = 1.0 / 60.0

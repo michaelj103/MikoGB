@@ -33,6 +33,7 @@ public:
     /// Emulate at least 1 full frame. If a frame is partially rendered when called, that frame will be finished first and
     /// then the next one will be emulated to completion
     void emulateFrame();
+    void emulateFrameStep();
     
     /// Runnability represents whether frame emulation can proceed normally. External runnable represents whether a client wants
     /// emulation to proceed normally. Runnability also takes into account internal signals, mainly for debugging (e.g. breakpoints)

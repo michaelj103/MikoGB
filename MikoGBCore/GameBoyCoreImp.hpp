@@ -33,6 +33,7 @@ public:
     void step();
     
     void emulateFrame();
+    void emulateFrameStep();
     
     void setRunnable(bool);
     bool isRunnable() const { return _isRunnable; }

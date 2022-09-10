@@ -78,6 +78,19 @@ void GameBoyCoreImp::emulateFrame() {
     }
 }
 
+void GameBoyCoreImp::emulateFrameStep() {
+    auto gpu = _gpu.get();
+    // If we're in the middle of a frame, run until the start of the next
+    while (gpu->getCurrentScanline() != 0) {
+        step();
+    }
+    
+    // Run until v-blank at line 144
+    while (gpu->getCurrentScanline() < 144) {
+        step();
+    }
+}
+
 void GameBoyCoreImp::setRunnable(bool runnable) {
     if (runnable == _isRunnable) {
         return;

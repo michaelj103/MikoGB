@@ -15,7 +15,7 @@
 namespace MikoGB {
 
 struct LCDScanline {
-    LCDScanline(size_t width) : _pixelData(width, 1), _bgPixelData(width, 1), _bgPriority(width, InternalPriority::Transparent), _objPixelData(width, 1), _objPriority(width, InternalPriority::Transparent) {}
+    LCDScanline(size_t width) : _pixelData(width, 1), _bgPixelData(width, 1), _bgPriority(width, InternalPriority::Undefined), _objPixelData(width, 1), _objPriority(width, InternalPriority::Undefined) {}
     
     size_t getWidth() const { return _pixelData.width; }
     
@@ -24,15 +24,17 @@ struct LCDScanline {
         for (int i = 0; i < _pixelData.width; ++i) {
             _pixelData.pixels[i] = px;
             _bgPixelData.pixels[i] = px;
-            _bgPriority[i] = InternalPriority::Transparent;
+            _bgPriority[i] = InternalPriority::Undefined;
             _objPixelData.pixels[i] = px;
-            _objPriority[i] = InternalPriority::Transparent;
+            _objPriority[i] = InternalPriority::Undefined;
         }
     }
     
     enum class WriteType {
         BackgroundDeferToObj,
         BackgroundPrioritizeBG,
+        WindowDeferToObj,
+        WindowPrioritizeBG,
         ObjectLow,
         ObjectHigh,
     };
@@ -49,14 +51,22 @@ struct LCDScanline {
                 _bgPixelData.pixels[idx] = px;
                 _bgPriority[idx] = isTransparentPixel ? InternalPriority::Transparent : InternalPriority::High;
                 break;
+            case WriteType::WindowDeferToObj:
+                _bgPixelData.pixels[idx] = px;
+                _bgPriority[idx] = InternalPriority::Low;
+                break;
+            case WriteType::WindowPrioritizeBG:
+                _bgPixelData.pixels[idx] = px;
+                _bgPriority[idx] = InternalPriority::High;
+                break;
             case WriteType::ObjectLow:
-                if (!isTransparentPixel) {
+                if (_objPriority[idx] == InternalPriority::Undefined || !isTransparentPixel) {
                     _objPixelData.pixels[idx] = px;
                     _objPriority[idx] = isTransparentPixel ? InternalPriority::Transparent : InternalPriority::Low;
                 }
                 break;
             case WriteType::ObjectHigh:
-                if (!isTransparentPixel) {
+                if (_objPriority[idx] == InternalPriority::Undefined || !isTransparentPixel) {
                     _objPixelData.pixels[idx] = px;
                     _objPriority[idx] = isTransparentPixel ? InternalPriority::Transparent : InternalPriority::High;
                 }
@@ -68,11 +78,15 @@ struct LCDScanline {
     const PixelBuffer &getCompositedPixelData() {
         for (int i = 0; i < _pixelData.width; ++i) {
             InternalPriority objPriority = _objPriority[i];
-            if (objPriority == InternalPriority::Transparent) {
+            InternalPriority bgPriority = _bgPriority[i];
+            if (objPriority == InternalPriority::Undefined) {
+                _pixelData.pixels[i] = _bgPixelData.pixels[i];
+            } else if (bgPriority == InternalPriority::Undefined) {
+                _pixelData.pixels[i] = _objPixelData.pixels[i];
+            } else if (objPriority == InternalPriority::Transparent) {
                 // if OBJ is transparent, BG always wins, even if transparent
                 _pixelData.pixels[i] = _bgPixelData.pixels[i];
             } else {
-                InternalPriority bgPriority = _bgPriority[i];
                 if (bgPriority == InternalPriority::Transparent) {
                     // If the OBJ is non-transparent and the BG is transparent, then OBJ always wins
                     _pixelData.pixels[i] = _objPixelData.pixels[i];
@@ -95,6 +109,7 @@ struct LCDScanline {
     
 private:
     enum class InternalPriority {
+        Undefined,
         Transparent,
         Low,
         High

@@ -67,6 +67,7 @@ typedef void (^SaveDataCompletion)( NSData * _Nullable data);
 - (void)writeDisplayStateToDirectory:(NSURL *)directoryURL completion:(void (^_Nullable)(BOOL))completion;
 
 - (void)emulateFrame;
+- (void)stepFrame;
 - (void)step:(NSInteger)stepCount; // step a given number of instructions
 
 - (void)setDesiredRunnable:(BOOL)runnable completion:(void (^_Nullable)(void))completion;

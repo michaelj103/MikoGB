@@ -47,6 +47,10 @@ void GameBoyCore::emulateFrame() {
     _imp->emulateFrame();
 }
 
+void GameBoyCore::emulateFrameStep() {
+    _imp->emulateFrameStep();
+}
+
 void GameBoyCore::setRunnable(bool runnable) {
     _imp->setRunnable(runnable);
 }

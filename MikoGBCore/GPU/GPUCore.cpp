@@ -369,8 +369,12 @@ static uint8_t _DrawTileRowToScanline(uint16_t tileAddress, uint8_t tileRow, uin
 }
 
 void GPUCore::_renderBackgroundToScanline(size_t lineNum, LCDScanline &scanline) {
-    // NOTE: background can technically be disabled on DMG, but not CGB. Ignored here
-    // This simplifies the sprite priority logic later
+    const bool isCGBRendering = _renderingMode == ColorRenderingMode::CGBMode;
+    const uint8_t lcdc = _memoryController->readByte(LCDCRegister);
+    if (!isCGBRendering && !isMaskSet(lcdc, 0x01)) {
+        // BG off
+        return;
+    }
     
     // 1. Read relevant info for drawing the background of the current line
     const uint8_t scx = _memoryController->readByte(SCXRegister);
@@ -388,7 +392,6 @@ void GPUCore::_renderBackgroundToScanline(size_t lineNum, LCDScanline &scanline)
     const uint8_t tileRow = bgY % 8; // the row in the 8x8 tile that is on this line
     
     // 3. Main loop, draw background tiles progressively to the scanline
-    const bool isCGBRendering = _renderingMode == ColorRenderingMode::CGBMode;
     const bool isDMGCompatibilityRendering = _renderingMode == ColorRenderingMode::DMGCompatibility;
     uint8_t pixelsDrawn = 0;
     while (pixelsDrawn < ScreenWidth) {
@@ -486,7 +489,7 @@ void GPUCore::_renderWindowToScanline(size_t lineNum, LCDScanline &scanline) {
         const bool flipY = isMaskSet(tileAttr, 0x40);
         const uint8_t adjustedRow = flipY ? BackgroundTileSize - tileRow - 1 : tileRow;
         const uint8_t tileBank = isMaskSet(tileAttr, 0x8) ? 1 : 0;
-        const LCDScanline::WriteType writeType = isMaskSet(tileAttr, 0x80) ? LCDScanline::WriteType::BackgroundPrioritizeBG : LCDScanline::WriteType::BackgroundDeferToObj;
+        const LCDScanline::WriteType writeType = isMaskSet(tileAttr, 0x80) ? LCDScanline::WriteType::WindowPrioritizeBG : LCDScanline::WriteType::WindowDeferToObj;
         const uint8_t colorPaletteIndex = isDMGCompatibilityRendering ? 0 : (tileAttr & 0x7);
         const Palette &colorPalette = _colorPaletteBG[colorPaletteIndex];
         const Palette &finalPalette = (isCGBRendering || isDMGCompatibilityRendering) ? colorPalette : bgPalette;

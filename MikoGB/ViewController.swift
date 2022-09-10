@@ -166,6 +166,8 @@ class ViewController: NSViewController, NoROMViewDelegate, NSMenuItemValidation,
             }
         } else if menuItem.action == #selector(self.a_dumpDisplayState) {
             valid = (gameView?.state == .Paused)
+        } else if menuItem.action == #selector(self.a_stepFrame) {
+            valid = (gameView?.state == .Paused)
         }
         
         return valid;
@@ -194,6 +196,14 @@ class ViewController: NSViewController, NoROMViewDelegate, NSMenuItemValidation,
                 self.writeDisplayState(to: dirURL)
             }
         }
+    }
+    
+    @objc func a_stepFrame(_ sender: AnyObject) {
+        guard let gv = gameView else {
+            return
+        }
+        
+        gv.engine.stepFrame()
     }
 }
 
