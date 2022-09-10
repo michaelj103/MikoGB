@@ -15,44 +15,96 @@
 namespace MikoGB {
 
 struct LCDScanline {
-    LCDScanline(size_t width) : _lowPriorityBG(width, false), _pixelData(width, 1) {}
+    LCDScanline(size_t width) : _pixelData(width, 1), _bgPixelData(width, 1), _bgPriority(width, InternalPriority::Transparent), _objPixelData(width, 1), _objPriority(width, InternalPriority::Transparent) {}
     
-    const PixelBuffer &getPixelData() const { return _pixelData; }
     size_t getWidth() const { return _pixelData.width; }
     
-    enum class WriteType {
-        Background,
-        SpriteLowPriority,
-        SpriteHighPriority,
-    };
-    
-    void writePixel(size_t idx, uint8_t code, const Palette &palette, WriteType writeType) {
-        if (!palette.isTransparent(code)) {
-            bool shouldWrite = true;
-            switch (writeType) {
-                case WriteType::Background:
-                    _lowPriorityBG[idx] = (code & 0x3) == 0;
-                    break;
-                case WriteType::SpriteLowPriority:
-                    // low priority sprites only draw over low priority background
-                    shouldWrite = _lowPriorityBG[idx];
-                    break;
-                case WriteType::SpriteHighPriority:
-                    break;
-            }
-            if (shouldWrite) {
-                const Pixel &px = palette.pixelForCode(code);
-                _pixelData.pixels[idx] = px;
-            }
+    void clear() {
+        Pixel px = Pixel();
+        for (int i = 0; i < _pixelData.width; ++i) {
+            _pixelData.pixels[i] = px;
+            _bgPixelData.pixels[i] = px;
+            _bgPriority[i] = InternalPriority::Transparent;
+            _objPixelData.pixels[i] = px;
+            _objPriority[i] = InternalPriority::Transparent;
         }
     }
     
+    enum class WriteType {
+        BackgroundDeferToObj,
+        BackgroundPrioritizeBG,
+        ObjectLow,
+        ObjectHigh,
+    };
+        
+    void writePixel(size_t idx, uint8_t code, const Palette &palette, WriteType writeType) {
+        const Pixel &px = palette.pixelForCode(code);
+        const bool isTransparentPixel = (code & 0x3) == 0;
+        switch (writeType) {
+            case WriteType::BackgroundDeferToObj:
+                _bgPixelData.pixels[idx] = px;
+                _bgPriority[idx] = isTransparentPixel ? InternalPriority::Transparent : InternalPriority::Low;
+                break;
+            case WriteType::BackgroundPrioritizeBG:
+                _bgPixelData.pixels[idx] = px;
+                _bgPriority[idx] = isTransparentPixel ? InternalPriority::Transparent : InternalPriority::High;
+                break;
+            case WriteType::ObjectLow:
+                if (!isTransparentPixel) {
+                    _objPixelData.pixels[idx] = px;
+                    _objPriority[idx] = isTransparentPixel ? InternalPriority::Transparent : InternalPriority::Low;
+                }
+                break;
+            case WriteType::ObjectHigh:
+                if (!isTransparentPixel) {
+                    _objPixelData.pixels[idx] = px;
+                    _objPriority[idx] = isTransparentPixel ? InternalPriority::Transparent : InternalPriority::High;
+                }
+                break;
+        }
+    }
+    
+    // See section 2.4 in the GB programmer manual for details on compositing BG and OBJ pixels
+    const PixelBuffer &getCompositedPixelData() {
+        for (int i = 0; i < _pixelData.width; ++i) {
+            InternalPriority objPriority = _objPriority[i];
+            if (objPriority == InternalPriority::Transparent) {
+                // if OBJ is transparent, BG always wins, even if transparent
+                _pixelData.pixels[i] = _bgPixelData.pixels[i];
+            } else {
+                InternalPriority bgPriority = _bgPriority[i];
+                if (bgPriority == InternalPriority::Transparent) {
+                    // If the OBJ is non-transparent and the BG is transparent, then OBJ always wins
+                    _pixelData.pixels[i] = _objPixelData.pixels[i];
+                } else if (bgPriority == InternalPriority::High) {
+                    // BG takes priority always if it did not defer to OBJ and neither is transparent
+                    _pixelData.pixels[i] = _bgPixelData.pixels[i];
+                } else {
+                    // Neither is transparent and BG deferred, so use the OBJ priority
+                    if (objPriority == InternalPriority::High) {
+                        _pixelData.pixels[i] = _objPixelData.pixels[i];
+                    } else {
+                        _pixelData.pixels[i] = _bgPixelData.pixels[i];
+                    }
+                }
+            }
+        }
+        
+        return _pixelData;
+    }
+    
 private:
-    /// If a pixel is low priority BG, then sprites go over it whether their low or high priority
-    std::vector<bool> _lowPriorityBG; // if true, low priority sprites go over it. Otherwise they don't
-    //TODO: Indicate that the BG tile here is always over OBJs (CGB feature)
-    //std::vector<bool> _highPriorityBG;
+    enum class InternalPriority {
+        Transparent,
+        Low,
+        High
+    };
+    
     PixelBuffer _pixelData;
+    PixelBuffer _bgPixelData;
+    std::vector<InternalPriority> _bgPriority;
+    PixelBuffer _objPixelData;
+    std::vector<InternalPriority> _objPriority;
 };
 
 }

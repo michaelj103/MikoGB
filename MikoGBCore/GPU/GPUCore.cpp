@@ -405,13 +405,14 @@ void GPUCore::_renderBackgroundToScanline(size_t lineNum, LCDScanline &scanline)
         const bool flipY = isMaskSet(tileAttr, 0x40);
         const uint8_t adjustedRow = flipY ? BackgroundTileSize - tileRow - 1 : tileRow;
         const uint8_t tileBank = isMaskSet(tileAttr, 0x8) ? 1 : 0;
+        const LCDScanline::WriteType writeType = isMaskSet(tileAttr, 0x80) ? LCDScanline::WriteType::BackgroundPrioritizeBG : LCDScanline::WriteType::BackgroundDeferToObj;
         const uint8_t colorPaletteIndex = isDMGCompatibilityRendering ? 0 : (tileAttr & 0x7);
         const Palette &colorPalette = _colorPaletteBG[colorPaletteIndex];
         const Palette &finalPalette = (isCGBRendering || isDMGCompatibilityRendering) ? colorPalette : bgPalette;
         
         // 3b. Now draw the line from the tile to the scanline using the helper
         const uint8_t tileCol = bgX % 8; // for all but the first tile, this should be 0
-        pixelsDrawn += _DrawTileRowToScanline(tileBaseAddress, adjustedRow, tileCol, flipX, LCDScanline::WriteType::Background, pixelsDrawn, tileBank, scanline, _memoryController, finalPalette);
+        pixelsDrawn += _DrawTileRowToScanline(tileBaseAddress, adjustedRow, tileCol, flipX, writeType, pixelsDrawn, tileBank, scanline, _memoryController, finalPalette);
     }
 #if DEBUG
     assert(pixelsDrawn == 160);
@@ -485,13 +486,14 @@ void GPUCore::_renderWindowToScanline(size_t lineNum, LCDScanline &scanline) {
         const bool flipY = isMaskSet(tileAttr, 0x40);
         const uint8_t adjustedRow = flipY ? BackgroundTileSize - tileRow - 1 : tileRow;
         const uint8_t tileBank = isMaskSet(tileAttr, 0x8) ? 1 : 0;
+        const LCDScanline::WriteType writeType = isMaskSet(tileAttr, 0x80) ? LCDScanline::WriteType::BackgroundPrioritizeBG : LCDScanline::WriteType::BackgroundDeferToObj;
         const uint8_t colorPaletteIndex = isDMGCompatibilityRendering ? 0 : (tileAttr & 0x7);
         const Palette &colorPalette = _colorPaletteBG[colorPaletteIndex];
         const Palette &finalPalette = (isCGBRendering || isDMGCompatibilityRendering) ? colorPalette : bgPalette;
         
         // 3b. Now draw the line from the tile to the scanline using the helper
         const uint8_t tileCol = windowPosition % 8;
-        const uint8_t pixelsDrawn = _DrawTileRowToScanline(tileBaseAddress, adjustedRow, tileCol, flipX, LCDScanline::WriteType::Background, screenPosition, tileBank, scanline, _memoryController, finalPalette);
+        const uint8_t pixelsDrawn = _DrawTileRowToScanline(tileBaseAddress, adjustedRow, tileCol, flipX, writeType, screenPosition, tileBank, scanline, _memoryController, finalPalette);
         screenPosition += pixelsDrawn;
         windowPosition += pixelsDrawn;
     }
@@ -563,7 +565,7 @@ void GPUCore::_renderSpritesToScanline(size_t line, LCDScanline &scanline) {
         const uint8_t spriteY = _memoryController->readByte(codeBase);
         const uint8_t chrCode = _memoryController->readByte(codeBase + 2) & chrCodeMask;
         const uint8_t spriteAttr = _memoryController->readByte(codeBase + 3);
-        const LCDScanline::WriteType writeType = isMaskSet(spriteAttr, 0x80) ? LCDScanline::WriteType::SpriteLowPriority : LCDScanline::WriteType::SpriteHighPriority;
+        const LCDScanline::WriteType writeType = isMaskSet(spriteAttr, 0x80) ? LCDScanline::WriteType::ObjectLow : LCDScanline::WriteType::ObjectHigh;
 
         const bool flipX = isMaskSet(spriteAttr, 0x20);
         const bool flipY = isMaskSet(spriteAttr, 0x40);
@@ -584,12 +586,13 @@ void GPUCore::_renderSpritesToScanline(size_t line, LCDScanline &scanline) {
 }
 
 void GPUCore::_renderScanline(size_t lineNum) {
+    _scanline.clear();
     _renderBackgroundToScanline(lineNum, _scanline);
     _renderWindowToScanline(lineNum, _scanline);
     _renderSpritesToScanline(lineNum, _scanline);
     
     if (_scanlineCallback) {
-        _scanlineCallback(_scanline.getPixelData(), lineNum);
+        _scanlineCallback(_scanline.getCompositedPixelData(), lineNum);
     }
 }
 

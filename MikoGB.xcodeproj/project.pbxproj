@@ -53,7 +53,6 @@
 		290FF37B2662110A006812F4 /* Timer.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 290FF3792662110A006812F4 /* Timer.hpp */; };
 		29198790267481FA009D7C45 /* MBC1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2919878E267481FA009D7C45 /* MBC1.cpp */; };
 		29198791267481FA009D7C45 /* MBC1.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 2919878F267481FA009D7C45 /* MBC1.hpp */; };
-		2919879F267BF936009D7C45 /* LCDScanline.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 2919879D267BF936009D7C45 /* LCDScanline.hpp */; };
 		291987C526829212009D7C45 /* MBC3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 291987C326829212009D7C45 /* MBC3.cpp */; };
 		291987C626829213009D7C45 /* MBC3.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 291987C426829212009D7C45 /* MBC3.hpp */; };
 		291987D3268300FA009D7C45 /* Debugger.xib in Resources */ = {isa = PBXBuildFile; fileRef = 291987D2268300FA009D7C45 /* Debugger.xib */; };
@@ -277,6 +276,7 @@
 		2907003728C5A07F000D8A5B /* Palette.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Palette.hpp; sourceTree = "<group>"; };
 		2907003B28C5A2A2000D8A5B /* ColorPalette.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ColorPalette.hpp; sourceTree = "<group>"; };
 		2907003E28C5CBE7000D8A5B /* cgb_boot.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = cgb_boot.bin; sourceTree = "<group>"; };
+		2907004028C9B24C000D8A5B /* LCDScanline-old.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "LCDScanline-old.hpp"; sourceTree = "<group>"; };
 		290B3BCF247E048100937D71 /* Test8BitLoadInstructions.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = Test8BitLoadInstructions.mm; sourceTree = "<group>"; };
 		290B3BD1247F51D100937D71 /* Test16BitLoadInstructions.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = Test16BitLoadInstructions.mm; sourceTree = "<group>"; };
 		290FF33D265F066D006812F4 /* MonochromePalette.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MonochromePalette.hpp; sourceTree = "<group>"; };
@@ -632,6 +632,7 @@
 				290FF33D265F066D006812F4 /* MonochromePalette.hpp */,
 				2907003B28C5A2A2000D8A5B /* ColorPalette.hpp */,
 				2907003728C5A07F000D8A5B /* Palette.hpp */,
+				2907004028C9B24C000D8A5B /* LCDScanline-old.hpp */,
 				2919879D267BF936009D7C45 /* LCDScanline.hpp */,
 			);
 			path = GPU;
@@ -860,7 +861,6 @@
 				2902EAB027C889BB00186976 /* SquareSound.hpp in Headers */,
 				299282FD264266A9004691E5 /* GameBoyCoreImp.hpp in Headers */,
 				290FF358265F671C006812F4 /* Joypad.hpp in Headers */,
-				2919879F267BF936009D7C45 /* LCDScanline.hpp in Headers */,
 				291987C626829213009D7C45 /* MBC3.hpp in Headers */,
 				29A8FF76265211B8007A26C9 /* MemoryController.hpp in Headers */,
 				290FF33F265F066E006812F4 /* MonochromePalette.hpp in Headers */,
