@@ -13,13 +13,17 @@
 namespace MikoGB {
 
 struct MonochromePalette : public Palette {
-    MonochromePalette(uint8_t p, bool allowTransparent) {
-        _transparent = allowTransparent;
-        _palette[0] = allowTransparent ? MikoGB::Pixel() : _PixelForCode(p & 0x03);
+    MonochromePalette(uint8_t p): paletteByte(p) {
+        _palette[0] = _PixelForCode(p & 0x03);
         _palette[1] = _PixelForCode((p & 0x0C) >> 2);
         _palette[2] = _PixelForCode((p & 0x30) >> 4);
         _palette[3] = _PixelForCode((p & 0xC0) >> 6);
+        
+        // No code translation for monochrome
+        _translation = { 0, 1, 2, 3 };
     }
+    
+    const uint8_t paletteByte;
     
 private:
     static MikoGB::Pixel _PixelForCode(uint8_t code) {

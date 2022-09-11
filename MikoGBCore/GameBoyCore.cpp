@@ -107,6 +107,10 @@ void GameBoyCore::getBackground(PixelBufferImageCallback callback) {
     _imp->getBackground(callback);
 }
 
+void GameBoyCore::getWindow(PixelBufferImageCallback callback) {
+    _imp->getWindow(callback);
+}
+
 std::vector<DisassembledInstruction> GameBoyCore::getDisassembledInstructions(int lookAheadCount, int lookBehindCount, size_t *currentIdx) const {
     return _imp->getDisassembledInstructions(lookAheadCount, lookBehindCount, currentIdx);
 }

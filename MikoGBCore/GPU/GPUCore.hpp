@@ -34,6 +34,11 @@ public:
         return _currentScanline;
     }
     
+    enum class ColorRenderingMode {
+        DMGOnly,
+        DMGCompatibility,
+        CGBMode,
+    };
     void enableCGBRendering() { _renderingMode = ColorRenderingMode::CGBMode; }
     void colorModeRegisterWrite(uint8_t val); /// Writes to the KEY0 register indicating color mode
     void colorPaletteRegisterWrite(uint16_t addr, uint8_t val);
@@ -42,6 +47,7 @@ public:
     /// Debug utilities
     void getTileMap(PixelBufferImageCallback callback);
     void getBackground(PixelBufferImageCallback callback);
+    void getWindow(PixelBufferImageCallback callback);
     
 private:
     enum LCDMode : uint8_t {
@@ -75,11 +81,6 @@ private:
     ColorPalette _colorPaletteBG[ColorPaletteCount];
     ColorPalette _colorPaletteOBJ[ColorPaletteCount];
     
-    enum class ColorRenderingMode {
-        DMGOnly,
-        DMGCompatibility,
-        CGBMode,
-    };
     ColorRenderingMode _renderingMode = ColorRenderingMode::DMGOnly;
 };
 

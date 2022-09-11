@@ -295,6 +295,14 @@ static MikoGB::JoypadButton _ButtonForCode(GBEngineKeyCode code) {
     _core->getBackground([backgroundBlock](const MikoGB::PixelBuffer &pixelBuffer){
         backgroundBlock(pixelBuffer);
     });
+    
+    void (^windowBlock)(const MikoGB::PixelBuffer &) = ^void(const MikoGB::PixelBuffer &pixelBuffer) {
+        writePNG(pixelBuffer, dirURL, @"window.png");
+    };
+    
+    _core->getWindow([windowBlock](const MikoGB::PixelBuffer &pixelBuffer){
+        windowBlock(pixelBuffer);
+    });
 }
 
 - (void)emulateFrame {

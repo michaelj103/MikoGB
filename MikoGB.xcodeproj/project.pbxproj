@@ -37,6 +37,7 @@
 		2907003928C5A07F000D8A5B /* Palette.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 2907003728C5A07F000D8A5B /* Palette.hpp */; };
 		2907003D28C5A2A2000D8A5B /* ColorPalette.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 2907003B28C5A2A2000D8A5B /* ColorPalette.hpp */; };
 		2907003F28C5CBE7000D8A5B /* cgb_boot.bin in Resources */ = {isa = PBXBuildFile; fileRef = 2907003E28C5CBE7000D8A5B /* cgb_boot.bin */; };
+		2907004428CD2F2A000D8A5B /* GPUTypes.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 2907004228CD2F2A000D8A5B /* GPUTypes.hpp */; };
 		290B3BC8247E00B400937D71 /* CPUCore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297E6137245FEA5D00EE150F /* CPUCore.cpp */; };
 		290B3BC9247E00C000937D71 /* CPUInstruction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297E613C245FECDF00EE150F /* CPUInstruction.cpp */; };
 		290B3BCA247E00CB00937D71 /* LoadInstructions8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8C0BA2462685F0082C52B /* LoadInstructions8.cpp */; };
@@ -277,6 +278,7 @@
 		2907003B28C5A2A2000D8A5B /* ColorPalette.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ColorPalette.hpp; sourceTree = "<group>"; };
 		2907003E28C5CBE7000D8A5B /* cgb_boot.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = cgb_boot.bin; sourceTree = "<group>"; };
 		2907004028C9B24C000D8A5B /* LCDScanline-old.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "LCDScanline-old.hpp"; sourceTree = "<group>"; };
+		2907004228CD2F2A000D8A5B /* GPUTypes.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = GPUTypes.hpp; sourceTree = "<group>"; };
 		290B3BCF247E048100937D71 /* Test8BitLoadInstructions.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = Test8BitLoadInstructions.mm; sourceTree = "<group>"; };
 		290B3BD1247F51D100937D71 /* Test16BitLoadInstructions.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = Test16BitLoadInstructions.mm; sourceTree = "<group>"; };
 		290FF33D265F066D006812F4 /* MonochromePalette.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MonochromePalette.hpp; sourceTree = "<group>"; };
@@ -629,6 +631,7 @@
 			children = (
 				2992830926426A32004691E5 /* GPUCore.hpp */,
 				2992830826426A32004691E5 /* GPUCore.cpp */,
+				2907004228CD2F2A000D8A5B /* GPUTypes.hpp */,
 				290FF33D265F066D006812F4 /* MonochromePalette.hpp */,
 				2907003B28C5A2A2000D8A5B /* ColorPalette.hpp */,
 				2907003728C5A07F000D8A5B /* Palette.hpp */,
@@ -848,6 +851,7 @@
 				299281FE2642416A004691E5 /* GameBoyCore.hpp in Headers */,
 				2902EAAC27C85C8F00186976 /* AudioController.hpp in Headers */,
 				29198791267481FA009D7C45 /* MBC1.hpp in Headers */,
+				2907004428CD2F2A000D8A5B /* GPUTypes.hpp in Headers */,
 				2902EAD927CAD5D300186976 /* NoiseSound.hpp in Headers */,
 				29A8FF9226521A71007A26C9 /* CartridgeHeader.hpp in Headers */,
 				2902EA9727C216ED00186976 /* Disassembler.hpp in Headers */,

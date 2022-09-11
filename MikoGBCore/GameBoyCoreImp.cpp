@@ -141,6 +141,10 @@ void GameBoyCoreImp::getBackground(PixelBufferImageCallback callback) {
     _gpu->getBackground(callback);
 }
 
+void GameBoyCoreImp::getWindow(PixelBufferImageCallback callback) {
+    _gpu->getWindow(callback);
+}
+
 Disassembler::Ptr GameBoyCoreImp::_accessDisassembler() {
     if (!_disassembler) {
         _disassembler = make_shared<Disassembler>();

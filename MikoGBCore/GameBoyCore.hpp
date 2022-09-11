@@ -74,6 +74,7 @@ public:
     void getTileMap(PixelBufferImageCallback callback);
     
     void getBackground(PixelBufferImageCallback callback);
+    void getWindow(PixelBufferImageCallback callback);
     
     /// returns the disassembled instructions surrounding the current instruction
     std::vector<DisassembledInstruction> getDisassembledInstructions(int lookAheadCount, int lookBehindCount, size_t *currentIdx) const;

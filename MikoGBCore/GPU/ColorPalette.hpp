@@ -15,19 +15,24 @@ namespace MikoGB {
 
 struct ColorPalette : public Palette {
     ColorPalette() {
-        _transparent = false;
         _palette[0] = Pixel();
         _palette[1] = Pixel();
         _palette[2] = Pixel();
         _palette[3] = Pixel();
+        
+        _translation = { 0, 1, 2, 3 };
     }
     
-    ColorPalette(const ColorPalette &other, bool wantsTransparent) {
-        _transparent = wantsTransparent;
-        _palette[0] = wantsTransparent ? Pixel() : other._palette[0];
+    ColorPalette(const ColorPalette &other, uint8_t translation = 0xE4) {
+        _palette[0] = other._palette[0];
         _palette[1] = other._palette[1];
         _palette[2] = other._palette[2];
         _palette[3] = other._palette[3];
+        
+        _translation[0] = (translation & 0x03);
+        _translation[1] = (translation & 0x0C) >> 2;
+        _translation[2] = (translation & 0x30) >> 4;
+        _translation[3] = (translation & 0xC0) >> 6;
     }
     
     void paletteDataWrite(uint8_t control, uint8_t data) {

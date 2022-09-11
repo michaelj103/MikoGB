@@ -38,7 +38,15 @@ struct LCDScanline {
         ObjectLow,
         ObjectHigh,
     };
-        
+    
+    void writeBlankBG() {
+        const Pixel px = Pixel(0xFF, 0xFF, 0xFF);
+        for (size_t i = 0; i < getWidth(); ++i) {
+            _bgPixelData.pixels[i] = px;
+            _bgPriority[i] = InternalPriority::Transparent;
+        }
+    }
+    
     void writePixel(size_t idx, uint8_t code, const Palette &palette, WriteType writeType) {
         const Pixel &px = palette.pixelForCode(code);
         const bool isTransparentPixel = (code & 0x3) == 0;
