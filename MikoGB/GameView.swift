@@ -111,7 +111,7 @@ class GameView : NSView, GBEngineImageDestination, GBEngineObserver {
             _isInSpeedMode = !_isInSpeedMode
             if _isInSpeedMode {
                 // 90fps (1.5x speed)
-                desiredFramerate = 1.0 / 30.0
+                desiredFramerate = 1.0 / 90.0
             } else {
                 // 60fps (normal)
                 desiredFramerate = 1.0 / 60.0
