@@ -38,6 +38,7 @@
 		2907003D28C5A2A2000D8A5B /* ColorPalette.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 2907003B28C5A2A2000D8A5B /* ColorPalette.hpp */; };
 		2907003F28C5CBE7000D8A5B /* cgb_boot.bin in Resources */ = {isa = PBXBuildFile; fileRef = 2907003E28C5CBE7000D8A5B /* cgb_boot.bin */; };
 		2907004428CD2F2A000D8A5B /* GPUTypes.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 2907004228CD2F2A000D8A5B /* GPUTypes.hpp */; };
+		2907004528CED547000D8A5B /* cgb_boot.bin in Resources */ = {isa = PBXBuildFile; fileRef = 2907003E28C5CBE7000D8A5B /* cgb_boot.bin */; };
 		290B3BC8247E00B400937D71 /* CPUCore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297E6137245FEA5D00EE150F /* CPUCore.cpp */; };
 		290B3BC9247E00C000937D71 /* CPUInstruction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 297E613C245FECDF00EE150F /* CPUInstruction.cpp */; };
 		290B3BCA247E00CB00937D71 /* LoadInstructions8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8C0BA2462685F0082C52B /* LoadInstructions8.cpp */; };
@@ -622,6 +623,7 @@
 				2902EABC27C961E200186976 /* GBAudioWriter.m */,
 				2902EABD27C961E200186976 /* WavFile.h */,
 				2902EABB27C961E200186976 /* WavFile.c */,
+				2907003E28C5CBE7000D8A5B /* cgb_boot.bin */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -699,7 +701,6 @@
 				299282BA2642449F004691E5 /* Main.storyboard */,
 				299282BD2642449F004691E5 /* Info.plist */,
 				299282BE2642449F004691E5 /* MikoGB.entitlements */,
-				2907003E28C5CBE7000D8A5B /* cgb_boot.bin */,
 				29F0828C2647B9F700FA5F67 /* MikoGB-Bridging-Header.h */,
 			);
 			path = MikoGB;
@@ -1127,6 +1128,7 @@
 			files = (
 				29DBB68427E2BA8800C77519 /* LaunchScreen.storyboard in Resources */,
 				29DBB68127E2BA8800C77519 /* Assets.xcassets in Resources */,
+				2907004528CED547000D8A5B /* cgb_boot.bin in Resources */,
 				29DBB67F27E2BA8700C77519 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
