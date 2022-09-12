@@ -385,7 +385,7 @@ class GameViewController: UIViewController, DPadDelegate, GBEngineSaveDestinatio
                 _startEmulation()
             }
         } else {
-            let alert = UIAlertController(title: "Failed to Load ROM", message: "Unable to load ROM data from the file. Was it deleted?", preferredStyle: .alert)
+            let alert = UIAlertController(title: "Failed to Load ROM", message: "Either because the file failed to load or the MBC (chip on cartridge) is unsupported", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { [weak self] _ in
                 self?.navigationController?.popViewController(animated: true)
             }))
