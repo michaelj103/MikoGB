@@ -70,6 +70,8 @@ static MikoGB::JoypadButton _ButtonForCode(GBEngineKeyCode code) {
     os_unfair_lock _frameLock;
     BOOL _isProcessingFrame;
     BOOL _isRunnable;
+    NSUInteger _emulatedFrameCount;
+    CFAbsoluteTime _lastRealTime;
     
     GBRateLimitTimer *_persistenceTimer;
     GBRateLimitTimer *_clockPersistenceTimer;
@@ -210,7 +212,8 @@ static MikoGB::JoypadButton _ButtonForCode(GBEngineKeyCode code) {
 
 - (void)loadClockData:(NSData *)data completion:(nullable ClockLoadCompletion)completion {
     NSError *unarchiveError = nil;
-    NSDictionary *clockDictionary = [NSKeyedUnarchiver unarchivedObjectOfClass:NSDictionary.class fromData:data error:&unarchiveError];
+    NSSet *expectedClasses = [NSSet setWithArray:@[NSDictionary.class, NSDate.class, NSData.class, NSString.class]];
+    NSDictionary *clockDictionary = [NSKeyedUnarchiver unarchivedObjectOfClasses:expectedClasses fromData:data error:&unarchiveError];
     if (!clockDictionary) {
         NSLog(@"Failed to unarchive clock data with error %@", unarchiveError);
         if (completion) {
@@ -268,7 +271,7 @@ static MikoGB::JoypadButton _ButtonForCode(GBEngineKeyCode code) {
         if (copiedSize > 0) {
             NSDictionary *clockDataDictionary = @{
                 GBClockDataTimestampKey : date,
-                GBClockDataRawDataKey : data,
+                GBClockDataRawDataKey : [data copy],
             };
             NSError *archiveError = nil;
             copiedData = [NSKeyedArchiver archivedDataWithRootObject:clockDataDictionary requiringSecureCoding:YES error:&archiveError];
@@ -375,6 +378,22 @@ static MikoGB::JoypadButton _ButtonForCode(GBEngineKeyCode code) {
     os_unfair_lock_unlock(&_serialLock);
 }
 
+- (void)_updateRealTimeClockIfNeeded {
+    if (_emulatedFrameCount == 0) {
+        _lastRealTime = CFAbsoluteTimeGetCurrent();
+        return;
+    }
+    
+    if (_emulatedFrameCount % 10 == 0) {
+        CFAbsoluteTime currentTime = CFAbsoluteTimeGetCurrent();
+        size_t diff = (size_t)(currentTime - _lastRealTime);
+        if (diff >= 1) {
+            _core->updateWithRealTimeSeconds(diff);
+            _lastRealTime = currentTime;
+        }
+    }
+}
+
 - (void)_writeOutTileMapAndBackground:(NSURL *)dirURL {
     void (^tileMapBlock)(const MikoGB::PixelBuffer &) = ^void(const MikoGB::PixelBuffer &pixelBuffer) {
         writePNG(pixelBuffer, dirURL, @"tileMap.png");
@@ -430,11 +449,13 @@ static MikoGB::JoypadButton _ButtonForCode(GBEngineKeyCode code) {
     
     [self _updateKeyStatesIfNeeded];
     [self _updateSerialStateIfNeeded];
+    [self _updateRealTimeClockIfNeeded];
     if (step) {
         _core->emulateFrameStep();
     } else {
         _core->emulateFrame();
     }
+    _emulatedFrameCount += 1;
     
     os_unfair_lock_lock(&_frameLock);
     _isProcessingFrame = NO;

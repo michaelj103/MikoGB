@@ -172,6 +172,9 @@ class ViewController: NSViewController, NoROMViewDelegate, NSMenuItemValidation,
             let saveData = engine.synchronousGetSaveData()
             _persistSaveData(saveData)
             engine.staleSaveDataHandled()
+        }
+        if engine.isClockDataStale {
+            print("Writing stale clock data on quit")
             let clockData = engine.synchronousGetClockData()
             _persistClockData(clockData)
             engine.staleClockDataHandled()
