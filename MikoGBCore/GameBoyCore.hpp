@@ -23,9 +23,16 @@ public:
     
     bool loadROMData(const void *romData, size_t size, const void *colorBootROMData = nullptr, size_t bootRomSize = 0);
     void prepTestROM();
+    
+    // Persisting battery RAM and loading it from saved files
     size_t saveDataSize() const;
     size_t copySaveData(void *buffer, size_t size) const;
     bool loadSaveData(const void *saveData, size_t size);
+    
+    // Persisting real-time clock data and loading it from saved files
+    size_t clockDataSize() const;
+    size_t copyClockData(void *buffer, size_t size) const;
+    bool loadClockData(const void *clockData, size_t size);
     
     /// Step a single CPU instruction
     void step();
@@ -33,7 +40,10 @@ public:
     /// Emulate at least 1 full frame. If a frame is partially rendered when called, that frame will be finished first and
     /// then the next one will be emulated to completion
     void emulateFrame();
-    void emulateFrameStep();
+    
+    /// Move the real-time clock ahead by the given number of seconds. Clients are responsible for maintaining a timer that moves this forward in real time.
+    /// Clients may also use this to simulate real time passing
+    void updateWithRealTimeSeconds(size_t secondsElapsed);
     
     /// Runnability represents whether frame emulation can proceed normally. External runnable represents whether a client wants
     /// emulation to proceed normally. Runnability also takes into account internal signals, mainly for debugging (e.g. breakpoints)
@@ -53,6 +63,8 @@ public:
     /// Save state management
     bool isPersistenceStale() const;
     void resetPersistence();
+    bool isClockPersistenceStale() const;
+    void resetClockPersistence();
     
     /// Serial
     
@@ -70,6 +82,8 @@ public:
     /// ------------------------
     
     uint16_t getPC() const;
+    
+    void emulateFrameStep();
     
     void getTileMap(PixelBufferImageCallback callback);
     

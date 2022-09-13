@@ -44,8 +44,14 @@ typedef struct _GBRegisterState {
     BOOL CFlag;
 } GBRegisterState;
 
-typedef void (^ROMLoadCompletion)(BOOL success, BOOL supportsSaveData);
+typedef struct _ROMFeatureSupport {
+    BOOL supportsSave;
+    BOOL supportsTimer;
+} ROMFeatureSupport;
+
+typedef void (^ROMLoadCompletion)(BOOL success, ROMFeatureSupport featureSupport);
 typedef void (^RAMLoadCompletion)(BOOL success);
+typedef void (^ClockLoadCompletion)(BOOL success);
 typedef void (^SaveDataCompletion)( NSData * _Nullable data);
 
 @interface GBEngine : NSObject
@@ -60,10 +66,16 @@ typedef void (^SaveDataCompletion)( NSData * _Nullable data);
 
 - (void)loadROM:(NSURL *)url completion:(nullable ROMLoadCompletion)completion;
 - (void)loadSaveData:(NSData *)data completion:(nullable RAMLoadCompletion)completion;
+- (void)loadClockData:(NSData *)data completion:(nullable ClockLoadCompletion)completion;
+
 - (void)getSaveData:(SaveDataCompletion)completion;
 @property (readonly, nonatomic) BOOL isSaveDataStale;
 - (void)staleSaveDataHandled;
 - (nullable NSData *)synchronousGetSaveData;
+- (void)getClockData:(SaveDataCompletion)completion;
+@property (readonly, nonatomic) BOOL isClockDataStale;
+- (void)staleClockDataHandled;
+- (nullable NSData *)synchronousGetClockData;
 - (void)writeDisplayStateToDirectory:(NSURL *)directoryURL completion:(void (^_Nullable)(BOOL))completion;
 
 - (void)emulateFrame;
@@ -102,6 +114,7 @@ typedef void (^SaveDataCompletion)( NSData * _Nullable data);
 
 @protocol GBEngineSaveDestination <NSObject>
 - (void)engineIsReadyToPersistSaveData:(GBEngine *)engine;
+- (void)engineIsReadyToPersistClockData:(GBEngine *)engine;
 @end
 
 /// Protocol for handling events originating from this emulator. Events are emitted on main queue

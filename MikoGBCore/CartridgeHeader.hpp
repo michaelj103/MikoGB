@@ -20,6 +20,7 @@ enum class CartridgeType {
     MBC1_RAM,
     MBC1_RAM_BATT,
     MBC3_RAM_BATT,
+    MBC3_TIMER_RAM_BATT,
     MBC5_RAM_BATT,
 };
 
@@ -57,6 +58,7 @@ public:
     CartridgeROMSize getROMSize() const;
     CartridgeRAMSize getRAMSize() const;
     bool hasBatteryBackup() const;
+    bool hasTimer() const;
     
 private:
     std::string _title;

@@ -153,9 +153,23 @@ class PersistenceManager {
         return saveFilePath
     }
     
+    private func _activeClockSavePath(for entry: SaveEntry) -> String {
+        let saveFileName = NSString(string: entry.name).appendingPathExtension("clock")!
+        let saveFilePath = NSString(string: PersistenceManager.activeSavesPath).appendingPathComponent(saveFileName)
+        return saveFilePath
+    }
+    
     func loadSaveData(_ entry: SaveEntry) throws -> Data? {
+        return try _loadData(entry)
+    }
+    
+    func loadClockData(_ entry: SaveEntry) throws -> Data? {
+        return try _loadData(entry, isClock: true)
+    }
+    
+    private func _loadData(_ entry: SaveEntry, isClock: Bool = false) throws -> Data? {
         let fileManager = FileManager.default
-        let saveFilePath = _activeSavePath(for: entry)
+        let saveFilePath = isClock ? _activeClockSavePath(for: entry) : _activeSavePath(for: entry)
         var isDir: ObjCBool = false
         if fileManager.fileExists(atPath: saveFilePath, isDirectory: &isDir) {
             if isDir.boolValue {
@@ -175,6 +189,13 @@ class PersistenceManager {
         let url = URL(fileURLWithPath: saveFilePath)
         try data.write(to: url)
         print("Wrote save data to \"\(saveFilePath)\"")
+    }
+    
+    func writeClockData(_ data: Data, for entry: SaveEntry) throws {
+        let saveFilePath = _activeClockSavePath(for: entry)
+        let url = URL(fileURLWithPath: saveFilePath)
+        try data.write(to: url)
+        print("Wrote clock data to \"\(saveFilePath)\"")
     }
     
     func saveURLForEntry(_ entry: SaveEntry) -> URL {

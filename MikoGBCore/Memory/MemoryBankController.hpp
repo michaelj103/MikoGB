@@ -23,6 +23,8 @@ public:
     
     bool isPersistenceStale() const { return _isPersistenceStale; }
     void resetPersistence() { _isPersistenceStale = false; }
+    bool isClockPersistenceStale() const { return _isClockPersistenceStale; }
+    void resetClockPersistence() { _isClockPersistenceStale = false; }
     
     virtual bool configureWithROMData(const void *romData, size_t size);
     
@@ -41,18 +43,22 @@ public:
     /// Get the current ROM bank number. For debugging or diagnostics
     virtual int currentROMBank() const = 0;
     
-    /// Some MBCs maintain a clock. Supply CPU cycle counts to the MBC to keep this up to date
-    /// CPU cycles are 4 * instruction cycles and the CPU oscillates at 4.2MHz (2^22)
-    virtual void updateClock(size_t cpuCycles);
+    /// Some MBCs maintain a real-time clock. Supply real-time seconds elapsed to increment it
+    virtual void updateClock(size_t secondsElapsed);
     
     virtual size_t saveDataSize() const = 0;
     virtual void *getSaveData() const = 0;
     virtual bool loadSaveData(const void *saveData, size_t size) = 0;
+    
+    virtual size_t clockDataSize() const;
+    virtual size_t copyClockData(void *buffer, size_t size) const;
+    virtual bool loadClockData(const void *clockData, size_t size);
         
 protected:
     uint8_t *_romData = nullptr;
     size_t _romSize = 0;
     bool _isPersistenceStale = false;
+    bool _isClockPersistenceStale = false;
 };
 
 }

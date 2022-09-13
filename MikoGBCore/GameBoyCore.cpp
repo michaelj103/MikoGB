@@ -39,12 +39,28 @@ bool GameBoyCore::loadSaveData(const void *saveData, size_t size) {
     return _imp->loadSaveData(saveData, size);
 }
 
+size_t GameBoyCore::clockDataSize() const {
+    return _imp->clockDataSize();
+}
+
+size_t GameBoyCore::copyClockData(void *buffer, size_t size) const {
+    return _imp->copyClockData(buffer, size);
+}
+
+bool GameBoyCore::loadClockData(const void *clockData, size_t size) {
+    return _imp->loadClockData(clockData, size);
+}
+
 void GameBoyCore::step() {
     _imp->step();
 }
 
 void GameBoyCore::emulateFrame() {
     _imp->emulateFrame();
+}
+
+void GameBoyCore::updateWithRealTimeSeconds(size_t secondsElapsed) {
+    _imp->updateWithRealTimeSeconds(secondsElapsed);
 }
 
 void GameBoyCore::emulateFrameStep() {
@@ -81,6 +97,14 @@ bool GameBoyCore::isPersistenceStale() const {
 
 void GameBoyCore::resetPersistence() {
     _imp->resetPersistence();
+}
+
+bool GameBoyCore::isClockPersistenceStale() const {
+    return _imp->isClockPersistenceStale();
+}
+
+void GameBoyCore::resetClockPersistence() {
+    _imp->resetClockPersistence();
 }
 
 uint8_t GameBoyCore::currentSerialDataByte() const {

@@ -29,11 +29,14 @@ public:
     size_t saveDataSize() const;
     size_t copySaveData(void *buffer, size_t size) const;
     bool loadSaveData(const void *saveData, size_t size);
+    size_t clockDataSize() const;
+    size_t copyClockData(void *buffer, size_t size) const;
+    bool loadClockData(const void *clockData, size_t size);
     
     void step();
     
     void emulateFrame();
-    void emulateFrameStep();
+    void updateWithRealTimeSeconds(size_t secondsElapsed);
     
     void setRunnable(bool);
     bool isRunnable() const { return _isRunnable; }
@@ -44,6 +47,8 @@ public:
     
     bool isPersistenceStale() const;
     void resetPersistence();
+    bool isClockPersistenceStale() const;
+    void resetClockPersistence();
     
     void setButtonPressed(JoypadButton, bool);
     
@@ -53,6 +58,7 @@ public:
     void setSerialEventCallback(SerialEventCallback callback);
     
     /// Debug utilities
+    void emulateFrameStep();
     void getTileMap(PixelBufferImageCallback callback);
     void getBackground(PixelBufferImageCallback callback);
     void getWindow(PixelBufferImageCallback callback);

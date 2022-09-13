@@ -23,6 +23,10 @@
 
 static const size_t GBBytesPerLine = 160 * 4;
 static const size_t GBBytesPerImage = GBBytesPerLine * 144;
+static const ROMFeatureSupport GBEmptySupport = { NO, NO };
+
+static const NSString *GBClockDataTimestampKey = @"Timestamp";
+static const NSString *GBClockDataRawDataKey = @"ClockData";
 
 static const size_t NumKeys = 8; //Number of gameboy keys
 
@@ -68,6 +72,7 @@ static MikoGB::JoypadButton _ButtonForCode(GBEngineKeyCode code) {
     BOOL _isRunnable;
     
     GBRateLimitTimer *_persistenceTimer;
+    GBRateLimitTimer *_clockPersistenceTimer;
     
     NSHashTable<id<GBEngineObserver>> *_observers;
 //    GBAudioWriter *_audioWriter;
@@ -136,6 +141,12 @@ static MikoGB::JoypadButton _ButtonForCode(GBEngineKeyCode code) {
             [strongSelf.saveDestination engineIsReadyToPersistSaveData:strongSelf];
         }];
         
+        // Clock data writes should be more rare, so save them pretty quickly after they happen
+        _clockPersistenceTimer = [[GBRateLimitTimer alloc] initWithDelay:2.0 targetQueue:dispatch_get_main_queue() eventBlock:^{
+            GBEngine *strongSelf = weakSelf;
+            [strongSelf.saveDestination engineIsReadyToPersistClockData:strongSelf];
+        }];
+        
 //        _audioWriter = [[GBAudioWriter alloc] init];
 //        self.audioDestination = _audioWriter;
     }
@@ -149,12 +160,13 @@ static MikoGB::JoypadButton _ButtonForCode(GBEngineKeyCode code) {
 }
 
 - (void)loadROM:(NSURL *)url completion:(ROMLoadCompletion)completion {
+    __block ROMFeatureSupport supportedFeatures = GBEmptySupport;
     NSError *readErr = nil;
     NSData *data = [NSData dataWithContentsOfURL:url options:NSDataReadingMappedIfSafe error:&readErr];
     if (!data) {
         NSLog(@"Failed to read data from URL \'%@\': %@", url, readErr);
         if (completion) {
-            completion(NO, NO);
+            completion(NO, supportedFeatures);
         }
         return;
     }
@@ -173,10 +185,11 @@ static MikoGB::JoypadButton _ButtonForCode(GBEngineKeyCode code) {
     
     dispatch_async(_emulationQueue, ^{
         bool success = self->_core->loadROMData(data.bytes, data.length, bootROMData.bytes, bootROMData.length);
-        BOOL supportsSaveData = self->_core->saveDataSize() > 0 ? YES : NO;
+        supportedFeatures.supportsSave = self->_core->saveDataSize() > 0 ? YES : NO;
+        supportedFeatures.supportsTimer = self->_core->clockDataSize() > 0 ? YES : NO;
         if (completion) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                completion(success ? YES : NO, supportsSaveData);
+                completion(success ? YES : NO, supportedFeatures);
             });
         }
     });
@@ -195,6 +208,36 @@ static MikoGB::JoypadButton _ButtonForCode(GBEngineKeyCode code) {
     });
 }
 
+- (void)loadClockData:(NSData *)data completion:(nullable ClockLoadCompletion)completion {
+    NSError *unarchiveError = nil;
+    NSDictionary *clockDictionary = [NSKeyedUnarchiver unarchivedObjectOfClass:NSDictionary.class fromData:data error:&unarchiveError];
+    if (!clockDictionary) {
+        NSLog(@"Failed to unarchive clock data with error %@", unarchiveError);
+        if (completion) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completion(NO);
+            });
+        }
+        return;
+    }
+    
+    NSData *rawData = clockDictionary[GBClockDataRawDataKey];
+    NSDate *saveTimestamp = clockDictionary[GBClockDataTimestampKey];
+    NSTimeInterval timeSinceDate = [[NSDate date] timeIntervalSinceDate:saveTimestamp];
+    size_t secondsSinceDate = (size_t)timeSinceDate;
+    dispatch_async(_emulationQueue, ^{
+        BOOL success = self->_core->loadClockData(rawData.bytes, rawData.length) ? YES : NO;
+        if (success) {
+            self->_core->updateWithRealTimeSeconds(secondsSinceDate);
+        }
+        if (completion) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completion(success);
+            });
+        }
+    });
+}
+
 - (NSData *)_emulationQueue_getSaveData {
     size_t copiedSize = 0;
     NSData *copiedData = nil;
@@ -207,6 +250,35 @@ static MikoGB::JoypadButton _ButtonForCode(GBEngineKeyCode code) {
     }
     
     if (copiedSize > 0) {
+        return copiedData;
+    } else {
+        return nil;
+    }
+}
+
+- (NSData *)_emulationQueue_getClockData {
+    size_t copiedSize = 0;
+    NSData *copiedData = nil;
+    size_t clockDataSize = _core->clockDataSize();
+    if (clockDataSize > 0) {
+        NSDate *date = [NSDate date];
+        NSMutableData *data = [NSMutableData dataWithLength:clockDataSize];
+        void *buffer = data.mutableBytes;
+        copiedSize = self->_core->copyClockData(buffer, clockDataSize);
+        if (copiedSize > 0) {
+            NSDictionary *clockDataDictionary = @{
+                GBClockDataTimestampKey : date,
+                GBClockDataRawDataKey : data,
+            };
+            NSError *archiveError = nil;
+            copiedData = [NSKeyedArchiver archivedDataWithRootObject:clockDataDictionary requiringSecureCoding:YES error:&archiveError];
+            if (!copiedData) {
+                NSLog(@"Error archiving clock data: %@", archiveError);
+            }
+        }
+    }
+    
+    if (copiedData) {
         return copiedData;
     } else {
         return nil;
@@ -231,9 +303,33 @@ static MikoGB::JoypadButton _ButtonForCode(GBEngineKeyCode code) {
 
 - (nullable NSData *)synchronousGetSaveData {
     __block NSData *data = nil;
-    // Consider timeout for this
     dispatch_sync(_emulationQueue, ^{
         data = [self _emulationQueue_getSaveData];
+    });
+    
+    return data;
+}
+
+- (void)getClockData:(SaveDataCompletion)completion {
+    dispatch_async(_emulationQueue, ^{
+        NSData *copiedData = [self _emulationQueue_getClockData];
+        completion(copiedData);
+    });
+}
+
+- (BOOL)isClockDataStale {
+    return _clockPersistenceTimer.isPending;
+}
+
+- (void)staleClockDataHandled {
+    // no need to signal until it's made stale again
+    [_clockPersistenceTimer cancel];
+}
+
+- (nullable NSData *)synchronousGetClockData {
+    __block NSData *data = nil;
+    dispatch_sync(_emulationQueue, ^{
+        data = [self _emulationQueue_getClockData];
     });
     
     return data;
@@ -348,6 +444,11 @@ static MikoGB::JoypadButton _ButtonForCode(GBEngineKeyCode code) {
     if (_core->isPersistenceStale()) {
         _core->resetPersistence();
         [_persistenceTimer input];
+    }
+    
+    if (_core->isClockPersistenceStale()) {
+        _core->resetClockPersistence();
+        [_clockPersistenceTimer input];
     }
 }
 
