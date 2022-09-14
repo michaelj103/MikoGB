@@ -35,6 +35,7 @@ public:
     void setByte(uint16_t addr, uint8_t val);
     
     void updateWithCPUCycles(size_t cpuCycles);
+    void updateWithRealTimeSeconds(size_t seconds);
         
     const CartridgeHeader &getHeader() const { return _header; }
     
@@ -70,6 +71,8 @@ public:
     // Persistence
     bool isPersistenceStale() const;
     void resetPersistence();
+    bool isClockPersistenceStale() const;
+    void resetClockPersistence();
     
     // Debugging and introspection
     int currentROMBank() const;
@@ -78,6 +81,9 @@ public:
     size_t saveDataSize() const;
     size_t copySaveData(void *buffer, size_t size) const;
     bool loadSaveData(const void *saveData, size_t size);
+    size_t clockDataSize() const;
+    size_t copyClockData(void *buffer, size_t size) const;
+    bool loadClockData(const void *clockData, size_t size);
     
     void hBlankDMATransferStep();
     

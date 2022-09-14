@@ -27,6 +27,7 @@ MemoryBankController *MemoryBankController::CreateMBC(const CartridgeHeader &hea
             mbc = new MBC1(header);
             break;
         case CartridgeType::MBC3_RAM_BATT:
+        case CartridgeType::MBC3_TIMER_RAM_BATT:
             mbc = new MBC3(header);
             break;
             
@@ -48,8 +49,20 @@ bool MemoryBankController::configureWithROMData(const void *romData, size_t size
     return true;
 }
 
-void MemoryBankController::updateClock(size_t cpuCycles) {
-    // no-op for most MBCs
+void MemoryBankController::updateClock(size_t secondsElapsed) {
+    // no-op for some MBCs
+}
+
+size_t MemoryBankController::clockDataSize() const {
+    return 0;
+}
+
+size_t MemoryBankController::copyClockData(void *buffer, size_t size) const {
+    return 0;
+}
+
+bool MemoryBankController::loadClockData(const void *clockData, size_t size) {
+    return false;
 }
 
 MemoryBankController::~MemoryBankController() {

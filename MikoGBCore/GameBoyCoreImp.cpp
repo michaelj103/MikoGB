@@ -53,6 +53,18 @@ bool GameBoyCoreImp::loadSaveData(const void *saveData, size_t size) {
     return _memoryController->loadSaveData(saveData, size);
 }
 
+size_t GameBoyCoreImp::clockDataSize() const {
+    return _memoryController->clockDataSize();
+}
+
+size_t GameBoyCoreImp::copyClockData(void *buffer, size_t size) const {
+    return _memoryController->copyClockData(buffer, size);
+}
+
+bool GameBoyCoreImp::loadClockData(const void *clockData, size_t size) {
+    return _memoryController->loadClockData(clockData, size);
+}
+
 void GameBoyCoreImp::step() {
     int instructionCycles = _cpu->step();
     size_t cpuCycles = instructionCycles * 4;
@@ -76,6 +88,10 @@ void GameBoyCoreImp::emulateFrame() {
     while (gpu->getCurrentScanline() < 144 && _isRunnable) {
         step();
     }
+}
+
+void GameBoyCoreImp::updateWithRealTimeSeconds(size_t secondsElapsed) {
+    _memoryController->updateWithRealTimeSeconds(secondsElapsed);
 }
 
 void GameBoyCoreImp::emulateFrameStep() {
@@ -119,6 +135,14 @@ bool GameBoyCoreImp::isPersistenceStale() const {
 
 void GameBoyCoreImp::resetPersistence() {
     _memoryController->resetPersistence();
+}
+
+bool GameBoyCoreImp::isClockPersistenceStale() const {
+    return _memoryController->isClockPersistenceStale();
+}
+
+void GameBoyCoreImp::resetClockPersistence() {
+    _memoryController->resetClockPersistence();
 }
 
 uint8_t GameBoyCoreImp::currentSerialDataByte() const {

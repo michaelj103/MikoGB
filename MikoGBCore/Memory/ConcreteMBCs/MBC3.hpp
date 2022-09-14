@@ -35,6 +35,9 @@ public:
     size_t saveDataSize() const override;
     void *getSaveData() const override;
     bool loadSaveData(const void *saveData, size_t size) override;
+    size_t clockDataSize() const override;
+    size_t copyClockData(void *buffer, size_t size) const override;
+    bool loadClockData(const void *clockData, size_t size) override;
     
 private:
     int _romBankCount;
@@ -49,12 +52,14 @@ private:
     int _romBank = 1;
     int _ramBank = 0;
     bool _batteryBackup = false;
+    bool _hasTimer = false;
     
     uint8_t _clockRegisters[5];
     
     void _updateBankNumbers();
-    void _latchClockRegisters();
+    void _latchClockRegisters(uint8_t *clockRegisters) const;
     void _writeClockRegister(MBC3Clock reg, uint8_t val);
+    void _updateClockCounterFromRegisters(uint8_t *clockRegisters);
 };
 
 }

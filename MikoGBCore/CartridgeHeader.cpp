@@ -43,6 +43,8 @@ static CartridgeType _CartridgeTypeFromByte(uint8_t byte) {
         case 0x03:
             // e.g. Super Mario Land 2
             return CartridgeType::MBC1_RAM_BATT;
+        case 0x10:
+            return CartridgeType::MBC3_TIMER_RAM_BATT;
         case 0x13:
             // e.g. Pokemon Red/Blue
             return CartridgeType::MBC3_RAM_BATT;
@@ -71,6 +73,8 @@ static string _CartridgeTypeDescription(uint8_t byte) {
         case CartridgeType::MBC3_RAM_BATT:
             // e.g. Pokemon Red/Blue
             return "MBC3+RAM+BATTERY";
+        case CartridgeType::MBC3_TIMER_RAM_BATT:
+            return "MBC3+TIMER+RAM+BATTERY";
         case CartridgeType::MBC5_RAM_BATT:
             // e.g. Pokemon Yellow
             return "MBC5+RAM+BATTERY";
@@ -273,17 +277,33 @@ bool CartridgeHeader::hasBatteryBackup() const {
     CartridgeType type = _CartridgeTypeFromByte(_cartridgeType);
     switch (type) {
         case CartridgeType::ROM_Only:
-            return false;
         case CartridgeType::MBC1:
-            return false;
         case CartridgeType::MBC1_RAM:
             return false;
         case CartridgeType::MBC1_RAM_BATT:
-            return true;
         case CartridgeType::MBC3_RAM_BATT:
-            return true;
+        case CartridgeType::MBC3_TIMER_RAM_BATT:
         case CartridgeType::MBC5_RAM_BATT:
             return true;
+            
+        case CartridgeType::Unsupported:
+            return false;
+    }
+}
+
+bool CartridgeHeader::hasTimer() const {
+    CartridgeType type = _CartridgeTypeFromByte(_cartridgeType);
+    switch (type) {
+        case CartridgeType::ROM_Only:
+        case CartridgeType::MBC1:
+        case CartridgeType::MBC1_RAM:
+        case CartridgeType::MBC1_RAM_BATT:
+        case CartridgeType::MBC3_RAM_BATT:
+        case CartridgeType::MBC5_RAM_BATT:
+            return false;
+        case CartridgeType::MBC3_TIMER_RAM_BATT:
+            return true;
+            
         case CartridgeType::Unsupported:
             return false;
     }

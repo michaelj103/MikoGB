@@ -16,6 +16,7 @@ class GameViewController: UIViewController, DPadDelegate, GBEngineSaveDestinatio
     private var engine: GBEngine
     private var audioController: AudioController!
     private let romURL: URL
+    private var romFeatures: ROMFeatureSupport?
     private let persistenceManager: PersistenceManager
     private var linkSessionManager: LinkSessionManager
     
@@ -190,8 +191,8 @@ class GameViewController: UIViewController, DPadDelegate, GBEngineSaveDestinatio
     private func _loadROM() {
         let url = romURL
         engine.saveDestination = self
-        engine.loadROM(url) { [weak self] success, supportsSaves in
-            self?._romDidLoad(url, success: success, supportsSaveData: supportsSaves)
+        engine.loadROM(url) { [weak self] success, featureSupport in
+            self?._romDidLoad(url, success: success, featureSupport: featureSupport)
         }
     }
     
@@ -376,9 +377,10 @@ class GameViewController: UIViewController, DPadDelegate, GBEngineSaveDestinatio
     }
     
     private var loadedSaveDataEntry: SaveEntry?
-    private func _romDidLoad(_ url: URL, success: Bool, supportsSaveData: Bool) {
+    private func _romDidLoad(_ url: URL, success: Bool, featureSupport: ROMFeatureSupport) {
         if success {
-            if supportsSaveData {
+            self.romFeatures = featureSupport
+            if featureSupport.supportsSave.boolValue {
                 _loadSaveData(url) { _saveDataDidLoad($0) }
             } else {
                 loadedSaveDataEntry = nil
@@ -395,9 +397,42 @@ class GameViewController: UIViewController, DPadDelegate, GBEngineSaveDestinatio
     
     private func _saveDataDidLoad(_ success: Bool) {
         if success {
-            _startEmulation()
+            if self.romFeatures!.supportsTimer.boolValue {
+                _loadClockData { _clockDataDidLoad($0) }
+            } else {
+                _startEmulation()
+            }
         } else {
             let alert = UIAlertController(title: "Failed to Load Save Data", message: "Unable to load save data from the file. It may not be valid for this ROM", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { [weak self] _ in
+                self?.navigationController?.popViewController(animated: true)
+            }))
+            self.present(alert, animated: true)
+        }
+    }
+    
+    private func _loadClockData(completion: (Bool) -> Void) {
+        guard let saveEntry = loadedSaveDataEntry else {
+            // no data is a valid case (e.g. starting for the first time)
+            completion(true)
+            return
+        }
+        
+        if let data = try! persistenceManager.loadClockData(saveEntry) {
+            engine.loadClockData(data) { [weak self] success in
+                self?._clockDataDidLoad(success)
+            }
+        } else {
+            // no data is a valid case (e.g. starting for the first time)
+            completion(true)
+        }
+    }
+    
+    private func _clockDataDidLoad(_ success: Bool) {
+        if success {
+            _startEmulation()
+        } else {
+            let alert = UIAlertController(title: "Failed to Load Clock Data", message: "Unable to load clock data from the file", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { [weak self] _ in
                 self?.navigationController?.popViewController(animated: true)
             }))
@@ -417,6 +452,13 @@ class GameViewController: UIViewController, DPadDelegate, GBEngineSaveDestinatio
         }
     }
     
+    func engineIsReady(toPersistClockData engine: GBEngine) {
+        engine.getClockData { (data) in
+            // capture strong reference
+            self._persistClockData(data)
+        }
+    }
+    
     private func _persistSaveData(_ data: Data?) {
         guard let data = data, let entry = loadedSaveDataEntry else {
             return
@@ -426,12 +468,27 @@ class GameViewController: UIViewController, DPadDelegate, GBEngineSaveDestinatio
         try! persistenceManager.writeSaveData(data, for: entry)
     }
     
+    private func _persistClockData(_ data: Data?) {
+        guard let data = data, let entry = loadedSaveDataEntry else {
+            return
+        }
+        
+        // TODO: catch errors and handle gracefully
+        try! persistenceManager.writeClockData(data, for: entry)
+    }
+    
     private func _persistSaveDataImmediatelyIfNeeded() {
         if engine.isSaveDataStale {
             print("Writing stale save data immediately")
             let data = engine.synchronousGetSaveData()
             _persistSaveData(data)
             engine.staleSaveDataHandled()
+        }
+        if engine.isClockDataStale {
+            print("Writing stale clock data on quit")
+            let clockData = engine.synchronousGetClockData()
+            _persistClockData(clockData)
+            engine.staleClockDataHandled()
         }
     }
     

@@ -339,9 +339,12 @@ void MemoryController::updateWithCPUCycles(size_t cpuCycles) {
     if (interrupt) {
         requestInterrupt(TIMA);
     }
-    _mbc->updateClock(cpuCycles);
     _audioController.updateWithCPUCycles((int)cpuCycles);
     serialController->updateWithCPUCycles((int)cpuCycles);
+}
+
+void MemoryController::updateWithRealTimeSeconds(size_t secondsElapsed) {
+    _mbc->updateClock(secondsElapsed);
 }
 
 void MemoryController::requestInterrupt(InterruptFlag flag) {
@@ -370,6 +373,20 @@ bool MemoryController::isPersistenceStale() const {
 void MemoryController::resetPersistence() {
     if (_mbc) {
         _mbc->resetPersistence();
+    }
+}
+
+bool MemoryController::isClockPersistenceStale() const {
+    if (_mbc) {
+        return _mbc->isClockPersistenceStale();
+    } else {
+        return false;
+    }
+}
+
+void MemoryController::resetClockPersistence() {
+    if (_mbc) {
+        _mbc->resetClockPersistence();
     }
 }
 
@@ -495,4 +512,28 @@ bool MemoryController::loadSaveData(const void *saveData, size_t size) {
     }
     
     return _mbc->loadSaveData(saveData, size);
+}
+
+size_t MemoryController::clockDataSize() const {
+    if (_mbc) {
+        return _mbc->clockDataSize();
+    } else {
+        return 0;
+    }
+}
+
+size_t MemoryController::copyClockData(void *buffer, size_t size) const {
+    if (_mbc) {
+        return _mbc->copyClockData(buffer, size);
+    } else {
+        return 0;
+    }
+}
+
+bool MemoryController::loadClockData(const void *saveData, size_t size) {
+    if (!_mbc) {
+        return false;
+    }
+    
+    return _mbc->loadClockData(saveData, size);
 }

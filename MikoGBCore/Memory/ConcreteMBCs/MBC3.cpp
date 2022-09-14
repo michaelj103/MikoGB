@@ -6,6 +6,7 @@
 //
 
 #include "MBC3.hpp"
+#include "BitTwiddlingUtil.h"
 
 using namespace std;
 using namespace MikoGB;
@@ -52,6 +53,7 @@ MBC3::MBC3(const CartridgeHeader &header) {
     }
     
     _batteryBackup = header.hasBatteryBackup();
+    _hasTimer = header.hasTimer();
 }
 
 MBC3::~MBC3() {
@@ -97,23 +99,32 @@ void MBC3::_updateBankNumbers() {
 //#endif
 }
 
-void MBC3::_latchClockRegisters() {
-    const size_t cpuCyclesPerSecond = 1 << 22; // 4.2MHz (2^22)
-    const size_t totalSeconds = _clockCount / cpuCyclesPerSecond;
-    _clockRegisters[MBC3Clock::RTC_S] = totalSeconds % 60;
+void MBC3::_latchClockRegisters(uint8_t *clockRegisters) const {
+    const size_t totalSeconds = _clockCount;
+    clockRegisters[MBC3Clock::RTC_S] = totalSeconds % 60;
     const size_t totalMinutes = totalSeconds / 60;
-    _clockRegisters[MBC3Clock::RTC_M] = totalMinutes % 60;
+    clockRegisters[MBC3Clock::RTC_M] = totalMinutes % 60;
     const size_t totalHours = totalMinutes / 60;
-    _clockRegisters[MBC3Clock::RTC_H] = totalHours % 24;
+    clockRegisters[MBC3Clock::RTC_H] = totalHours % 24;
     const size_t totalDays = totalHours / 24;
-    _clockRegisters[MBC3Clock::RTC_DL] = (totalDays & 0xFF);
+    clockRegisters[MBC3Clock::RTC_DL] = (totalDays & 0xFF);
     size_t daysMask = (totalDays & 0x100) >> 8;
     if (totalDays > 0x1FF) {
         // carry bit always stays set until explicitly reset
         daysMask |= 0x80;
     }
     
-    _clockRegisters[MBC3Clock::RTC_DH] |= daysMask;
+    clockRegisters[MBC3Clock::RTC_DH] |= daysMask;
+}
+
+void MBC3::_updateClockCounterFromRegisters(uint8_t *clockRegisters) {
+    size_t totalSeconds = clockRegisters[MBC3Clock::RTC_S];
+    totalSeconds += (clockRegisters[MBC3Clock::RTC_M] * 60);
+    totalSeconds += (clockRegisters[MBC3Clock::RTC_H] * 60 * 60);
+    size_t days = (size_t)(clockRegisters[MBC3Clock::RTC_DL]) + (isMaskSet(clockRegisters[MBC3Clock::RTC_DH], 0x01) ? 256 : 0);
+    totalSeconds += (days * 24 * 60 * 60);
+    
+    _clockCount = totalSeconds;
 }
 
 void MBC3::writeControlCode(uint16_t addr, uint8_t val) {
@@ -135,7 +146,7 @@ void MBC3::writeControlCode(uint16_t addr, uint8_t val) {
             _latchVal = val;
             if (_latchVal == 1) {
                 // we latched the clock. copy the current values
-                _latchClockRegisters();
+                _latchClockRegisters(_clockRegisters);
             }
         }
     } else {
@@ -188,24 +199,38 @@ void MBC3::writeRAM(uint16_t addr, uint8_t val) {
         assert(_ramBank >= 0x08 && _ramBank <= 0x0C);
         MBC3Clock clockRegister = static_cast<MBC3Clock>(_ramBank - 0x08);
         _writeClockRegister(clockRegister, val);
+        _isClockPersistenceStale = _hasTimer;
     }
 }
 
-void MBC3::updateClock(size_t cpuCycles) {
-    bool running = ((_clockRegisters[MBC3Clock::RTC_DH - MBC3Clock::RTC_S] & 0x40) == 0);
-    if (running) {
-        _clockCount += cpuCycles;
+void MBC3::updateClock(size_t secondsElapsed) {
+    bool isHalted = isMaskSet(_clockRegisters[MBC3Clock::RTC_DH], 0x40);
+    if (!isHalted) {
+        _clockCount += secondsElapsed;
     }
 }
 
 void MBC3::_writeClockRegister(MBC3Clock reg, uint8_t val) {
-//    switch (reg) {
-//        case MBC3Clock::RTC_S:
-//
-//    }
-    
-    // TODO: clock writing. clock writing is weird.
-    assert(false);
+    uint8_t writeVal = val;
+    switch (reg) {
+        case MBC3Clock::RTC_S:
+            writeVal = std::min(writeVal, (uint8_t)59); // 0-59 sec
+            break;
+        case MBC3Clock::RTC_M:
+            writeVal = std::min(writeVal, (uint8_t)59); // 0-59 min
+            break;
+        case MBC3Clock::RTC_H:
+            writeVal = std::min(writeVal, (uint8_t)23); // 0-23 hr
+            break;
+        case MBC3Clock::RTC_DL:
+            // 0-255 days are fine for the low 8 bits
+            break;
+        case MBC3Clock::RTC_DH:
+            writeVal = val & 0xC1; // middle 5 bits always 0
+            break;
+    }
+    _clockRegisters[reg] = writeVal;
+    _updateClockCounterFromRegisters(_clockRegisters);
 }
 
 int MBC3::currentROMBank() const {
@@ -240,4 +265,26 @@ bool MBC3::loadSaveData(const void *saveData, size_t size) {
     } else {
         return false;
     }
+}
+
+size_t MBC3::clockDataSize() const {
+    return 5; // 5 clock registers
+}
+
+size_t MBC3::copyClockData(void *buffer, size_t size) const {
+    if (size != 5) {
+        return 0;
+    }
+    
+    _latchClockRegisters((uint8_t *)buffer);
+    return size;
+}
+
+bool MBC3::loadClockData(const void *clockData, size_t size) {
+    if (size != 5) {
+        return false;
+    }
+    
+    _updateClockCounterFromRegisters((uint8_t *)clockData);
+    return true;
 }

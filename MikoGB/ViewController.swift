@@ -24,6 +24,7 @@ class ViewController: NSViewController, NoROMViewDelegate, NSMenuItemValidation,
     private var audioController: AudioController!
     private var persistenceManager: PersistenceManager!
     private var linkManager: LinkSessionManager!
+    private var romFeatures: ROMFeatureSupport?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,8 +51,8 @@ class ViewController: NSViewController, NoROMViewDelegate, NSMenuItemValidation,
     }
     
     private func loadROM(url: URL) {
-        engine.loadROM(url) { [self] (success, supportsSaveData) in
-            _romDidLoad(url, success: success, supportsSaveData: supportsSaveData)
+        engine.loadROM(url) { [self] (success, featureSupport) in
+            _romDidLoad(url, success: success, featureSupport: featureSupport)
         }
     }
     
@@ -70,10 +71,28 @@ class ViewController: NSViewController, NoROMViewDelegate, NSMenuItemValidation,
         }
     }
     
+    private func _loadClockData(completion: (Bool) -> Void) {
+        guard let saveEntry = loadedSaveDataEntry else {
+            // no data is a valid case (e.g. starting for the first time)
+            completion(true)
+            return
+        }
+        
+        if let data = try! persistenceManager.loadClockData(saveEntry) {
+            engine.loadClockData(data) { [weak self] success in
+                self?._clockDataDidLoad(success)
+            }
+        } else {
+            // no data is a valid case (e.g. starting for the first time)
+            completion(true)
+        }
+    }
+    
     private var loadedSaveDataEntry: SaveEntry?
-    private func _romDidLoad(_ url: URL, success: Bool, supportsSaveData: Bool) {
+    private func _romDidLoad(_ url: URL, success: Bool, featureSupport: ROMFeatureSupport) {
         if success {
-            if supportsSaveData {
+            self.romFeatures = featureSupport
+            if featureSupport.supportsSave.boolValue {
                 _loadSaveData(url) { _saveDataDidLoad($0) }
             } else {
                 loadedSaveDataEntry = nil
@@ -87,10 +106,23 @@ class ViewController: NSViewController, NoROMViewDelegate, NSMenuItemValidation,
     
     private func _saveDataDidLoad(_ success: Bool) {
         if success {
-            _startEmulation()
+            if self.romFeatures!.supportsTimer.boolValue {
+                _loadClockData { _clockDataDidLoad($0) }
+            } else {
+                _startEmulation()
+            }
         } else {
             //TODO: present an alert
             preconditionFailure("failure to load save data is unhandled")
+        }
+    }
+    
+    private func _clockDataDidLoad(_ success: Bool) {
+        if success {
+            _startEmulation()
+        } else {
+            //TODO: present an alert
+            preconditionFailure("failure to load clock data is unhandled")
         }
     }
     
@@ -109,6 +141,13 @@ class ViewController: NSViewController, NoROMViewDelegate, NSMenuItemValidation,
         }
     }
     
+    func engineIsReady(toPersistClockData engine: GBEngine) {
+        engine.getClockData { (data) in
+            // capture strong reference
+            self._persistClockData(data)
+        }
+    }
+    
     private func _persistSaveData(_ data: Data?) {
         guard let data = data, let entry = loadedSaveDataEntry else {
             return
@@ -118,12 +157,27 @@ class ViewController: NSViewController, NoROMViewDelegate, NSMenuItemValidation,
         try! persistenceManager.writeSaveData(data, for: entry)
     }
     
+    private func _persistClockData(_ data: Data?) {
+        guard let data = data, let entry = loadedSaveDataEntry else {
+            return
+        }
+        
+        // TODO: catch errors and handle gracefully
+        try! persistenceManager.writeClockData(data, for: entry)
+    }
+    
     private func _prepareForTermination() {
         if engine.isSaveDataStale {
             print("Writing stale save data on quit")
-            let data = engine.synchronousGetSaveData()
-            _persistSaveData(data)
+            let saveData = engine.synchronousGetSaveData()
+            _persistSaveData(saveData)
             engine.staleSaveDataHandled()
+        }
+        if engine.isClockDataStale {
+            print("Writing stale clock data on quit")
+            let clockData = engine.synchronousGetClockData()
+            _persistClockData(clockData)
+            engine.staleClockDataHandled()
         }
     }
     
