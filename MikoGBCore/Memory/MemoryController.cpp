@@ -11,6 +11,7 @@
 #include "Joypad.hpp"
 #include "SerialController.hpp"
 #include "GPUCore.hpp"
+#include "BitTwiddlingUtil.h"
 #include <iostream>
 
 using namespace std;
@@ -213,6 +214,11 @@ uint8_t MemoryController::readByte(uint16_t addr) const {
             return _audioController.readAudioRegister(addr);
         } else if (addr >= ColorPaletteRegisterBegin && addr <= ColorPaletteRegisterEnd) {
             return gpu->colorPaletteRegisterRead(addr);
+        } else if (addr == DoubleSpeedRegister) {
+            // high bit is if we're in double-speed mode. Low bit is if a switch has been "prepared"
+            const uint8_t speedMask = _doubleSpeedModeEnabled ? 0x80 : 0x00;
+            const uint8_t pendingMask = _doubleSpeedModeTogglePending ? 0x01 : 0x00;
+            return speedMask | pendingMask;
         }
         
         // Read from the high range memory
@@ -317,8 +323,9 @@ void MemoryController::setByte(uint16_t addr, uint8_t val) {
         } else if (addr == SerialControlRegister) {
             serialController->serialControlWillWrite(val);
         } else if (addr == DoubleSpeedRegister) {
-            // TODO: Double speed?
-            assert(false);
+            if (isMaskSet(val, 0x01)) {
+                _doubleSpeedModeTogglePending = true;
+            }
         } else if (addr >= ColorPaletteRegisterBegin && addr <= ColorPaletteRegisterEnd) {
             gpu->colorPaletteRegisterWrite(addr, val);
         } else if (addr == ColorCompatibilityRegister) {
@@ -339,12 +346,22 @@ void MemoryController::updateWithCPUCycles(size_t cpuCycles) {
     if (interrupt) {
         requestInterrupt(TIMA);
     }
-    _audioController.updateWithCPUCycles((int)cpuCycles * 2);
+    const size_t audioCycles = _doubleSpeedModeEnabled ? cpuCycles : cpuCycles * 2;
+    _audioController.updateWithCPUCycles((int)audioCycles);
     serialController->updateWithCPUCycles((int)cpuCycles);
 }
 
 void MemoryController::updateWithRealTimeSeconds(size_t secondsElapsed) {
     _mbc->updateClock(secondsElapsed);
+}
+
+bool MemoryController::toggleDoubleSpeedModeIfNecessary() {
+    if (!_doubleSpeedModeTogglePending) {
+        return false;
+    }
+    _doubleSpeedModeTogglePending = false;
+    _doubleSpeedModeEnabled = !_doubleSpeedModeEnabled;
+    return true;
 }
 
 void MemoryController::requestInterrupt(InterruptFlag flag) {

@@ -174,6 +174,9 @@ void CPUCore::halt() {
 void CPUCore::stop() {
     // From Pan docs:
     // "No licensed rom makes use of STOP outside of CGB speed switching"
-    throw runtime_error("STOP mode not implemented");
+    const bool didToggle = memoryController->toggleDoubleSpeedModeIfNecessary();
+    if (!didToggle) {
+        throw runtime_error("STOP mode not implemented");
+    }
 }
 
