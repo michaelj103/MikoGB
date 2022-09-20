@@ -15,9 +15,13 @@
 using namespace std;
 using namespace MikoGB;
 
-static const int SweepTimeCycles = 1 << 15; // 128Hz with 4.2MHz CPU: 2^22 / 2^7 = 1 << 15
-static const int DurationTimeCycles = 1 << 14; // 256Hz with 4.2MHz CPU: 2^22 / 2^8 = 1 << 14
-static const int EnvelopeTimeCycles = 1 << 16; // 64Hz with 4.2MHz CPU: 2^22 / 2^6 = 1 << 16
+// Note on double-speed support. All of the cycle counts are doubled so that we can avoid fractional cycles
+// In normal speed mode, cycles are multipled by 2 before being handed to the audio controller, so the timing cancels to 1x
+// In double speed mode, cycles are not multiplied by 2, so it takes ~2x as many instructions before audio events occur
+// This keeps the audio controller running at real time relative to external driver
+static const int SweepTimeCycles = 1 << 16; // 128Hz with 4.2MHz CPU: 2^22 / 2^7 = 1 << 15 (x2 for double speed support)
+static const int DurationTimeCycles = 1 << 15; // 256Hz with 4.2MHz CPU: 2^22 / 2^8 = 1 << 14 (x2 for double speed support)
+static const int EnvelopeTimeCycles = 1 << 17; // 64Hz with 4.2MHz CPU: 2^22 / 2^6 = 1 << 16 (x2 for double speed support
 
 static const int DutyPatternLength = 8;
 // Duty patterns from pan docs. They don't really make a difference though vs idx <= count
@@ -197,7 +201,8 @@ void SquareSound::_updateFreqCounter() {
     // therefore, cycles per wave is 2^5 * (2048 - _freq)
     // duty cycles can be specified in 8ths, so further divide by 8 to get
     // cycles per duty update
-    _freqCycles = 4 * (2048 - _freq);
+    // Then multiply by 2 for double-speed support. See note at the top of the file
+    _freqCycles = 4 * (2048 - _freq) * 2;
     _freqCounter = _freqCycles;
     _waveDutyPeriod = 0;
 }

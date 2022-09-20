@@ -339,7 +339,7 @@ void MemoryController::updateWithCPUCycles(size_t cpuCycles) {
     if (interrupt) {
         requestInterrupt(TIMA);
     }
-    _audioController.updateWithCPUCycles((int)cpuCycles);
+    _audioController.updateWithCPUCycles((int)cpuCycles * 2);
     serialController->updateWithCPUCycles((int)cpuCycles);
 }
 

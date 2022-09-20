@@ -44,10 +44,14 @@ static CartridgeType _CartridgeTypeFromByte(uint8_t byte) {
             // e.g. Super Mario Land 2
             return CartridgeType::MBC1_RAM_BATT;
         case 0x10:
+            // e.g. Pokemon gen 2
             return CartridgeType::MBC3_TIMER_RAM_BATT;
         case 0x13:
             // e.g. Pokemon Red/Blue
             return CartridgeType::MBC3_RAM_BATT;
+        case 0x19:
+            // e.g. Rayman
+            return CartridgeType::MBC5;
         case 0x1B:
             // e.g. Pokemon Yellow
             return CartridgeType::MBC5_RAM_BATT;
@@ -74,7 +78,11 @@ static string _CartridgeTypeDescription(uint8_t byte) {
             // e.g. Pokemon Red/Blue
             return "MBC3+RAM+BATTERY";
         case CartridgeType::MBC3_TIMER_RAM_BATT:
+            // e.g. Pokemon gen 2
             return "MBC3+TIMER+RAM+BATTERY";
+        case CartridgeType::MBC5:
+            // e.g. Rayman
+            return "MBC5";
         case CartridgeType::MBC5_RAM_BATT:
             // e.g. Pokemon Yellow
             return "MBC5+RAM+BATTERY";
@@ -86,7 +94,7 @@ static string _CartridgeTypeDescription(uint8_t byte) {
 static CartridgeROMSize _CartridgeROMSizeFromByte(uint8_t byte) {
     switch (byte) {
         case 0x00:
-            return CartridgeROMSize::BANKS_0;
+            return CartridgeROMSize::BANKS_2;
         case 0x01:
             return CartridgeROMSize::BANKS_4;
         case 0x02:
@@ -114,7 +122,7 @@ static CartridgeROMSize _CartridgeROMSizeFromByte(uint8_t byte) {
 static string _CartridgeROMSizeDescription(uint8_t byte) {
     CartridgeROMSize size = _CartridgeROMSizeFromByte(byte);
     switch (size) {
-        case CartridgeROMSize::BANKS_0:
+        case CartridgeROMSize::BANKS_2:
             return "32 KiB (No Bank Switching)";
         case CartridgeROMSize::BANKS_4:
             return "64 KiB (4 Banks)";
@@ -279,6 +287,7 @@ bool CartridgeHeader::hasBatteryBackup() const {
         case CartridgeType::ROM_Only:
         case CartridgeType::MBC1:
         case CartridgeType::MBC1_RAM:
+        case CartridgeType::MBC5:
             return false;
         case CartridgeType::MBC1_RAM_BATT:
         case CartridgeType::MBC3_RAM_BATT:
@@ -299,10 +308,29 @@ bool CartridgeHeader::hasTimer() const {
         case CartridgeType::MBC1_RAM:
         case CartridgeType::MBC1_RAM_BATT:
         case CartridgeType::MBC3_RAM_BATT:
+        case CartridgeType::MBC5:
         case CartridgeType::MBC5_RAM_BATT:
             return false;
         case CartridgeType::MBC3_TIMER_RAM_BATT:
             return true;
+            
+        case CartridgeType::Unsupported:
+            return false;
+    }
+}
+
+bool CartridgeHeader::hasRumble() const {
+    CartridgeType type = _CartridgeTypeFromByte(_cartridgeType);
+    switch (type) {
+        case CartridgeType::ROM_Only:
+        case CartridgeType::MBC1:
+        case CartridgeType::MBC1_RAM:
+        case CartridgeType::MBC1_RAM_BATT:
+        case CartridgeType::MBC3_RAM_BATT:
+        case CartridgeType::MBC5:
+        case CartridgeType::MBC5_RAM_BATT:
+        case CartridgeType::MBC3_TIMER_RAM_BATT:
+            return false;
             
         case CartridgeType::Unsupported:
             return false;

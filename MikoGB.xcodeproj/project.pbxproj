@@ -142,6 +142,8 @@
 		29A8FFF826537426007A26C9 /* NoMBC.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8FFF626537426007A26C9 /* NoMBC.cpp */; };
 		29A8FFF926537426007A26C9 /* NoMBC.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29A8FFF626537426007A26C9 /* NoMBC.cpp */; };
 		29A8FFFA26537426007A26C9 /* NoMBC.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 29A8FFF726537426007A26C9 /* NoMBC.hpp */; };
+		29AA377C28D9340E00FB718C /* MBC5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29AA377A28D9340E00FB718C /* MBC5.cpp */; };
+		29AA377D28D9340E00FB718C /* MBC5.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 29AA377B28D9340E00FB718C /* MBC5.hpp */; };
 		29C2CBC628AD7E7E00936BD7 /* UserIdentityController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29D6D0EF28A19EE900C98B03 /* UserIdentityController.swift */; };
 		29C2CBC928AD7EC000936BD7 /* ServerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2923CE0A289DA7AA00262C49 /* ServerConfiguration.swift */; };
 		29C2CBCA28AD7EDF00936BD7 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2923CDFC28947BE900262C49 /* NetworkManager.swift */; };
@@ -372,6 +374,8 @@
 		29A8FFD326535994007A26C9 /* MemoryBankController.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MemoryBankController.hpp; sourceTree = "<group>"; };
 		29A8FFF626537426007A26C9 /* NoMBC.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = NoMBC.cpp; sourceTree = "<group>"; };
 		29A8FFF726537426007A26C9 /* NoMBC.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = NoMBC.hpp; sourceTree = "<group>"; };
+		29AA377A28D9340E00FB718C /* MBC5.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = MBC5.cpp; sourceTree = "<group>"; };
+		29AA377B28D9340E00FB718C /* MBC5.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MBC5.hpp; sourceTree = "<group>"; };
 		29C2CBCD28AD849A00936BD7 /* SerialController.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SerialController.cpp; sourceTree = "<group>"; };
 		29C2CBCE28AD849A00936BD7 /* SerialController.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SerialController.hpp; sourceTree = "<group>"; };
 		29C2CBD128ADABCA00936BD7 /* LinkSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkSessionManager.swift; sourceTree = "<group>"; };
@@ -754,6 +758,8 @@
 				2919878E267481FA009D7C45 /* MBC1.cpp */,
 				291987C426829212009D7C45 /* MBC3.hpp */,
 				291987C326829212009D7C45 /* MBC3.cpp */,
+				29AA377B28D9340E00FB718C /* MBC5.hpp */,
+				29AA377A28D9340E00FB718C /* MBC5.cpp */,
 			);
 			path = ConcreteMBCs;
 			sourceTree = "<group>";
@@ -868,6 +874,7 @@
 				290FF358265F671C006812F4 /* Joypad.hpp in Headers */,
 				291987C626829213009D7C45 /* MBC3.hpp in Headers */,
 				29A8FF76265211B8007A26C9 /* MemoryController.hpp in Headers */,
+				29AA377D28D9340E00FB718C /* MBC5.hpp in Headers */,
 				290FF33F265F066E006812F4 /* MonochromePalette.hpp in Headers */,
 				2907003D28C5A2A2000D8A5B /* ColorPalette.hpp in Headers */,
 				29A8FFFA26537426007A26C9 /* NoMBC.hpp in Headers */,
@@ -1165,6 +1172,7 @@
 				2992825A26424262004691E5 /* JumpInstructions.cpp in Sources */,
 				2902EAA427C5A2F700186976 /* InstructionRingBuffer.cpp in Sources */,
 				2992826326424265004691E5 /* CallAndReturnInstructions.cpp in Sources */,
+				29AA377C28D9340E00FB718C /* MBC5.cpp in Sources */,
 				29C2CBCF28AD849A00936BD7 /* SerialController.cpp in Sources */,
 				29A8FF8C26521A6E007A26C9 /* CartridgeHeader.cpp in Sources */,
 				2902EA9227C0712A00186976 /* Breakpoint.cpp in Sources */,

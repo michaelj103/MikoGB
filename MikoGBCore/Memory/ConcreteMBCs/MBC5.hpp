@@ -1,21 +1,22 @@
 //
-//  MBC1.hpp
-//  MikoGB
+//  MBC5.hpp
+//  MikoGBCore
 //
-//  Created on 6/11/21.
+//  Created by Michael Brandt on 9/19/22.
+//  Copyright © 2022 Michael Brandt. All rights reserved.
 //
 
-#ifndef MBC1_hpp
-#define MBC1_hpp
+#ifndef MBC5_hpp
+#define MBC5_hpp
 
 #include "MemoryBankController.hpp"
 
 namespace MikoGB {
 
-class MBC1 : public MemoryBankController {
+class MBC5 : public MemoryBankController {
 public:
-    MBC1(const CartridgeHeader &header);
-    ~MBC1();
+    MBC5(const CartridgeHeader &header);
+    ~MBC5();
     
     bool configureWithROMData(const void *romData, size_t size) override;
     uint8_t readROM(uint16_t addr) const override;
@@ -34,15 +35,16 @@ private:
     uint8_t *_ramData = nullptr;
 
     uint8_t _romBankLower = 1;
-    uint8_t _bankNumberUpper = 0;
-    uint8_t _bankingMode = 0;
+    uint8_t _romBankUpper = 0;
+    uint8_t _ramBankRegister = 0;
     int _romBank = 1;
     int _ramBank = 0;
-    bool _batteryBackup = false;
+    bool _hasBatteryBackup = false;
+    bool _hasRumble = false;
 
     void _updateBankNumbers();
 };
 
 }
 
-#endif /* MBC1_hpp */
+#endif /* MBC5_hpp */

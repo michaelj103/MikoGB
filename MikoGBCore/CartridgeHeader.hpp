@@ -21,12 +21,13 @@ enum class CartridgeType {
     MBC1_RAM_BATT,
     MBC3_RAM_BATT,
     MBC3_TIMER_RAM_BATT,
+    MBC5,
     MBC5_RAM_BATT,
 };
 
 enum class CartridgeROMSize {
     Unsupported,
-    BANKS_0, ///< 32 KiB
+    BANKS_2, ///< 32 KiB
     BANKS_4, ///< 64 KiB
     BANKS_8, ///< 128 KiB
     BANKS_16, ///< 256 KiB
@@ -59,6 +60,7 @@ public:
     CartridgeRAMSize getRAMSize() const;
     bool hasBatteryBackup() const;
     bool hasTimer() const;
+    bool hasRumble() const;
     
 private:
     std::string _title;
