@@ -90,7 +90,7 @@ class PersistenceManager {
         let sourcePath = url.path
         let filename = url.lastPathComponent
         let targetPath = NSString(string: romsPath).appendingPathComponent(filename)
-        try fm.moveItem(atPath: sourcePath, toPath: targetPath)
+        try fm.copyItem(atPath: sourcePath, toPath: targetPath)
     }
     
     private static func getHash(_ url: URL) throws -> String {

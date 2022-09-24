@@ -95,6 +95,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 do {
                     try PersistenceManager.installROM(url)
                 } catch {
+                    print("Failed to install with error \(error)")
                     _presentErrorAlert(onScene: scene, title: "Unable to install", message: error.localizedDescription)
                 }
             } else {
