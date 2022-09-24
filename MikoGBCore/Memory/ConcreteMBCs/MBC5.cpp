@@ -117,10 +117,15 @@ void MBC5::_updateBankNumbers() {
     _romBank = ((int)_romBankLower) | romBankUpper;
     
     uint8_t ramBankMask = _hasRumble ? 0x3 : 0xF; // with rumble, only lower 2 bits are usable
-    _ramBank = (int)(_ramBankRegister & ramBankMask);
+    // Mask to the real usable bits. Counts are always powers of 2. Some games write illegal values otherwise
+    // I can't find documentation that this behavior is correct, but it is the documented behavior for
+    // earlier MBCs and otherwise games would try to write to unsupported banks
+    uint8_t ramBankUsableMask = (_ramBankCount - 1);
+    _ramBank = (int)(_ramBankRegister & ramBankMask & ramBankUsableMask);
     
 #if DEBUG
     assert(_romBank < _romBankCount && _romBank >= 0);
+    assert(_ramBank < _ramBankCount || _ramBank == 0);
 #endif
 }
 
