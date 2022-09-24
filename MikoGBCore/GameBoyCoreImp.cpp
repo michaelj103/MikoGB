@@ -68,7 +68,10 @@ bool GameBoyCoreImp::loadClockData(const void *clockData, size_t size) {
 void GameBoyCoreImp::step() {
     int instructionCycles = _cpu->step();
     size_t cpuCycles = instructionCycles * 4;
-    _gpu->updateWithCPUCycles(cpuCycles);
+    // in double-speed mode, GPU cycles take half as long so that GPU events happen in "real" time
+    const bool isDoubleSpeed = _memoryController->isDoubleSpeedModeEnabled();
+    const size_t cyclesForGPU = isDoubleSpeed ? cpuCycles : cpuCycles * 2;
+    _gpu->updateWithCPUCycles(cyclesForGPU);
     _memoryController->updateWithCPUCycles(cpuCycles);
 #if ENABLE_DEBUGGER
     if (_cpu->isStoppedAtBreakpoint()) {

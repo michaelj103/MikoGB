@@ -36,6 +36,8 @@ public:
     
     void updateWithCPUCycles(size_t cpuCycles);
     void updateWithRealTimeSeconds(size_t seconds);
+    bool isDoubleSpeedModeEnabled() const { return _doubleSpeedModeEnabled; }
+    bool toggleDoubleSpeedModeIfNecessary();
         
     const CartridgeHeader &getHeader() const { return _header; }
     
@@ -100,6 +102,8 @@ private:
     uint8_t *_colorBootROM = nullptr;
     size_t _saveDataSize = false;
     uint8_t _switchableWRAMBank = 1;
+    bool _doubleSpeedModeEnabled = false;
+    bool _doubleSpeedModeTogglePending = false;
     
     MemoryBankController *_mbc = nullptr;
     Timer _timer;

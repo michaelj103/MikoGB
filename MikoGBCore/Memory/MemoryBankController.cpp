@@ -9,6 +9,7 @@
 #include "NoMBC.hpp"
 #include "MBC1.hpp"
 #include "MBC3.hpp"
+#include "MBC5.hpp"
 
 #include <iostream>
 
@@ -29,6 +30,11 @@ MemoryBankController *MemoryBankController::CreateMBC(const CartridgeHeader &hea
         case CartridgeType::MBC3_RAM_BATT:
         case CartridgeType::MBC3_TIMER_RAM_BATT:
             mbc = new MBC3(header);
+            break;
+        case CartridgeType::MBC5:
+        case CartridgeType::MBC5_RAM_BATT:
+        case CartridgeType::MBC5_RUMBLE_RAM_BATT:
+            mbc = new MBC5(header);
             break;
             
         default:

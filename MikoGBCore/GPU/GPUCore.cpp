@@ -25,7 +25,10 @@ using namespace std;
 // and that V-blank lasts 1.09ms (10 lines). The first matches well to 456 oscillations per line (108.7µs and change)
 // And obviously 10x that is ~1.09ms. All together that means that 154 lines (0-153) would finish 59.7 times per second
 // This is the documented refresh rate of the screen
-static const size_t CPUCyclesPerScanline = 456;
+// Finally, total cycles are doubled. In normal-speed mode, input cycles are multiplied by 2, so the x2 cancels
+// In double-speed mode, input is not multiplied. This means that twice as many CPU cycles must elapse in double-speed mode
+// which counteracts the fact that the CPU would be running twice as fast and keeps the framerate at "real" time
+static const size_t CPUCyclesPerScanline = 456 * 2;
 static const size_t LCDScanlineCount = 154; // 0-153. 144-153 are V-Blank
 static const size_t VBlankScanline = 144;
 
@@ -41,9 +44,10 @@ static const size_t VBlankScanline = 144;
 // 51- clocks (204 cycles) in H-blank (0)
 // Which makes more sense since H-blank needs to be long enough to do meaningful computation
 // Transfer can take longer if there's window and/or sprites on the line, but longer may be better for emulation? to test
-static const size_t OAMCycles = 80;
-static const size_t LCDTransferCycles = 172;
-static const size_t HBlankCycles = 204;
+// Finally, total cycles are doubled. See double-speed note above
+static const size_t OAMCycles = 80 * 2;
+static const size_t LCDTransferCycles = 172 * 2;
+static const size_t HBlankCycles = 204 * 2;
 
 // Important memory locations
 static const uint16_t LCDCRegister = 0xFF40; // LCD Control

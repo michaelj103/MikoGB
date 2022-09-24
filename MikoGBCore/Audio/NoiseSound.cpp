@@ -14,9 +14,13 @@
 using namespace std;
 using namespace MikoGB;
 
-static const int DurationTimeCycles = 1 << 14; // 256Hz with 4.2MHz CPU: 2^22 / 2^8 = 1 << 14
-static const int EnvelopeTimeCycles = 1 << 16; // 64Hz with 4.2MHz CPU: 2^22 / 2^6 = 1 << 16
-static const int BaseFrequency = 1 << 19; // 4.2MHz / 8 per docs: 2^22 / 8 = 1 << 19
+// Note on double-speed support. All of the cycle counts are doubled so that we can avoid fractional cycles
+// In normal speed mode, cycles are multipled by 2 before being handed to the audio controller, so the timing cancels to 1x
+// In double speed mode, cycles are not multiplied by 2, so it takes ~2x as many instructions before audio events occur
+// This keeps the audio controller running at real time relative to external driver
+static const int DurationTimeCycles = 1 << 15; // 256Hz with 4.2MHz CPU: 2^22 / 2^8 = 1 << 14 (x2 for double-speed support)
+static const int EnvelopeTimeCycles = 1 << 16; // 64Hz with 4.2MHz CPU: 2^22 / 2^6 = 1 << 16 (x2 for double-speed support)
+static const int BaseFrequency = 1 << 20; // 4.2MHz / 8 per docs: 2^22 / 8 = 1 << 19 (x2 for double-speed support)
 
 void NoiseSound::updateWithCycles(int cycles) {
     if (!_isRunning) {

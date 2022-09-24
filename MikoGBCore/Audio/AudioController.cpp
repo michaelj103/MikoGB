@@ -44,7 +44,10 @@ static const uint16_t AudioRegisterBase = NR10Register;
 // we emit a sample when it hits <= 0 and reset to += (1 << 22) to account for fracional drift
 // Instead of the actual clock speed (1<22) as the counter base, use the GPU speed, which is
 // 456 cycles per scanline, 154 scanlines per frame, 60 frames per second
-static const int SampleCounterBase = 456 * 154 * 60;
+// Finally, cycles are doubled. In normal-speed mode, input will also be doubled so that the 2x cancels out
+// in double-speed mode, input will not be doubled, so samples will be emitted in half the actual CPU cycles
+// which counteracts the fact that if things are running in "real" time, the CPU should be cycling 2x as fast
+static const int SampleCounterBase = 456 * 154 * 60 * 2;
 static const int SamplesPerSecond = 44100;
 static const int16_t SampleMaxVolume = INT16_MAX * 0.9;
 
