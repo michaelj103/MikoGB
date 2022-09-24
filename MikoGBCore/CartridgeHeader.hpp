@@ -23,6 +23,7 @@ enum class CartridgeType {
     MBC3_TIMER_RAM_BATT,
     MBC5,
     MBC5_RAM_BATT,
+    MBC5_RUMBLE_RAM_BATT,
 };
 
 enum class CartridgeROMSize {

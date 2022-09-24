@@ -33,6 +33,7 @@ MemoryBankController *MemoryBankController::CreateMBC(const CartridgeHeader &hea
             break;
         case CartridgeType::MBC5:
         case CartridgeType::MBC5_RAM_BATT:
+        case CartridgeType::MBC5_RUMBLE_RAM_BATT:
             mbc = new MBC5(header);
             break;
             

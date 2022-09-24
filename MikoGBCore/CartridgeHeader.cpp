@@ -55,6 +55,9 @@ static CartridgeType _CartridgeTypeFromByte(uint8_t byte) {
         case 0x1B:
             // e.g. Pokemon Yellow
             return CartridgeType::MBC5_RAM_BATT;
+        case 0x1E:
+            // e.g. Pokemon Pinball
+            return CartridgeType::MBC5_RUMBLE_RAM_BATT;
         default:
             return CartridgeType::Unsupported;
     }
@@ -86,6 +89,9 @@ static string _CartridgeTypeDescription(uint8_t byte) {
         case CartridgeType::MBC5_RAM_BATT:
             // e.g. Pokemon Yellow
             return "MBC5+RAM+BATTERY";
+        case CartridgeType::MBC5_RUMBLE_RAM_BATT:
+            // e.g. Pokemon Pinball
+            return "MBC5+RUMBLE+RAM+BATTERY";
         case CartridgeType::Unsupported:
             return "Unsupported " + to_string((int)byte);
     }
@@ -293,6 +299,7 @@ bool CartridgeHeader::hasBatteryBackup() const {
         case CartridgeType::MBC3_RAM_BATT:
         case CartridgeType::MBC3_TIMER_RAM_BATT:
         case CartridgeType::MBC5_RAM_BATT:
+        case CartridgeType::MBC5_RUMBLE_RAM_BATT:
             return true;
             
         case CartridgeType::Unsupported:
@@ -310,6 +317,7 @@ bool CartridgeHeader::hasTimer() const {
         case CartridgeType::MBC3_RAM_BATT:
         case CartridgeType::MBC5:
         case CartridgeType::MBC5_RAM_BATT:
+        case CartridgeType::MBC5_RUMBLE_RAM_BATT:
             return false;
         case CartridgeType::MBC3_TIMER_RAM_BATT:
             return true;
@@ -331,6 +339,9 @@ bool CartridgeHeader::hasRumble() const {
         case CartridgeType::MBC5_RAM_BATT:
         case CartridgeType::MBC3_TIMER_RAM_BATT:
             return false;
+            
+        case CartridgeType::MBC5_RUMBLE_RAM_BATT:
+            return true;
             
         case CartridgeType::Unsupported:
             return false;
