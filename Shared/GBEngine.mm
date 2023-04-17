@@ -72,6 +72,7 @@ static MikoGB::JoypadButton _ButtonForCode(GBEngineKeyCode code) {
     BOOL _isRunnable;
     NSUInteger _emulatedFrameCount;
     CFAbsoluteTime _lastRealTime;
+    CFAbsoluteTime _realTimeExcess;
     
     GBRateLimitTimer *_persistenceTimer;
     GBRateLimitTimer *_clockPersistenceTimer;
@@ -226,11 +227,14 @@ static MikoGB::JoypadButton _ButtonForCode(GBEngineKeyCode code) {
     
     NSData *rawData = clockDictionary[GBClockDataRawDataKey];
     NSDate *saveTimestamp = clockDictionary[GBClockDataTimestampKey];
-    NSTimeInterval timeSinceDate = [[NSDate date] timeIntervalSinceDate:saveTimestamp];
+    NSDate *nowDate = [NSDate date];
+    NSTimeInterval loadReferenceTime = nowDate.timeIntervalSinceReferenceDate;
+    NSTimeInterval timeSinceDate = [nowDate timeIntervalSinceDate:saveTimestamp];
     size_t secondsSinceDate = (size_t)timeSinceDate;
     dispatch_async(_emulationQueue, ^{
         BOOL success = self->_core->loadClockData(rawData.bytes, rawData.length) ? YES : NO;
         if (success) {
+            self->_lastRealTime = loadReferenceTime;
             self->_core->updateWithRealTimeSeconds(secondsSinceDate);
         }
         if (completion) {
@@ -264,7 +268,8 @@ static MikoGB::JoypadButton _ButtonForCode(GBEngineKeyCode code) {
     NSData *copiedData = nil;
     size_t clockDataSize = _core->clockDataSize();
     if (clockDataSize > 0) {
-        NSDate *date = [NSDate date];
+        // save the timestamp when we last updated the emulator's RTC
+        NSDate *date = [NSDate dateWithTimeIntervalSinceReferenceDate:_lastRealTime];
         NSMutableData *data = [NSMutableData dataWithLength:clockDataSize];
         void *buffer = data.mutableBytes;
         copiedSize = self->_core->copyClockData(buffer, clockDataSize);
@@ -379,15 +384,12 @@ static MikoGB::JoypadButton _ButtonForCode(GBEngineKeyCode code) {
 }
 
 - (void)_updateRealTimeClockIfNeeded {
-    if (_emulatedFrameCount == 0) {
-        _lastRealTime = CFAbsoluteTimeGetCurrent();
-        return;
-    }
-    
     if (_emulatedFrameCount % 10 == 0) {
         CFAbsoluteTime currentTime = CFAbsoluteTimeGetCurrent();
-        size_t diff = (size_t)(currentTime - _lastRealTime);
+        CFAbsoluteTime absoluteDiff = currentTime - _lastRealTime + _realTimeExcess;
+        size_t diff = (size_t)absoluteDiff; // clamp
         if (diff >= 1) {
+            _realTimeExcess = absoluteDiff - floor(absoluteDiff);
             _core->updateWithRealTimeSeconds(diff);
             _lastRealTime = currentTime;
         }

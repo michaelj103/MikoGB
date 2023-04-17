@@ -361,15 +361,13 @@ class GameViewController: UIViewController, DPadDelegate, GBEngineSaveDestinatio
         }
     }
     
-    private func _loadSaveData(_ url: URL, completion: (Bool)->()) {
+    private func _loadSaveData(_ url: URL, completion: @escaping (Bool)->()) {
         // TODO: MJB: appropriate fallbacks instead of crash
         let entry = try! persistenceManager.loadSaveEntry(url)
         loadedSaveDataEntry = entry
         if let data = try! persistenceManager.loadSaveData(entry) {
             // now, do something with the data
-            engine.loadSave(data) { [weak self] (success) in
-                self?._saveDataDidLoad(success)
-            }
+            engine.loadSave(data, completion: completion)
         } else {
             // there's no data, which is a valid case (e.g. starting a game for the first time or after deleting save data)
             completion(true)
@@ -381,7 +379,7 @@ class GameViewController: UIViewController, DPadDelegate, GBEngineSaveDestinatio
         if success {
             self.romFeatures = featureSupport
             if featureSupport.supportsSave.boolValue {
-                _loadSaveData(url) { _saveDataDidLoad($0) }
+                _loadSaveData(url) { self._saveDataDidLoad($0) }
             } else {
                 loadedSaveDataEntry = nil
                 _startEmulation()
@@ -398,7 +396,7 @@ class GameViewController: UIViewController, DPadDelegate, GBEngineSaveDestinatio
     private func _saveDataDidLoad(_ success: Bool) {
         if success {
             if self.romFeatures!.supportsTimer.boolValue {
-                _loadClockData { _clockDataDidLoad($0) }
+                _loadClockData { self._clockDataDidLoad($0) }
             } else {
                 _startEmulation()
             }
@@ -411,7 +409,7 @@ class GameViewController: UIViewController, DPadDelegate, GBEngineSaveDestinatio
         }
     }
     
-    private func _loadClockData(completion: (Bool) -> Void) {
+    private func _loadClockData(completion: @escaping(Bool) -> Void) {
         guard let saveEntry = loadedSaveDataEntry else {
             // no data is a valid case (e.g. starting for the first time)
             completion(true)
@@ -419,9 +417,7 @@ class GameViewController: UIViewController, DPadDelegate, GBEngineSaveDestinatio
         }
         
         if let data = try! persistenceManager.loadClockData(saveEntry) {
-            engine.loadClockData(data) { [weak self] success in
-                self?._clockDataDidLoad(success)
-            }
+            engine.loadClockData(data, completion: completion)
         } else {
             // no data is a valid case (e.g. starting for the first time)
             completion(true)
