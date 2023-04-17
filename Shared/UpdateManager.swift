@@ -10,9 +10,9 @@ import Foundation
 import GBServerPayloads
 
 class UpdateManager {
-    private static let BuildVersion = 14
+    private static let BuildVersion = 15
     private static let BuildVersionKey = "BuildVersion"
-    private static let CurrentVersion = "v0.10.4"
+    private static let CurrentVersion = "v0.10.5"
     
     static func getCurrentVersionAndBuild() -> (String, Int) {
         return (CurrentVersion, BuildVersion)
