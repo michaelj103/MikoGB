@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name='viewport' content='width=device-width, user-scalable=no'>
+        <link rel="stylesheet" href="stylesheet.css">
+    </head>
+    <body>
+        <h1>Release Notes</h1>
+        <div>
+            <h1>----- Version 0.10.x -----</br>Game Boy Color Support!</h1>
+        </div>
+        <h2>Version 0.10.6</h2>
+        <ul>
+            <li>Added an app icon at last</li>
+            <li>Added release notes. Hello, reader!</li>
+        </ul>
+        <h2>Version 0.10.5</h2>
+        <ul>
+            <li>Fixed a couple of issues that could lead to the real-time clock drifting behind gradually</li>
+        </ul>
+        <h2>Version 0.10.4</h2>
+        <ul>
+            <li>Re-signed app for certificate expiration</li>
+        </ul>
+        <h2>Version 0.10.3</h2>
+        <ul>
+            <li>Fixed an issue with MBC5 banking</li>
+        </ul>
+        <h2>Version 0.10.2</h2>
+        <ul>
+            <li>Support for MBC5 games</li>
+            <li>Support for Game Boy Color double-speed CPU mode, required by most MBC5 games</li>
+            <li>Support for MBC5 + Rumble games (e.g. Pokemon Pinball). Rumble output is ignored...for now</li>
+        </ul>
+        <h2>Version 0.10.1</h2>
+        <ul>
+            <li>Support for MBC3 + Real Time Clock (RTC)</li>
+            <li>Defined RTC save data format</li>
+            <li>RTC data is pegged to system time whenever the cartridge writes to its clock and saved alongside save data</li>
+        </ul>
+        <h2>Version 0.10</h2>
+        <ul>
+            <li>Pretty big rendering engine refactor</li>
+            <li>Switchable WRAM and VRAM banks</li>
+            <li>New DMA transfer process for color sprites</li>
+        </ul>
+        <div>
+            <h1>----- Version 0.9.x -----</br>Link Session Support!</h1>
+        </div>
+        <h2>Version 0.9.1</h2>
+        <ul>
+            <li>Fix an issue with making initial connection</li>
+            <li>Disable fast emulation when a link connection is active</li>
+            <li>(Server-side) require client API version to participate in link sessions</li>
+            <li>(Client-side) report client API version. Clients below v0.9.1 will be rejected</li>
+        </ul>
+        <h2>Version 0.9</h2>
+        <ul>
+            <li>Emulator Core API for emitting and receiving serial cable messages</li>
+            <li>Adoption of shared client-side connection framework for communicating with link cable servers</li>
+            <li>Infrastructure for managing the link cable session with the HTTP coordination server</li>
+            <li>Link management UI visible from within a game session</li>
+            <li>(Debug) settings to target a dev server instance</li>
+        </ul>
+    </body>
+</html>

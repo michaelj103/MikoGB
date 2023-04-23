@@ -1,0 +1,25 @@
+:root {
+  color-scheme: light dark;
+}
+
+body {
+    font: -apple-system-body;
+}
+
+h1 {
+    font: -apple-system-headline;
+    font-weight: bold;
+}
+
+h2 {
+    font: -apple-system-subheadline;
+    font-weight: bold;
+}
+
+footer {
+    font: -apple-system-footnote;
+}
+
+div {
+    text-align: center;
+}

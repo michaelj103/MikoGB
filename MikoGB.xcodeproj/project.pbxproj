@@ -155,6 +155,8 @@
 		29C2CBD628ADE83200936BD7 /* LinkManager.xib in Resources */ = {isa = PBXBuildFile; fileRef = 29C2CBD528ADE83200936BD7 /* LinkManager.xib */; };
 		29C2CBDC28ADF3BC00936BD7 /* LinkManagerWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29C2CBDB28ADF3BC00936BD7 /* LinkManagerWindowController.swift */; };
 		29C3DB8D2655B0ED00DCFA33 /* GBImageUtilities.mm in Sources */ = {isa = PBXBuildFile; fileRef = 29C3DB8C2655B0ED00DCFA33 /* GBImageUtilities.mm */; };
+		29D016F129F4A1110097B10A /* ReleaseNotes.html in Resources */ = {isa = PBXBuildFile; fileRef = 29D016F029F4A1110097B10A /* ReleaseNotes.html */; };
+		29D016F329F4A4CD0097B10A /* stylesheet.css in Resources */ = {isa = PBXBuildFile; fileRef = 29D016F229F4A4CD0097B10A /* stylesheet.css */; };
 		29D3C93F247DFC6A0096D21B /* TestCPUCoreBasics.mm in Sources */ = {isa = PBXBuildFile; fileRef = 29D3C93E247DFC6A0096D21B /* TestCPUCoreBasics.mm */; };
 		29D3C942247DFDE80096D21B /* TestCPUCoreUtilities.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 29D3C940247DFDE80096D21B /* TestCPUCoreUtilities.cpp */; };
 		29D6748E2747273800BF9F2E /* MBC1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2919878E267481FA009D7C45 /* MBC1.cpp */; };
@@ -383,6 +385,8 @@
 		29C2CBDB28ADF3BC00936BD7 /* LinkManagerWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkManagerWindowController.swift; sourceTree = "<group>"; };
 		29C3DB8B2655B0ED00DCFA33 /* GBImageUtilities.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GBImageUtilities.h; sourceTree = "<group>"; };
 		29C3DB8C2655B0ED00DCFA33 /* GBImageUtilities.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = GBImageUtilities.mm; sourceTree = "<group>"; };
+		29D016F029F4A1110097B10A /* ReleaseNotes.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = ReleaseNotes.html; sourceTree = "<group>"; };
+		29D016F229F4A4CD0097B10A /* stylesheet.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = stylesheet.css; sourceTree = "<group>"; };
 		29D3C936247DFBFE0096D21B /* MikoGBCoreTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MikoGBCoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		29D3C93A247DFBFE0096D21B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		29D3C93E247DFC6A0096D21B /* TestCPUCoreBasics.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = TestCPUCoreBasics.mm; sourceTree = "<group>"; };
@@ -782,6 +786,15 @@
 			path = LinkUI;
 			sourceTree = "<group>";
 		};
+		29D016F429F4A7410097B10A /* HTML */ = {
+			isa = PBXGroup;
+			children = (
+				29D016F029F4A1110097B10A /* ReleaseNotes.html */,
+				29D016F229F4A4CD0097B10A /* stylesheet.css */,
+			);
+			path = HTML;
+			sourceTree = "<group>";
+		};
 		29D3C937247DFBFE0096D21B /* MikoGBCoreTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -810,6 +823,7 @@
 		29DBB67627E2BA8700C77519 /* MikoGB-iOS */ = {
 			isa = PBXGroup;
 			children = (
+				29D016F429F4A7410097B10A /* HTML */,
 				29DBB67727E2BA8700C77519 /* AppDelegate.swift */,
 				29DBB67927E2BA8700C77519 /* SceneDelegate.swift */,
 				2987F3C427E6E26800EC00A7 /* ROMTableViewController.swift */,
@@ -1133,9 +1147,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				29D016F329F4A4CD0097B10A /* stylesheet.css in Resources */,
 				29DBB68427E2BA8800C77519 /* LaunchScreen.storyboard in Resources */,
 				29DBB68127E2BA8800C77519 /* Assets.xcassets in Resources */,
 				2907004528CED547000D8A5B /* cgb_boot.bin in Resources */,
+				29D016F129F4A1110097B10A /* ReleaseNotes.html in Resources */,
 				29DBB67F27E2BA8700C77519 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

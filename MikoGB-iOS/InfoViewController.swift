@@ -7,12 +7,14 @@
 //
 
 import UIKit
+import WebKit
 
 class InfoViewController : UIViewController {
     
     private var titleLabel: UILabel! = nil
     private var versionLabel: UILabel! = nil
     private var updateButton: UIButton! = nil
+    private var releaseNotesView: WKWebView! = nil
     
     private static let CheckForUpdateString = "Check For Update"
     private static let CheckingForUpdateString = "Checking For Update…"
@@ -32,6 +34,16 @@ class InfoViewController : UIViewController {
         let (version, build) = UpdateManager.getCurrentVersionAndBuild()
         versionLabel.text = "\(version) (Build \(build))"
         self.view.addSubview(versionLabel)
+        
+        releaseNotesView = WKWebView()
+        releaseNotesView.isOpaque = false
+        releaseNotesView.backgroundColor = .systemBackground
+        releaseNotesView.scrollView.indicatorStyle = .white
+        self.view.addSubview(releaseNotesView)
+        
+        let releaseNotesURL = Bundle.main.url(forResource: "ReleaseNotes", withExtension: "html")
+        releaseNotesView.loadFileURL(releaseNotesURL!, allowingReadAccessTo: releaseNotesURL!)
+        _updateReleaseNotesScrollIndicatorColor()
         
         var updateButtonConfig = UIButton.Configuration.filled()
         updateButtonConfig.title = InfoViewController.CheckForUpdateString
@@ -77,6 +89,33 @@ class InfoViewController : UIViewController {
         let buttonY = availableBounds.maxY - buttonSize.height
         let buttonFrame = CGRect(x: buttonX, y: buttonY, width: buttonSize.width, height: buttonSize.height)
         updateButton.frame = buttonFrame
+        
+        let textSpacing = 5.0
+        let textWidth = availableBounds.width
+        let textHeight = (buttonFrame.minY - versionFrame.maxY) - (2.0 * textSpacing)
+        let textX = availableBounds.minX
+        let textY = versionFrame.maxY + textSpacing
+        let textFrame = CGRect(x: textX, y: textY, width: textWidth, height: textHeight)
+        releaseNotesView.frame = textFrame
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        if previousTraitCollection?.userInterfaceStyle != traitCollection.userInterfaceStyle {
+            _updateReleaseNotesScrollIndicatorColor()
+        }
+    }
+    
+    private func _updateReleaseNotesScrollIndicatorColor() {
+        switch self.traitCollection.userInterfaceStyle {
+        case .light:
+            releaseNotesView.scrollView.indicatorStyle = .black
+        case .dark:
+            releaseNotesView.scrollView.indicatorStyle = .white
+        case .unspecified:
+            fallthrough
+        @unknown default:
+            releaseNotesView.scrollView.indicatorStyle = .default
+        }
     }
     
     private func _checkForUpdate() {
