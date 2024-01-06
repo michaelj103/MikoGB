@@ -9,6 +9,7 @@
 #include "CPUInstruction.hpp"
 #include <algorithm>
 #include <stdexcept>
+#include <cassert>
 #include "GameBoyCoreTypes.h"
 
 using namespace std;

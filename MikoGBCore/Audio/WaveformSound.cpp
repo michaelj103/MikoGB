@@ -8,6 +8,7 @@
 
 #include "WaveformSound.hpp"
 #include "BitTwiddlingUtil.h"
+#include <cassert>
 
 using namespace std;
 using namespace MikoGB;

@@ -7,6 +7,7 @@
 
 #include "NoMBC.hpp"
 #include <iostream>
+#include <cassert>
 
 using namespace std;
 using namespace MikoGB;

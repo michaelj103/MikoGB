@@ -11,6 +11,7 @@
 #include <cstdlib>
 #include <vector>
 #include <functional>
+#include <cassert>
 
 namespace MikoGB {
 

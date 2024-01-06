@@ -7,6 +7,7 @@
 
 #include "MBC3.hpp"
 #include "BitTwiddlingUtil.h"
+#include <cassert>
 
 using namespace std;
 using namespace MikoGB;

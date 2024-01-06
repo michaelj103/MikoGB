@@ -7,6 +7,7 @@
 //
 
 #include "MBC5.hpp"
+#include <cassert>
 
 using namespace std;
 using namespace MikoGB;

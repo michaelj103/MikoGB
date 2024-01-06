@@ -11,6 +11,7 @@
 #include <sstream>
 #include <iomanip>
 #include <algorithm>
+#include <cassert>
 #include "BitTwiddlingUtil.h"
 
 using namespace std;

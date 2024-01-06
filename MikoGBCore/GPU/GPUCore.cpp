@@ -11,6 +11,7 @@
 #include "ColorPalette.hpp"
 #include "GPUTypes.hpp"
 #include <array>
+#include <cassert>
 
 using namespace MikoGB;
 using namespace std;

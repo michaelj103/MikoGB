@@ -7,6 +7,7 @@
 
 #include "SpecialInstructions.hpp"
 #include <stdexcept>
+#include <cassert>
 
 using namespace MikoGB;
 
