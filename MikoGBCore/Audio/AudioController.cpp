@@ -55,53 +55,53 @@ AudioController::AudioController(): _sound1(true), _sound2(false) {
     _nextSampleCounter = SampleCounterBase;
 }
 
-void AudioController::updateWithCPUCycles(int cycles) {
-    _sound1.updateWithCycles(cycles);
-    _sound2.updateWithCycles(cycles);
-    _sound3.updateWithCycles(cycles);
-    _sound4.updateWithCycles(cycles);
-
-    // this isn't technically correct if the input cycles is large (~190 or more)
-    // but the input cycles should only be the duration of a cpu instruction so up to ~10
-    // if there can be multiple samples per update we'd need to do something more complicated
-    _nextSampleCounter -= (cycles * SamplesPerSecond);
-    while (_nextSampleCounter <= 0) {
-        _nextSampleCounter += SampleCounterBase;
-        // emit a sample!
-        _emitSample();
-    }
-}
-
-// Alternative version of the updater that updates per sample and not excessively
 //void AudioController::updateWithCPUCycles(int cycles) {
-//    int cyclesUpdated = 0;
-//    int audioCycles = (cycles * SamplesPerSecond);
-//    while (audioCycles > 0) {
-//        if (audioCycles >= _nextSampleCounter) {
-//            // if we'll hit a cycle, run until then
-//            int cpuCycles = _nextSampleCounter / SamplesPerSecond;
-//            audioCycles -= _nextSampleCounter;
-//            _nextSampleCounter = SampleCounterBase;
+//    _sound1.updateWithCycles(cycles);
+//    _sound2.updateWithCycles(cycles);
+//    _sound3.updateWithCycles(cycles);
+//    _sound4.updateWithCycles(cycles);
 //
-//            // update until the sample will be emitted and then emit
-//            _sound1.updateWithCycles(cpuCycles);
-//            _sound2.updateWithCycles(cpuCycles);
-//            _sound3.updateWithCycles(cpuCycles);
-//            _sound4.updateWithCycles(cpuCycles);
-//            cyclesUpdated += cpuCycles;
-//
-//            _emitSample();
-//        } else {
-//            int remainingCPUCycles = cycles - cyclesUpdated;
-//            _nextSampleCounter -= audioCycles;
-//            audioCycles = 0;
-//            _sound1.updateWithCycles(remainingCPUCycles);
-//            _sound2.updateWithCycles(remainingCPUCycles);
-//            _sound3.updateWithCycles(remainingCPUCycles);
-//            _sound4.updateWithCycles(remainingCPUCycles);
-//        }
+//    // this isn't technically correct if the input cycles is large (~190 or more)
+//    // but the input cycles should only be the duration of a cpu instruction so up to ~10
+//    // if there can be multiple samples per update we'd need to do something more complicated
+//    _nextSampleCounter -= (cycles * SamplesPerSecond);
+//    while (_nextSampleCounter <= 0) {
+//        _nextSampleCounter += SampleCounterBase;
+//        // emit a sample!
+//        _emitSample();
 //    }
 //}
+
+// Alternative version of the updater that updates per sample and not excessively
+void AudioController::updateWithCPUCycles(int cycles) {
+    int cyclesUpdated = 0;
+    int audioCycles = (cycles * SamplesPerSecond);
+    while (audioCycles > 0) {
+        if (audioCycles >= _nextSampleCounter) {
+            // if we'll hit a cycle, run until then
+            int cpuCycles = _nextSampleCounter / SamplesPerSecond;
+            audioCycles -= _nextSampleCounter;
+            _nextSampleCounter = SampleCounterBase;
+
+            // update until the sample will be emitted and then emit
+            _sound1.updateWithCycles(cpuCycles);
+            _sound2.updateWithCycles(cpuCycles);
+            _sound3.updateWithCycles(cpuCycles);
+            _sound4.updateWithCycles(cpuCycles);
+            cyclesUpdated += cpuCycles;
+
+            _emitSample();
+        } else {
+            int remainingCPUCycles = cycles - cyclesUpdated;
+            _nextSampleCounter -= audioCycles;
+            audioCycles = 0;
+            _sound1.updateWithCycles(remainingCPUCycles);
+            _sound2.updateWithCycles(remainingCPUCycles);
+            _sound3.updateWithCycles(remainingCPUCycles);
+            _sound4.updateWithCycles(remainingCPUCycles);
+        }
+    }
+}
 
 // get left/right channel volumes as double from 0.0 - 1.0
 static void ChannelVolumes(uint8_t val, double &leftChannel, double &rightChannel) {

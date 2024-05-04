@@ -153,41 +153,37 @@ double SquareSound::getSample() const {
 
 void SquareSound::_resetSweep(uint8_t val) {
     int sweepTime = (val & 0x70 >> 4); // bits 4-6 indicate time in multiples of 128Hz
-    _sweepTime = sweepTime * SweepTimeCycles;
-    _sweepSign = isMaskSet(val, 0x8) ? -1 : 1;
-    _sweepShift = (val & 0x7); // bits 0-2 indicate shift per sweep
-    _sweepCounter = _sweepTime;
+    _sweepTimePending = sweepTime * SweepTimeCycles;
+    _sweepSignPending = isMaskSet(val, 0x8) ? -1 : 1;
+    _sweepShiftPending = (val & 0x7); // bits 0-2 indicate shift per sweep
 }
 
 void SquareSound::_resetDutyAndDuration(uint8_t val) {
-    _duty = (val & 0xC0) >> 6; // bits 6-7 represent duty
+    _pendingDuty = (val & 0xC0) >> 6; // bits 6-7 represent duty
     // bits 0-5 are duration count. sound lasts (64-count) increments of 1/256
     int durationCounts = (val & 0x3F);
-    _durationTime = (64 - durationCounts) * DurationTimeCycles;
-    _durationCounter = _durationTime;
+    _pendingDurationTime = (64 - durationCounts) * DurationTimeCycles;
 }
 
 void SquareSound::_resetEnvelope(uint8_t val) {
-    _envelopeInitialVolume = (val & 0xF0) >> 4; // bits 4-7 are initial envelope volume
-    _envelopeVolume = _envelopeInitialVolume;
-    _envelopeSign = isMaskSet(val, 0x8) ? 1 : -1; // bit 3 is attenuate/amplify
+    _pendingEnvelopeVolume = (val & 0xF0) >> 4; // bits 4-7 are initial envelope volume
+    _pendingEnvelopeSign = isMaskSet(val, 0x8) ? 1 : -1; // bit 3 is attenuate/amplify
     // bits 0-2 are envelope step time. Each step is *count* increments of 1/64 second
     int envelopeCounts = (val & 0x7);
-    _envelopeStepTime = envelopeCounts * EnvelopeTimeCycles;
-    _envelopeStepCounter = _envelopeStepTime;
+    _pendingEnvelopeStepTime = envelopeCounts * EnvelopeTimeCycles;
 }
 
 void SquareSound::_resetFreqLow(uint8_t val) {
     // freq is 11 bits. keep top 3 and add in the low 8
-    _freq = (_freq & 0x700) | val;
+    _pendingFreq = (_pendingFreq & 0x700) | val;
 }
 
 void SquareSound::_resetFreqHigh(uint8_t val) {
     // freq is 11 bits, keep bottom 8 and add the top 3
     int freqUpdate = val & 7;
-    _freq = (_freq & 0xFF) | (freqUpdate << 8);
+    _pendingFreq = (_pendingFreq & 0xFF) | (freqUpdate << 8);
     // duration enable is here for whatever reason
-    _durationEnabled = isMaskSet(val, 0x40);
+    _pendingDurationEnabled = isMaskSet(val, 0x40);
     
     // restart the sound if the initialize bit is set
     if (isMaskSet(val, 0x80)) {
@@ -204,18 +200,27 @@ void SquareSound::_updateFreqCounter() {
     // Then multiply by 2 for double-speed support. See note at the top of the file
     _freqCycles = 4 * (2048 - _freq) * 2;
     _freqCounter = _freqCycles;
-    _waveDutyPeriod = 0;
+//    _waveDutyPeriod = 0;
 }
 
 void SquareSound::_initialize() {
     // reset sweep
+    _sweepTime = _sweepTimePending;
+    _sweepSign = _sweepSignPending;
+    _sweepShift = _sweepShiftPending;
     _sweepCounter = _sweepTime;
     // reset envelope
-    _envelopeVolume = _envelopeInitialVolume;
+    _envelopeVolume = _pendingEnvelopeVolume;
+    _envelopeSign = _pendingEnvelopeSign;
+    _envelopeStepTime = _pendingEnvelopeStepTime;
     _envelopeStepCounter = _envelopeStepTime;
-    // reset duration
+    // reset duty & duration
+    _duty = _pendingDuty;
+    _durationTime = _pendingDurationTime;
     _durationCounter = _durationTime;
+    _durationEnabled = _pendingDurationEnabled;
     // reset duty period and frequency calculations
+    _freq = _pendingFreq;
     _updateFreqCounter();
     
     // ...and start
