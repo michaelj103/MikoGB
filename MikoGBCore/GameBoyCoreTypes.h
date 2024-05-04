@@ -9,6 +9,7 @@
 #define GameBoyCoreTypes_h
 
 #include <string>
+#include <functional>
 
 namespace MikoGB {
 
